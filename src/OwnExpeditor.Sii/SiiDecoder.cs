@@ -49,13 +49,40 @@ public static class SiiDecoder
             case SiiFormat.Encrypted:
                 return DecodeToText(Decrypt(data));
             case SiiFormat.Binary:
-                throw new NotSupportedException(
-                    "Save em formato binário (BSII) ainda não é suportado. Use g_save_format \"2\" e salve de novo.");
+                return BsiiDecoder.ToText(data);
             case SiiFormat.ThreeNK:
-                throw new NotSupportedException("Formato 3nK ainda não é suportado.");
+                return DecodeToText(Decode3nK(data));
             default:
                 throw new InvalidDataException("Arquivo não reconhecido como .sii.");
         }
+    }
+
+    /// <summary>
+    /// Como DecodeToText, mas aceita qualquer texto (ex.: .sui sem "SiiNunit").
+    /// Usado para arquivos de definição do jogo.
+    /// </summary>
+    public static string DecodeLenient(byte[] data) => DetectFormat(data) switch
+    {
+        SiiFormat.Encrypted => DecodeLenient(Decrypt(data)),
+        SiiFormat.ThreeNK => DecodeLenient(Decode3nK(data)),
+        SiiFormat.Binary => BsiiDecoder.ToText(data),
+        _ => Encoding.UTF8.GetString(data).TrimStart('﻿'),
+    };
+
+    /// <summary>3nK: XOR com tabela fixa a partir de uma semente (cabeçalho de 6 bytes).</summary>
+    public static byte[] Decode3nK(byte[] data)
+    {
+        if (data.Length < 6 || DetectFormat(data) != SiiFormat.ThreeNK)
+            throw new InvalidDataException("Cabeçalho 3nK inválido.");
+        var seed = data[5];
+        var output = new byte[data.Length - 6];
+        for (var j = 0; j < output.Length; j++)
+        {
+            var b = (byte)((seed + j) & 0xFF);
+            var key = (byte)((((byte)(b << 2) ^ (byte)~b) << 3) ^ b);
+            output[j] = (byte)(data[6 + j] ^ key);
+        }
+        return output;
     }
 
     /// <summary>Remove a camada ScsC e devolve o conteúdo interno (texto ou BSII).</summary>

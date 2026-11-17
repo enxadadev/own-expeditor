@@ -3,20 +3,86 @@
         xmlns:vm="using:OwnExpeditor.App.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d" d:DesignWidth="760" d:DesignHeight="720"
         x:Class="OwnExpeditor.App.Views.MainWindow"
         x:DataType="vm:MainViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="OwnExpeditor.App">
+        Width="760" Height="760" MinWidth="560"
+        Title="Own Expeditor">
 
     <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
         <vm:MainViewModel />
     </Design.DataContext>
 
-    <TextBox Text="{Binding Greeting}"
-             HorizontalAlignment="Center"
-             VerticalAlignment="Center" />
+    <Window.Styles>
+        <Style Selector="TextBlock.h">
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="Margin" Value="0,12,0,4" />
+        </Style>
+        <Style Selector="TextBlock.label">
+            <Setter Property="Opacity" Value="0.75" />
+            <Setter Property="Margin" Value="0,6,0,2" />
+        </Style>
+        <Style Selector="ComboBox">
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+        </Style>
+    </Window.Styles>
 
+    <DockPanel Margin="20">
+        <Border DockPanel.Dock="Bottom" Padding="10" CornerRadius="6" Margin="0,12,0,0"
+                Background="{DynamicResource SystemControlBackgroundBaseLowBrush}">
+            <TextBlock Text="{Binding Status}" TextWrapping="Wrap"
+                       Foreground="{Binding IsError, Converter={x:Static vm:Converters.ErrorBrush}}" />
+        </Border>
+
+        <ScrollViewer>
+            <StackPanel Spacing="2">
+                <TextBlock Classes="h" Text="1. Pastas" Margin="0,0,0,4" />
+                <TextBlock Classes="label" Text="Pasta do jogo (onde ficam def.scs e dlc_*.scs)" />
+                <TextBox Text="{Binding GameDir}" />
+                <TextBlock Classes="label" Text="Pasta de documentos do ETS2 (com profiles/)" />
+                <TextBox Text="{Binding DocumentsDir}" />
+                <Button Content="Carregar" Command="{Binding LoadCommand}" Margin="0,8,0,0" />
+
+                <TextBlock Classes="h" Text="2. Save" />
+                <Grid ColumnDefinitions="*,12,2*">
+                    <StackPanel>
+                        <TextBlock Classes="label" Text="Perfil" />
+                        <ComboBox ItemsSource="{Binding Profiles}" SelectedItem="{Binding SelectedProfile}" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Classes="label" Text="Save de origem (não é alterado)" />
+                        <ComboBox ItemsSource="{Binding Saves}" SelectedItem="{Binding SelectedSave}" />
+                    </StackPanel>
+                </Grid>
+
+                <TextBlock Classes="h" Text="3. Frete" />
+                <TextBlock Classes="label" Text="Origem (empresas com vaga livre)" />
+                <ComboBox ItemsSource="{Binding Origins}" SelectedItem="{Binding SelectedOrigin}" />
+                <TextBlock Classes="label" Text="Carga" />
+                <ComboBox ItemsSource="{Binding Cargos}" SelectedItem="{Binding SelectedCargo}" />
+                <TextBlock Classes="label" Text="Destino (empresas que recebem a carga)" />
+                <ComboBox ItemsSource="{Binding Destinations}" SelectedItem="{Binding SelectedDestination}" />
+                <Grid ColumnDefinitions="*,12,*">
+                    <StackPanel>
+                        <TextBlock Classes="label" Text="Distância (km)" />
+                        <TextBox Text="{Binding DistanceKm}" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Classes="label" Text="Urgência" />
+                        <ComboBox ItemsSource="{Binding UrgencyOptions}" SelectedIndex="{Binding Urgency}" />
+                    </StackPanel>
+                </Grid>
+                <TextBlock Text="{Binding DistanceHint}" Opacity="0.7" FontSize="12" TextWrapping="Wrap" />
+                <Button Content="Adicionar frete" Command="{Binding InjectCommand}" Margin="0,8,0,0" />
+
+                <TextBlock Classes="h" Text="4. Gravar" />
+                <TextBlock Text="{Binding InjectedSummary}" TextWrapping="Wrap" />
+                <TextBlock Classes="label" Text="Nome do novo save" />
+                <TextBox Text="{Binding SaveName}" />
+                <Button Content="Gravar como novo save" Command="{Binding WriteCommand}" Margin="0,8,0,0" />
+            </StackPanel>
+        </ScrollViewer>
+    </DockPanel>
 </Window>

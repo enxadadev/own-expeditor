@@ -3,7 +3,22 @@
 A versão do produto fica em `Directory.Build.props` (`M.X.Y`). Quem a altera é
 o agente `git-ops` (ver `ia/agents/git-ops.md`).
 
-## 0.1.0 (em desenvolvimento)
+## 0.2.0 (em desenvolvimento)
+
+Injeção de fretes (`feature/job-injection`):
+
+- `OwnExpeditor.Sii`: leitura de BSII (binário) e 3nK, além de ScsC e texto.
+- `OwnExpeditor.Data`: leitor de pacotes `.scs` (HashFS v2) e catálogo do
+  jogo (empresas, cidades, cargas) lido da instalação do usuário.
+- `OwnExpeditor.Data`: nomes traduzidos via `locale.scs` no idioma do jogo,
+  com fallback para nome local e id legível. Ainda não verificado com o
+  arquivo real (pendência em `docs/sii-format.md`, seção 6).
+- `OwnExpeditor.Core`: `JobInjector` e `SaveSession` (origens com vaga,
+  cargas, destinos, distância aprendida do save) e gravação como save novo.
+- `OwnExpeditor.App`: primeira interface (pastas, save, frete, gravar).
+- Validado no jogo: save em texto carrega e o frete injetado aparece.
+
+## 0.1.0
 
 Ainda sem release publicado. Estado do que existe no código:
 

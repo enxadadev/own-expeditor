@@ -12,18 +12,14 @@ public class RealSaveTests
         var dir = FindSamplesDir();
         if (dir is null) yield break;
         foreach (var f in Directory.EnumerateFiles(dir, "game.sii", SearchOption.AllDirectories))
-        {
-            // BSII (binário) ainda não é suportado; só testa saves que viram texto.
-            var data = File.ReadAllBytes(f);
-            var inner = SiiDecoder.DetectFormat(data) == SiiFormat.Encrypted ? SiiDecoder.Decrypt(data) : data;
-            if (SiiDecoder.DetectFormat(inner) == SiiFormat.Text) yield return [f];
-        }
+            yield return [Path.GetRelativePath(dir, f)];
     }
 
     [Theory]
     [MemberData(nameof(Saves))]
-    public void Real_save_decodes_parses_and_roundtrips(string path)
+    public void Real_save_decodes_parses_and_roundtrips(string relativePath)
     {
+        var path = Path.Combine(FindSamplesDir()!, relativePath);
         var text = SiiDecoder.DecodeToText(File.ReadAllBytes(path));
         var doc = SiiDocument.Parse(text);
 
