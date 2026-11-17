@@ -1,0 +1,19 @@
+{
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "Tokens.dc.html": {"expand": "fill", "h": 3700, "is_interactive": true, "title": "Tokens · cores, contraste, tipografia, espaços, raios", "w": 1280, "x": 0, "y": 0},
+    "Galeria.dc.html": {"expand": "fill", "h": 5400, "is_interactive": true, "title": "Galeria · todos os controles em estados, Light × Dark", "w": 1280, "x": 1360, "y": 0}
+  },
+  "createdOnFiles": {"at": "2026-11-17T18:00:00Z", "v": 1},
+  "designSystems": [],
+  "launch": {"view": "canvas"},
+  "noteOrder": ["t", "s"],
+  "notes": {
+    "s": {"size": 24, "text": "Tokens: contraste calculado ao vivo. Galeria: cada controle em Claro e Escuro lado a lado; botões de tema, idioma, textos longos e áreas de clique no topo. Dados de exemplo sintéticos.", "w": 1200, "x": 0, "y": -150},
+    "t": {"kind": "title1", "maxW": 4000, "text": "Own Expeditor — biblioteca de controles (rascunho)", "w": 240, "x": 0, "y": -260}
+  },
+  "order": ["Tokens.dc.html", "Galeria.dc.html"],
+  "pages": [],
+  "title": "Own Expeditor — biblioteca de controles"
+}

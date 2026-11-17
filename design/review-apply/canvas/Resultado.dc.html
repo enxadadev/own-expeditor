@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Resultado da gravação</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&amp;family=Barlow+Condensed:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#f5a524}a:hover{color:#ffc35c}
+button{font:inherit;cursor:pointer}
+@keyframes oe-spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion: reduce){*{animation-duration:0.01ms !important}}
+</style>
+</helmet>
+<div style="position: relative; width: 1280px; height: 800px; overflow: hidden; display: flex; background: {{t.bg}}; color: {{t.text}}; font-family: Barlow, system-ui, sans-serif; font-size: 14px;">
+  <nav aria-label="{{navLabel}}" style="flex: 0 0 76px; box-sizing: border-box; padding: 16px 0; display: flex; flex-direction: column; align-items: center; gap: 6px; background: {{t.side}}; border-right: 1px solid {{t.line}};">
+    <div style="width: 40px; height: 40px; border-radius: 10px; background: {{t.accent}}; display: flex; align-items: center; justify-content: center; margin-bottom: 14px;">
+      <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1a1206" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h11v9H3z"/><path d="M14 10h4l3 3v3h-7"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>
+    </div>
+    <sc-for list="{{nav}}" as="n" hint-placeholder-count="5">
+      <button type="button" aria-label="{{n.label}}" style="{{n.style}}">
+        <span style="width: 18px; height: 3px; border-radius: 2px; background: {{n.bar}};"></span>
+        <span style="font-family: 'Barlow Condensed', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.06em;">{{n.short}}</span>
+      </button>
+    </sc-for>
+    <div style="flex-grow: 1;"></div>
+    <button type="button" onClick="{{toggle}}" aria-label="{{themeLabel}}" style="width: 48px; height: 48px; border-radius: 10px; border: 1px solid {{t.line}}; background: transparent; color: {{t.muted}}; display: flex; align-items: center; justify-content: center;">
+      <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
+    <button type="button" onClick="{{langToggle}}" aria-label="{{langLabel}}" style="width: 48px; height: 44px; border-radius: 10px; border: 1px solid {{t.line}}; background: transparent; color: {{t.muted}}; font-family: 'Barlow Condensed', sans-serif; font-weight: 600;">{{langShort}}</button>
+  </nav>
+  <div style="flex: 1 1 0; min-width: 0; display: flex; flex-direction: column;">
+    <header aria-label="{{sessionLabel}}" style="flex: 0 0 56px; box-sizing: border-box; padding: 0 32px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid {{t.line}};">
+      <span style="font-size: 12px; color: {{t.muted}}; text-transform: uppercase; letter-spacing: 0.08em;">{{profileSave}}</span>
+      <span style="padding: 2px 8px; border-radius: 8px; border: 1px solid {{t.line}}; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 13px; letter-spacing: 0.06em; color: {{t.muted}};">ETS2</span>
+      <div style="flex-grow: 1;"></div>
+      <button type="button" aria-label="{{pendAria}}" style="{{pendStyle}}">{{pendLabel}}</button>
+    </header>
+    <div style="flex: 1 1 0; min-height: 0; position: relative;">
+
+<main style="position: absolute; inset: 0; box-sizing: border-box; padding: 24px 32px; display: flex; flex-direction: column; gap: 20px; overflow: auto;">
+  <div style="display: flex; align-items: center; gap: 20px;">
+    <div style="flex: 0 0 auto; width: 72px; height: 72px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: {{t.successBg}}; border: 2px solid {{t.success}}; color: {{t.success}};"><svg aria-hidden="true" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg></div>
+    <div style="display: flex; flex-direction: column; gap: 4px;">
+      <h1 tabindex="-1" style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-size: 40px; font-weight: 700; line-height: 1.05; text-transform: uppercase; letter-spacing: 0.03em;">{{x.title}}</h1>
+      <span style="font-size: 16px; color: {{t.muted}};">{{x.written}}</span>
+    </div>
+  </div>
+
+  <section aria-label="{{x.backupTitle}}" style="display: flex; flex-direction: column; gap: 12px; padding: 18px 20px; border-radius: 12px; background: {{t.panel}}; border: 1px solid {{t.line}};">
+    <div style="display: flex; flex-direction: column; gap: 2px;">
+      <span style="font-size: 11px; color: {{t.muted}}; text-transform: uppercase; letter-spacing: 0.08em;">{{x.backupTitle}}</span>
+      <span style="color: {{t.muted}};">{{x.backupHelp}}</span>
+    </div>
+    <div style="padding: 12px 14px; border-radius: 10px; background: {{t.bg}}; border: 1px solid {{t.line}};">
+      <span title="{{path}}{{file}}" style="font-family: ui-monospace, Consolas, monospace; font-size: 13px; line-height: 1.55; word-break: break-all;">{{path}}<span style="color: {{t.accent}};">{{file}}</span></span>
+    </div>
+    <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+      <button type="button" style="{{outline}}"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>{{x.openFolder}}</button>
+      <button type="button" onClick="{{copy}}" style="{{outline}}"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/></svg>{{copyLabel}}</button>
+    </div>
+  </section>
+
+  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px;">
+    <section style="display: flex; flex-direction: column; gap: 8px; padding: 16px 20px; border-radius: 12px; background: {{t.panel}}; border: 1px solid {{t.line}};">
+      <span style="font-size: 11px; color: {{t.muted}}; text-transform: uppercase; letter-spacing: 0.08em;">{{x.nowTitle}}</span>
+      <span>{{x.nowBody}}</span>
+      <span style="color: {{t.muted}};">{{x.textNote}}</span>
+    </section>
+    <section style="display: flex; flex-direction: column; gap: 8px; padding: 16px 20px; border-radius: 12px; background: {{t.panel}}; border: 1px solid {{t.line}};">
+      <span style="font-size: 11px; color: {{t.muted}}; text-transform: uppercase; letter-spacing: 0.08em;">{{x.restoreTitle}}</span>
+      <ol style="margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 4px;">
+        <sc-for list="{{steps}}" as="s" hint-placeholder-count="3">
+          <li>{{s.text}}</li>
+        </sc-for>
+      </ol>
+    </section>
+  </div>
+
+  <div style="flex-grow: 1;"></div>
+  <div style="display: flex; justify-content: flex-end;">
+    <button type="button" style="{{primary}}">{{x.keep}}</button>
+  </div>
+  <div role="status" style="{{toastStyle}}">
+    <span style="color: {{t.success}};"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg></span><span>{{x.copied}}</span>
+  </div>
+</main>
+
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":true},"en":{"editor":"boolean","default":false},"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+
+  pal(dark) {
+    return dark
+      ? { bg:'#121417', side:'#0c0e10', panel:'#1a1d21', line:'#2a2f35', text:'#eef0f2', muted:'#9aa3ad', accent:'#f5a524', sel:'#2a2414',
+          danger:'#f87171', onDanger:'#1a0606', dangerBg:'rgba(248,113,113,0.12)', success:'#4ade80', successBg:'rgba(74,222,128,0.12)',
+          dim:'rgba(0,0,0,0.62)', shadow:'0 24px 64px rgba(0,0,0,0.55)' }
+      : { bg:'#f4f2ee', side:'#ebe7df', panel:'#ffffff', line:'#d9d3c7', text:'#1b1d20', muted:'#5f6670', accent:'#b86e00', sel:'#fbecd2',
+          danger:'#b42318', onDanger:'#ffffff', dangerBg:'rgba(180,35,24,0.08)', success:'#157f3b', successBg:'rgba(21,127,59,0.10)',
+          dim:'rgba(27,29,32,0.50)', shadow:'0 24px 64px rgba(27,29,32,0.28)' };
+  }
+  base(t) { return `display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 22px;border-radius:10px;font-weight:700;letter-spacing:0.03em;`; }
+  bPrimary(t) { return this.base(t) + `border:none;background:${t.accent};color:#1a1206;`; }
+  bDanger(t)  { return this.base(t) + `border:none;background:${t.danger};color:${t.onDanger};`; }
+  bOutline(t) { return this.base(t) + `border:1px solid ${t.line};background:transparent;color:${t.text};font-weight:600;`; }
+  bGhost(t, danger) { return `display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 14px;border-radius:10px;border:1px solid transparent;background:transparent;font-weight:600;color:${danger ? t.danger : t.muted};`; }
+  plural(lang, n, one, many) { return n === 1 ? one : many.replace('{0}', n); }
+  cultura(lang) { return lang === 'pt' ? 'pt-BR' : 'en-US'; }
+  // Lateral + barra de sessão simplificadas (o desenho oficial é do UX-1, design/shell/).
+  shell(t, lang, dark, navSel, pendCount, pendMode) {
+    const sh = lang === 'pt'
+      ? { navLabel:'Módulos', nav:['Fretes','Frota','Perfil','Empresa','Mapa'], short:['FRETES','FROTA','PERFIL','EMPRESA','MAPA'], session:'Sessão', profile:'Perfil 1 · Save 4',
+          themeLight:'Usar tema claro', themeDark:'Usar tema escuro', langShort:'PT', langLabel:'Idioma: português. Mudar para inglês', review:'Revisar',
+          pendAria:(n) => n > 0 ? `Revisar mudanças pendentes: ${n}` : 'Revisar mudanças: nenhuma pendente' }
+      : { navLabel:'Modules', nav:['Jobs','Fleet','Profile','Company','Map'], short:['JOBS','FLEET','PROFILE','COMPANY','MAP'], session:'Session', profile:'Profile 1 · Save 4',
+          themeLight:'Use light theme', themeDark:'Use dark theme', langShort:'EN', langLabel:'Language: English. Switch to Portuguese', review:'Review',
+          pendAria:(n) => n > 0 ? `Review pending changes: ${n}` : 'Review changes: none pending' };
+    const nav = sh.nav.map((l, i) => ({ label:l, short:sh.short[i], bar: i === navSel ? t.accent : 'transparent',
+      style:`width:60px;min-height:52px;border-radius:10px;border:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:${i===navSel?t.panel:'transparent'};color:${i===navSel?t.text:t.muted};` }));
+    const cur = pendMode === 'current';
+    const pendStyle = `min-height:44px;padding:0 16px;border-radius:10px;font-weight:600;border:1px solid ${cur ? t.accent : t.line};background:${cur ? t.sel : 'transparent'};color:${pendCount > 0 ? t.text : t.muted};`;
+    return { nav, navLabel: sh.navLabel, sessionLabel: sh.session, profileSave: sh.profile, themeLabel: dark ? sh.themeLight : sh.themeDark,
+      langShort: sh.langShort, langLabel: sh.langLabel, pendStyle, pendAria: sh.pendAria(pendCount),
+      pendLabel: pendCount > 0 ? `${sh.review} (${pendCount})` : sh.review,
+      toggle: () => this.setState({ dark: !dark }), langToggle: () => this.setState({ lang: lang === 'pt' ? 'en' : 'pt' }) };
+  }
+
+  constructor(p) { super(p); this.state = { dark: null, lang: null, copied: false }; }
+  renderVals() {
+    const dark = this.state.dark ?? (this.props.dark ?? true);
+    const lang = this.state.lang ?? (this.props.en ? 'en' : 'pt');
+    const t = this.pal(dark);
+    const X = {
+      pt: { title:'Mudanças gravadas', written:'3 mudanças gravadas no save.',
+        backupTitle:'Backup do save original', backupHelp:'Guardamos uma cópia do save como ele estava antes. Ela fica na mesma pasta.',
+        openFolder:'Abrir pasta', copyIdle:'Copiar caminho', copied:'Caminho copiado.',
+        nowTitle:'Agora no jogo', nowBody:'Abra o jogo e carregue este save para ver as mudanças.',
+        textNote:'O Own Expeditor grava o save em texto simples. Se o jogo não carregar este save, restaure o backup.',
+        restoreTitle:'Como restaurar o backup',
+        steps:['Feche o jogo.', 'Na pasta do save, renomeie game.sii para game.sii.old.', 'Renomeie o backup (game.sii.bak-…) para game.sii.'],
+        keep:'Continuar editando' },
+      en: { title:'Changes written', written:'3 changes written to the save.',
+        backupTitle:'Backup of the original save', backupHelp:'We kept a copy of the save as it was before. It sits in the same folder.',
+        openFolder:'Open folder', copyIdle:'Copy path', copied:'Path copied.',
+        nowTitle:'Now in the game', nowBody:'Open the game and load this save to see the changes.',
+        textNote:'Own Expeditor writes the save as plain text. If the game doesn’t load this save, restore the backup.',
+        restoreTitle:'How to restore the backup',
+        steps:['Close the game.', 'In the save folder, rename game.sii to game.sii.old.', 'Rename the backup (game.sii.bak-…) to game.sii.'],
+        keep:'Keep editing' }
+    }[lang];
+    const copied = this.state.copied;
+    return {
+      ...this.shell(t, lang, dark, -1, 0, 'idle'),
+      t, x: X,
+      path:'C:\\Users\\you\\Documents\\Euro Truck Simulator 2\\profiles\\profile_1\\save\\4\\', file:'game.sii.bak-20261117-143022',
+      steps: X.steps.map(s => ({ text: s })),
+      outline: this.bOutline(t), primary: this.bPrimary(t),
+      copyLabel: copied ? X.copied.replace('.', '') : X.copyIdle,
+      toastStyle: `display:${copied ? 'flex' : 'none'};align-items:center;gap:10px;position:absolute;left:50%;bottom:24px;transform:translateX(-50%);padding:12px 18px;border-radius:12px;background:${t.panel};border:1px solid ${t.line};box-shadow:${t.shadow};`,
+      copy: () => { this.setState({ copied: true }); setTimeout(() => this.setState({ copied: false }), 2500); }
+    };
+  }
+}
+</script>
+</body>
+</html>

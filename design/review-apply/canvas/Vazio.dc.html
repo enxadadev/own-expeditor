@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Revisar: nada para revisar</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&amp;family=Barlow+Condensed:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#f5a524}a:hover{color:#ffc35c}
+button{font:inherit;cursor:pointer}
+@keyframes oe-spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion: reduce){*{animation-duration:0.01ms !important}}
+</style>
+</helmet>
+<div style="position: relative; width: 1280px; height: 800px; overflow: hidden; display: flex; background: {{t.bg}}; color: {{t.text}}; font-family: Barlow, system-ui, sans-serif; font-size: 14px;">
+  <nav aria-label="{{navLabel}}" style="flex: 0 0 76px; box-sizing: border-box; padding: 16px 0; display: flex; flex-direction: column; align-items: center; gap: 6px; background: {{t.side}}; border-right: 1px solid {{t.line}};">
+    <div style="width: 40px; height: 40px; border-radius: 10px; background: {{t.accent}}; display: flex; align-items: center; justify-content: center; margin-bottom: 14px;">
+      <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1a1206" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h11v9H3z"/><path d="M14 10h4l3 3v3h-7"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>
+    </div>
+    <sc-for list="{{nav}}" as="n" hint-placeholder-count="5">
+      <button type="button" aria-label="{{n.label}}" style="{{n.style}}">
+        <span style="width: 18px; height: 3px; border-radius: 2px; background: {{n.bar}};"></span>
+        <span style="font-family: 'Barlow Condensed', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.06em;">{{n.short}}</span>
+      </button>
+    </sc-for>
+    <div style="flex-grow: 1;"></div>
+    <button type="button" onClick="{{toggle}}" aria-label="{{themeLabel}}" style="width: 48px; height: 48px; border-radius: 10px; border: 1px solid {{t.line}}; background: transparent; color: {{t.muted}}; display: flex; align-items: center; justify-content: center;">
+      <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
+    <button type="button" onClick="{{langToggle}}" aria-label="{{langLabel}}" style="width: 48px; height: 44px; border-radius: 10px; border: 1px solid {{t.line}}; background: transparent; color: {{t.muted}}; font-family: 'Barlow Condensed', sans-serif; font-weight: 600;">{{langShort}}</button>
+  </nav>
+  <div style="flex: 1 1 0; min-width: 0; display: flex; flex-direction: column;">
+    <header aria-label="{{sessionLabel}}" style="flex: 0 0 56px; box-sizing: border-box; padding: 0 32px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid {{t.line}};">
+      <span style="font-size: 12px; color: {{t.muted}}; text-transform: uppercase; letter-spacing: 0.08em;">{{profileSave}}</span>
+      <span style="padding: 2px 8px; border-radius: 8px; border: 1px solid {{t.line}}; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 13px; letter-spacing: 0.06em; color: {{t.muted}};">ETS2</span>
+      <div style="flex-grow: 1;"></div>
+      <button type="button" aria-label="{{pendAria}}" style="{{pendStyle}}">{{pendLabel}}</button>
+    </header>
+    <div style="flex: 1 1 0; min-height: 0; position: relative;">
+
+<main style="position: absolute; inset: 0; box-sizing: border-box; padding: 20px 32px 24px; display: flex; flex-direction: column; gap: 16px;">
+  <div style="display: flex; flex-direction: column; gap: 2px;">
+    <h1 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-size: 26px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em;">{{x.title}}</h1>
+    <span style="color: {{t.muted}};">{{x.sub}}</span>
+  </div>
+  <section aria-label="{{x.title}}" style="flex: 1 1 0; display: flex; align-items: center; justify-content: center; border: 1px dashed {{t.line}}; border-radius: 16px;">
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 14px; max-width: 460px; text-align: center;">
+      <svg aria-hidden="true" width="96" height="96" viewBox="0 0 96 96" fill="none" stroke="{{t.muted}}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="22" y="14" width="52" height="68" rx="8"/>
+        <path d="M38 14v-2a4 4 0 0 1 4-4h12a4 4 0 0 1 4 4v2"/>
+        <path d="M34 40h28M34 54h28M34 68h14" stroke-dasharray="1 7"/>
+        <path d="M60 64l7 7 13-14" stroke="{{t.accent}}" stroke-width="3.2"/>
+      </svg>
+      <h2 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-size: 30px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em;">{{x.emptyTitle}}</h2>
+      <span style="color: {{t.muted}}; font-size: 15px; line-height: 1.5;">{{x.emptyMsg}}</span>
+      <button type="button" style="{{primary}}">{{x.go}}</button>
+      <span style="font-size: 13px; color: {{t.muted}};">{{x.tip}}</span>
+    </div>
+  </section>
+  <div style="display: flex; justify-content: flex-end; align-items: center; gap: 12px;">
+    <span style="font-size: 13px; color: {{t.muted}};">{{x.hint}}</span>
+    <button type="button" aria-disabled="true" style="{{applyStyle}}">{{x.apply}}</button>
+  </div>
+</main>
+
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":true},"en":{"editor":"boolean","default":false},"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+
+  pal(dark) {
+    return dark
+      ? { bg:'#121417', side:'#0c0e10', panel:'#1a1d21', line:'#2a2f35', text:'#eef0f2', muted:'#9aa3ad', accent:'#f5a524', sel:'#2a2414',
+          danger:'#f87171', onDanger:'#1a0606', dangerBg:'rgba(248,113,113,0.12)', success:'#4ade80', successBg:'rgba(74,222,128,0.12)',
+          dim:'rgba(0,0,0,0.62)', shadow:'0 24px 64px rgba(0,0,0,0.55)' }
+      : { bg:'#f4f2ee', side:'#ebe7df', panel:'#ffffff', line:'#d9d3c7', text:'#1b1d20', muted:'#5f6670', accent:'#b86e00', sel:'#fbecd2',
+          danger:'#b42318', onDanger:'#ffffff', dangerBg:'rgba(180,35,24,0.08)', success:'#157f3b', successBg:'rgba(21,127,59,0.10)',
+          dim:'rgba(27,29,32,0.50)', shadow:'0 24px 64px rgba(27,29,32,0.28)' };
+  }
+  base(t) { return `display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 22px;border-radius:10px;font-weight:700;letter-spacing:0.03em;`; }
+  bPrimary(t) { return this.base(t) + `border:none;background:${t.accent};color:#1a1206;`; }
+  bDanger(t)  { return this.base(t) + `border:none;background:${t.danger};color:${t.onDanger};`; }
+  bOutline(t) { return this.base(t) + `border:1px solid ${t.line};background:transparent;color:${t.text};font-weight:600;`; }
+  bGhost(t, danger) { return `display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 14px;border-radius:10px;border:1px solid transparent;background:transparent;font-weight:600;color:${danger ? t.danger : t.muted};`; }
+  plural(lang, n, one, many) { return n === 1 ? one : many.replace('{0}', n); }
+  cultura(lang) { return lang === 'pt' ? 'pt-BR' : 'en-US'; }
+  // Lateral + barra de sessão simplificadas (o desenho oficial é do UX-1, design/shell/).
+  shell(t, lang, dark, navSel, pendCount, pendMode) {
+    const sh = lang === 'pt'
+      ? { navLabel:'Módulos', nav:['Fretes','Frota','Perfil','Empresa','Mapa'], short:['FRETES','FROTA','PERFIL','EMPRESA','MAPA'], session:'Sessão', profile:'Perfil 1 · Save 4',
+          themeLight:'Usar tema claro', themeDark:'Usar tema escuro', langShort:'PT', langLabel:'Idioma: português. Mudar para inglês', review:'Revisar',
+          pendAria:(n) => n > 0 ? `Revisar mudanças pendentes: ${n}` : 'Revisar mudanças: nenhuma pendente' }
+      : { navLabel:'Modules', nav:['Jobs','Fleet','Profile','Company','Map'], short:['JOBS','FLEET','PROFILE','COMPANY','MAP'], session:'Session', profile:'Profile 1 · Save 4',
+          themeLight:'Use light theme', themeDark:'Use dark theme', langShort:'EN', langLabel:'Language: English. Switch to Portuguese', review:'Review',
+          pendAria:(n) => n > 0 ? `Review pending changes: ${n}` : 'Review changes: none pending' };
+    const nav = sh.nav.map((l, i) => ({ label:l, short:sh.short[i], bar: i === navSel ? t.accent : 'transparent',
+      style:`width:60px;min-height:52px;border-radius:10px;border:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:${i===navSel?t.panel:'transparent'};color:${i===navSel?t.text:t.muted};` }));
+    const cur = pendMode === 'current';
+    const pendStyle = `min-height:44px;padding:0 16px;border-radius:10px;font-weight:600;border:1px solid ${cur ? t.accent : t.line};background:${cur ? t.sel : 'transparent'};color:${pendCount > 0 ? t.text : t.muted};`;
+    return { nav, navLabel: sh.navLabel, sessionLabel: sh.session, profileSave: sh.profile, themeLabel: dark ? sh.themeLight : sh.themeDark,
+      langShort: sh.langShort, langLabel: sh.langLabel, pendStyle, pendAria: sh.pendAria(pendCount),
+      pendLabel: pendCount > 0 ? `${sh.review} (${pendCount})` : sh.review,
+      toggle: () => this.setState({ dark: !dark }), langToggle: () => this.setState({ lang: lang === 'pt' ? 'en' : 'pt' }) };
+  }
+
+  constructor(p) { super(p); this.state = { dark: null, lang: null }; }
+  renderVals() {
+    const dark = this.state.dark ?? (this.props.dark ?? true);
+    const lang = this.state.lang ?? (this.props.en ? 'en' : 'pt');
+    const t = this.pal(dark);
+    const X = {
+      pt: { title:'Revisar mudanças', sub:'Nenhuma mudança pendente', emptyTitle:'Nada para revisar',
+        emptyMsg:'Você ainda não fez mudanças neste save. Escolha um módulo, edite o que quiser e volte aqui para revisar antes de gravar.',
+        go:'Ir para Fretes', tip:'Dica: Ctrl+R abre esta tela a qualquer momento.', apply:'Aplicar mudanças', hint:'Aplicar fica disponível quando houver mudanças.' },
+      en: { title:'Review changes', sub:'No pending changes', emptyTitle:'Nothing to review',
+        emptyMsg:'You haven’t made any changes to this save yet. Pick a module, edit what you like and come back here to review before writing.',
+        go:'Go to Jobs', tip:'Tip: Ctrl+R opens this screen any time.', apply:'Apply changes', hint:'Apply becomes available when there are changes.' }
+    }[lang];
+    return {
+      ...this.shell(t, lang, dark, -1, 0, 'current'),
+      t, x: X, primary: this.bPrimary(t),
+      applyStyle: this.bDanger(t) + 'opacity:0.4;cursor:not-allowed;'
+    };
+  }
+}
+</script>
+</body>
+</html>

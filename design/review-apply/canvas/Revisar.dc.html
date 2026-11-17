@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Revisar mudanças</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&amp;family=Barlow+Condensed:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#f5a524}a:hover{color:#ffc35c}
+button{font:inherit;cursor:pointer}
+@keyframes oe-spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion: reduce){*{animation-duration:0.01ms !important}}
+</style>
+</helmet>
+<div style="position: relative; width: 1280px; height: 800px; overflow: hidden; display: flex; background: {{t.bg}}; color: {{t.text}}; font-family: Barlow, system-ui, sans-serif; font-size: 14px;">
+  <nav aria-label="{{navLabel}}" style="flex: 0 0 76px; box-sizing: border-box; padding: 16px 0; display: flex; flex-direction: column; align-items: center; gap: 6px; background: {{t.side}}; border-right: 1px solid {{t.line}};">
+    <div style="width: 40px; height: 40px; border-radius: 10px; background: {{t.accent}}; display: flex; align-items: center; justify-content: center; margin-bottom: 14px;">
+      <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1a1206" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h11v9H3z"/><path d="M14 10h4l3 3v3h-7"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>
+    </div>
+    <sc-for list="{{nav}}" as="n" hint-placeholder-count="5">
+      <button type="button" aria-label="{{n.label}}" style="{{n.style}}">
+        <span style="width: 18px; height: 3px; border-radius: 2px; background: {{n.bar}};"></span>
+        <span style="font-family: 'Barlow Condensed', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.06em;">{{n.short}}</span>
+      </button>
+    </sc-for>
+    <div style="flex-grow: 1;"></div>
+    <button type="button" onClick="{{toggle}}" aria-label="{{themeLabel}}" style="width: 48px; height: 48px; border-radius: 10px; border: 1px solid {{t.line}}; background: transparent; color: {{t.muted}}; display: flex; align-items: center; justify-content: center;">
+      <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
+    <button type="button" onClick="{{langToggle}}" aria-label="{{langLabel}}" style="width: 48px; height: 44px; border-radius: 10px; border: 1px solid {{t.line}}; background: transparent; color: {{t.muted}}; font-family: 'Barlow Condensed', sans-serif; font-weight: 600;">{{langShort}}</button>
+  </nav>
+  <div style="flex: 1 1 0; min-width: 0; display: flex; flex-direction: column;">
+    <header aria-label="{{sessionLabel}}" style="flex: 0 0 56px; box-sizing: border-box; padding: 0 32px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid {{t.line}};">
+      <span style="font-size: 12px; color: {{t.muted}}; text-transform: uppercase; letter-spacing: 0.08em;">{{profileSave}}</span>
+      <span style="padding: 2px 8px; border-radius: 8px; border: 1px solid {{t.line}}; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 13px; letter-spacing: 0.06em; color: {{t.muted}};">ETS2</span>
+      <div style="flex-grow: 1;"></div>
+      <button type="button" aria-label="{{pendAria}}" style="{{pendStyle}}">{{pendLabel}}</button>
+    </header>
+    <div style="flex: 1 1 0; min-height: 0; position: relative;">
+
+<main style="position: absolute; inset: 0; box-sizing: border-box; padding: 20px 32px 24px; display: flex; flex-direction: column; gap: 16px;">
+  <div style="display: flex; align-items: flex-end; gap: 12px;">
+    <div style="display: flex; flex-direction: column; gap: 2px;">
+      <h1 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-size: 26px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em;">{{x.title}}</h1>
+      <span style="color: {{t.muted}};">{{subtitle}}</span>
+    </div>
+    <div style="flex-grow: 1;"></div>
+    <button type="button" onClick="{{askDiscardAll}}" style="{{discAllStyle}}">{{x.discardAll}}</button>
+  </div>
+  <div style="flex: 1 1 0; min-height: 0; display: flex; gap: 24px;">
+    <section aria-label="{{x.listLabel}}" style="flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 6px;">
+      <div aria-hidden="true" style="display: grid; grid-template-columns: 120px minmax(0, 1fr) 28px minmax(0, 1fr); gap: 12px; padding: 0 17px; font-size: 11px; color: {{t.muted}}; text-transform: uppercase; letter-spacing: 0.08em;">
+        <span>{{x.colField}}</span><span>{{x.colBefore}}</span><span></span><span>{{x.colAfter}}</span>
+      </div>
+      <div style="flex: 1 1 0; min-height: 0; overflow: auto; padding-right: 6px; display: flex; flex-direction: column;">
+        <sc-for list="{{rows}}" as="r" hint-placeholder-count="12">
+          <div style="{{r.box}}">
+            <div style="{{r.mod}}">
+              <h2 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-size: 18px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;">{{r.modName}}</h2>
+              <span style="min-width: 24px; padding: 1px 8px; border-radius: 10px; background: {{t.panel}}; border: 1px solid {{t.line}}; text-align: center; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-variant-numeric: tabular-nums; color: {{t.muted}};">{{r.modCount}}</span>
+              <div style="flex-grow: 1;"></div>
+              <button type="button" onClick="{{r.discardMod}}" aria-label="{{r.discardModAria}}" style="{{r.ghost}}">{{x.discardModule}}</button>
+            </div>
+            <div style="{{r.set}}">
+              <h3 style="margin: 0; font-size: 15px; font-weight: 600;">{{r.setTitle}}</h3>
+              <div style="flex-grow: 1;"></div>
+              <button type="button" onClick="{{r.discardSet}}" aria-label="{{r.discardSetAria}}" style="{{r.ghost}}"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg>{{x.discard}}</button>
+            </div>
+            <div role="group" aria-label="{{r.lineAria}}" style="{{r.line}}">
+              <span style="color: {{t.muted}};">{{r.label}}</span>
+              <span title="{{r.before}}" style="{{r.bStyle}}">{{r.before}}</span>
+              <span aria-hidden="true" style="color: {{t.muted}}; display: flex; justify-content: center;"><svg aria-hidden="true" width="22" height="10" viewBox="0 0 22 10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 5h19M16 1l4 4-4 4"/></svg></span>
+              <span title="{{r.after}}" style="{{r.aStyle}}">{{r.after}}</span>
+            </div>
+          </div>
+        </sc-for>
+        <div style="{{emptyBox}}">
+          <span style="font-weight: 600;">{{x.emptyTitle}}</span>
+          <span style="color: {{t.muted}}; max-width: 420px; text-align: center;">{{x.emptyMsg}}</span>
+          <button type="button" onClick="{{reset}}" style="{{outline}}">{{x.restore}}</button>
+        </div>
+      </div>
+    </section>
+    <aside aria-label="{{x.summary}}" style="flex: 0 0 300px; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px;">
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;">
+        <div style="padding: 12px 14px; border-radius: 12px; background: {{t.panel}}; border: 1px solid {{t.line}}; display: flex; flex-direction: column; gap: 2px;">
+          <span style="font-size: 11px; color: {{t.muted}}; text-transform: uppercase; letter-spacing: 0.08em;">{{x.statChanges}}</span>
+          <span style="font-family: 'Barlow Condensed', sans-serif; font-size: 34px; font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums;">{{total}}</span>
+        </div>
+        <div style="padding: 12px 14px; border-radius: 12px; background: {{t.panel}}; border: 1px solid {{t.line}}; display: flex; flex-direction: column; gap: 2px;">
+          <span style="font-size: 11px; color: {{t.muted}}; text-transform: uppercase; letter-spacing: 0.08em;">{{x.statModules}}</span>
+          <span style="font-family: 'Barlow Condensed', sans-serif; font-size: 34px; font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums;">{{modTotal}}</span>
+        </div>
+      </div>
+      <div style="padding: 14px; border-radius: 12px; background: {{t.panel}}; border: 1px solid {{t.line}}; display: flex; flex-direction: column; gap: 10px;">
+        <span style="font-size: 11px; color: {{t.muted}}; text-transform: uppercase; letter-spacing: 0.08em;">{{x.safetyTitle}}</span>
+        <div style="display: flex; gap: 10px; color: {{t.muted}};"><span style="color: {{t.success}}; flex: 0 0 auto;"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg></span><span>{{x.safety1}}</span></div>
+        <div style="display: flex; gap: 10px; color: {{t.muted}};"><span style="color: {{t.success}}; flex: 0 0 auto;"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg></span><span>{{x.safety2}}</span></div>
+        <div style="display: flex; gap: 10px;"><span style="color: {{t.danger}}; flex: 0 0 auto;"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18.2v.1"/></svg></span><span>{{x.safety3}}</span></div>
+      </div>
+      <div style="flex-grow: 1;"></div>
+      <button type="button" style="{{outline}}">{{x.back}}</button>
+      <button type="button" aria-disabled="{{applyDisabled}}" style="{{applyStyle}}">{{x.apply}}</button>
+      <span style="font-size: 13px; color: {{t.muted}}; text-align: center;">{{x.applyHint}}</span>
+    </aside>
+  </div>
+  <div role="status" style="{{toastStyle}}">
+    <span>{{x.toastDiscarded}}</span>
+    <button type="button" onClick="{{undo}}" style="min-height: 40px; padding: 0 12px; border-radius: 8px; border: none; background: transparent; color: {{t.accent}}; font-weight: 700;">{{x.undo}}</button>
+  </div>
+</main>
+
+    </div>
+  </div>
+  <div style="{{ovStyle}}">
+    <div role="dialog" aria-modal="true" aria-labelledby="dlg-all" style="width: 460px; box-sizing: border-box; padding: 24px; border-radius: 16px; background: {{t.panel}}; border: 1px solid {{t.line}}; box-shadow: {{t.shadow}}; display: flex; flex-direction: column; gap: 12px;">
+      <h2 id="dlg-all" style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-size: 24px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em;">{{x.allTitle}}</h2>
+      <span style="color: {{t.muted}};">{{x.allMsg}}</span>
+      <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 8px;">
+        <button type="button" onClick="{{cancelAll}}" style="{{outlineFocus}}">{{x.cancel}}</button>
+        <button type="button" onClick="{{confirmAll}}" style="{{danger}}">{{x.allConfirm}}</button>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":true},"en":{"editor":"boolean","default":false},"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+
+  pal(dark) {
+    return dark
+      ? { bg:'#121417', side:'#0c0e10', panel:'#1a1d21', line:'#2a2f35', text:'#eef0f2', muted:'#9aa3ad', accent:'#f5a524', sel:'#2a2414',
+          danger:'#f87171', onDanger:'#1a0606', dangerBg:'rgba(248,113,113,0.12)', success:'#4ade80', successBg:'rgba(74,222,128,0.12)',
+          dim:'rgba(0,0,0,0.62)', shadow:'0 24px 64px rgba(0,0,0,0.55)' }
+      : { bg:'#f4f2ee', side:'#ebe7df', panel:'#ffffff', line:'#d9d3c7', text:'#1b1d20', muted:'#5f6670', accent:'#b86e00', sel:'#fbecd2',
+          danger:'#b42318', onDanger:'#ffffff', dangerBg:'rgba(180,35,24,0.08)', success:'#157f3b', successBg:'rgba(21,127,59,0.10)',
+          dim:'rgba(27,29,32,0.50)', shadow:'0 24px 64px rgba(27,29,32,0.28)' };
+  }
+  base(t) { return `display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 22px;border-radius:10px;font-weight:700;letter-spacing:0.03em;`; }
+  bPrimary(t) { return this.base(t) + `border:none;background:${t.accent};color:#1a1206;`; }
+  bDanger(t)  { return this.base(t) + `border:none;background:${t.danger};color:${t.onDanger};`; }
+  bOutline(t) { return this.base(t) + `border:1px solid ${t.line};background:transparent;color:${t.text};font-weight:600;`; }
+  bGhost(t, danger) { return `display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 14px;border-radius:10px;border:1px solid transparent;background:transparent;font-weight:600;color:${danger ? t.danger : t.muted};`; }
+  plural(lang, n, one, many) { return n === 1 ? one : many.replace('{0}', n); }
+  cultura(lang) { return lang === 'pt' ? 'pt-BR' : 'en-US'; }
+  // Lateral + barra de sessão simplificadas (o desenho oficial é do UX-1, design/shell/).
+  shell(t, lang, dark, navSel, pendCount, pendMode) {
+    const sh = lang === 'pt'
+      ? { navLabel:'Módulos', nav:['Fretes','Frota','Perfil','Empresa','Mapa'], short:['FRETES','FROTA','PERFIL','EMPRESA','MAPA'], session:'Sessão', profile:'Perfil 1 · Save 4',
+          themeLight:'Usar tema claro', themeDark:'Usar tema escuro', langShort:'PT', langLabel:'Idioma: português. Mudar para inglês', review:'Revisar',
+          pendAria:(n) => n > 0 ? `Revisar mudanças pendentes: ${n}` : 'Revisar mudanças: nenhuma pendente' }
+      : { navLabel:'Modules', nav:['Jobs','Fleet','Profile','Company','Map'], short:['JOBS','FLEET','PROFILE','COMPANY','MAP'], session:'Session', profile:'Profile 1 · Save 4',
+          themeLight:'Use light theme', themeDark:'Use dark theme', langShort:'EN', langLabel:'Language: English. Switch to Portuguese', review:'Review',
+          pendAria:(n) => n > 0 ? `Review pending changes: ${n}` : 'Review changes: none pending' };
+    const nav = sh.nav.map((l, i) => ({ label:l, short:sh.short[i], bar: i === navSel ? t.accent : 'transparent',
+      style:`width:60px;min-height:52px;border-radius:10px;border:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:${i===navSel?t.panel:'transparent'};color:${i===navSel?t.text:t.muted};` }));
+    const cur = pendMode === 'current';
+    const pendStyle = `min-height:44px;padding:0 16px;border-radius:10px;font-weight:600;border:1px solid ${cur ? t.accent : t.line};background:${cur ? t.sel : 'transparent'};color:${pendCount > 0 ? t.text : t.muted};`;
+    return { nav, navLabel: sh.navLabel, sessionLabel: sh.session, profileSave: sh.profile, themeLabel: dark ? sh.themeLight : sh.themeDark,
+      langShort: sh.langShort, langLabel: sh.langLabel, pendStyle, pendAria: sh.pendAria(pendCount),
+      pendLabel: pendCount > 0 ? `${sh.review} (${pendCount})` : sh.review,
+      toggle: () => this.setState({ dark: !dark }), langToggle: () => this.setState({ lang: lang === 'pt' ? 'en' : 'pt' }) };
+  }
+
+  constructor(p) { super(p); this.state = { dark: null, lang: null, items: this.seed(), undoItems: null, askAll: false }; }
+  seed() {
+    return [
+      { id:'a', mod:'jobs', title:['Sofia','Beograd'], lines:[
+        { k:'dest', before:'LogNStick · Istanbul', after:'Tradeaux · Beograd' },
+        { k:'cargo', before:'Concrete beams', after:'Machinery' },
+        { k:'km', before:569, after:394 } ] },
+      { id:'b', mod:'jobs', title:['Wien','Praha'], lines:[
+        { k:'cargo', before:'Machinery', after:'Electronics' },
+        { k:'trailer', before:'Lowboy', after:'Box trailer' } ] },
+      { id:'c', mod:'profile', title:null, lines:[ { k:'money', before:1250000, after:2000000 } ] }
+    ];
+  }
+  renderVals() {
+    const dark = this.state.dark ?? (this.props.dark ?? true);
+    const lang = this.state.lang ?? (this.props.en ? 'en' : 'pt');
+    const t = this.pal(dark);
+    const items = this.state.items;
+    const loc = this.cultura(lang);
+    const X = {
+      pt: { title:'Revisar mudanças', listLabel:'Mudanças pendentes', colField:'Campo', colBefore:'Antes', colAfter:'Depois',
+        discardAll:'Descartar tudo', discardModule:'Descartar módulo', discard:'Descartar', summary:'Resumo', statChanges:'Mudanças', statModules:'Módulos',
+        safetyTitle:'Antes de gravar', safety1:'Um backup do save é criado ao lado dele.', safety2:'Todos os módulos são gravados de uma vez.', safety3:'Feche o jogo antes de aplicar.',
+        back:'Continuar editando', apply:'Aplicar mudanças', applyHint:'Nada é gravado sem sua confirmação.',
+        toastDiscarded:'Mudança descartada.', undo:'Desfazer',
+        emptyTitle:'Nada para revisar', emptyMsg:'Você descartou todas as mudanças. O save não foi alterado.', restore:'Restaurar exemplo (só no protótipo)',
+        allTitle:'Descartar todas as mudanças?', allMsg:'Todas as mudanças pendentes serão perdidas. O save não foi alterado.', cancel:'Cancelar', allConfirm:'Descartar tudo',
+        mods:{ jobs:'Fretes', profile:'Perfil' },
+        labels:{ dest:'Destino', cargo:'Carga', km:'Distância', trailer:'Reboque', money:'Dinheiro' },
+        jobTitle:(a, b) => `Frete ${a} → ${b}`, moneyTitle:'Dinheiro do perfil',
+        ariaDiscard:(s) => `Descartar mudança: ${s}`, ariaMod:(m) => `Descartar todas as mudanças de ${m}`,
+        ariaLine:(l, b, a) => `${l}: antes ${b}, depois ${a}`,
+        sub:(n, m) => `${n === 1 ? '1 mudança' : n + ' mudanças'} em ${m === 1 ? '1 módulo' : m + ' módulos'}`, subNone:'Nenhuma mudança pendente' },
+      en: { title:'Review changes', listLabel:'Pending changes', colField:'Field', colBefore:'Before', colAfter:'After',
+        discardAll:'Discard all', discardModule:'Discard module', discard:'Discard', summary:'Summary', statChanges:'Changes', statModules:'Modules',
+        safetyTitle:'Before writing', safety1:'A backup of the save is created next to it.', safety2:'All modules are written at once.', safety3:'Close the game before applying.',
+        back:'Keep editing', apply:'Apply changes', applyHint:'Nothing is written without your confirmation.',
+        toastDiscarded:'Change discarded.', undo:'Undo',
+        emptyTitle:'Nothing to review', emptyMsg:'You discarded every change. Your save was not changed.', restore:'Restore sample (prototype only)',
+        allTitle:'Discard all changes?', allMsg:'All pending changes will be lost. Your save has not been changed.', cancel:'Cancel', allConfirm:'Discard all',
+        mods:{ jobs:'Jobs', profile:'Profile' },
+        labels:{ dest:'Destination', cargo:'Cargo', km:'Distance', trailer:'Trailer', money:'Money' },
+        jobTitle:(a, b) => `Job ${a} → ${b}`, moneyTitle:'Profile money',
+        ariaDiscard:(s) => `Discard change: ${s}`, ariaMod:(m) => `Discard all changes in ${m}`,
+        ariaLine:(l, b, a) => `${l}: before ${b}, after ${a}`,
+        sub:(n, m) => `${n === 1 ? '1 change' : n + ' changes'} in ${m === 1 ? '1 module' : m + ' modules'}`, subNone:'No pending changes' }
+    }[lang];
+    const fmt = (ln) => {
+      if (ln.k === 'km') return [ln.before.toLocaleString(loc) + ' km', ln.after.toLocaleString(loc) + ' km'];
+      if (ln.k === 'money') { const m = (v) => lang === 'pt' ? v.toLocaleString(loc) + ' €' : '€' + v.toLocaleString(loc); return [m(ln.before), m(ln.after)]; }
+      return [ln.before, ln.after];
+    };
+    const ghost = this.bGhost(t, false);
+    const mods = ['jobs', 'profile'].filter(m => items.some(i => i.mod === m));
+    const setT = (it) => it.mod === 'profile' ? X.moneyTitle : X.jobTitle(it.title[0], it.title[1]);
+    const rows = [];
+    const none = 'display:none;';
+    const dismiss = () => setTimeout(() => this.setState({ undoItems: null }), 6000);
+    const remove = (pred) => () => { this.setState({ undoItems: items, items: items.filter(i => !pred(i)) }); dismiss(); };
+    mods.forEach((m, mi) => {
+      const its = items.filter(i => i.mod === m);
+      const modName = X.mods[m];
+      rows.push({ box:`margin:${mi === 0 ? 0 : 14}px 0 8px;`, mod:'display:flex;align-items:center;gap:10px;', set:none, line:none,
+        modName, modCount: its.length, discardMod: remove(i => i.mod === m), discardModAria: X.ariaMod(modName), ghost,
+        setTitle:'', discardSet:()=>{}, discardSetAria:'', label:'', before:'', after:'', bStyle:'', aStyle:'', lineAria:'' });
+      its.forEach((it) => {
+        const title = setT(it);
+        rows.push({ box:'', mod:none, set:`display:flex;align-items:center;gap:8px;box-sizing:border-box;min-height:52px;padding:6px 8px 6px 16px;border:1px solid ${t.line};border-radius:12px 12px 0 0;background:${t.panel};`, line:none,
+          modName:'', modCount:'', discardMod:()=>{}, discardModAria:'', ghost,
+          setTitle:title, discardSet: remove(i => i.id === it.id), discardSetAria: X.ariaDiscard(title), label:'', before:'', after:'', bStyle:'', aStyle:'', lineAria:'' });
+        it.lines.forEach((ln, li) => {
+          const last = li === it.lines.length - 1;
+          const [b, a] = fmt(ln);
+          const num = ln.k === 'km' || ln.k === 'money';
+          const numCss = num ? "font-family:'Barlow Condensed',sans-serif;font-size:19px;font-variant-numeric:tabular-nums;" : '';
+          const ell = 'overflow:hidden;text-overflow:ellipsis;white-space:nowrap;';
+          rows.push({ box: last ? 'margin-bottom:12px;' : '', mod:none, set:none,
+            line:`display:grid;grid-template-columns:120px minmax(0,1fr) 28px minmax(0,1fr);gap:12px;align-items:center;box-sizing:border-box;min-height:48px;padding:6px 16px;margin-top:-1px;border:1px solid ${t.line};border-radius:${last ? '0 0 12px 12px' : '0'};background:${t.panel};`,
+            modName:'', modCount:'', discardMod:()=>{}, discardModAria:'', ghost, setTitle:'', discardSet:()=>{}, discardSetAria:'',
+            label: X.labels[ln.k], before: b || '—', after: a,
+            bStyle: ell + numCss + `color:${t.muted};text-decoration:line-through;`, aStyle: ell + numCss + 'font-weight:600;',
+            lineAria: X.ariaLine(X.labels[ln.k], b, a) });
+        });
+      });
+    });
+    const total = items.length;
+    const empty = total === 0;
+    const askAll = this.state.askAll;
+    const toastOn = this.state.undoItems !== null;
+    return {
+      ...this.shell(t, lang, dark, -1, total, 'current'),
+      t, x: X, rows, total, modTotal: mods.length, subtitle: empty ? X.subNone : X.sub(total, mods.length),
+      outline: this.bOutline(t), outlineFocus: this.bOutline(t) + `outline:2px solid ${t.accent};outline-offset:2px;`, danger: this.bDanger(t),
+      discAllStyle: this.bGhost(t, true) + (empty ? 'opacity:0.4;' : ''),
+      applyStyle: this.bDanger(t) + 'width:100%;min-height:52px;' + (empty ? 'opacity:0.4;cursor:not-allowed;' : ''), applyDisabled: empty ? 'true' : 'false',
+      emptyBox: `display:${empty ? 'flex' : 'none'};flex-direction:column;align-items:center;gap:10px;padding:48px 24px;border:1px dashed ${t.line};border-radius:12px;`,
+      toastStyle: `display:${toastOn ? 'flex' : 'none'};align-items:center;gap:8px;position:absolute;left:50%;bottom:20px;transform:translateX(-50%);padding:4px 8px 4px 16px;border-radius:12px;background:${t.panel};border:1px solid ${t.line};box-shadow:${t.shadow};`,
+      ovStyle: `position:absolute;inset:0;background:${t.dim};display:${askAll ? 'flex' : 'none'};align-items:center;justify-content:center;`,
+      askDiscardAll: () => { if (!empty) this.setState({ askAll: true }); },
+      cancelAll: () => this.setState({ askAll: false }),
+      confirmAll: () => { this.setState({ undoItems: items, items: [], askAll: false }); dismiss(); },
+      undo: () => this.setState({ items: this.state.undoItems || items, undoItems: null }),
+      reset: () => this.setState({ items: this.seed(), undoItems: null })
+    };
+  }
+}
+</script>
+</body>
+</html>

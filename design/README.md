@@ -31,6 +31,9 @@ não direto no navegador.
 | Pasta | Status | Canvas |
 | --- | --- | --- |
 | [direcao-visual](direcao-visual/README.md) | aprovado (A+C) | [link](https://claude.ai/artifact/EBn8WvYp5z8dgDmK8rNmQV) |
+| [shell](shell/README.md) | aprovado | [link](https://claude.ai/artifact/YSdcaqn7AyAqvc6wVuBSYN) |
+| [review-apply](review-apply/README.md) | aprovado | [link](https://claude.ai/artifact/Sc4DPk3qimRg3ivvk58d5z) |
+| [controles](controles/README.md) | aprovado | [link](https://claude.ai/artifact/AHbpXwyEujo1i82j8AZEED) |
 
 ## Regras
 - Mudou a tela? Atualize o desenho **antes**, no mesmo PR.

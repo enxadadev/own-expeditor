@@ -1,0 +1,626 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Galeria de controles — Own Expeditor</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&amp;family=Barlow+Condensed:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+button{font:inherit;cursor:pointer}
+@keyframes oe-spin{to{transform:rotate(360deg)}}
+@keyframes oe-slide{0%{margin-left:-35%}100%{margin-left:100%}}
+</style>
+</helmet>
+<div style="min-height: 2400px; box-sizing: border-box; background: {{ui.bg}}; color: {{ui.text}}; font-family: Barlow, system-ui, sans-serif; font-size: 14px; padding: 20px 24px 40px; display: flex; flex-direction: column; gap: 16px;">
+
+  <!-- barra da galeria (Debug) -->
+  <header style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding-bottom: 12px; border-bottom: 1px solid {{ui.line}};">
+    <div style="display: flex; flex-direction: column; margin-right: 8px;">
+      <span style="font-size: 12px; color: {{ui.muted}}; text-transform: uppercase; letter-spacing: 0.08em;">{{s.eyebrow}}</span>
+      <h1 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-size: 26px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em;">{{s.title}}</h1>
+    </div>
+    <div style="flex-grow: 1;"></div>
+    <div role="group" aria-label="{{s.themeLabel}}" style="display: flex; gap: 6px;">
+      <sc-for list="{{modes}}" as="m" hint-placeholder-count="3">
+        <button type="button" onClick="{{m.pick}}" aria-pressed="{{m.on}}" style="{{m.style}}">{{m.label}}</button>
+      </sc-for>
+    </div>
+    <button type="button" onClick="{{toggleLong}}" aria-pressed="{{longOn}}" style="{{longStyle}}">{{s.long}}</button>
+    <button type="button" onClick="{{toggleHit}}" aria-pressed="{{hitOn}}" style="{{hitStyleBtn}}">{{s.hit}}</button>
+    <button type="button" onClick="{{toggleLang}}" aria-label="{{s.langLabel}}" style="min-width: 48px; min-height: 44px; padding: 0 12px; border-radius: 10px; border: 1px solid {{ui.border}}; background: transparent; color: {{ui.text}}; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 15px;">{{s.lang}}</button>
+  </header>
+
+  <div style="display: grid; grid-template-columns: {{cols}}; gap: 16px; align-items: start;">
+    <sc-for list="{{panels}}" as="p" hint-placeholder-count="2">
+      <div style="{{p.frame}}">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-family: 'Barlow Condensed', sans-serif; font-size: 20px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: {{p.t.accentText}};">{{p.name}}</span>
+          <span style="flex-grow: 1; height: 1px; background: {{p.t.line}};"></span>
+        </div>
+
+        <!-- 1 · Botões -->
+        <section aria-label="{{p.s.secButtons}}" style="{{p.st.sec}}">
+          <div style="{{p.st.secHead}}"><h2 style="{{p.st.h2}}">{{p.s.secButtons}}</h2><span style="{{p.st.desc}}">{{p.s.descButtons}}</span></div>
+          <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px 8px; align-items: start;">
+            <sc-for list="{{p.btns}}" as="b" hint-placeholder-count="15">
+              <div style="display: flex; flex-direction: column; align-items: stretch; gap: 4px;">
+                <button type="button" tabindex="-1" style="{{b.style}}">{{b.label}}</button>
+                <span style="{{p.st.cap2}}">{{b.cap}}</span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px;">
+            <button type="button" aria-label="{{p.s.refresh}}" style="{{p.icon40}}"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8M21 3v5h-5"/></svg></button>
+            <button type="button" aria-label="{{p.s.refresh}}" style="{{p.icon44}}"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8M21 3v5h-5"/></svg></button>
+            <span style="{{p.st.cap2}}">{{p.s.iconNote}}</span>
+            <button type="button" tabindex="-1" style="{{p.longBtn}}">{{p.s.longBtn}}</button>
+          </div>
+        </section>
+
+        <!-- 2 · PageHeader -->
+        <section aria-label="PageHeader" style="{{p.st.sec}}">
+          <div style="{{p.st.secHead}}"><h2 style="{{p.st.h2}}">PageHeader</h2><span style="{{p.st.desc}}">{{p.s.descHeader}}</span></div>
+          <div style="{{p.st.box}}">
+            <div style="display: flex; align-items: flex-end; gap: 10px; min-width: 0;">
+              <div style="display: flex; flex-direction: column; min-width: 0;">
+                <span style="{{p.st.capUp}}">{{p.s.eyebrow}}</span>
+                <h3 style="{{p.st.title}}">{{p.s.pageTitle}}</h3>
+              </div>
+              <div style="flex-grow: 1;"></div>
+              <span style="{{p.st.metricMuted}}" aria-label="{{p.s.countA11y}}">{{p.s.count}}</span>
+              <button type="button" tabindex="-1" style="{{p.reviewBtn}}">{{p.s.review}}<span style="{{p.badgeCount}}">3</span></button>
+            </div>
+          </div>
+          <div style="{{p.st.box}}">
+            <div style="display: flex; align-items: flex-end; gap: 10px; min-width: 0;">
+              <div style="display: flex; flex-direction: column; min-width: 0; flex: 1 1 auto;">
+                <span style="{{p.st.capUp}} white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{p.s.eyebrowLong}}</span>
+                <h3 style="{{p.st.title}} white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{p.s.titleLong}}</h3>
+              </div>
+              <span style="{{p.st.metricMuted}}">128</span>
+            </div>
+            <span style="{{p.st.cap2}}">{{p.s.headerLongNote}}</span>
+          </div>
+        </section>
+
+        <!-- 3 · SearchBox -->
+        <section aria-label="SearchBox" style="{{p.st.sec}}">
+          <div style="{{p.st.secHead}}"><h2 style="{{p.st.h2}}">SearchBox</h2><span style="{{p.st.desc}}">{{p.s.descSearch}}</span></div>
+          <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;">
+            <sc-for list="{{p.searches}}" as="q" hint-placeholder-count="5">
+              <div style="display: flex; flex-direction: column; gap: 4px;">
+                <div style="{{q.wrap}}">
+                  <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="{{p.t.muted}}" stroke-width="2" stroke-linecap="round" style="flex: 0 0 auto;"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+                  <span style="{{q.txt}}">{{q.text}}</span>
+                  <span aria-hidden="true" style="{{q.spin}}"></span>
+                  <span aria-hidden="true" style="{{q.clear}}">✕</span>
+                </div>
+                <span style="{{p.st.cap2}}">{{q.cap}}</span>
+              </div>
+            </sc-for>
+          </div>
+        </section>
+
+        <!-- 4 · SearchablePicker -->
+        <section aria-label="SearchablePicker" style="{{p.st.sec}}">
+          <div style="{{p.st.secHead}}"><h2 style="{{p.st.h2}}">SearchablePicker</h2><span style="{{p.st.desc}}">{{p.s.descPicker}}</span></div>
+          <div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 14px; align-items: start;">
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+              <sc-for list="{{p.pickers}}" as="k" hint-placeholder-count="5">
+                <div style="display: flex; flex-direction: column; gap: 4px;">
+                  <div style="{{k.wrap}}">
+                    <span style="display: flex; flex-direction: column; min-width: 0; flex: 1 1 auto; gap: 1px;">
+                      <span style="{{p.st.capUp}}">{{k.label}}</span>
+                      <span style="{{k.val}}">{{k.value}}</span>
+                    </span>
+                    <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="{{p.t.muted}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex: 0 0 auto;"><path d="M6 9l6 6 6-6"/></svg>
+                  </div>
+                  <span style="{{k.noteStyle}}">{{k.note}}</span>
+                </div>
+              </sc-for>
+            </div>
+            <div style="{{p.popup}}">
+              <div style="{{p.st.searchFocus}}">
+                <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="{{p.t.muted}}" stroke-width="2" stroke-linecap="round" style="flex: 0 0 auto;"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+                <span style="flex: 1 1 auto; font-size: 14px;">{{p.s.pickQuery}}</span>
+                <span aria-hidden="true" style="{{p.st.clearBtn}}">✕</span>
+              </div>
+              <span style="{{p.st.cap2}} padding: 0 4px;">{{p.s.pickCount}}</span>
+              <sc-for list="{{p.options}}" as="o" hint-placeholder-count="5">
+                <div style="{{o.style}}">
+                  <span style="display: flex; flex-direction: column; min-width: 0; flex: 1 1 auto;">
+                    <span style="{{o.p1}}">{{o.primary}}</span>
+                    <span style="{{p.st.sub}}">{{o.secondary}}</span>
+                  </span>
+                  <span style="{{o.tag}}">{{p.s.mod}}</span>
+                  <span aria-hidden="true" style="{{o.check}}">✓</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </section>
+
+        <!-- 5 · RouteOfferItem -->
+        <section aria-label="RouteOfferItem" style="{{p.st.sec}}">
+          <div style="{{p.st.secHead}}"><h2 style="{{p.st.h2}}">RouteOfferItem</h2><span style="{{p.st.desc}}">{{p.s.descOffer}}</span></div>
+          <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;">
+            <sc-for list="{{p.offers}}" as="o" hint-placeholder-count="6">
+              <div style="display: flex; flex-direction: column; gap: 4px;">
+                <div style="{{o.style}}">
+                  <div style="display: flex; align-items: center; gap: 8px; width: 100%; min-width: 0;">
+                    <span style="font-weight: 600; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 0 1 auto; max-width: 38%;">{{o.from}}</span>
+                    <svg aria-hidden="true" width="22" height="8" viewBox="0 0 26 8" fill="none" stroke="{{p.t.muted}}" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="2 3" style="flex: 0 0 auto;"><path d="M1 4h24"/></svg>
+                    <span style="font-weight: 600; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 0 1 auto; max-width: 38%;">{{o.to}}</span>
+                    <span style="{{o.km}}">{{o.kmText}}</span>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 6px; width: 100%; min-width: 0;">
+                    <span style="{{p.st.sub}} flex: 1 1 auto; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{o.line2}}</span>
+                    <span style="{{o.tag}}">{{o.tagText}}</span>
+                  </div>
+                </div>
+                <span style="{{p.st.cap2}}">{{o.cap}}</span>
+              </div>
+            </sc-for>
+          </div>
+        </section>
+
+        <!-- 6 · RouteMap -->
+        <section aria-label="RouteMap" style="{{p.st.sec}}">
+          <div style="{{p.st.secHead}}"><h2 style="{{p.st.h2}}">RouteMap</h2><span style="{{p.st.desc}}">{{p.s.descMap}}</span></div>
+          <sc-for list="{{p.maps}}" as="m" hint-placeholder-count="2">
+            <div style="display: flex; flex-direction: column; gap: 4px;">
+              <div style="position: relative; border-radius: 16px; overflow: hidden; background: {{p.t.map}}; border: 1px solid {{p.t.line}};">
+                <svg role="img" aria-label="{{m.a11y}}" width="100%" height="{{m.h}}" viewBox="0 0 800 {{m.vh}}" preserveAspectRatio="xMidYMid meet">
+                  <g stroke="{{p.t.mapGrid}}" stroke-width="1"><path d="{{m.grid}}"/></g>
+                  <sc-for list="{{m.cities}}" as="c" hint-placeholder-count="8">
+                    <circle cx="{{c.x}}" cy="{{c.y}}" r="3" fill="{{p.t.mapCityDot}}"/>
+                    <text x="{{c.lx}}" y="{{c.ly}}" fill="{{p.t.mapCityText}}" font-size="13" font-family="Barlow, sans-serif">{{c.name}}</text>
+                  </sc-for>
+                  <path d="{{m.d}}" fill="none" stroke="{{m.glow}}" stroke-width="12" stroke-linecap="round"/>
+                  <path d="{{m.d}}" fill="none" stroke="{{m.line}}" stroke-width="4" stroke-linecap="round" stroke-dasharray="{{m.dash}}"/>
+                  <circle cx="{{m.ax}}" cy="{{m.ay}}" r="{{m.ar}}" fill="{{p.t.map}}" stroke="{{m.node}}" stroke-width="4"/>
+                  <circle cx="{{m.bx}}" cy="{{m.by}}" r="{{m.br}}" fill="{{m.node}}"/>
+                  <text x="{{m.ax}}" y="{{m.aly}}" text-anchor="middle" fill="{{p.t.text}}" font-size="15" font-weight="600" font-family="Barlow, sans-serif">{{m.aLabel}}</text>
+                  <text x="{{m.bx}}" y="{{m.bly}}" text-anchor="middle" fill="{{p.t.text}}" font-size="15" font-weight="600" font-family="Barlow, sans-serif">{{m.bLabel}}</text>
+                </svg>
+                <div style="{{m.chipStyle}}">
+                  <span style="{{p.st.capUp}}">{{m.chipCap}}</span>
+                  <span style="font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{m.chip}}</span>
+                </div>
+                <div style="{{m.kmStyle}}">
+                  <span style="font-family: 'Barlow Condensed', sans-serif; font-size: 34px; font-weight: 700; font-variant-numeric: tabular-nums; color: {{p.t.accentText}};">{{m.km}}</span>
+                  <span style="color: {{p.t.muted}};">km</span>
+                </div>
+              </div>
+              <span style="{{p.st.cap2}}">{{m.cap}}</span>
+            </div>
+          </sc-for>
+        </section>
+
+        <!-- 7 · StatTile -->
+        <section aria-label="StatTile" style="{{p.st.sec}}">
+          <div style="{{p.st.secHead}}"><h2 style="{{p.st.h2}}">StatTile</h2><span style="{{p.st.desc}}">{{p.s.descStat}}</span></div>
+          <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px;">
+            <sc-for list="{{p.stats}}" as="st" hint-placeholder-count="6">
+              <div style="display: flex; flex-direction: column; gap: 4px;">
+                <div style="{{p.st.tile}}">
+                  <span style="{{p.st.capUp}}">{{st.label}}</span>
+                  <span style="{{st.val}}">{{st.value}}</span>
+                </div>
+                <span style="{{p.st.cap2}}">{{st.cap}}</span>
+              </div>
+            </sc-for>
+          </div>
+        </section>
+
+        <!-- 8 · SectionCard -->
+        <section aria-label="SectionCard" style="{{p.st.sec}}">
+          <div style="{{p.st.secHead}}"><h2 style="{{p.st.h2}}">SectionCard</h2><span style="{{p.st.desc}}">{{p.s.descCard}}</span></div>
+          <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; align-items: start;">
+            <div style="{{p.st.card}}">
+              <div style="display: flex; align-items: center; gap: 8px; min-width: 0;">
+                <h3 style="{{p.st.h3}} flex: 1 1 auto; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{p.s.cardTitle}}</h3>
+                <button type="button" tabindex="-1" style="{{p.smallNeutral}}">{{p.s.edit}}</button>
+              </div>
+              <span style="{{p.st.sub}}">{{p.s.cardDesc}}</span>
+              <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 4px;">
+                <div style="{{p.st.field}}"><span style="{{p.st.capUp}}">{{p.s.fCargo}}</span><span style="font-weight: 600;">{{p.s.cargo1}}</span></div>
+                <div style="{{p.st.field}}"><span style="{{p.st.capUp}}">{{p.s.fTrailer}}</span><span style="font-weight: 600;">{{p.s.trailer1}}</span></div>
+              </div>
+            </div>
+            <div style="{{p.st.card}}">
+              <h3 style="{{p.st.h3}} white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{p.s.cardTitleLong}}</h3>
+              <div style="{{p.st.emptyInline}}">{{p.s.cardEmpty}}</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 9 · ValueChange -->
+        <section aria-label="ValueChange" style="{{p.st.sec}}">
+          <div style="{{p.st.secHead}}"><h2 style="{{p.st.h2}}">ValueChange</h2><span style="{{p.st.desc}}">{{p.s.descChange}}</span></div>
+          <div style="{{p.st.card}}">
+            <sc-for list="{{p.changes}}" as="v" hint-placeholder-count="5">
+              <div style="{{v.row}}">
+                <span style="{{p.st.capUp}} flex: 0 0 120px;">{{v.label}}</span>
+                <span role="img" aria-label="{{v.a11y}}" style="{{v.wrap}}">
+                  <span style="{{v.bStyle}}">{{v.before}}</span>
+                  <svg aria-hidden="true" width="18" height="12" viewBox="0 0 18 12" fill="none" stroke="{{p.t.muted}}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="{{v.arrow}}"><path d="M1 6h15M11 1.5L16.5 6 11 10.5"/></svg>
+                  <span style="{{v.aStyle}}">{{v.after}}</span>
+                </span>
+                <span style="{{p.st.cap2}} flex: 0 0 auto;">{{v.cap}}</span>
+              </div>
+            </sc-for>
+          </div>
+        </section>
+
+        <!-- 10 · DiffList -->
+        <section aria-label="DiffList" style="{{p.st.sec}}">
+          <div style="{{p.st.secHead}}"><h2 style="{{p.st.h2}}">DiffList</h2><span style="{{p.st.desc}}">{{p.s.descDiff}}</span></div>
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <sc-for list="{{p.diff}}" as="r" hint-placeholder-count="8">
+              <div style="{{r.headStyle}}">
+                <span style="{{p.st.capUp}} flex: 0 0 auto;">{{r.module}}</span>
+                <h3 style="{{p.st.h3}} flex: 1 1 auto; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{r.title}}</h3>
+                <button type="button" tabindex="-1" style="{{p.smallNeutral}}">{{p.s.discard}}</button>
+              </div>
+              <div style="{{r.lineStyle}}">
+                <span style="{{p.st.sub}} flex: 0 0 130px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{r.label}}</span>
+                <span role="img" aria-label="{{r.a11y}}" style="{{r.wrap}}">
+                  <span style="{{r.bStyle}}">{{r.before}}</span>
+                  <svg aria-hidden="true" width="18" height="12" viewBox="0 0 18 12" fill="none" stroke="{{p.t.muted}}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex: 0 0 auto;"><path d="M1 6h15M11 1.5L16.5 6 11 10.5"/></svg>
+                  <span style="{{r.aStyle}}">{{r.after}}</span>
+                </span>
+              </div>
+            </sc-for>
+          </div>
+        </section>
+
+        <!-- 11 · PendingBadge -->
+        <section aria-label="PendingBadge" style="{{p.st.sec}}">
+          <div style="{{p.st.secHead}}"><h2 style="{{p.st.h2}}">PendingBadge</h2><span style="{{p.st.desc}}">{{p.s.descBadge}}</span></div>
+          <div style="display: flex; flex-wrap: wrap; align-items: flex-start; gap: 16px;">
+            <sc-for list="{{p.badges}}" as="g" hint-placeholder-count="6">
+              <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px;">
+                <span role="img" aria-label="{{g.a11y}}" style="{{g.style}}">{{g.text}}</span>
+                <span style="{{p.st.cap2}}">{{g.cap}}</span>
+              </div>
+            </sc-for>
+            <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px;">
+              <button type="button" tabindex="-1" style="{{p.reviewBtn}}">{{p.s.review}}<span style="{{p.badgeCount}}">3</span></button>
+              <span style="{{p.st.cap2}}">{{p.s.badgeInBtn}}</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- 12 · EmptyState -->
+        <section aria-label="EmptyState" style="{{p.st.sec}}">
+          <div style="{{p.st.secHead}}"><h2 style="{{p.st.h2}}">EmptyState</h2><span style="{{p.st.desc}}">{{p.s.descEmpty}}</span></div>
+          <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; align-items: stretch;">
+            <sc-for list="{{p.empties}}" as="e" hint-placeholder-count="2">
+              <div style="{{p.st.empty}}">
+                <span aria-hidden="true" style="{{p.st.emptyIcon}}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="{{e.icon}}"/></svg></span>
+                <span style="font-size: 16px; font-weight: 600; text-align: center;">{{e.title}}</span>
+                <span style="{{p.st.sub}} text-align: center; max-width: 250px; line-height: 1.4;">{{e.msg}}</span>
+                <button type="button" tabindex="-1" style="{{p.neutralBtn}}">{{e.action}}</button>
+              </div>
+            </sc-for>
+          </div>
+        </section>
+
+        <!-- 13 · ErrorBanner -->
+        <section aria-label="ErrorBanner" style="{{p.st.sec}}">
+          <div style="{{p.st.secHead}}"><h2 style="{{p.st.h2}}">ErrorBanner</h2><span style="{{p.st.desc}}">{{p.s.descBanner}}</span></div>
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <sc-for list="{{p.banners}}" as="b" hint-placeholder-count="4">
+              <div role="alert" style="{{b.style}}">
+                <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="{{b.fg}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex: 0 0 auto; margin-top: 1px;"><path d="{{b.icon}}"/></svg>
+                <span style="display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1 1 auto;">
+                  <span style="font-weight: 600;">{{b.title}}</span>
+                  <span style="font-size: 13px; line-height: 1.4;">{{b.msg}}</span>
+                  <span style="{{b.detailStyle}}">{{b.detail}}</span>
+                </span>
+                <button type="button" tabindex="-1" style="{{b.actStyle}}">{{b.action}}</button>
+                <span aria-hidden="true" style="{{b.xStyle}}">✕</span>
+              </div>
+            </sc-for>
+          </div>
+        </section>
+
+        <!-- 14 · LoadingPanel -->
+        <section aria-label="LoadingPanel" style="{{p.st.sec}}">
+          <div style="{{p.st.secHead}}"><h2 style="{{p.st.h2}}">LoadingPanel</h2><span style="{{p.st.desc}}">{{p.s.descLoading}}</span></div>
+          <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;">
+            <div style="{{p.st.empty}}" role="status" aria-label="{{p.s.reading}}">
+              <span aria-hidden="true" style="{{p.spinner}}"></span>
+              <span style="font-size: 15px; font-weight: 600;">{{p.s.reading}}</span>
+              <span style="{{p.st.cap2}}">{{p.s.loadIndet}}</span>
+            </div>
+            <div style="{{p.st.empty}}" role="status" aria-label="{{p.s.reading}}">
+              <span style="font-size: 15px; font-weight: 600;">{{p.s.reading}}</span>
+              <div style="width: 100%; max-width: 240px; height: 6px; border-radius: 3px; background: {{p.t.line}}; overflow: hidden;"><div style="width: 62%; height: 100%; background: {{p.t.accent}}; border-radius: 3px;"></div></div>
+              <span style="{{p.st.sub}} font-variant-numeric: tabular-nums;">{{p.s.loadDetail}}</span>
+              <button type="button" tabindex="-1" style="{{p.neutralBtn}}">{{p.s.cancel}}</button>
+              <span style="{{p.st.cap2}}">{{p.s.loadDet}}</span>
+            </div>
+          </div>
+        </section>
+      </div>
+    </sc-for>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":true},"$preview":{"width":1280,"height":2400}}'>
+class Component extends DCLogic {
+  constructor(p){ super(p); this.state = { mode: 'both', lang: 'pt', long: false, hit: false }; }
+  renderVals() {
+    const { lang, mode, long, hit } = this.state;
+    // ---- tokens [Dark, Light] (iguais a Tokens.dc.html) ----
+    const T = {
+      Bg:['#121417','#F4F2EE'], Side:['#0C0E10','#EBE7DF'], Surface:['#1A1D21','#FFFFFF'], SurfaceHover:['#22262B','#F6F3EC'], SurfacePressed:['#2A2F35','#EDE8DD'],
+      Map:['#101316','#EFEBE3'], Line:['#2A2F35','#D9D3C7'], BorderStrong:['#66717D','#857E6F'],
+      Text:['#EEF0F2','#1B1D20'], TextMuted:['#9AA3AD','#5F6670'],
+      Accent:['#F5A524','#B86E00'], AccentHover:['#FFB84A','#C47A0A'], AccentPressed:['#E8991A','#B86E00'], AccentText:['#F5A524','#8A5200'], OnAccent:['#1A1206','#1A1206'], Selection:['#2A2414','#FBECD2'],
+      Danger:['#F87171','#B42318'], DangerHover:['#FA8A8A','#C42B1C'], DangerPressed:['#E25C5C','#9A1B12'], OnDanger:['#1F0A0A','#FFFFFF'], DangerBg:['#39292C','#F8E9E8'],
+      Success:['#4ADE80','#0F6B33'], SuccessBg:['#21382E','#E8F2EB'],
+      Focus:['#EEF0F2','#1B1D20'], MapGrid:['#1A1F24','#E2DCCF'], MapCityDot:['#6B7783','#8F8675'], MapCityText:['#8A949E','#6A624F']
+    };
+    const mk = i => { const o = {}; for (const k in T) o[k.charAt(0).toLowerCase() + k.slice(1)] = T[k][i]; o.muted = T.TextMuted[i]; o.text = T.Text[i]; o.panel = T.Surface[i]; o.bg = T.Bg[i]; o.border = T.BorderStrong[i]; o.sel = T.Selection[i]; o.glow = i === 0 ? 'rgba(245,165,36,0.18)' : 'rgba(184,110,0,0.16)'; o.overlay = i === 0 ? 'rgba(18,20,23,0.88)' : 'rgba(255,255,255,0.92)'; return o; };
+    const td = mk(0), tl = mk(1);
+    const ui = mode === 'light' ? tl : td;
+    const cond = "'Barlow Condensed', sans-serif";
+    const fmt = n => (lang === 'pt' ? n.toLocaleString('pt-BR') : n.toLocaleString('en-US'));
+    const km = n => fmt(n) + ' km';
+
+    // ---- textos de exemplo (ids sintéticos, nada de arte/marca SCS) ----
+    const SS = {
+      pt: {
+        eyebrow:'Perfil 1 · Save 4', title:'Galeria de controles', themeLabel:'Tema', long:'Textos longos', hit:'Áreas de clique', langLabel:'Idioma do canvas', lang:'EN', modeBoth:'Lado a lado', modeLight:'Claro', modeDark:'Escuro',
+        secButtons:'Botões', descButtons:'Classes accent, danger e neutral · estados normal, hover, pressed, focus-visible, disabled', iconNote:'Ícone: 40 px (mín.) e 44 px', refresh:'Atualizar',
+        descHeader:'Título do módulo, contagem e ações · reduz com reticências', pageTitle:'Fretes', count:'6.485', countA11y:'6.485 ofertas', review:'Revisar mudanças', eyebrowLong:'Perfil Principal de Teste · Save automático 2026-11-17 18:42', titleLong:'Frete expresso de longa distância', headerLongNote:'Texto longo: reticências no título e no rótulo; contagem e ação nunca encolhem.',
+        descSearch:'Debounce de 250 ms · Esc limpa · Enter envia na hora', descPicker:'Uma entre milhares · busca, lista virtualizada, contagem · teclado completo',
+        pickQuery:'sof', pickCount:'3 de 1.842', mod:'Mod',
+        descOffer:'Origem ⋯ Destino · km, carga e reboque · item de lista', descMap:'Esquema origem → destino; com coordenadas vira mapa geográfico', descStat:'Número grande + rótulo · tabular', descCard:'Agrupa campos relacionados · borda, sem sombra',
+        descChange:'Antes → depois · muda de linha quando o texto não cabe', descDiff:'Revisão agrupada por mudança · descartar por grupo', descBadge:'Contagem, ponto ou etiqueta de status · some quando 0',
+        descEmpty:'Lista vazia com motivo e ação', descBanner:'O que aconteceu + o que fazer · inline no topo do conteúdo', descLoading:'Texto + progresso · aparece depois de 300 ms',
+        cardTitle:'Detalhes do frete', cardDesc:'Carga e reboque da oferta selecionada.', edit:'Editar', fCargo:'Carga', fTrailer:'Reboque', cargo1:'Vigas de concreto', trailer1:'Prancha', cardTitleLong:'Informações complementares de desempenho da rota selecionada', cardEmpty:'Sem campos para mostrar.',
+        discard:'Descartar', mkHint:'',
+        reading:'Lendo save…', loadIndet:'Indeterminado', loadDetail:'4.038 de 6.485 ofertas', cancel:'Cancelar', loadDet:'Com progresso e cancelar', longBtn:'Revisar mudanças pendentes antes de gravar',
+        badgeInBtn:'Dentro do botão Revisar', mapEmptyTitle:'Escolha uma oferta', route:'Rota'
+      },
+      en: {
+        eyebrow:'Profile 1 · Save 4', title:'Control gallery', themeLabel:'Theme', long:'Long texts', hit:'Hit areas', langLabel:'Canvas language', lang:'PT', modeBoth:'Side by side', modeLight:'Light', modeDark:'Dark',
+        secButtons:'Buttons', descButtons:'Classes accent, danger and neutral · states normal, hover, pressed, focus-visible, disabled', iconNote:'Icon: 40 px (min.) and 44 px', refresh:'Refresh',
+        descHeader:'Module title, count and actions · truncates with ellipsis', pageTitle:'Jobs', count:'6,485', countA11y:'6,485 offers', review:'Review changes', eyebrowLong:'Main Test Profile · Autosave 2026-11-17 18:42', titleLong:'Express long-haul job', headerLongNote:'Long text: ellipsis on title and label; count and action never shrink.',
+        descSearch:'250 ms debounce · Esc clears · Enter submits immediately', descPicker:'One of thousands · search, virtualized list, count · full keyboard',
+        pickQuery:'sof', pickCount:'3 of 1,842', mod:'Mod',
+        descOffer:'Origin ⋯ Destination · km, cargo and trailer · list item', descMap:'Schematic origin → destination; with coordinates it becomes a geographic map', descStat:'Big number + label · tabular', descCard:'Groups related fields · border, no shadow',
+        descChange:'Before → after · wraps to two lines when text does not fit', descDiff:'Review grouped by change · discard per group', descBadge:'Count, dot or status tag · hidden at 0',
+        descEmpty:'Empty list with reason and action', descBanner:'What happened + what to do · inline at the top of the content', descLoading:'Text + progress · shows after 300 ms',
+        cardTitle:'Job details', cardDesc:'Cargo and trailer of the selected offer.', edit:'Edit', fCargo:'Cargo', fTrailer:'Trailer', cargo1:'Concrete beams', trailer1:'Flatbed', cardTitleLong:'Additional route performance information for the selected offer', cardEmpty:'No fields to show.',
+        discard:'Discard', mkHint:'',
+        reading:'Reading save…', loadIndet:'Indeterminate', loadDetail:'4,038 of 6,485 offers', cancel:'Cancel', loadDet:'With progress and cancel', longBtn:'Review pending changes before writing',
+        badgeInBtn:'Inside the Review button', mapEmptyTitle:'Pick an offer', route:'Route'
+      }
+    };
+    const s = SS[lang];
+    const pt = lang === 'pt';
+    const L = (a, b) => long ? b : a;
+
+    // ---- estilos reutilizáveis por tema ----
+    const mkStyles = t => ({
+      sec: `display:flex;flex-direction:column;gap:12px;padding-top:6px;`,
+      secHead: `display:flex;flex-direction:column;gap:2px;`,
+      h2: `margin:0;font-family:${cond};font-size:17px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;`,
+      desc: `font-size:13px;color:${t.muted};`,
+      h3: `margin:0;font-size:16px;font-weight:600;`,
+      title: `margin:0;font-family:${cond};font-size:26px;font-weight:700;text-transform:uppercase;letter-spacing:0.03em;line-height:1.15;`,
+      capUp: `font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;color:${t.muted};`,
+      cap2: `font-size:11px;color:${t.muted};`,
+      sub: `font-size:13px;color:${t.muted};`,
+      metricMuted: `font-family:${cond};font-size:22px;font-weight:600;font-variant-numeric:tabular-nums;color:${t.muted};`,
+      box: `display:flex;flex-direction:column;gap:6px;padding:14px 16px;border-radius:12px;border:1px solid ${t.line};background:${t.panel};`,
+      card: `display:flex;flex-direction:column;gap:10px;padding:16px;border-radius:12px;border:1px solid ${t.line};background:${t.panel};`,
+      tile: `display:flex;flex-direction:column;gap:2px;padding:12px 14px;border-radius:12px;border:1px solid ${t.line};background:${t.panel};min-width:0;`,
+      field: `display:flex;flex-direction:column;gap:2px;padding:8px 12px;border-radius:10px;border:1px solid ${t.line};`,
+      emptyInline: `padding:12px;border-radius:10px;border:1px dashed ${t.border};color:${t.muted};font-size:13px;text-align:center;`,
+      empty: `box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:22px 16px;border-radius:12px;border:1px solid ${t.line};background:${t.panel};`,
+      emptyIcon: `display:flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:12px;background:${t.sel};color:${t.accentText};`,
+      searchFocus: `display:flex;align-items:center;gap:8px;box-sizing:border-box;min-height:44px;padding:0 6px 0 12px;border-radius:10px;border:1px solid ${t.border};background:${t.panel};color:${t.text};box-shadow:0 0 0 2px ${t.panel}, 0 0 0 4px ${t.focus};margin:4px;`,
+      clearBtn: `display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:8px;color:${t.muted};font-size:13px;`
+    });
+
+    // ---- botões ----
+    const hitCss = t => hit ? `outline:1px dashed ${t.accentText};outline-offset:0;` : '';
+    const btnStyle = (t, kind, st, size) => {
+      const f = { accent: [t.accent, t.accentHover, t.accentPressed, t.onAccent, 'transparent'], danger: [t.danger, t.dangerHover, t.dangerPressed, t.onDanger, 'transparent'], neutral: [t.panel, t.surfaceHover, t.surfacePressed, t.text, t.border] }[kind];
+      const bg = st === 'hover' ? f[1] : st === 'pressed' ? f[2] : f[0];
+      const bd = kind === 'accent' && st === 'pressed' ? t.accentText : f[4];
+      let x = '';
+      if (st === 'pressed') x += 'transform:scale(0.98);';
+      if (st === 'disabled') x += 'opacity:0.4;';
+      if (st === 'focus') x += `box-shadow:0 0 0 2px ${t.bg}, 0 0 0 4px ${t.focus};`;
+      const h = size === 'sm' ? 40 : size === 'lg' ? 48 : 44;
+      return `display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;min-height:${h}px;min-width:${h}px;padding:0 ${size==='sm'?14:18}px;border-radius:10px;border:1px solid ${bd};background:${bg};color:${f[3]};font:600 14px Barlow,system-ui,sans-serif;letter-spacing:0.03em;white-space:nowrap;${x}${hitCss(t)}`;
+    };
+    const stNames = pt ? { normal:'normal', hover:'hover', pressed:'pressed', focus:'focus-visible', disabled:'disabled' } : { normal:'normal', hover:'hover', pressed:'pressed', focus:'focus-visible', disabled:'disabled' };
+    const btnLabels = { accent: pt ? 'Revisar' : 'Review', danger: pt ? 'Aplicar' : 'Apply', neutral: pt ? 'Cancelar' : 'Cancel' };
+
+    const panelFor = (name, t) => {
+      const st = mkStyles(t);
+      const btns = [];
+      for (const kind of ['accent', 'danger', 'neutral']) for (const state of ['normal', 'hover', 'pressed', 'focus', 'disabled'])
+        btns.push({ style: btnStyle(t, kind, state, 'lg').replace('min-height:48px', 'min-height:44px'), label: btnLabels[kind], cap: `${kind} · ${stNames[state]}` });
+      // SearchBox
+      const sw = (extra) => `display:flex;align-items:center;gap:8px;box-sizing:border-box;min-height:44px;padding:0 6px 0 12px;border-radius:10px;border:1px solid ${t.border};background:${t.panel};color:${t.text};${extra}${hitCss(t)}`;
+      const none = 'display:none;', clr = `display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:8px;color:${t.muted};font-size:13px;`;
+      const spin = `display:inline-block;flex:0 0 auto;width:14px;height:14px;border-radius:50%;border:2px solid ${t.line};border-top-color:${t.accent};animation:oe-spin 0.8s linear infinite;margin-right:8px;`;
+      const ph = `flex:1 1 auto;font-size:14px;color:${t.muted};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;`, tx = `flex:1 1 auto;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;`;
+      const searches = [
+        { wrap: sw(''), txt: ph, text: pt ? 'Cidade, empresa ou carga…' : 'City, company or cargo…', spin: none, clear: none, cap: pt ? 'vazio' : 'empty' },
+        { wrap: sw(`box-shadow:0 0 0 2px ${t.bg}, 0 0 0 4px ${t.focus};`), txt: ph, text: pt ? 'Cidade, empresa ou carga…' : 'City, company or cargo…', spin: none, clear: none, cap: 'focus-visible' },
+        { wrap: sw(''), txt: tx, text: 'sofia', spin: none, clear: clr, cap: pt ? 'com texto + limpar (40 px)' : 'with text + clear (40 px)' },
+        { wrap: sw(''), txt: tx, text: 'sofia', spin: spin, clear: clr, cap: pt ? 'ocupado (buscando…)' : 'busy (searching…)' },
+        { wrap: sw(`opacity:0.4;`), txt: ph, text: pt ? 'Cidade, empresa ou carga…' : 'City, company or cargo…', spin: none, clear: none, cap: 'disabled' },
+        { wrap: sw(`background:${t.surfaceHover};`), txt: ph, text: pt ? 'Cidade, empresa ou carga…' : 'City, company or cargo…', spin: none, clear: none, cap: 'hover' }
+      ];
+      // SearchablePicker
+      const pw = (extra) => `display:flex;align-items:center;gap:8px;box-sizing:border-box;min-height:56px;padding:8px 12px;border-radius:10px;border:1px solid ${t.border};background:${t.panel};color:${t.text};${extra}${hitCss(t)}`;
+      const vPh = `font-size:14px;color:${t.muted};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;`, vOk = `font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;`;
+      const pickers = [
+        { label: pt ? 'Origem' : 'Origin', value: pt ? 'Escolher origem…' : 'Choose origin…', wrap: pw(''), val: vPh, note: 'normal · ' + (pt ? 'vazio' : 'empty'), noteStyle: st.cap2 },
+        { label: pt ? 'Destino' : 'Destination', value: L('LogNStick · Istanbul', pt ? 'Complexo Industrial Regional de Logística · Cidade muito longa do mod' : 'Regional Industrial Logistics Complex · Very long mod city'), wrap: pw(`border-color:${t.accentText};`), val: vOk, note: pt ? 'selecionado (borda de acento)' : 'selected (accent border)', noteStyle: st.cap2 },
+        { label: pt ? 'Carga' : 'Cargo', value: pt ? 'Escolher carga…' : 'Choose cargo…', wrap: pw(`border-color:${t.danger};`), val: vPh, note: pt ? 'Escolha uma opção.' : 'Choose an option.', noteStyle: `font-size:12px;color:${t.danger};` },
+        { label: pt ? 'Reboque' : 'Trailer', value: pt ? 'Prancha' : 'Flatbed', wrap: pw(`box-shadow:0 0 0 2px ${t.bg}, 0 0 0 4px ${t.focus};`), val: vOk, note: 'focus-visible', noteStyle: st.cap2 },
+        { label: pt ? 'Empresa' : 'Company', value: pt ? 'Sem sessão' : 'No session', wrap: pw('opacity:0.4;'), val: vPh, note: 'disabled', noteStyle: st.cap2 }
+      ];
+      const optBase = `display:flex;align-items:center;gap:8px;box-sizing:border-box;min-height:44px;padding:6px 10px;border-radius:8px;`;
+      const mkOpt = (primary, secondary, sel, hov, mod, strongP) => ({ primary, secondary, style: optBase + `background:${sel ? t.sel : hov ? t.surfaceHover : 'transparent'};${sel ? `border:1px solid ${t.accentText};` : 'border:1px solid transparent;'}`, p1: `font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;${sel ? `color:${t.accentText};` : ''}`,
+        tag: mod ? `flex:0 0 auto;padding:1px 8px;border-radius:999px;border:1px solid ${t.border};font-size:11px;color:${t.muted};` : 'display:none;', check: sel ? `flex:0 0 auto;color:${t.accentText};font-weight:700;` : 'display:none;' });
+      const options = [
+        mkOpt('Sofia', 'Radus · Bulgaria', true, false, false),
+        mkOpt('Sofia Gate', pt ? 'Mod Balkans Expansion' : 'Balkans Expansion mod', false, true, true),
+        mkOpt(L('Sofiyski Zavod', pt ? 'Complexo Industrial Regional de Logística de Sofia Oeste' : 'West Sofia Regional Industrial Logistics Complex'), 'Rock Eat', false, false, false)
+      ];
+      // RouteOfferItem
+      const ob = `display:flex;flex-direction:column;gap:3px;box-sizing:border-box;width:100%;min-height:64px;padding:10px 14px;border-radius:12px;`;
+      const kmS = (c) => `margin-left:auto;flex:0 0 auto;font-family:${cond};font-size:19px;font-weight:600;font-variant-numeric:tabular-nums;color:${c};`;
+      const tagS = (c, b, bg) => `flex:0 0 auto;padding:1px 8px;border-radius:999px;font-size:11px;font-weight:500;border:1px solid ${b};color:${c};background:${bg};`;
+      const D = { // dados de exemplo
+        a: [pt?'Sofia':'Sofia','Istanbul',569, pt?'Vigas de concreto · Prancha':'Concrete beams · Flatbed'],
+        b: [pt?'Beograd':'Beograd','Sofia',394, pt?'Tanque de água · Baú':'Water tank · Box'],
+        c: [pt?'Wien':'Wien','Praha',332, pt?'Maquinário · Rebaixado':'Machinery · Lowboy'],
+        d: [pt?'Calais':'Calais','London',166, pt?'Frutas · Refrigerado':'Fruit · Reefer'],
+        e: [pt?'Lyon':'Lyon','Milano',441, pt?'Vinho · Tanque':'Wine · Tanker'],
+        f: [pt?'Cidade com nome muito longo do mod Balkans':'Very long city name from the Balkans mod', pt?'Outra cidade de nome igualmente longo':'Another equally long city name', 1234, pt?'Equipamento pesado de mineração com escolta especial · Reboque modular de oito eixos':'Heavy mining equipment with special escort · Eight-axle modular trailer']
+      };
+      const mkOffer = (d, o) => ({ from: L(d[0], D.f[0]), to: L(d[1], D.f[1]), kmText: km(d[2]), line2: L(d[3], D.f[3]), style: ob + o.box, km: kmS(o.km || t.text), tag: o.tag ? tagS(o.tagC, o.tagB, o.tagBg) : 'display:none;', tagText: o.tagText || '', cap: o.cap });
+      const offers = [
+        mkOffer(D.a, { box: `border:1px solid ${t.line};background:${t.panel};color:${t.text};${hitCss(t)}`, cap: 'normal' }),
+        mkOffer(D.b, { box: `border:1px solid ${t.line};background:${t.surfaceHover};color:${t.text};`, cap: 'hover' }),
+        mkOffer(D.c, { box: `border:1px solid ${t.accent};background:${t.sel};color:${t.text};`, km: t.accentText, cap: pt ? 'selecionado' : 'selected' }),
+        mkOffer(D.d, { box: `border:1px solid ${t.line};background:${t.panel};color:${t.text};`, tag: true, tagC: t.accentText, tagB: t.accentText, tagBg: t.sel, tagText: pt ? 'Modificado' : 'Modified', cap: pt ? 'com mudança pendente' : 'with pending change' }),
+        mkOffer(D.e, { box: `border:1px solid ${t.line};background:${t.panel};color:${t.text};opacity:0.7;`, tag: true, tagC: t.muted, tagB: t.border, tagBg: 'transparent', tagText: pt ? 'Expirada' : 'Expired', cap: pt ? 'expirada (dados)' : 'expired (data)' }),
+        mkOffer(D.f, { box: `border:1px solid ${t.line};background:${t.panel};color:${t.text};box-shadow:inset 0 0 0 2px ${t.focus};`, cap: pt ? 'texto longo + focus-visible (anel interno)' : 'long text + focus-visible (inset ring)' })
+      ];
+      // RouteMap
+      const gridPath = 'M0 68H800M0 136H800M0 204H800M0 272H800M100 0V340M200 0V340M300 0V340M400 0V340M500 0V340M600 0V340M700 0V340';
+      const geo = { Lisboa:[-9.14,38.72], Madrid:[-3.70,40.42], Paris:[2.35,48.86], London:[-0.13,51.51], Lyon:[4.84,45.76], Milano:[9.19,45.46], Berlin:[13.40,52.52], Hamburg:[9.99,53.55], Praha:[14.42,50.08], Wien:[16.37,48.21], Beograd:[20.46,44.79], Warszawa:[21.01,52.23], Roma:[12.50,41.90], Sofia:[23.32,42.70], Istanbul:[28.98,41.01] };
+      const proj = ([lon, lat]) => [Math.round(60 + (lon + 10) * 18.5), Math.round(330 - (lat - 37) * 17.5)];
+      const [gax, gay] = proj(geo.Lyon), [gbx, gby] = proj(geo.Berlin);
+      const gmx = (gax + gbx) / 2, gmy = (gay + gby) / 2;
+      const gcities = Object.entries(geo).filter(([n]) => n !== 'Lyon' && n !== 'Berlin').map(([name, g]) => { const [x, y] = proj(g); return { name, x, y, lx: x + 6, ly: y - 6 }; });
+      const chip = `position:absolute;left:14px;top:12px;max-width:62%;display:flex;flex-direction:column;gap:2px;padding:8px 12px;border-radius:10px;background:${t.overlay};border:1px solid ${t.line};`;
+      const kmBox = `position:absolute;right:14px;bottom:12px;padding:4px 12px;border-radius:10px;background:${t.overlay};border:1px solid ${t.line};display:flex;align-items:baseline;gap:6px;`;
+      const maps = [
+        { a11y: pt ? 'Mapa da rota de Sofia até Istanbul, 569 km' : 'Route map from Sofia to Istanbul, 569 km', h: 230, vh: 340, grid: gridPath, cities: [], d: 'M150 230 Q400 120 650 150', glow: t.glow, line: t.accent, dash: '0', node: t.accent, ax: 150, ay: 230, ar: 9, bx: 650, by: 150, br: 10, aly: 262, bly: 182, aLabel: 'Radus · Sofia', bLabel: 'LogNStick · Istanbul',
+          chipStyle: chip, chipCap: s.route, chip: 'Radus · Sofia → LogNStick · Istanbul', kmStyle: kmBox, km: fmt(569), cap: pt ? 'esquemático (sem coordenadas)' : 'schematic (no coordinates)' },
+        { a11y: pt ? 'Mapa da rota de Lyon até Berlin, 1.006 km' : 'Route map from Lyon to Berlin, 1,006 km', h: 230, vh: 340, grid: gridPath, cities: gcities, d: `M${gax} ${gay} Q${Math.round(gmx - (gby - gay) * 0.18)} ${Math.round(gmy + (gbx - gax) * 0.18)} ${gbx} ${gby}`, glow: t.glow, line: t.accent, dash: '0', node: t.accent, ax: gax, ay: gay, ar: 9, bx: gbx, by: gby, br: 10, aly: gay + 26, bly: gby - 18, aLabel: 'Lyon', bLabel: 'Berlin',
+          chipStyle: chip, chipCap: s.route, chip: 'Fle · Lyon → Posped · Berlin', kmStyle: kmBox, km: fmt(1006), cap: pt ? 'geográfico (com coordenadas das cidades)' : 'geographic (with city coordinates)' },
+        { a11y: pt ? 'Mapa da rota: nenhuma oferta escolhida' : 'Route map: no offer picked', h: 150, vh: 340, grid: gridPath, cities: [], d: 'M0 0', glow: 'transparent', line: 'transparent', dash: '0', node: 'transparent', ax: -50, ay: -50, ar: 0, bx: -50, by: -50, br: 0, aly: -50, bly: -50, aLabel: '', bLabel: '',
+          chipStyle: `position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center;`, chipCap: pt ? 'A rota aparece aqui.' : 'The route appears here.', chip: s.mapEmptyTitle, kmStyle: 'display:none;', km: '', cap: pt ? 'vazio (nenhuma oferta)' : 'empty (no offer)' }
+      ];
+      // StatTile
+      const tv = (c) => `font-family:${cond};font-size:22px;font-weight:600;font-variant-numeric:tabular-nums;color:${c};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;`;
+      const stats = [
+        { label: pt ? 'Expira em' : 'Expires in', value: '12h 14min', val: tv(t.text), cap: 'normal' },
+        { label: pt ? 'Urgência' : 'Urgency', value: pt ? 'Alta' : 'High', val: tv(t.accentText), cap: pt ? 'ênfase (acento)' : 'emphasis (accent)' },
+        { label: pt ? 'Balsa' : 'Ferry', value: '—', val: tv(t.muted), cap: pt ? 'desconhecido' : 'unknown' },
+        { label: pt ? 'Carga' : 'Cargo', value: L(pt ? 'Vigas de concreto' : 'Concrete beams', pt ? 'Equipamento pesado de mineração com escolta' : 'Heavy mining equipment with escort'), val: tv(t.text), cap: pt ? 'texto longo (reticências)' : 'long text (ellipsis)' },
+        { label: pt ? 'Distância' : 'Distance', value: '  ', val: `display:block;height:22px;width:70%;border-radius:6px;background:${t.line};margin-top:2px;`, cap: pt ? 'carregando' : 'loading' },
+        { label: pt ? 'Unidades' : 'Units', value: '2', val: tv(t.text), cap: 'normal · tnum' }
+      ];
+      // ValueChange
+      const baseV = `font-size:14px;`;
+      const ch = (label, before, after, o) => {
+        o = o || {};
+        const vert = !!o.vert;
+        return { label, before, after, cap: o.cap || '', a11y: `${label}: ${pt ? 'de' : 'from'} ${before} ${pt ? 'para' : 'to'} ${after}`,
+          row: `display:flex;align-items:${vert ? 'flex-start' : 'center'};gap:12px;padding:8px 0;border-top:1px solid ${t.line};`,
+          wrap: `display:flex;${vert ? 'flex-direction:column;align-items:flex-start;' : 'align-items:center;'}gap:8px;flex:1 1 auto;min-width:0;`,
+          bStyle: baseV + `color:${t.muted};${o.num ? 'font-variant-numeric:tabular-nums;' : ''}${vert ? '' : 'white-space:nowrap;'}${o.bEmpty ? 'font-style:italic;' : ''}`,
+          aStyle: baseV + `font-weight:600;${o.num ? 'font-variant-numeric:tabular-nums;' : ''}${o.aEmpty ? `color:${t.muted};font-style:italic;font-weight:400;` : ''}`,
+          arrow: `flex:0 0 auto;${vert ? 'transform:rotate(90deg);margin-left:4px;' : ''}` };
+      };
+      const changes = [
+        ch(pt ? 'Distância' : 'Distance', km(569), km(612), { num: true, cap: pt ? 'número' : 'number' }),
+        ch(pt ? 'Destino' : 'Destination', 'LogNStick · Istanbul', 'Tradeaux · Praha', { cap: pt ? 'texto' : 'text' }),
+        ch(pt ? 'Reboque' : 'Trailer', pt ? '(vazio)' : '(empty)', pt ? 'Prancha' : 'Flatbed', { bEmpty: true, cap: pt ? 'adicionado' : 'added' }),
+        ch(pt ? 'Urgência' : 'Urgency', pt ? 'Alta' : 'High', pt ? '(vazio)' : '(empty)', { aEmpty: true, cap: pt ? 'removido' : 'removed' }),
+        ch(pt ? 'Carga' : 'Cargo', L(pt ? 'Vigas de concreto' : 'Concrete beams', pt ? 'Equipamento pesado de mineração com escolta especial' : 'Heavy mining equipment with special escort'), pt ? 'Peças de turbina eólica superdimensionadas' : 'Oversized wind turbine parts', { vert: true, cap: pt ? 'vertical (quando não cabe)' : 'vertical (when it does not fit)' })
+      ];
+      // DiffList (achatado: cabeçalho de grupo + linhas)
+      const grpHead = `display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px 12px 0 0;border:1px solid ${t.line};background:${t.side};`;
+      const lineRow = (hov, last) => `display:flex;align-items:center;gap:12px;padding:8px 14px;border:1px solid ${t.line};border-top:none;background:${hov ? t.surfaceHover : t.panel};${last ? 'border-radius:0 0 12px 12px;' : ''}`;
+      const dl = (label, before, after, hov, last, o) => ({ isHead: false, headStyle: 'display:none;', lineStyle: lineRow(hov, last), label, before, after, module: '', title: '',
+        a11y: `${label}: ${pt ? 'de' : 'from'} ${before} ${pt ? 'para' : 'to'} ${after}`,
+        wrap: 'display:flex;align-items:center;gap:8px;flex:1 1 auto;min-width:0;', bStyle: `font-size:14px;color:${t.muted};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;${o && o.num ? 'font-variant-numeric:tabular-nums;' : ''}`, aStyle: `font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;${o && o.num ? 'font-variant-numeric:tabular-nums;' : ''}` });
+      const dh = (module, title) => ({ headStyle: grpHead, lineStyle: 'display:none;', module, title, label: '', before: '', after: '', a11y: '', wrap: '', bStyle: '', aStyle: '' });
+      const diff = [
+        dh(pt ? 'Fretes' : 'Jobs', 'Radus · Sofia → LogNStick · Istanbul'),
+        dl(pt ? 'Destino' : 'Destination', 'LogNStick · Istanbul', 'Tradeaux · Praha', false, false),
+        dl(pt ? 'Distância' : 'Distance', km(569), km(612), true, false, { num: true }),
+        dl(pt ? 'Carga' : 'Cargo', pt ? 'Vigas de concreto' : 'Concrete beams', pt ? 'Maquinário' : 'Machinery', false, true),
+        dh(pt ? 'Perfil' : 'Profile', pt ? 'Dinheiro e experiência' : 'Money and experience'),
+        dl(pt ? 'Dinheiro' : 'Money', pt ? '€ 120.450' : '€120,450', pt ? '€ 250.000' : '€250,000', false, false, { num: true }),
+        dl(pt ? 'Experiência' : 'Experience', pt ? '36.120 XP' : '36,120 XP', pt ? '48.000 XP' : '48,000 XP', false, true, { num: true })
+      ];
+      // PendingBadge
+      const bd = (c, bg, b, min) => `display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;min-width:${min}px;height:20px;padding:0 6px;border-radius:999px;background:${bg};color:${c};border:1px solid ${b};font-family:${cond};font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;`;
+      const badges = [
+        { text: '3', style: bd(t.accentText, t.sel, t.accentText, 20), a11y: pt ? '3 mudanças pendentes' : '3 pending changes', cap: pt ? 'contagem' : 'count' },
+        { text: '12', style: bd(t.accentText, t.sel, t.accentText, 20), a11y: pt ? '12 mudanças pendentes' : '12 pending changes', cap: pt ? 'dois dígitos' : 'two digits' },
+        { text: '99+', style: bd(t.accentText, t.sel, t.accentText, 20), a11y: pt ? 'mais de 99 mudanças pendentes' : 'more than 99 pending changes', cap: pt ? 'estouro' : 'overflow' },
+        { text: pt ? 'Modificado' : 'Modified', style: bd(t.accentText, t.sel, t.accentText, 20) + `font-family:Barlow,sans-serif;font-size:11px;font-weight:500;`, a11y: pt ? 'Modificado' : 'Modified', cap: pt ? 'etiqueta' : 'tag' },
+        { text: '', style: `display:inline-block;width:10px;height:10px;border-radius:50%;background:${t.accent};margin:5px;`, a11y: pt ? 'Modificado' : 'Modified', cap: pt ? 'ponto' : 'dot' },
+        { text: '0', style: `display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;border-radius:999px;border:1px dashed ${t.border};color:${t.muted};font-size:12px;`, a11y: '', cap: pt ? '0 = oculto' : '0 = hidden' }
+      ];
+      // EmptyState
+      const empties = [
+        { icon: 'M3 7h11v9H3zM14 10h4l3 3v3h-7M7 19a2 2 0 1 0 0-.1M17 19a2 2 0 1 0 0-.1', title: pt ? 'Nenhuma oferta neste save' : 'No offers in this save', msg: pt ? 'Abra o mercado de fretes no jogo, salve e tente de novo.' : 'Open the freight market in game, save and try again.', action: pt ? 'Recarregar save' : 'Reload save' },
+        { icon: 'M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM20 20l-4-4', title: pt ? 'Nada encontrado' : 'Nothing found', msg: pt ? 'Nenhum resultado para “sofya”. Tente outro termo.' : 'No results for “sofya”. Try another term.', action: pt ? 'Limpar busca' : 'Clear search' }
+      ];
+      // ErrorBanner
+      const bn = (bg, bdC, fg) => `display:flex;align-items:flex-start;gap:12px;box-sizing:border-box;padding:12px 14px;border-radius:12px;border:1px solid ${bdC};background:${bg};color:${t.text};`;
+      const smBtn = `display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;min-height:40px;padding:0 14px;border-radius:10px;border:1px solid ${t.border};background:${t.panel};color:${t.text};font:600 13px Barlow,sans-serif;white-space:nowrap;flex:0 0 auto;`;
+      const xs = `display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;margin:-6px -8px -6px 0;border-radius:8px;color:${t.muted};font-size:13px;flex:0 0 auto;`;
+      const banners = [
+        { style: bn(t.dangerBg, t.danger), fg: t.danger, icon: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM9 9l6 6M15 9l-6 6', title: pt ? 'Não foi possível gravar' : 'Couldn’t save', msg: pt ? 'O jogo está aberto. Feche o jogo e tente de novo.' : 'The game is running. Close it and try again.', detail: '', detailStyle: 'display:none;', action: pt ? 'Tentar de novo' : 'Try again', actStyle: smBtn, xStyle: xs },
+        { style: bn(t.sel, t.accentText), fg: t.accentText, icon: 'M12 3 2.5 20h19L12 3zM12 10v4M12 17.2v.1', title: pt ? 'O save mudou no disco' : 'The save changed on disk', msg: pt ? 'Reabra o save para continuar. As mudanças pendentes serão perdidas.' : 'Reopen the save to continue. Pending changes will be lost.', detail: '', detailStyle: 'display:none;', action: pt ? 'Reabrir save' : 'Reopen save', actStyle: smBtn, xStyle: 'display:none;' },
+        { style: bn(t.panel, t.border), fg: t.muted, icon: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 11v5M12 7.8v.1', title: pt ? 'Save em modo somente leitura' : 'Save is read-only', msg: pt ? 'Este save é de amostra: dá para explorar, mas não gravar.' : 'This save is a sample: you can explore it, but not write it.', detail: '', detailStyle: 'display:none;', action: '', actStyle: 'display:none;', xStyle: xs },
+        { style: bn(t.dangerBg, t.danger), fg: t.danger, icon: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM9 9l6 6M15 9l-6 6', title: pt ? 'Não foi possível ler o save' : 'Couldn’t read the save', msg: pt ? 'O arquivo parece corrompido. Escolha outro save ou restaure um backup.' : 'The file looks corrupted. Pick another save or restore a backup.', detail: pt ? 'Detalhes: D:\\Jogos\\profiles\\4A6F\\save\\4\\game.sii · linha 12.480' : 'Details: D:\\Games\\profiles\\4A6F\\save\\4\\game.sii · line 12,480', detailStyle: `font-size:12px;color:${t.muted};font-family:ui-monospace,Consolas,monospace;word-break:break-all;margin-top:2px;`, action: pt ? 'Escolher outro save' : 'Pick another save', actStyle: smBtn, xStyle: 'display:none;' }
+      ];
+      return { name, t, st,
+        frame: `box-sizing:border-box;min-width:0;display:flex;flex-direction:column;gap:22px;padding:20px;border-radius:14px;border:1px solid ${t.line};background:${t.bg};color:${t.text};`,
+        s, btns, searches, pickers, options, offers, maps, stats, changes, diff, badges, empties, banners,
+        popup: `display:flex;flex-direction:column;gap:2px;padding:6px;border-radius:12px;border:1px solid ${t.line};background:${t.panel};box-shadow:0 8px 24px rgba(0,0,0,${name === 'Dark' ? '0.5' : '0.14'}), 0 1px 2px rgba(0,0,0,0.2);`,
+        icon40: btnStyle(t, 'neutral', 'normal', 'sm').replace(/padding:0 \d+px/, 'padding:0'), icon44: btnStyle(t, 'neutral', 'normal', 'md').replace(/padding:0 \d+px/, 'padding:0'),
+        longBtn: btnStyle(t, 'accent', 'normal', 'lg') + 'max-width:100%;overflow:hidden;text-overflow:ellipsis;',
+        reviewBtn: btnStyle(t, 'accent', 'normal', 'lg') + 'gap:8px;flex:0 0 auto;',
+        badgeCount: `display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:${t.onAccent};color:${t.accent === '#F5A524' ? '#F5A524' : '#FFD9A0'};font-family:${cond};font-size:13px;font-weight:700;`,
+        smallNeutral: btnStyle(t, 'neutral', 'normal', 'sm'),
+        neutralBtn: btnStyle(t, 'neutral', 'normal', 'md'),
+        spinner: `display:inline-block;width:28px;height:28px;border-radius:50%;border:3px solid ${t.line};border-top-color:${t.accent};animation:oe-spin 0.9s linear infinite;`
+      };
+    };
+    const showD = mode !== 'light', showL = mode !== 'dark';
+    const panels = []; if (showL) panels.push(panelFor('Light', tl)); if (showD) panels.push(panelFor('Dark', td));
+    // fix do texto do PageHeader (usa chaves já existentes)
+    panels.forEach(p => { p.s = Object.assign({}, s, { pageTitle: L(s.pageTitle, s.titleLong), eyebrow: L(s.eyebrow, s.eyebrowLong) }); });
+    const modeDefs = [['both', s.modeBoth], ['light', s.modeLight], ['dark', s.modeDark]];
+    const pillStyle = on => `min-height:44px;padding:0 16px;border-radius:10px;border:1px solid ${on ? ui.accent : ui.border};background:${on ? ui.sel : 'transparent'};color:${on ? ui.accentText : ui.text};font-weight:600;`;
+    return { ui, s, panels, cols: showD && showL ? '1fr 1fr' : '1fr',
+      modes: modeDefs.map(([m, label]) => ({ label, on: mode === m ? 'true' : 'false', style: pillStyle(mode === m), pick: () => this.setState({ mode: m }) })),
+      longOn: long ? 'true' : 'false', longStyle: pillStyle(long), toggleLong: () => this.setState({ long: !long }),
+      hitOn: hit ? 'true' : 'false', hitStyleBtn: pillStyle(hit), toggleHit: () => this.setState({ hit: !hit }),
+      toggleLang: () => this.setState({ lang: lang === 'pt' ? 'en' : 'pt' }) };
+  }
+}
+</script>
+</body>
+</html>

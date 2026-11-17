@@ -1,0 +1,99 @@
+{
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "Carregando.dc.html": {
+      "expand": "fill",
+      "h": 800,
+      "is_interactive": true,
+      "title": "Carregando save",
+      "w": 1280,
+      "x": 1360,
+      "y": 0
+    },
+    "Configuracoes.dc.html": {
+      "expand": "fill",
+      "h": 800,
+      "is_interactive": true,
+      "title": "Configurações",
+      "w": 1280,
+      "x": 2720,
+      "y": 940
+    },
+    "ErroCorrompido.dc.html": {
+      "expand": "fill",
+      "h": 800,
+      "is_interactive": true,
+      "title": "Erro: save ilegível",
+      "w": 1280,
+      "x": 0,
+      "y": 940
+    },
+    "SemSessao.dc.html": {
+      "expand": "fill",
+      "h": 800,
+      "is_interactive": true,
+      "title": "Sem sessão (abrir save)",
+      "w": 1280,
+      "x": 0,
+      "y": 0
+    },
+    "SessaoAberta.dc.html": {
+      "expand": "fill",
+      "h": 800,
+      "is_interactive": true,
+      "title": "Sessão aberta com pendências",
+      "w": 1280,
+      "x": 1360,
+      "y": 940
+    },
+    "ErroInterpretacao.dc.html": {
+      "expand": "fill",
+      "h": 800,
+      "is_interactive": true,
+      "title": "Erro: save não entendido",
+      "w": 1280,
+      "x": 2720,
+      "y": 0
+    }
+  },
+  "createdOnFiles": {
+    "at": "2026-11-17T20:00:00Z",
+    "v": 1
+  },
+  "designSystems": [],
+  "launch": {
+    "view": "canvas"
+  },
+  "noteOrder": [
+    "t",
+    "s"
+  ],
+  "notes": {
+    "s": {
+      "size": 24,
+      "text": "Seis telas do shell. Cada uma tem a barra de prévia embaixo (tema, idioma e variações); fora do app. Configurações muda o tema e o idioma do canvas de verdade. Dados de exemplo anonimizados.",
+      "w": 1500,
+      "x": 1280,
+      "y": -371
+    },
+    "t": {
+      "kind": "title1",
+      "maxW": 4000,
+      "text": "Own Expeditor — Shell (UX-1) · aprovado",
+      "w": 240,
+      "x": 0,
+      "y": -260
+    }
+  },
+  "order": [
+    "SemSessao.dc.html",
+    "Carregando.dc.html",
+    "ErroInterpretacao.dc.html",
+    "ErroCorrompido.dc.html",
+    "SessaoAberta.dc.html",
+    "Configuracoes.dc.html"
+  ],
+  "pages": [],
+  "title": "Own Expeditor — shell"
+}

@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Tokens — Own Expeditor</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&amp;family=Barlow+Condensed:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+button{font:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="min-height: 1500px; box-sizing: border-box; background: {{ui.bg}}; color: {{ui.text}}; font-family: Barlow, system-ui, sans-serif; font-size: 14px; padding: 24px 28px 40px; display: flex; flex-direction: column; gap: 20px;">
+
+  <header style="display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px;">
+    <div style="display: flex; flex-direction: column;">
+      <span style="font-size: 12px; color: {{ui.muted}}; text-transform: uppercase; letter-spacing: 0.08em;">{{s.eyebrow}}</span>
+      <h1 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-size: 26px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em;">{{s.title}}</h1>
+    </div>
+    <div style="flex-grow: 1;"></div>
+    <div role="group" aria-label="{{s.modeLabel}}" style="display: flex; gap: 6px;">
+      <sc-for list="{{modes}}" as="m" hint-placeholder-count="3">
+        <button type="button" onClick="{{m.pick}}" aria-pressed="{{m.on}}" style="{{m.style}}">{{m.label}}</button>
+      </sc-for>
+    </div>
+    <button type="button" onClick="{{toggleLang}}" aria-label="{{s.langLabel}}" style="min-width: 48px; min-height: 44px; padding: 0 12px; border-radius: 10px; border: 1px solid {{ui.border}}; background: transparent; color: {{ui.text}}; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 15px;">{{s.lang}}</button>
+  </header>
+
+  <!-- Cores -->
+  <section aria-label="{{s.colors}}" style="display: flex; flex-direction: column; gap: 12px;">
+    <h2 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-size: 20px; letter-spacing: 0.04em; text-transform: uppercase;">{{s.colors}}</h2>
+    <div style="display: grid; grid-template-columns: {{cols}}; gap: 16px;">
+      <sc-for list="{{panels}}" as="p" hint-placeholder-count="2">
+        <div style="{{p.frame}}">
+          <span style="font-family: 'Barlow Condensed', sans-serif; font-size: 18px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: {{p.t.accentText}};">{{p.name}}</span>
+          <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 14px;">
+            <sc-for list="{{p.swatches}}" as="w" hint-placeholder-count="26">
+              <div style="display: flex; align-items: center; gap: 10px; min-width: 0;">
+                <span aria-hidden="true" style="flex: 0 0 30px; height: 30px; border-radius: 8px; background: {{w.hex}}; border: 1px solid {{p.t.borderStrong}};"></span>
+                <span style="display: flex; flex-direction: column; min-width: 0;">
+                  <span style="font-weight: 600; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{w.name}}</span>
+                  <span style="font-size: 12px; color: {{p.t.muted}}; font-variant-numeric: tabular-nums;">{{w.hex}}</span>
+                </span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- Contraste -->
+  <section aria-label="{{s.contrast}}" style="display: flex; flex-direction: column; gap: 10px;">
+    <h2 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-size: 20px; letter-spacing: 0.04em; text-transform: uppercase;">{{s.contrast}}</h2>
+    <span style="color: {{ui.muted}}; font-size: 13px;">{{s.contrastNote}}</span>
+    <div role="table" aria-label="{{s.contrast}}" style="border: 1px solid {{ui.line}}; border-radius: 12px; overflow: hidden; background: {{ui.panel}};">
+      <div role="row" style="display: grid; grid-template-columns: 2.2fr 1.1fr 1fr 1fr; gap: 8px; padding: 8px 14px; background: {{ui.side}}; color: {{ui.muted}}; font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em;">
+        <span role="columnheader">{{s.pair}}</span><span role="columnheader">{{s.need}}</span><span role="columnheader">Dark</span><span role="columnheader">Light</span>
+      </div>
+      <sc-for list="{{contrast}}" as="c" hint-placeholder-count="30">
+        <div role="row" style="display: grid; grid-template-columns: 2.2fr 1.1fr 1fr 1fr; gap: 8px; padding: 6px 14px; border-top: 1px solid {{ui.line}}; align-items: center; font-size: 13px;">
+          <span role="cell" style="display: flex; align-items: center; gap: 8px;">
+            <span aria-hidden="true" style="{{c.sampleD}}">Aa</span><span aria-hidden="true" style="{{c.sampleL}}">Aa</span>
+            <span>{{c.pair}}</span>
+          </span>
+          <span role="cell" style="color: {{ui.muted}};">{{c.need}}</span>
+          <span role="cell" style="font-variant-numeric: tabular-nums; font-weight: 600; color: {{c.dColor}};">{{c.d}} {{c.dMark}}</span>
+          <span role="cell" style="font-variant-numeric: tabular-nums; font-weight: 600; color: {{c.lColor}};">{{c.l}} {{c.lMark}}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- Tipografia -->
+  <section aria-label="{{s.type}}" style="display: flex; flex-direction: column; gap: 10px;">
+    <h2 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-size: 20px; letter-spacing: 0.04em; text-transform: uppercase;">{{s.type}}</h2>
+    <div style="border: 1px solid {{ui.line}}; border-radius: 12px; background: {{ui.panel}}; padding: 6px 16px; display: flex; flex-direction: column;">
+      <sc-for list="{{typeScale}}" as="r" hint-placeholder-count="8">
+        <div style="display: grid; grid-template-columns: 130px 220px 1fr; gap: 14px; align-items: baseline; padding: 10px 0; border-top: 1px solid {{ui.line}};">
+          <span style="font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: {{ui.accentText}};">{{r.name}}</span>
+          <span style="font-size: 12px; color: {{ui.muted}}; font-variant-numeric: tabular-nums;">{{r.spec}}</span>
+          <span style="{{r.style}}">{{r.sample}}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- Espaço, raio, movimento -->
+  <section style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+    <div style="border: 1px solid {{ui.line}}; border-radius: 12px; background: {{ui.panel}}; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px;">
+      <h2 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-size: 20px; letter-spacing: 0.04em; text-transform: uppercase;">{{s.space}}</h2>
+      <sc-for list="{{spaces}}" as="sp" hint-placeholder-count="8">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <span style="width: 70px; font-size: 13px; font-weight: 600;">{{sp.name}}</span>
+          <span style="width: 40px; font-size: 13px; color: {{ui.muted}}; font-variant-numeric: tabular-nums;">{{sp.px}}</span>
+          <span aria-hidden="true" style="height: 14px; width: {{sp.px}}px; border-radius: 3px; background: {{ui.accent}};"></span>
+        </div>
+      </sc-for>
+    </div>
+    <div style="border: 1px solid {{ui.line}}; border-radius: 12px; background: {{ui.panel}}; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px;">
+      <h2 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-size: 20px; letter-spacing: 0.04em; text-transform: uppercase;">{{s.radius}}</h2>
+      <div style="display: flex; flex-wrap: wrap; gap: 14px;">
+        <sc-for list="{{radii}}" as="r" hint-placeholder-count="5">
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; width: 92px;">
+            <span aria-hidden="true" style="width: 80px; height: 56px; border: 2px solid {{ui.accent}}; background: {{ui.sel}}; border-radius: {{r.px}}px;"></span>
+            <span style="font-size: 13px; font-weight: 600;">{{r.name}}</span>
+            <span style="font-size: 12px; color: {{ui.muted}};">{{r.px}}px · {{r.use}}</span>
+          </div>
+        </sc-for>
+      </div>
+      <h2 style="margin: 6px 0 0; font-family: 'Barlow Condensed', sans-serif; font-size: 20px; letter-spacing: 0.04em; text-transform: uppercase;">{{s.motion}}</h2>
+      <sc-for list="{{motion}}" as="m" hint-placeholder-count="4">
+        <div style="display: flex; gap: 12px; font-size: 13px;"><span style="width: 120px; font-weight: 600;">{{m.name}}</span><span style="color: {{ui.muted}};">{{m.value}}</span></div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- Foco, área de clique, estados -->
+  <section style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px;">
+    <div style="border: 1px solid {{ui.line}}; border-radius: 12px; background: {{ui.panel}}; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px;">
+      <h2 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-size: 20px; letter-spacing: 0.04em; text-transform: uppercase;">{{s.focus}}</h2>
+      <div style="display: flex; align-items: center; justify-content: center; height: 84px; border-radius: 10px; background: {{ui.bg}};">
+        <span style="{{focusDemo}}">{{s.focusSample}}</span>
+      </div>
+      <span style="color: {{ui.muted}}; font-size: 13px;">{{s.focusNote}}</span>
+    </div>
+    <div style="border: 1px solid {{ui.line}}; border-radius: 12px; background: {{ui.panel}}; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px;">
+      <h2 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-size: 20px; letter-spacing: 0.04em; text-transform: uppercase;">{{s.hit}}</h2>
+      <div style="display: flex; align-items: center; justify-content: space-around; height: 84px; border-radius: 10px; background: {{ui.bg}};">
+        <sc-for list="{{hits}}" as="h" hint-placeholder-count="3">
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+            <span aria-hidden="true" style="width: {{h.px}}px; height: {{h.px}}px; border: 1px dashed {{ui.accentText}}; background: {{ui.sel}}; border-radius: 8px; display: block;"></span>
+            <span style="font-size: 12px; color: {{ui.muted}}; font-variant-numeric: tabular-nums;">{{h.px}}px · {{h.use}}</span>
+          </div>
+        </sc-for>
+      </div>
+      <span style="color: {{ui.muted}}; font-size: 13px;">{{s.hitNote}}</span>
+    </div>
+    <div style="border: 1px solid {{ui.line}}; border-radius: 12px; background: {{ui.panel}}; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px;">
+      <h2 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-size: 20px; letter-spacing: 0.04em; text-transform: uppercase;">{{s.disabled}}</h2>
+      <div style="display: flex; align-items: center; justify-content: space-around; height: 84px; border-radius: 10px; background: {{ui.bg}};">
+        <span style="{{dis1}}">{{s.btnAccent}}</span><span style="{{dis2}}">{{s.btnNeutral}}</span>
+      </div>
+      <span style="color: {{ui.muted}}; font-size: 13px;">{{s.disabledNote}}</span>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":true},"$preview":{"width":1280,"height":1500}}'>
+class Component extends DCLogic {
+  constructor(p){ super(p); this.state = { mode: 'both', lang: 'pt' }; }
+  renderVals() {
+    const lang = this.state.lang, mode = this.state.mode;
+    // ---- contraste (WCAG 2.x) ----
+    const lin = c => { c /= 255; return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); };
+    const lum = h => { const n = parseInt(h.slice(1), 16); return 0.2126 * lin(n >> 16 & 255) + 0.7152 * lin(n >> 8 & 255) + 0.0722 * lin(n & 255); };
+    const cr = (a, b) => { let x = lum(a), y = lum(b); if (x < y) { const z = x; x = y; y = z; } return (x + 0.05) / (y + 0.05); };
+    // ---- tokens: [Dark, Light] ----
+    const T = {
+      Bg:['#121417','#F4F2EE'], Side:['#0C0E10','#EBE7DF'], Surface:['#1A1D21','#FFFFFF'], SurfaceHover:['#22262B','#F6F3EC'], SurfacePressed:['#2A2F35','#EDE8DD'],
+      Map:['#101316','#EFEBE3'], Line:['#2A2F35','#D9D3C7'], BorderStrong:['#66717D','#857E6F'],
+      Text:['#EEF0F2','#1B1D20'], TextMuted:['#9AA3AD','#5F6670'],
+      Accent:['#F5A524','#B86E00'], AccentHover:['#FFB84A','#C47A0A'], AccentPressed:['#E8991A','#B86E00'], AccentText:['#F5A524','#8A5200'], OnAccent:['#1A1206','#1A1206'], Selection:['#2A2414','#FBECD2'],
+      Danger:['#F87171','#B42318'], DangerHover:['#FA8A8A','#C42B1C'], DangerPressed:['#E25C5C','#9A1B12'], OnDanger:['#1F0A0A','#FFFFFF'], DangerBg:['#39292C','#F8E9E8'],
+      Success:['#4ADE80','#0F6B33'], SuccessBg:['#21382E','#E8F2EB'],
+      Focus:['#EEF0F2','#1B1D20'], MapGrid:['#1A1F24','#E2DCCF'], MapCityDot:['#6B7783','#8F8675'], MapCityText:['#8A949E','#6A624F']
+    };
+    const groups = [
+      ['Bg','Side','Surface','SurfaceHover','SurfacePressed','Map','Line','BorderStrong'],
+      ['Text','TextMuted'],
+      ['Accent','AccentHover','AccentPressed','AccentText','OnAccent','Selection'],
+      ['Danger','DangerHover','DangerPressed','OnDanger','DangerBg','Success','SuccessBg'],
+      ['Focus','MapGrid','MapCityDot','MapCityText']
+    ];
+    const order = [].concat(...groups);
+    const mk = i => { const o = {}; for (const k in T) o[k.charAt(0).toLowerCase() + k.slice(1)] = T[k][i]; o.muted = T.TextMuted[i]; o.text = T.Text[i]; o.panel = T.Surface[i]; o.bg = T.Bg[i]; o.border = T.BorderStrong[i]; o.accentText = T.AccentText[i]; o.sel = T.Selection[i]; return o; };
+    const td = mk(0), tl = mk(1);
+    const ui = mode === 'light' ? tl : td;  // cromo da página
+    const showD = mode !== 'light', showL = mode !== 'dark';
+    const mkPanel = (name, t, i) => ({ name, t, frame: `box-sizing:border-box;display:flex;flex-direction:column;gap:12px;padding:16px;border-radius:12px;border:1px solid ${t.line};background:${t.bg};color:${t.text};`,
+      swatches: order.map(k => ({ name: k + 'Color', hex: T[k][i] })) });
+    const panels = []; if (showL) panels.push(mkPanel('Light', tl, 1)); if (showD) panels.push(mkPanel('Dark', td, 0));
+    const S = {
+      pt: { eyebrow:'Own Expeditor · biblioteca de controles', title:'Tokens', colors:'Cores', contrast:'Contraste verificado', contrastNote:'Calculado ao vivo com a fórmula WCAG 2.x (luminância relativa). Texto: mínimo 4,5:1. Elementos gráficos e bordas de controle: mínimo 3:1. ✓ = passou.', pair:'Par (primeiro plano / fundo)', need:'Exigido', type:'Tipografia', space:'Espaço', radius:'Raio', motion:'Movimento', focus:'Foco visível', focusSample:'Revisar mudanças', focusNote:'Anel de 2 px na cor Focus, com 2 px de folga (cor do fundo) entre o anel e o controle. Em lista, o anel fica por dentro.', hit:'Área de clique', hitNote:'Mínimo 40 px; padrão 44 px; ação principal 48 px; item de lista ≥ 64 px de altura. Ícone de 16 px dentro de 40 px.', disabled:'Desabilitado', disabledNote:'Opacidade 0,4, sem hover. Isento de contraste, mas o motivo aparece em ToolTip e/ou texto de apoio.', btnAccent:'Revisar mudanças', btnNeutral:'Cancelar', modeLabel:'Tema da página', langLabel:'Idioma do canvas', lang:'EN', light:'Claro', dark:'Escuro', both:'Lado a lado' },
+      en: { eyebrow:'Own Expeditor · control library', title:'Tokens', colors:'Colors', contrast:'Verified contrast', contrastNote:'Computed live with the WCAG 2.x formula (relative luminance). Text: at least 4.5:1. Graphics and control borders: at least 3:1. ✓ = pass.', pair:'Pair (foreground / background)', need:'Required', type:'Typography', space:'Spacing', radius:'Radius', motion:'Motion', focus:'Visible focus', focusSample:'Review changes', focusNote:'2 px ring in the Focus color, with a 2 px gap (background color) between ring and control. Inside lists the ring is drawn inset.', hit:'Hit area', hitNote:'Minimum 40 px; default 44 px; primary action 48 px; list items at least 64 px tall. A 16 px icon inside a 40 px target.', disabled:'Disabled', disabledNote:'0.4 opacity, no hover. Exempt from contrast, but the reason shows in a ToolTip and/or helper text.', btnAccent:'Review changes', btnNeutral:'Cancel', modeLabel:'Page theme', langLabel:'Canvas language', lang:'PT', light:'Light', dark:'Dark', both:'Side by side' }
+    }[lang];
+    const modes = [['both', s => s.both], ['light', s => s.light], ['dark', s => s.dark]].map(([m, f]) => ({ label: f(S), on: mode === m ? 'true' : 'false', pick: () => this.setState({ mode: m }),
+      style: `min-height:44px;padding:0 16px;border-radius:10px;border:1px solid ${mode===m?ui.accent:ui.border};background:${mode===m?ui.sel:'transparent'};color:${mode===m?ui.accentText:ui.text};font-weight:600;` }));
+    // ---- pares de contraste ----
+    const P = [
+      ['Text','Bg',4.5],['Text','Side',4.5],['Text','Surface',4.5],['Text','SurfaceHover',4.5],['Text','SurfacePressed',4.5],['Text','Selection',4.5],['Text','Map',4.5],
+      ['TextMuted','Bg',4.5],['TextMuted','Side',4.5],['TextMuted','Surface',4.5],['TextMuted','SurfaceHover',4.5],['TextMuted','SurfacePressed',4.5],['TextMuted','Selection',4.5],['TextMuted','Map',4.5],
+      ['AccentText','Bg',4.5],['AccentText','Side',4.5],['AccentText','Surface',4.5],['AccentText','Selection',4.5],['AccentText','Map',4.5],
+      ['OnAccent','Accent',4.5],['OnAccent','AccentHover',4.5],['OnAccent','AccentPressed',4.5],
+      ['OnDanger','Danger',4.5],['OnDanger','DangerHover',4.5],['OnDanger','DangerPressed',4.5],
+      ['Danger','Bg',4.5],['Danger','Surface',4.5],['Danger','DangerBg',4.5],['Text','DangerBg',4.5],['TextMuted','DangerBg',4.5],
+      ['Success','Bg',4.5],['Success','Surface',4.5],['Success','SuccessBg',4.5],['Text','SuccessBg',4.5],['TextMuted','SuccessBg',4.5],
+      ['MapCityText','Map',4.5],
+      ['Accent','Map',3],['Accent','Bg',3],['Accent','Surface',3],['BorderStrong','Bg',3],['BorderStrong','Surface',3],['BorderStrong','Selection',3],['Focus','Bg',3],['Focus','Surface',3],['Focus','Side',3],['MapCityDot','Map',3],['Danger','Surface',3],['Success','Surface',3]
+    ];
+    const contrast = P.map(([a, b, need]) => {
+      const d = cr(T[a][0], T[b][0]), l = cr(T[a][1], T[b][1]);
+      const ok = (v) => v >= need;
+      const smp = (i) => `display:inline-flex;align-items:center;justify-content:center;width:34px;height:24px;border-radius:6px;font-weight:600;font-size:12px;background:${T[b][i]};color:${T[a][i]};border:1px solid ${T.Line[i]};`;
+      return { pair: `${a} / ${b}`, need: need === 4.5 ? (lang === 'pt' ? 'texto ≥ 4,5:1' : 'text ≥ 4.5:1') : (lang === 'pt' ? 'gráfico ≥ 3:1' : 'graphic ≥ 3:1'),
+        d: d.toFixed(2) + ':1', l: l.toFixed(2) + ':1', dMark: ok(d) ? '✓' : '✗', lMark: ok(l) ? '✓' : '✗',
+        dColor: ok(d) ? ui.text : ui.danger, lColor: ok(l) ? ui.text : ui.danger, sampleD: smp(0), sampleL: smp(1) };
+    });
+    // ---- tipografia ----
+    const cond = "'Barlow Condensed', sans-serif";
+    const typeScale = [
+      { name:'Caption', spec:'Barlow 500 · 12/16 · +0,08em · CAIXA ALTA', style:`font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;color:${ui.muted};`, sample: lang==='pt'?'Origem · Destino':'Origin · Destination' },
+      { name:'BodySm', spec:'Barlow 400 · 13/18', style:'font-size:13px;', sample: lang==='pt'?'Vigas de concreto · Prancha':'Concrete beams · Flatbed' },
+      { name:'Body', spec:'Barlow 400/600 · 14/20', style:'font-size:14px;', sample: lang==='pt'?'Nada é gravado sem revisão. Um backup é criado antes.':'Nothing is written without review. A backup is created first.' },
+      { name:'Subtitle', spec:'Barlow 600 · 16/22', style:'font-size:16px;font-weight:600;', sample: lang==='pt'?'Mudanças pendentes':'Pending changes' },
+      { name:'Metric', spec:`Barlow Condensed 600 · 22/26 · tnum`, style:`font-family:${cond};font-size:22px;font-weight:600;font-variant-numeric:tabular-nums;`, sample: lang==='pt'?'12h 14min · 6.485 · 1.234 km':'12h 14min · 6,485 · 1,234 km' },
+      { name:'Title', spec:'Barlow Condensed 700 · 26/30 · +0,03em · CAIXA ALTA', style:`font-family:${cond};font-size:26px;font-weight:700;text-transform:uppercase;letter-spacing:0.03em;`, sample: lang==='pt'?'Fretes':'Jobs' },
+      { name:'Hero', spec:'Barlow Condensed 700 · 34/40 · tnum', style:`font-family:${cond};font-size:34px;font-weight:700;font-variant-numeric:tabular-nums;color:${ui.accentText};line-height:1.1;`, sample: lang==='pt'?'569 km':'569 km' }
+    ];
+    const spaces = [['Space1',2],['Space2',4],['Space3',8],['Space4',12],['Space5',16],['Space6',20],['Space7',24],['Space8',32]].map(([name, px]) => ({ name, px }));
+    const radii = [['RadiusSm',8,lang==='pt'?'campos, chips':'fields, chips'],['RadiusMd',10,lang==='pt'?'botões':'buttons'],['RadiusLg',12,lang==='pt'?'cartões':'cards'],['RadiusXl',16,lang==='pt'?'mapa':'map'],['RadiusPill',999,'badge']].map(([name, px, use]) => ({ name, px, use }));
+    const motion = [['DurFast','150 ms'],['DurBase','200 ms'],['EaseOut','CubicEaseOut'],[lang==='pt'?'Propriedades':'Properties','Opacity · RenderTransform · '+(lang==='pt'?'pincéis':'brushes')]].map(([name, value]) => ({ name, value }));
+    const hits = [{ px:40, use:lang==='pt'?'mín.':'min.' }, { px:44, use:lang==='pt'?'padrão':'default' }, { px:48, use:lang==='pt'?'principal':'primary' }];
+    const base = `display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 20px;border-radius:10px;font-weight:700;letter-spacing:0.03em;`;
+    const focusDemo = base + `background:${ui.accent};color:${ui.onAccent};box-shadow:0 0 0 2px ${ui.bg}, 0 0 0 4px ${ui.focus};`;
+    const dis1 = base + `background:${ui.accent};color:${ui.onAccent};opacity:0.4;`;
+    const dis2 = base + `background:${ui.panel};color:${ui.text};border:1px solid ${ui.border};opacity:0.4;`;
+    return { ui, s: S, modes, panels, cols: showD && showL ? '1fr 1fr' : '1fr', contrast, typeScale, spaces, radii, motion, hits, focusDemo, dis1, dis2,
+      toggleLang: () => this.setState({ lang: lang === 'pt' ? 'en' : 'pt' }) };
+  }
+}
+</script>
+</body>
+</html>

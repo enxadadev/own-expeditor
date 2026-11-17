@@ -25,12 +25,15 @@ neste catálogo e na Galeria no mesmo PR.
 | `LineColor` | `#2A2F35` | `#D9D3C7` | bordas, divisores |
 | `TextColor` | `#EEF0F2` | `#1B1D20` | texto principal |
 | `TextMutedColor` | `#9AA3AD` | `#5F6670` | rótulos, secundário (≥ 4.5:1) |
-| `AccentColor` | `#F5A524` | `#B86E00` | seleção, rota, ação principal |
+| `AccentColor` | `#F5A524` | `#B86E00` | preenchimento, borda, rota (não texto no claro) |
+| `AccentTextColor` | `#F5A524` | `#8A5200` | texto em âmbar |
 | `OnAccentColor` | `#1A1206` | `#1A1206` | texto sobre âmbar |
 | `SelectionColor` | `#2A2414` | `#FBECD2` | item selecionado |
 | `DangerColor` | `#F87171` | `#B42318` | erro, ação destrutiva |
-| `SuccessColor` | `#4ADE80` | `#157F3B` | sucesso |
-Cada cor tem o `…Brush` correspondente. Âmbar só para seleção, rota e a
+| `SuccessColor` | `#4ADE80` | `#0F6B33` | sucesso |
+| `BorderStrongColor` | `#66717D` | `#857E6F` | borda de campo e botão neutro (≥3:1) |
+| `OnDangerColor` | `#1A0606` | `#FFFFFF` | texto sobre `Danger` |
+Também: `SurfaceHover/Pressed`, `AccentHover/Pressed`, `DangerHover/Pressed`, `DangerBg`, `SuccessBg`, `Focus`, tokens do mapa, `RouteGlow`, `Overlay` — valores e os 48 pares de contraste em `design/controles/screens.md` §1. Cada cor tem o `…Brush` correspondente. Âmbar só para seleção, rota e a
 ação principal — nunca decoração.
 
 ### Tipografia
@@ -52,7 +55,8 @@ Números sempre `FontFeatures="+tnum"`.
 ## Componentes (`Controls/`)
 | Componente | Para quê | Não use para |
 | --- | --- | --- |
-| `AppShell` | barra lateral de módulos + topo (perfil/save, tema, idioma) | — (um só) |
+| `AppShell` | lateral de módulos + `SessionBar` (perfil, save, jogo, selo Revisar); tema/idioma ficam em Configurações | — (um só) |
+| `SessionBar`, `NavItem`, `ProfileSavePicker`, `SegmentedChoice`, `FolderField`, `StepList`, `CodeSnippet` | peças do shell e de Configurações | ver `design/shell/screens.md` |
 | `PageHeader` | título do módulo, contagem, ações | cabeçalho de seção interna |
 | `SearchablePicker` | escolher 1 entre milhares (cidade, empresa, carga, reboque) com busca/virtualização | listas < 10 itens (use `ComboBox`) |
 | `OfferList` / `DataList` | lista virtualizada selecionável com colunas | grade editável |
@@ -62,12 +66,14 @@ Números sempre `FontFeatures="+tnum"`.
 | `RouteMap` | mapa esquemático origem → destino (+ cidades se houver coordenadas) | navegação geral de mapa |
 | `RouteOfferItem` | item de lista "Origem ⋯ Destino · km" + carga | tabelas genéricas |
 | `EmptyState` | lista vazia com motivo e ação | erro |
-| `ErrorState` | o que aconteceu + o que fazer + tentar de novo | aviso leve (use `InfoBar`) |
-| `LoadingState` | carregando com texto ("Lendo save…") | operações < 300 ms |
-| `ChangeReviewList` | diff antes → depois de todas as mudanças pendentes | — (único lugar de revisão) |
+| `ErrorBanner` (Inline/Block) | o que aconteceu + o que fazer + ação | aviso leve |
+| `LoadingPanel` | carregando com etapas e progresso | operações < 300 ms |
+| `SectionCard`, `ValueChange` | agrupar; um valor antes → depois | — |
+| `DiffList` | diff antes → depois de todas as mudanças pendentes | — (único lugar de revisão) |
 | `ConfirmApplyDialog` | confirmar gravação, mostra backup | confirmações triviais |
-| `Toast` | resultado de ação (sucesso, backup salvo em…) | erros que exigem ação |
-| `Badge` | status curto (pendente, modificado, mod) | texto longo |
+| `Toast` | feedback curto ("Desfazer" após descartar) | resultado de aplicar (é página) |
+| `PendingBadge` | nº de mudanças pendentes | texto longo |
+| Botões `accent` / `danger` / `neutral` / `ghost` | ação principal / gravar ou descartar (perigo) / secundária / terciária | — |
 
 Cada componente: estilos via tokens, Light/Dark, textos por chave `.resx`,
 estados `:pointerover/:pressed/:disabled/:focus-visible`, exemplo na Galeria.
@@ -77,7 +83,7 @@ estados `:pointerover/:pressed/:disabled/:focus-visible`, exemplo na Galeria.
    topo com perfil/save ativo, tema e idioma. Badge com nº de mudanças pendentes.
 2. **Ciclo de módulo**: explorar (lista + busca) → selecionar → editar no
    `DetailPanel` → "Revisar mudanças (N)" → `ChangeReviewList` →
-   `ConfirmApplyDialog` → `Toast` com caminho do backup.
+   `ConfirmApplyDialog` → página **Resultado** com caminho do backup. Atalhos: Ctrl+R revisar, Ctrl+Enter (na revisão) abre a confirmação.
 3. **Nada grava sem revisão**: ações de módulo só alteram a sessão de edição.
 4. Toda tela tem os 4 estados (carregando/vazio/erro/conteúdo).
 
