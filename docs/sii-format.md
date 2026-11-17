@@ -151,6 +151,12 @@ Ler esses arquivos fica para uma fase posterior.
 
 - Se o jogo valida reboque e caminhão (`company_truck`) contra a carga.
 - Como calcular a distância quando o par origem/destino não existe no save.
+- **Traduções não verificadas com o arquivo real (pendente para o PC Windows).**
+  O `locale.scs` não está em `dataset/scs`, então as cargas aparecem com nome
+  derivado do id ("Used plast"). No Windows: rodar o app apontando para a pasta
+  do jogo e conferir se a barra de status mostra "Textos no idioma pt_br" e se
+  cargas/cidades saem traduzidas; se não, gerar
+  `tar -a -cf ets2_locale.zip locale.scs` na pasta do jogo e usar como fixture.
 ## 8. Definições do jogo (.scs)
 
 Leitor em `src/OwnExpeditor.Data/Scs/` (HashFS v2 + CityHash64, spec do
