@@ -26,6 +26,16 @@ Histórico de commits relevante para o estado atual:
 - `OWNE-4`: agentes e skills movidos para `ia/`.
 - `OWNE-5`, `OWNE-6`: regras de numeração e de histórico do git.
 - `OWNE-7`: agente `docs-keeper`.
+- `OWNE-8`: documentação inicial em `docs/`.
+- `OWNE-9`: `toolkit/`, com scripts para build e testes resumidos, checagem de
+  camadas e de docs, diff compacto, numeração OWNE, versão, commit com
+  validação de mensagem, ADRs, revisão pelo Codex e release Windows. Inclui a
+  ferramenta `toolkit/SiiTool` para inspecionar saves sem ler o arquivo inteiro.
+  Limitação: saves BSII ainda não são suportados.
+- `OWNE-10`: agentes de código (`chief-architect`, `core-dev`, `sii-engine`,
+  `ui-dev`, `test-engineer`, revisores, `build-fixer`, `save-inspector`,
+  `fixture-maker`, `test-runner`, `release-builder`, `git-ops`), skills de
+  workflow `wf-*` e a orquestração documentada em `ia/README.md`.
 
 Os números de commit citados aqui vêm do histórico do git. Esta seção não é
 gerada automaticamente.

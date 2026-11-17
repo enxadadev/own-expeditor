@@ -37,17 +37,146 @@ Não coloque saves pessoais no repositório. Use `samples/` para isso.
 
 ## Publicar para Windows
 
-> TODO: confirmar. O projeto ainda não tem perfil de publicação nem
-> configuração de `RuntimeIdentifier` ou `PublishSingleFile`. O comando abaixo
-> é a forma padrão do .NET, não foi executado aqui e precisa ser testado.
+Use o script de release, que roda `toolkit/check.sh` antes e só publica se os
+testes passarem:
 
 ```bash
-dotnet publish src/OwnExpeditor.App -c Release -r win-x64 \
-  --self-contained true -p:PublishSingleFile=true
+toolkit/release.sh
 ```
 
-A saída fica em `src/OwnExpeditor.App/bin/Release/net8.0/win-x64/publish/`.
-Não versione essa pasta (a pasta `publish/` já está no `.gitignore`).
+O script publica `OwnExpeditor.App` para `win-x64`, self-contained e em arquivo
+único (`PublishSingleFile`), e grava em `publish/<versão>/`:
+
+- `OwnExpeditor.App.exe`, o executável;
+- `RELEASE-NOTES.md`, com a seção `## <versão>` copiada de
+  [changelog.md](changelog.md). Se a seção não existir, o script avisa.
+
+> TODO: confirmar. O `release.sh` ainda não foi executado num ambiente Windows.
+> Até lá, o teste do `.exe` gerado fica pendente.
+
+A pasta `publish/` está no `.gitignore`. Não versione o conteúdo dela.
+
+## Toolkit
+
+`toolkit/` reúne scripts que substituem sequências de comandos repetidas, tanto
+por pessoas quanto pelos agentes em `ia/`. Os scripts devolvem saídas curtas
+(uma linha de resumo, erros e avisos). Eles rodam a partir de qualquer
+subpasta do repositório, porque resolvem a raiz pelo git.
+
+A lista completa e o papel de cada script estão na seção Toolkit de
+[ia/README.md](../ia/README.md). Abaixo, os casos de uso mais comuns.
+
+### Build e testes
+
+```bash
+toolkit/check.sh                                  # build + testes, resumido
+toolkit/check.sh --filter "FullyQualifiedName~Sii" # só um subconjunto dos testes
+```
+
+`check.sh` imprime `BUILD: ok (N avisos)` e
+`TESTES: N passaram, N falharam, N pulados`. Em caso de falha, mostra as
+primeiras linhas de erro, de falha e de exceção.
+
+### Regras de camadas e docs
+
+```bash
+toolkit/check-layers.sh    # CAMADAS: ok, ou VIOLACAO: <projeto> -> <referência>
+toolkit/check-docs.sh      # DOCS: ok, ou LINK QUEBRADO / FORA DO INDICE
+```
+
+`check-docs.sh` também conta os `TODO: confirmar` espalhados em `docs/`.
+
+### Diff para revisão
+
+```bash
+toolkit/diff-summary.sh                           # contra a branch principal
+toolkit/diff-summary.sh main -- src/OwnExpeditor.Sii   # base e caminhos específicos
+```
+
+Mostra o `stat` e o diff com 2 linhas de contexto, sem `*.Designer.cs`, `obj/`
+e `*.sii`.
+
+### Saves de exemplo e inspeção do formato
+
+```bash
+toolkit/samples.sh            # lista game.sii de samples/ com o formato de cada um
+toolkit/samples.sh --text     # só os que o parser atual consegue ler
+toolkit/sii.sh types  <save>            # contagem por tipo de bloco
+toolkit/sii.sh list   <save> <tipo> 10  # ids de um tipo
+toolkit/sii.sh show   <save> <id>       # um bloco inteiro
+toolkit/sii.sh attrs  <save> <tipo>     # atributos de um tipo e quantos blocos têm cada um
+toolkit/sii.sh roundtrip <save>         # parse + write reproduz o texto?
+```
+
+`toolkit/sii.sh` compila a ferramenta `toolkit/SiiTool` na primeira execução e
+de novo sempre que `src/OwnExpeditor.Sii` ou o próprio `SiiTool` mudam. Rode
+sem argumentos para ver a ajuda.
+
+Limitação atual: saves no formato **BSII** (binário) não são suportados. O
+`samples.sh` marca cada save como `Text` (utilizável) ou `Binary` (BSII, ainda
+não suportado). Os comandos do `sii.sh` só funcionam nos `Text`. O `samples.sh`
+procura `samples/` na raiz do worktree e, em seguida, na do repositório
+principal. Os caminhos que ele imprime são locais: não os copie para a
+documentação.
+
+Para detalhes do formato, ver [sii-format.md](sii-format.md).
+
+### Versão e numeração
+
+```bash
+toolkit/next-owne.sh                  # próximo número OWNE livre, ex.: OWNE-11
+toolkit/bump-version.sh patch --dry-run   # mostra 0.1.0 -> 0.1.1 sem gravar
+toolkit/bump-version.sh minor             # altera Directory.Build.props
+```
+
+`bump-version.sh` aceita `patch`, `minor` ou `major`. `--dry-run` vai como
+segundo argumento. `next-owne.sh` consulta `git fetch --all` antes de ler o
+histórico de todas as branches.
+
+### Commits
+
+```bash
+toolkit/precommit.sh                       # branch, próximo OWNE, versão, arquivos e alertas
+toolkit/lint-commit-msg.sh msg.txt         # valida título, linha em branco e OWNE repetido
+toolkit/install-hooks.sh                   # instala o hook commit-msg (vale para os worktrees)
+toolkit/commit.sh msg.txt src/a.cs src/b.cs  # valida e commita só os arquivos listados
+```
+
+`precommit.sh` alerta quando a branch atual é a principal, quando há arquivos
+proibidos (`.sii`, `bin/`, `obj/`, `samples/`, `publish/`) e quando a versão
+mudou sem entrada no changelog.
+
+`commit.sh` só deve ser usado depois da aprovação explícita do usuário. Ele
+não aceita `git add -A`: a lista de arquivos é obrigatória. Ele valida a
+mensagem antes e commita com `--no-verify`, porque a validação já foi feita.
+
+Regras da mensagem: título `OWNE-N: Resumo` com até 72 caracteres, sem ponto
+final, linha 2 em branco, corpo não vazio, e sem menção a Claude, Anthropic
+ou co-autoria.
+
+### ADRs
+
+```bash
+toolkit/new-adr.sh "usar-cache-de-distancias" < texto-do-adr.md
+```
+
+Cria `docs/decisions/NNNN-usar-cache-de-distancias.md` com o próximo número
+livre e imprime o caminho. O texto vem da entrada padrão. Se a entrada estiver
+vazia, o script recusa e não cria o arquivo. Ver [decisions/](decisions/).
+
+### Revisão pelo Codex
+
+```bash
+toolkit/codex-review.sh            # diff contra a branch principal
+toolkit/codex-review.sh origin/main
+```
+
+Precisa do Codex CLI instalado e autenticado (`npm i -g @openai/codex` e
+`codex login`). O relatório vai para `.reviews/codex-<data>.md`, pasta que está
+no `.gitignore`. O script imprime quantos achados `BLOQUEANTE` e `IMPORTANTE`
+o relatório tem.
+
+## Convenções
 
 ## Convenções
 
@@ -76,6 +205,7 @@ src/                      código de produção (ver architecture/layers.md)
 tests/                    testes xUnit
 docs/                     esta documentação
 ia/                       agentes e skills de apoio ao desenvolvimento
+toolkit/                  scripts de build, checagem, commit e inspeção de saves
 ```
 
 Os arquivos de `.claude/` são configuração do assistente. Ver

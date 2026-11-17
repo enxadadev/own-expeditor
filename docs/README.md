@@ -14,7 +14,8 @@ ainda não existem.
 | Documento | Para que serve |
 |-----------|----------------|
 | [usage.md](usage.md) | Guia do usuário: como abrir o app, backups, restauração e problemas comuns |
-| [development.md](development.md) | Pré-requisitos, comandos de build, teste e execução, publicação para Windows e convenções |
+| [development.md](development.md) | Pré-requisitos, comandos de build, teste e execução, publicação para Windows, toolkit e convenções |
+| [ai-workflow.md](ai-workflow.md) | Como os agentes de IA, as skills `wf-*` e o toolkit se organizam (resumo; a fonte está em `ia/`) |
 | [sii-format.md](sii-format.md) | Formato do `game.sii`: camadas ScsC, BSII e SiiNunit, campos de job e comportamento do parser |
 | [architecture/overview.md](architecture/overview.md) | Visão geral, diagrama de camadas e fluxo principal de leitura, injeção e escrita |
 | [architecture/layers.md](architecture/layers.md) | Responsabilidade de cada projeto em `src/` e a regra de dependência |
@@ -29,7 +30,10 @@ Fora de `docs/`:
 
 - `CLAUDE.md` (na raiz): instruções do projeto para o Claude Code, incluindo as
   regras de backup e de round-trip do save.
-- `ia/agents/` e `ia/skills/`: agentes e skills de apoio ao desenvolvimento.
+- `ia/agents/` e `ia/skills/`: agentes e skills de apoio ao desenvolvimento
+  (resumidos em [ai-workflow.md](ai-workflow.md)).
+- `toolkit/`: scripts de apoio ao desenvolvimento (resumidos em
+  [development.md](development.md#toolkit)).
 
 ## Como começar
 
