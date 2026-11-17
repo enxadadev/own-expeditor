@@ -24,6 +24,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\OwnExpeditor.Core\OwnExpeditor.Core.csproj" />
+    <ProjectReference Include="..\..\src\OwnExpeditor.Sii\OwnExpeditor.Sii.csproj" />
+    <ProjectReference Include="..\..\src\OwnExpeditor.Data\OwnExpeditor.Data.csproj" />
   </ItemGroup>
 
 </Project>

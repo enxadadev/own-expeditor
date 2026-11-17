@@ -9,3 +9,4 @@ samples/
 *.sii.bak-*
 .reviews/
 .screenshots/
+dataset/

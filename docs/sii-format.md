@@ -139,18 +139,36 @@ Limitação: só aparecem cargas e reboques que o jogo já sorteou em alguma
 oferta. A lista completa está nos arquivos `def/` do jogo (`.scs`, HashFS v2).
 Ler esses arquivos fica para uma fase posterior.
 
-## 5. Em aberto
+## 5. Validado no jogo (17/11/2026, ETS2 1.5x, Windows)
 
-- Se o jogo valida a combinação carga + reboque + empresa (ex.: carga que a
-  empresa de origem não produz).
+- **O jogo carrega `game.sii` e `info.sii` em texto puro.** Não é preciso
+  recriptografar.
+- **Job injetado num slot vazio aparece no mercado de fretes** (kaarfor.budapest
+  → dfh.berlin, `cargo.used_plast`, 847 km).
+- **Um job foi descartado sem aviso, e a causa não é conhecida.**
+  tradeaux.budapest → dfh.berlin com `cargo.plumb_suppl` não apareceu. A
+  hipótese de que a DFH não aceitava a carga **está errada**: `def/company/dfh/in/plumb_suppl.sii`
+  existe e `tradeaux/out/plumb_suppl.sii` também. Diferenças em relação ao teste
+  que funcionou: outra empresa de origem, reboque `scs_dry_s` e
+  `company_truck: daf_4x2_a`. Ainda a investigar.
+- **Steam Cloud:** em perfis sincronizados, o jogo pede a lista de arquivos à
+  Steam. Pastas de save criadas à mão em `Steam\userdata\...\remote` são ignoradas.
+  O app deve detectar isso e orientar o usuário a desativar o Steam Cloud do perfil,
+  ou gravar sobre um slot existente.
+- Uma pasta de save nova chamada `5` não apareceu e `6` apareceu; a causa não foi
+  investigada. Possível sobra da sincronização da Steam.
+
+## 6. Em aberto
+
+- Se o jogo valida reboque e caminhão (`company_truck`) contra a carga.
 - Como calcular a distância quando o par origem/destino não existe no save.
 - Se `info.sii` precisa ser atualizado junto.
 - Se o jogo regenera as ofertas ao carregar quando `expiration_time` é menor
   que `game_time`.
-- Se o jogo carrega um `game.sii` em texto puro gravado pelo app (ver
-  [ADR 0002](decisions/0002-gravar-save-em-texto.md)).
+- ~~Se o jogo carrega um `game.sii` em texto puro gravado pelo app~~ —
+  validado no jogo (seção 7; [ADR 0002](decisions/0002-gravar-save-em-texto.md)).
 
-## 6. Como o código lê e grava (`src/OwnExpeditor.Sii`)
+## 7. Como o código lê e grava (`src/OwnExpeditor.Sii`)
 
 Esta seção registra o comportamento do parser e do writer atuais. Ela não
 descreve o jogo.
@@ -173,3 +191,57 @@ descreve o jogo.
 - **Round-trip**: `RealSaveTests` compara `ToText()` com o texto original dos
   saves de `samples/` e passa para todos os saves que estão lá. Os saves não
   vêm com o repositório.
+
+## 8. BSII (binário)
+
+Implementado em `src/OwnExpeditor.Sii/BsiiDecoder.cs`, portado de
+SII-Decrypt-cpp (MIT). Resumo do formato:
+
+- Cabeçalho: `BSII` + versão u32 (1–3). Depois, uma sequência de blocos que
+  começam com um u32:
+  - `0` → definição de estrutura: u8 válido (0 = fim do arquivo), u32 id,
+    string nome, e campos (u32 tipo + string nome) até tipo `0`. O tipo `0x37`
+    (ordinal string) traz uma tabela valor → texto.
+  - `≠0` → bloco de dados da estrutura com esse id: um ID e os valores dos
+    campos, na ordem da estrutura.
+- Strings: u32 tamanho + bytes UTF-8. Tudo little-endian.
+- IDs: u8 tamanho (0 = `null`, 0xFF = `_nameless` + u64) e N tokens u64.
+- Tokens: até 12 caracteres `[0-9a-z_]` em base 38, primeiro caractere no
+  dígito menos significativo.
+- Placement (`0x19`, v2+): 8 floats; o 4º carrega um deslocamento de setor
+  somado a x e z.
+
+Ao gerar texto, seguimos o jogo: `nil` para inteiros com valor máximo, floats
+não inteiros como `&hex`, e strings sem aspas quando só têm `[A-Za-z0-9_]`.
+
+Validação: os 25 saves do exemplo (23 BSII) decodificam; os nomes dos campos
+e a forma dos valores batem com um save que o próprio jogo gravou em texto.
+Validado no jogo: o slot 3 (BSII) convertido para texto e com job injetado
+carregou normalmente, e o frete apareceu.
+
+## 9. Definições do jogo (.scs)
+
+Leitor em `src/OwnExpeditor.Data/Scs/` (HashFS v2 + CityHash64, spec do
+scs_tools, MIT). O app lê `def.scs` e `dlc_*.scs` da instalação do usuário em
+tempo de execução, sem distribuir arquivos do jogo. O catálogo completo
+(def + 10 DLCs de mapa) carrega em ~70 ms.
+
+| Caminho no pacote | Conteúdo |
+|-------------------|----------|
+| `def/company/<empresa>/in/<carga>.sii` | cargas que a empresa recebe |
+| `def/company/<empresa>/out/<carga>.sii` | cargas que a empresa envia |
+| `def/company/<empresa>/editor/<cidade>.sii` | cidades onde a empresa existe (`city:`) |
+| `def/cargo/<carga>.sui` | `cargo_data`: nome (`@@chave@@`), `body_types[]`, `group[]`, `unit_reward_per_km`, massa, volume |
+| `def/cargo.sii` | `@include` de todos os `.sui` |
+| `def/company/<empresa>.sui` | `name: "Kaarfor"` (nome de exibição, sem tradução) |
+| `def/city/<cidade>.sui` | `city_data : city.x`: `city_name` (nome local), `city_name_localized: "@@x@@"`, `country` |
+| `locale/<idioma>/local*.sii` (em `locale.scs`) | `localization_db`: pares `key[]`/`val[]`; `\xNN` são bytes UTF-8; pode ter `@include` e vir em 3nK |
+
+Nomes na tela: tradução (`@@chave@@` no idioma de `config.cfg` → `g_lang_init`,
+senão o idioma do sistema, senão en_us/en_gb) → nome local → id legível.
+O `locale.scs` ainda não foi testado com o arquivo real.
+
+As DLCs só trazem os arquivos delas; o catálogo junta todos os pacotes.
+Ainda não lido: mods (`.scs`/`.zip` na pasta `mod`), HashFS v1 e o vínculo
+reboque ↔ `body_types`.
+
