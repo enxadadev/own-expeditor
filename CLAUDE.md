@@ -23,6 +23,9 @@ existentes no save (`game.sii`) por origem, destino, carga e reboque escolhidos.
   fixtures pequenos em `tests/**/Fixtures/`.
 - Formato SII: documentar descobertas em `docs/sii-format.md` antes de codar o parser.
 
+## Agentes
+- Agentes e skills ficam em `ia/`; quem faz o quê e o fluxo estão em `ia/README.md`.
+
 ## Comandos
 - `dotnet build`
 - `dotnet test`
