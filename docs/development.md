@@ -178,8 +178,6 @@ o relatório tem.
 
 ## Convenções
 
-## Convenções
-
 - Nullable e `ImplicitUsings` estão ligados em todos os projetos.
 - A versão do produto fica em `Directory.Build.props` (`M.X.Y`). Quem altera
   essa versão é o agente `git-ops`, em `ia/agents/git-ops.md`. Ver

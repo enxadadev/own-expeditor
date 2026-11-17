@@ -21,7 +21,8 @@ Ainda sem release publicado. Estado do que existe no código:
 Histórico de commits relevante para o estado atual:
 
 - `OWNE-1`: commit inicial.
-- `OWNE-2`: skill `make-interfaces-feel-better`.
+- `OWNE-2`: skill `make-interfaces-feel-better` (renomeada depois para
+  `avalonia-polish`).
 - `OWNE-3`: agente `git-ops` e versionamento do projeto.
 - `OWNE-4`: agentes e skills movidos para `ia/`.
 - `OWNE-5`, `OWNE-6`: regras de numeração e de histórico do git.
@@ -36,6 +37,13 @@ Histórico de commits relevante para o estado atual:
   `ui-dev`, `test-engineer`, revisores, `build-fixer`, `save-inspector`,
   `fixture-maker`, `test-runner`, `release-builder`, `git-ops`), skills de
   workflow `wf-*` e a orquestração documentada em `ia/README.md`.
+- `OWNE-12`: skills de domínio, UI, testes e regra de tema/idioma:
+  skills `save-safety`, `ets2-domain`, `avalonia-mvvm`, `i18n-theming`,
+  `ux-writing`, `dotnet-standards`, `xunit-patterns` e `large-save-performance`;
+  `make-interfaces-feel-better` renomeada para `avalonia-polish`; agentes
+  listam as skills que carregam; regra de tema e idioma no `CLAUDE.md` e
+  ADR 0004.
+- `OWNE-13`: documentação das skills, do requisito de tema/idioma e ADR 0004.
 
 Os números de commit citados aqui vêm do histórico do git. Esta seção não é
 gerada automaticamente.

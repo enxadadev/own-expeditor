@@ -99,7 +99,7 @@ Job ativo:
 job_offer_data : _nameless.2d8.21c9.d5d8 {
  target: "lognstick.istanbul"          # destino: "<empresa>.<cidade>"
  expiration_time: 11649                 # game_time em que a oferta expira
- urgency: 0                             # 0 padrão, 1 importante, 2 urgente
+ urgency: 0                             # 0 padrão, 1 importante, 2 urgente (TODO: confirmar)
  shortest_distance_km: 569              # usado para pagamento e tempo
  ferry_time: 0
  ferry_price: 0
@@ -116,6 +116,14 @@ job_offer_data : _nameless.2d8.21c9.d5d8 {
 Slot vazio (1406 no save de exemplo): `target: ""`, `cargo: null`,
 `expiration_time: nil`. Esses slots são os candidatos naturais para injetar
 jobs sem apagar ofertas existentes.
+
+### Glossário dos demais atributos
+
+Os atributos acima são os que o app usa hoje. O glossário completo, com as
+dúvidas marcadas, está em
+[ia/skills/ets2-domain/SKILL.md](../ia/skills/ets2-domain/SKILL.md). Em
+`company`, falta listar `reserved_trailer_slot`, `delivered_trailer` e
+`delivered_pos`, que aparecem no save de exemplo.
 
 ## 4. De onde vêm as listas (sem listas fixas)
 

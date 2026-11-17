@@ -48,8 +48,26 @@ pedido:
 | [wf-commit](../ia/skills/wf-commit/SKILL.md) | commit, sempre com aprovação do usuário |
 | [wf-release](../ia/skills/wf-release/SKILL.md) | exe Windows e notas de versão |
 
-A skill `make-interfaces-feel-better` é usada pelos agentes de UI (ver
-[ia/skills/make-interfaces-feel-better/SKILL.md](../ia/skills/make-interfaces-feel-better/SKILL.md)).
+## Skills
+
+Skills são instruções que o agente carrega antes de começar. A lista de cada
+agente está no topo da sua definição em `ia/agents/`. A tabela abaixo mostra
+para que serve cada skill de apoio. O conteúdo fica no `SKILL.md` de cada uma;
+aqui há só o resumo.
+
+| Skill | Para quê | Agentes |
+| --- | --- | --- |
+| [avalonia-polish](../ia/skills/avalonia-polish/SKILL.md) | polimento visual e de interação da UI Avalonia (Fluent); exemplos em `reference.md` | ui-dev, ux-reviewer |
+| [avalonia-mvvm](../ia/skills/avalonia-mvvm/SKILL.md) | padrões de View e ViewModel (bindings compilados, comandos assíncronos, DI) | ui-dev, code-reviewer |
+| [i18n-theming](../ia/skills/i18n-theming/SKILL.md) | tema Light/Dark/Sistema e idioma pt-BR/en: `.resx`, troca em runtime, preferências | ui-dev, ux-reviewer, chief-architect |
+| [ux-writing](../ia/skills/ux-writing/SKILL.md) | textos de interface em pt-BR e en, mensagens de erro e glossário | ui-dev, ux-reviewer, docs-keeper |
+| [save-safety](../ia/skills/save-safety/SKILL.md) | regras para ler, gravar ou substituir o `game.sii` (backup, escrita atômica) | sii-engine, core-dev, code-reviewer, chief-architect |
+| [ets2-domain](../ia/skills/ets2-domain/SKILL.md) | glossário do save: `company`, `job_offer_data` e demais campos | chief-architect, core-dev, save-inspector, fixture-maker |
+| [dotnet-standards](../ia/skills/dotnet-standards/SKILL.md) | convenções C# e .NET 8 (nullable, async, exceções, nomes) | core-dev, sii-engine, test-engineer, build-fixer, code-reviewer |
+| [xunit-patterns](../ia/skills/xunit-patterns/SKILL.md) | padrões de teste xUnit: nomes, AAA, fixtures, arquivos temporários | test-engineer, fixture-maker |
+| [large-save-performance](../ia/skills/large-save-performance/SKILL.md) | desempenho com saves grandes: medição, alocação, streaming | sii-engine |
+
+Os workflows `wf-*` são skills também, mas ficam na tabela de workflows acima.
 
 ## Ciclo de uma feature
 

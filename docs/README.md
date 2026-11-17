@@ -15,7 +15,7 @@ ainda não existem.
 |-----------|----------------|
 | [usage.md](usage.md) | Guia do usuário: como abrir o app, backups, restauração e problemas comuns |
 | [development.md](development.md) | Pré-requisitos, comandos de build, teste e execução, publicação para Windows, toolkit e convenções |
-| [ai-workflow.md](ai-workflow.md) | Como os agentes de IA, as skills `wf-*` e o toolkit se organizam (resumo; a fonte está em `ia/`) |
+| [ai-workflow.md](ai-workflow.md) | Como os agentes de IA, as skills (workflows `wf-*` e skills de apoio) e o toolkit se organizam (resumo; a fonte está em `ia/`) |
 | [sii-format.md](sii-format.md) | Formato do `game.sii`: camadas ScsC, BSII e SiiNunit, campos de job e comportamento do parser |
 | [architecture/overview.md](architecture/overview.md) | Visão geral, diagrama de camadas e fluxo principal de leitura, injeção e escrita |
 | [architecture/layers.md](architecture/layers.md) | Responsabilidade de cada projeto em `src/` e a regra de dependência |
@@ -24,6 +24,7 @@ ainda não existem.
 | [decisions/0001-camadas-com-dependencia-para-baixo.md](decisions/0001-camadas-com-dependencia-para-baixo.md) | ADR: camadas com dependência só para baixo |
 | [decisions/0002-gravar-save-em-texto.md](decisions/0002-gravar-save-em-texto.md) | ADR: gravar o save em texto SiiNunit, sem recriptografar |
 | [decisions/0003-sem-listas-fixas.md](decisions/0003-sem-listas-fixas.md) | ADR: nenhuma lista fixa de cidades, cargas ou reboques |
+| [decisions/0004-suporte-a-tema-e-idioma.md](decisions/0004-suporte-a-tema-e-idioma.md) | ADR: tema Light/Dark/Sistema e idiomas pt-BR/en, com preferências em JSON |
 | [changelog.md](changelog.md) | Mudanças por versão (`Directory.Build.props`) |
 
 Fora de `docs/`:

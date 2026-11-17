@@ -45,6 +45,24 @@ Testes:
 > TODO: confirmar quando `Core`, `Data` e `Domain` ganharem código, e se o
 > `Models\` do App será usado ou removido.
 
+## Tema e idioma por camada
+
+Regra da [ADR 0004](../decisions/0004-suporte-a-tema-e-idioma.md) e da skill
+`i18n-theming`. Os itens marcados como TODO ainda não existem no código.
+
+- **App** (`src/OwnExpeditor.App`): todo texto visível vem de `.resx`
+  (`Resources/Strings.resx` em en e `Strings.pt-BR.resx`). Cores próprias ficam
+  em `ThemeDictionaries` (Light e Dark). Hoje só o tema do sistema está ligado
+  (`RequestedThemeVariant="Default"`). TODO: confirmar a pasta `Resources/`.
+- **Core** (`src/OwnExpeditor.Core`): devolve códigos de erro, não mensagens. A
+  App traduz o código. O Core não referencia recursos de UI. TODO: confirmar
+  quando o Core ganhar código.
+- **Data** (`src/OwnExpeditor.Data`): lê e grava `settings.json` em
+  `ApplicationData/OwnExpeditor/`, com tema e idioma. A Core acessa isso por
+  uma interface. TODO: confirmar quando `Data` ganhar código.
+- **Domain**: não tem texto nem cor. Nomes de cidades, empresas e cargas vêm do
+  save e não são traduzidos.
+
 ## Regras que a estrutura precisa manter
 
 - Nenhuma camada inferior conhece a superior. Por exemplo, `Sii` não pode

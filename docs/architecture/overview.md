@@ -49,5 +49,21 @@ Estado atual de cada etapa:
 | Listar opções | TODO: confirmar. Não há código em `Core` |
 | Injetar job pela UI | TODO: confirmar. A UI é só o template |
 
+## Requisitos transversais: tema e idioma
+
+A UI precisa oferecer tema Light, Dark ou Sistema, e os idiomas pt-BR e en. A
+regra está no `CLAUDE.md` e na decisão
+[ADR 0004](../decisions/0004-suporte-a-tema-e-idioma.md). Em cada camada:
+textos ficam em `.resx` na App, o Core devolve códigos de erro e a Data guarda
+as preferências. Detalhes por camada em [layers.md](layers.md).
+
+| Item | Situação |
+|------|----------|
+| Tema segue o sistema | Implementado: `App.axaml` usa `RequestedThemeVariant="Default"` |
+| Escolha de tema Light/Dark pelo usuário | TODO: confirmar. Não há tela nem preferência |
+| Textos em `.resx` (pt-BR e en) | TODO: confirmar. Não há arquivos `.resx` |
+| Preferências em JSON, na Data | TODO: confirmar. Não há código em `Data` |
+| Troca de tema e idioma em runtime | TODO: confirmar. Depende dos itens acima |
+
 Sequência detalhada de leitura e escrita: [data-flow.md](data-flow.md).
 Formato do arquivo: [../sii-format.md](../sii-format.md).
