@@ -49,8 +49,7 @@ public static class SiiDecoder
             case SiiFormat.Encrypted:
                 return DecodeToText(Decrypt(data));
             case SiiFormat.Binary:
-                throw new NotSupportedException(
-                    "Save em formato binário (BSII) ainda não é suportado. Use g_save_format \"2\" e salve de novo.");
+                return BsiiDecoder.ToText(data);
             case SiiFormat.ThreeNK:
                 throw new NotSupportedException("Formato 3nK ainda não é suportado.");
             default:

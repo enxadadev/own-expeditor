@@ -91,6 +91,13 @@ public class SiiDocumentTests
     }
 
     [Fact]
+    public void Bsii_token_decodes_base38()
+    {
+        // "ab" = a(11) + b(12) * 38
+        Assert.Equal("ab", BsiiDecoder.DecodeToken(11 + 12 * 38));
+    }
+
+    [Fact]
     public void Decoder_detects_formats()
     {
         Assert.Equal(SiiFormat.Text, SiiDecoder.DetectFormat("SiiNunit"u8));
