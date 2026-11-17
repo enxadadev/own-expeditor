@@ -16,6 +16,7 @@ flowchart TD
     Domain["OwnExpeditor.Domain<br/>entidades puras"]
 
     App --> Core
+    App -.->|records puros, ADR 0005| Domain
     Core --> Data
     Core --> Sii
     Data --> Sii
@@ -48,6 +49,33 @@ Estado atual de cada etapa:
 | Localizar perfil e save | TODO: confirmar. Não há código em `Data` |
 | Listar opções | TODO: confirmar. Não há código em `Core` |
 | Injetar job pela UI | TODO: confirmar. A UI é só o template |
+
+## Shell modular (planejado)
+
+O app deve virar um shell com módulos (Fretes primeiro, depois Caminhões,
+Perfil, Empresa e Mapa). Todos seguem o mesmo ciclo:
+
+```mermaid
+flowchart LR
+    X[explorar<br/>ver o save] --> E[editar<br/>enfileirar mudanças]
+    E --> R[revisar<br/>antes → depois]
+    R --> P[aplicar<br/>backup + escrita atômica]
+    P --> X
+```
+
+- **Explorar e editar** ficam no módulo. Ele não grava nada: monta
+  `ChangeSet`s numa sessão de edição do `Core`.
+- **Revisar, aplicar e ver o resultado** ficam no shell e valem para todos os
+  módulos. Uma gravação cobre todas as mudanças pendentes, com um único backup.
+- **Aplicar** é atômico: confere se o jogo está fechado e se o arquivo não
+  mudou, grava `game.sii.tmp`, verifica e só então substitui o original.
+
+Decisão: [ADR 0005](../decisions/0005-shell-modular-e-sessao-de-edicao.md).
+Plano de implementação e tarefas: [plan-0005-shell.md](plan-0005-shell.md).
+
+Estado: tudo isso está planejado. Nada foi implementado ainda.
+> TODO: confirmar a implementação de cada item do plano antes de descrever o
+> comportamento como fato.
 
 ## Requisitos transversais: tema e idioma
 

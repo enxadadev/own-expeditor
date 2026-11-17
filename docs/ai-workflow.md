@@ -39,7 +39,7 @@ pedido:
 | --- | --- |
 | [wf-feature](../ia/skills/wf-feature/SKILL.md) | funcionalidade nova ou mudança que atravessa camadas |
 | [wf-bugfix](../ia/skills/wf-bugfix/SKILL.md) | algo quebrado: teste de regressão, depois correção |
-| [wf-ui](../ia/skills/wf-ui/SKILL.md) | tela nova ou ajuste visual |
+| [wf-ui](../ia/skills/wf-ui/SKILL.md) | tela nova ou ajuste visual: passa pelo `ux-designer` antes do `ui-dev` |
 | [wf-refactor](../ia/skills/wf-refactor/SKILL.md) | reorganizar sem mudar comportamento |
 | [wf-sii-discovery](../ia/skills/wf-sii-discovery/SKILL.md) | entender ou suportar parte do formato do save |
 | [wf-review](../ia/skills/wf-review/SKILL.md) | revisão interna antes do commit |
@@ -57,9 +57,10 @@ aqui há só o resumo.
 
 | Skill | Para quê | Agentes |
 | --- | --- | --- |
-| [avalonia-polish](../ia/skills/avalonia-polish/SKILL.md) | polimento visual e de interação da UI Avalonia (Fluent); exemplos em `reference.md` | ui-dev, ux-reviewer |
+| [avalonia-polish](../ia/skills/avalonia-polish/SKILL.md) | polimento visual e de interação da UI Avalonia (Fluent); exemplos em `reference.md` | ux-designer, ui-dev, ux-reviewer |
 | [avalonia-mvvm](../ia/skills/avalonia-mvvm/SKILL.md) | padrões de View e ViewModel (bindings compilados, comandos assíncronos, DI) | ui-dev, code-reviewer |
 | [i18n-theming](../ia/skills/i18n-theming/SKILL.md) | tema Light/Dark/Sistema e idioma pt-BR/en: `.resx`, troca em runtime, preferências | ui-dev, ux-reviewer, chief-architect |
+| [design-system](../ia/skills/design-system/SKILL.md) | tokens, componentes de `src/OwnExpeditor.App/Controls` e padrões de tela; reutilize antes de criar | ux-designer, ui-dev, ux-reviewer |
 | [ux-writing](../ia/skills/ux-writing/SKILL.md) | textos de interface em pt-BR e en, mensagens de erro e glossário | ui-dev, ux-reviewer, docs-keeper |
 | [save-safety](../ia/skills/save-safety/SKILL.md) | regras para ler, gravar ou substituir o `game.sii` (backup, escrita atômica) | sii-engine, core-dev, code-reviewer, chief-architect |
 | [ets2-domain](../ia/skills/ets2-domain/SKILL.md) | glossário do save: `company`, `job_offer_data` e demais campos | chief-architect, core-dev, save-inspector, fixture-maker |
@@ -76,7 +77,8 @@ Resumo do `wf-feature`. Os detalhes estão na skill:
 ```mermaid
 flowchart LR
     A[chief-architect: plano e contratos] --> B[docs-keeper: ADR]
-    B --> C[agente da camada: stubs]
+    B --> U[ux-designer: design/ e canvas]
+    U --> C[agente da camada: stubs]
     C --> D[test-engineer: testes que falham]
     D --> E[sii-engine / core-dev / ui-dev: implementação]
     E --> F[test-runner: build e testes verdes]
@@ -87,7 +89,25 @@ flowchart LR
 ```
 
 Mudança pequena, como um bug isolado ou um ajuste visual, pode pular as
-primeiras etapas e começar pelos testes.
+primeiras etapas e começar pelos testes. Tela nova ou mudança relevante de UX
+não pula o `ux-designer`.
+
+### Design antes de código
+
+Regra do `CLAUDE.md`: nenhuma tela é implementada sem desenho aprovado em
+[design/](../design/README.md). O `ux-designer` escreve em `design/<tema>/`
+(fluxos, telas, textos e canvas). A sessão principal publica o canvas, e o
+usuário aprova. Só então o `ui-dev` implementa, e o `ux-reviewer` compara o
+resultado com o desenho aprovado. O agente só escreve em `design/`; ele não
+altera código nem docs.
+
+### Evidência visual do ux-reviewer
+
+O `ux-reviewer` não vê a tela rodando. Ele usa `toolkit/screenshots.sh`, que
+gera PNGs de cada View em Light/Dark × pt-BR/en, em `.screenshots/` (fora do
+git). Os PNGs são a prova de que o código renderiza nos quatro casos. O revisor
+compara essas imagens com `design/`. Detalhes do comando em
+[development.md](development.md#screenshots-das-telas).
 
 ## Regras que valem para todos os workflows
 

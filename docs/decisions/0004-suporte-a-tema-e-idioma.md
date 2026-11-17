@@ -35,3 +35,5 @@ disso, os textos ficam difíceis de revisar nos dois idiomas.
   (ver [overview](../architecture/overview.md#requisitos-transversais-tema-e-idioma)).
 - Regras, exemplos e checklist estão na skill
   [i18n-theming](../../ia/skills/i18n-theming/SKILL.md).
+
+**Atualização:** as interfaces da Data ficam na própria Data, não no Core (ver [ADR 0005](0005-shell-modular-e-sessao-de-edicao.md)).

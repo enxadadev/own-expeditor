@@ -25,12 +25,16 @@ ainda não existem.
 | [decisions/0002-gravar-save-em-texto.md](decisions/0002-gravar-save-em-texto.md) | ADR: gravar o save em texto SiiNunit, sem recriptografar |
 | [decisions/0003-sem-listas-fixas.md](decisions/0003-sem-listas-fixas.md) | ADR: nenhuma lista fixa de cidades, cargas ou reboques |
 | [decisions/0004-suporte-a-tema-e-idioma.md](decisions/0004-suporte-a-tema-e-idioma.md) | ADR: tema Light/Dark/Sistema e idiomas pt-BR/en, com preferências em JSON |
+| [decisions/0005-shell-modular-e-sessao-de-edicao.md](decisions/0005-shell-modular-e-sessao-de-edicao.md) | ADR (proposta): shell modular, sessão de edição no Core e escrita atômica do save |
+| [architecture/plan-0005-shell.md](architecture/plan-0005-shell.md) | Plano de implementação da ADR 0005: contratos, tarefas por agente e riscos |
 | [changelog.md](changelog.md) | Mudanças por versão (`Directory.Build.props`) |
 
 Fora de `docs/`:
 
 - `CLAUDE.md` (na raiz): instruções do projeto para o Claude Code, incluindo as
   regras de backup e de round-trip do save.
+- `design/`: fluxos, telas, textos e canvas das interfaces. Nenhuma tela é
+  implementada sem desenho aprovado aqui (ver [development.md](development.md#design)).
 - `ia/agents/` e `ia/skills/`: agentes e skills de apoio ao desenvolvimento
   (resumidos em [ai-workflow.md](ai-workflow.md)).
 - `toolkit/`: scripts de apoio ao desenvolvimento (resumidos em

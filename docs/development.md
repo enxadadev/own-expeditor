@@ -77,6 +77,22 @@ toolkit/check.sh --filter "FullyQualifiedName~Sii" # só um subconjunto dos test
 `TESTES: N passaram, N falharam, N pulados`. Em caso de falha, mostra as
 primeiras linhas de erro, de falha e de exceção.
 
+### Screenshots das telas
+
+```bash
+toolkit/screenshots.sh                  # todas as Views do App
+toolkit/screenshots.sh <filtro> [largura altura]   # só as Views cujo nome contém o filtro
+```
+
+Renderiza cada View com Avalonia.Headless, sem abrir janela, em Light e Dark
+× pt-BR e en. Grava `.screenshots/<View>/{light,dark}-{pt-BR,en}.png`. A pasta
+`.screenshots/` está no `.gitignore`. Antes de gerar, o script apaga os PNGs
+que já existem para o mesmo filtro. Sem filtro, apaga todos. O projeto de
+apoio é `toolkit/Screenshots`, que compila em Release na primeira execução.
+
+O `ux-reviewer` usa essas imagens como evidência visual (ver
+[ai-workflow.md](ai-workflow.md#evidência-visual-do-ux-reviewer)).
+
 ### Regras de camadas e docs
 
 ```bash
@@ -175,6 +191,14 @@ Precisa do Codex CLI instalado e autenticado (`npm i -g @openai/codex` e
 `codex login`). O relatório vai para `.reviews/codex-<data>.md`, pasta que está
 no `.gitignore`. O script imprime quantos achados `BLOQUEANTE` e `IMPORTANTE`
 o relatório tem.
+
+## Design
+
+Nenhuma tela é implementada sem desenho aprovado. O desenho fica em
+[design/](../design/README.md): fluxos, telas, textos (pt-BR e en) e canvas. A
+direção visual aprovada está em `design/direcao-visual/`. Tokens e componentes
+reutilizáveis estão na skill `design-system`
+(`ia/skills/design-system/SKILL.md`).
 
 ## Convenções
 

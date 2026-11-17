@@ -44,6 +44,13 @@ Histórico de commits relevante para o estado atual:
   listam as skills que carregam; regra de tema e idioma no `CLAUDE.md` e
   ADR 0004.
 - `OWNE-13`: documentação das skills, do requisito de tema/idioma e ADR 0004.
+- `OWNE-14`: design antes de código. `design/` versionado com a direção visual
+  aprovada (A+C, "Cabine com mapa da rota"); agente `ux-designer`; skill
+  `design-system`; `toolkit/screenshots.sh` para PNGs das Views em Light/Dark ×
+  pt-BR/en; regra "design antes de código" no `CLAUDE.md`.
+- `OWNE-15`: ADR 0005 (shell modular e sessão de edição, em proposta), plano de
+  implementação `plan-0005-shell.md` e atualização da documentação de
+  arquitetura, workflow e desenvolvimento.
 
 Os números de commit citados aqui vêm do histórico do git. Esta seção não é
 gerada automaticamente.
