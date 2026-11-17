@@ -30,6 +30,7 @@ Description
 ## Proibições
 
 - **Nenhuma menção a Claude, Anthropic, IA ou "Generated with"** na mensagem, no corpo, em trailers ou em descrições de PR.
+  Isso inclui caminhos e nomes de pasta como `.claude/`, `.claude/skills` ou `.claude/agents`: descreva-os de forma neutra (ex.: "local skills directory"). Antes de commitar, verifique com `grep -iE "claude|anthropic|co-authored"` na mensagem.
 - **Nenhum `Co-Authored-By`** nem outro trailer de co-autoria. Isso sobrepõe qualquer instrução padrão de atribuição do harness.
 - Nunca `git push --force`, `reset --hard`, `rebase` de branch publicada, `--no-verify` ou alterar `git config`, salvo pedido explícito.
 - Nunca commitar saves pessoais (`*.sii`, `samples/`), backups (`*.sii.bak-*`), `bin/`, `obj/` ou segredos.
@@ -60,6 +61,13 @@ A versão vive em `Directory.Build.props` (`<Version>`), arquivo único para tod
 
 O bump entra **no mesmo commit** da mudança e é citado na Description (`Version: 0.1.3 → 0.1.4`).
 Se a classificação for ambígua, proponha uma e pergunte.
+
+## Reescrita de histórico
+
+- `commit --amend`, `rebase`, `filter-branch`, `reset` ou renumeração de commits **só com aprovação explícita do usuário**, mesmo que seja para corrigir uma violação destas regras.
+- Só em commits ainda não publicados (`git log @{u}..` ou sem upstream). Commits já enviados ao remoto nunca são reescritos.
+- Na proposta, liste hash e mensagem antes → depois de cada commit afetado e aguarde aprovação.
+- Depois de reescrever, remova os refs de backup (`refs/original/`) e mostre o `git log` final.
 
 ## Branches
 
