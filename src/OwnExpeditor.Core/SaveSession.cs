@@ -8,7 +8,13 @@ public sealed record CompanyLocation(string Company, string City)
 {
     public string Key => $"{Company}.{City}";
     public string SaveId => "company.volatile." + Key;
-    public override string ToString() => $"{City} – {Company}";
+
+    /// <summary>Texto para a tela, ex.: "Budapeste – Kaarfor". Não entra na igualdade.</summary>
+    public string? Display { get; init; }
+
+    public bool Equals(CompanyLocation? other) => other is not null && Key == other.Key;
+    public override int GetHashCode() => Key.GetHashCode(StringComparison.Ordinal);
+    public override string ToString() => Display ?? $"{City} – {Company}";
 }
 
 /// <summary>Caminhão e reboque copiados de um frete existente da mesma carga.</summary>
@@ -38,7 +44,11 @@ public sealed class SaveSession
             var key = company.Id["company.volatile.".Length..];
             var dot = key.LastIndexOf('.');
             if (dot <= 0) continue;
-            var location = new CompanyLocation(key[..dot], key[(dot + 1)..]);
+            var (companyId, cityId) = (key[..dot], key[(dot + 1)..]);
+            var location = new CompanyLocation(companyId, cityId)
+            {
+                Display = $"{catalog.CityName(cityId)} – {catalog.CompanyName(companyId)}",
+            };
             _locations[key] = location;
 
             foreach (var jobId in company.GetArray("job_offer"))
@@ -79,7 +89,7 @@ public sealed class SaveSession
     public IReadOnlyList<CompanyLocation> Origins() =>
         _withEmptySlot.Select(k => _locations[k])
             .Where(l => CargosFor(l).Count > 0)
-            .OrderBy(l => l.City, StringComparer.Ordinal).ThenBy(l => l.Company, StringComparer.Ordinal)
+            .OrderBy(l => l.ToString(), StringComparer.CurrentCulture)
             .ToList();
 
     /// <summary>Cargas que a origem envia e para as quais existe modelo de reboque no save.</summary>
@@ -92,12 +102,14 @@ public sealed class SaveSession
     public IReadOnlyList<CompanyLocation> Destinations(CompanyLocation origin, string cargo) =>
         _locations.Values
             .Where(l => l.City != origin.City && _catalog.Accepts(l.Company, cargo))
-            .OrderBy(l => l.City, StringComparer.Ordinal).ThenBy(l => l.Company, StringComparer.Ordinal)
+            .OrderBy(l => l.ToString(), StringComparer.CurrentCulture)
             .ToList();
 
     /// <summary>Distância conhecida no save entre as duas cidades, ou null.</summary>
     public int? Distance(string fromCity, string toCity) =>
         _distances.TryGetValue((fromCity, toCity), out var km) ? km : null;
+
+    public string CargoName(string cargo) => _catalog.CargoName(cargo);
 
     public JobTemplate? Template(string cargo) => _templates.GetValueOrDefault(cargo);
 

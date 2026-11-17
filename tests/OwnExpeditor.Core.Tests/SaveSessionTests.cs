@@ -44,7 +44,7 @@ public class SaveSessionTests
     [Fact]
     public void Origins_are_companies_with_free_slot()
     {
-        Assert.Equal(["budapest – kaarfor"], Session().Origins().Select(o => o.ToString()));
+        Assert.Equal(["Budapest – Kaarfor"], Session().Origins().Select(o => o.ToString()));
     }
 
     [Fact]

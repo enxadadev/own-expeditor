@@ -10,6 +10,11 @@ using OwnExpeditor.Sii;
 
 namespace OwnExpeditor.App.ViewModels;
 
+public sealed record CargoOption(string Id, string Name)
+{
+    public override string ToString() => Name;
+}
+
 public partial class MainViewModel : ViewModelBase
 {
     private GameCatalog? _catalog;
@@ -24,13 +29,13 @@ public partial class MainViewModel : ViewModelBase
     public ObservableCollection<ProfileInfo> Profiles { get; } = [];
     public ObservableCollection<SaveInfo> Saves { get; } = [];
     public ObservableCollection<CompanyLocation> Origins { get; } = [];
-    public ObservableCollection<string> Cargos { get; } = [];
+    public ObservableCollection<CargoOption> Cargos { get; } = [];
     public ObservableCollection<CompanyLocation> Destinations { get; } = [];
 
     [ObservableProperty] private ProfileInfo? _selectedProfile;
     [ObservableProperty] private SaveInfo? _selectedSave;
     [ObservableProperty] private CompanyLocation? _selectedOrigin;
-    [ObservableProperty] private string? _selectedCargo;
+    [ObservableProperty] private CargoOption? _selectedCargo;
     [ObservableProperty] private CompanyLocation? _selectedDestination;
     [ObservableProperty] private string _distanceKm = "";
     [ObservableProperty] private string _distanceHint = "";
@@ -45,13 +50,18 @@ public partial class MainViewModel : ViewModelBase
     {
         Run(() =>
         {
-            _catalog = GameCatalog.LoadFromGameDir(GameDir);
+            var language = Localization.GameLanguage(DocumentsDir)
+                ?? System.Globalization.CultureInfo.CurrentUICulture.Name.Replace('-', '_').ToLowerInvariant();
+            _catalog = GameCatalog.LoadFromGameDir(GameDir, language);
             Profiles.Clear();
             foreach (var p in SaveLocator.Profiles(DocumentsDir)) Profiles.Add(p);
             SelectedProfile = Profiles.FirstOrDefault();
             return Profiles.Count == 0
                 ? throw new IOException($"Nenhum perfil encontrado em '{DocumentsDir}'.")
-                : $"{_catalog.Companies.Count} empresas e {_catalog.Cargos.Count} cargas lidas do jogo.";
+                : $"{_catalog.Companies.Count} empresas e {_catalog.Cargos.Count} cargas lidas do jogo. " +
+                  (_catalog.Texts.Count > 0
+                      ? $"Textos no idioma {_catalog.Texts.Language}."
+                      : "locale.scs não encontrado: nomes de cargas sem tradução.");
         });
     }
 
@@ -85,14 +95,17 @@ public partial class MainViewModel : ViewModelBase
     {
         Cargos.Clear();
         if (value is null || _session is null) return;
-        foreach (var c in _session.CargosFor(value)) Cargos.Add(c);
+        foreach (var c in _session.CargosFor(value)
+                     .Select(id => new CargoOption(id, _session.CargoName(id)))
+                     .OrderBy(c => c.Name, StringComparer.CurrentCulture))
+            Cargos.Add(c);
     }
 
-    partial void OnSelectedCargoChanged(string? value)
+    partial void OnSelectedCargoChanged(CargoOption? value)
     {
         Destinations.Clear();
         if (value is null || SelectedOrigin is null || _session is null) return;
-        foreach (var d in _session.Destinations(SelectedOrigin, value)) Destinations.Add(d);
+        foreach (var d in _session.Destinations(SelectedOrigin, value.Id)) Destinations.Add(d);
     }
 
     partial void OnSelectedDestinationChanged(CompanyLocation? value)
@@ -119,7 +132,7 @@ public partial class MainViewModel : ViewModelBase
             if (!int.TryParse(DistanceKm, out var km) || km <= 0)
                 throw new InvalidOperationException("Informe a distância em km.");
 
-            _session.Inject(SelectedOrigin, SelectedDestination, SelectedCargo, km, Urgency);
+            _session.Inject(SelectedOrigin, SelectedDestination, SelectedCargo.Id, km, Urgency);
             _injected++;
             InjectedSummary += $"• {SelectedOrigin} → {SelectedDestination}: {SelectedCargo}, {km} km\n";
 

@@ -37,6 +37,8 @@ public class ScsTests
         Assert.True(cat.Accepts("dfh", "used_plast"));
         Assert.Contains("budapest", cat.Companies["kaarfor"].Cities);
         Assert.Contains("dryvan", cat.Cargos["plumb_suppl"].BodyTypes);
+        Assert.Equal("Kaarfor", cat.CompanyName("kaarfor"));
+        Assert.Equal("Budapest", cat.CityName("budapest"));
     }
 
     private static string? FindDir(string relative)
@@ -47,5 +49,55 @@ public class ScsTests
             if (Directory.Exists(candidate)) return candidate;
         }
         return null;
+    }
+}
+
+public class LocalizationTests
+{
+    private const string Local =
+        "SiiNunit\r\n{\r\nlocalization_db : .localization\r\n{\r\n" +
+        " key[]: \"cn_plumbing_supplies\"\r\n val[]: \"Materiais hidr\\xc3\\xa1ulicos\"\r\n" +
+        " key[]: \"budapest\"\r\n val[]: \"Budapeste\"\r\n" +
+        "}\r\n}\r\n";
+
+    [Fact]
+    public void Resolves_keys_and_decodes_utf8_escapes()
+    {
+        var loc = Localization.FromText(Local);
+        Assert.Equal("Materiais hidráulicos", loc.Resolve("@@cn_plumbing_supplies@@"));
+        Assert.Equal("Budapeste", loc.Resolve("\"@@budapest@@\""));
+        Assert.Null(loc.Resolve("@@desconhecida@@"));
+        Assert.Equal("Texto fixo", loc.Resolve("Texto fixo"));
+    }
+
+    [Fact]
+    public void Catalog_names_prefer_translation_then_native_then_id()
+    {
+        var cat = new GameCatalog();
+        cat.Cities["budapest"] = new CityDef("budapest") { NativeName = "Budapest", LocalizationKey = "@@budapest@@" };
+        cat.Cities["wien"] = new CityDef("wien") { NativeName = "Wien", LocalizationKey = "@@wien@@" };
+        cat.Cargos["plumb_suppl"] = new CargoDef("plumb_suppl") { LocalizationKey = "@@cn_plumbing_supplies@@" };
+        typeof(GameCatalog).GetProperty(nameof(GameCatalog.Texts))!.SetValue(cat, Localization.FromText(Local));
+
+        Assert.Equal("Budapeste", cat.CityName("budapest"));
+        Assert.Equal("Wien", cat.CityName("wien"));
+        Assert.Equal("Materiais hidráulicos", cat.CargoName("plumb_suppl"));
+        Assert.Equal("Used plast", cat.CargoName("used_plast"));
+    }
+
+    [Fact]
+    public void ThreeNK_decodes_with_seed()
+    {
+        var plain = "SiiNunit"u8.ToArray();
+        byte seed = 7;
+        var data = new byte[6 + plain.Length];
+        "3nK\u0001"u8.CopyTo(data);
+        data[5] = seed;
+        for (var j = 0; j < plain.Length; j++)
+        {
+            var b = (byte)((seed + j) & 0xFF);
+            data[6 + j] = (byte)(plain[j] ^ (byte)((((byte)(b << 2) ^ (byte)~b) << 3) ^ b));
+        }
+        Assert.Equal(plain, OwnExpeditor.Sii.SiiDecoder.Decode3nK(data));
     }
 }

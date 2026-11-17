@@ -165,6 +165,13 @@ tempo de execução, sem distribuir arquivos do jogo. O catálogo completo
 | `def/company/<empresa>/editor/<cidade>.sii` | cidades onde a empresa existe (`city:`) |
 | `def/cargo/<carga>.sui` | `cargo_data`: nome (`@@chave@@`), `body_types[]`, `group[]`, `unit_reward_per_km`, massa, volume |
 | `def/cargo.sii` | `@include` de todos os `.sui` |
+| `def/company/<empresa>.sui` | `name: "Kaarfor"` (nome de exibição, sem tradução) |
+| `def/city/<cidade>.sui` | `city_data : city.x`: `city_name` (nome local), `city_name_localized: "@@x@@"`, `country` |
+| `locale/<idioma>/local*.sii` (em `locale.scs`) | `localization_db`: pares `key[]`/`val[]`; `\xNN` são bytes UTF-8; pode ter `@include` e vir em 3nK |
+
+Nomes na tela: tradução (`@@chave@@` no idioma de `config.cfg` → `g_lang_init`,
+senão o idioma do sistema, senão en_us/en_gb) → nome local → id legível.
+O `locale.scs` ainda não foi testado com o arquivo real.
 
 As DLCs só trazem os arquivos delas; o catálogo junta todos os pacotes.
 Ainda não lido: mods (`.scs`/`.zip` na pasta `mod`), HashFS v1 e o vínculo
