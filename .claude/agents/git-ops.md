@@ -1,1 +1,1 @@
-../../agents/git-ops.md
+../../ia/agents/git-ops.md
