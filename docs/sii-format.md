@@ -14,6 +14,9 @@ O `game.sii` pode chegar em três formatos. Os 4 primeiros bytes dizem qual:
 | `SiiNunit` | texto puro (`g_save_format "2"`) |
 | `3nK` (0x014B6E33) | texto ofuscado com XOR (usado em alguns arquivos do jogo) |
 
+O `SiiDecoder` ainda não lê `BSII` nem `3nK`: ambos lançam
+`NotSupportedException` (ver seção 6).
+
 ### ScsC (criptografado)
 
 Cabeçalho de 56 bytes, little-endian:
@@ -136,3 +139,29 @@ Ler esses arquivos fica para uma fase posterior.
 - Se `info.sii` precisa ser atualizado junto.
 - Se o jogo regenera as ofertas ao carregar quando `expiration_time` é menor
   que `game_time`.
+- Se o jogo carrega um `game.sii` em texto puro gravado pelo app (ver
+  [ADR 0002](decisions/0002-gravar-save-em-texto.md)).
+
+## 6. Como o código lê e grava (`src/OwnExpeditor.Sii`)
+
+Esta seção registra o comportamento do parser e do writer atuais. Ela não
+descreve o jogo.
+
+- **Detecção**: `DetectFormat` reconhece `SiiNunit`, `SiiNunit` precedido de
+  BOM UTF-8, `ScsC`, `BSII` e `3nK`. Qualquer outro início vira "não
+  reconhecido".
+- **ScsC**: `Decrypt` exige pelo menos 56 bytes e usa o IV no offset 36 e o
+  tamanho no offset 52. O HMAC (offsets 4 a 35) não é verificado. A saída
+  descomprimida precisa ter exatamente o tamanho do cabeçalho.
+- **Texto**: o parser ignora linhas em branco e faz `Trim()` em cada linha. Por
+  isso espaços no início ou no fim de um valor se perdem.
+- **Atributo**: é separado pelo primeiro `": "`. Uma linha `nome:` sem valor
+  vira atributo com valor vazio. Ao gravar, ele sai como `nome: ` (com espaço).
+  TODO: confirmar se o jogo gera linhas `nome:` sem espaço.
+- **Cabeçalho de bloco**: precisa ser `tipo : id {`, com espaço antes e depois
+  do `:`. TODO: confirmar se o jogo gera blocos com outra formatação.
+- **Escrita**: `ToText` usa CRLF e UTF-8 sem BOM. A ordem de blocos e
+  atributos é preservada.
+- **Round-trip**: `RealSaveTests` compara `ToText()` com o texto original dos
+  saves de `samples/` e passa para todos os saves que estão lá. Os saves não
+  vêm com o repositório.
