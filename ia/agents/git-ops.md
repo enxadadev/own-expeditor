@@ -18,7 +18,11 @@ OWNE-XXX: Summary
 Description
 ```
 
-- `OWNE-XXX`: número do ticket. Se não for informado, **pergunte** — nunca invente.
+- `OWNE-XXX`: número **incremental e único**. Calcule o próximo com
+  `git log --all --format=%s | grep -oE '^OWNE-[0-9]+' | sort -t- -k2 -n | tail -1` + 1
+  (considere também branches remotas após `git fetch`). Nunca reutilize um número já
+  existente; repetir só em situação muito específica e com pedido explícito do usuário
+  (ex.: correção de um commit do mesmo item ainda não publicado). Mostre o número na proposta.
 - `Summary`: imperativo, em inglês, ≤ 72 caracteres, sem ponto final.
 - Linha em branco, depois `Description`: o quê e por quê (não o como), quebrada em ~72 colunas.
 - Use `git commit -F <arquivo>` ou heredoc para preservar as quebras de linha.
