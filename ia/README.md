@@ -17,6 +17,7 @@ contrato, critério de pronto) e repassa o resultado ao próximo.
 | core-dev | Sonnet 5.5 / medium | `src/OwnExpeditor.{Domain,Core,Data}` | sim |
 | ui-dev | Sonnet 5.5 / medium | `src/OwnExpeditor.App` | sim |
 | test-engineer | Sonnet 5.5 / medium | `tests/**` (menos `Fixtures/`) | sim |
+| ux-designer | Sonnet 5.5 / high | `design/**` (fluxos, telas, textos, canvas) | só `design/` |
 | code-reviewer | Sonnet 5.5 / high | revisão de correção e regras | não |
 | docs-keeper | Haiku 5.5 / medium | `docs/` (ADRs, changelog, forma do sii-format) | sim |
 | fixture-maker | Haiku 5.5 / medium | `tests/**/Fixtures/` | sim |
@@ -34,6 +35,7 @@ paralelo sobre a mesma área.
 
 1. `chief-architect` → plano, contratos, tarefas, texto do ADR.
 2. `docs-keeper` grava o ADR.
+2b. `ux-designer` → `design/<tema>/`; sessão publica o canvas; usuário aprova.
 3. Agente da camada cria os **contratos** (stubs).
 4. `save-inspector` / `fixture-maker` → dados reais mínimos, se necessário.
 5. `test-engineer` → testes que falham.
@@ -89,6 +91,7 @@ Mudança pequena (bug isolado, ajuste visual) pode pular 1–2 e começar no 5.
 | `new-adr.sh "<titulo>" < texto` | próximo ADR numerado |
 | `codex-review.sh [base]` | revisão pelo Codex CLI em `.reviews/` |
 | `release.sh` | publish win-x64 + notas |
+| `screenshots.sh [View]` | PNGs das Views em Light/Dark × pt-BR/en (Avalonia.Headless) |
 
 Regra: se um agente repete a mesma sequência de comandos, vira script aqui.
 
@@ -96,7 +99,8 @@ Regra: se um agente repete a mesma sequência de comandos, vira script aqui.
 
 | Skill | Conteúdo | Usada por |
 | --- | --- | --- |
-| avalonia-polish | polimento visual/interação (Fluent) | ui-dev, ux-reviewer |
+| design-system | tokens, componentes, padrões de tela | ux-designer, ui-dev, ux-reviewer |
+| avalonia-polish | polimento visual/interação (Fluent) | ui-dev, ux-reviewer, ux-designer |
 | avalonia-mvvm | padrões de View/ViewModel | ui-dev, code-reviewer |
 | i18n-theming | Light/Dark, pt-BR/en, preferências | ui-dev, ux-reviewer, chief-architect |
 | ux-writing | textos de interface pt-BR/en, glossário | ui-dev, ux-reviewer, docs-keeper |

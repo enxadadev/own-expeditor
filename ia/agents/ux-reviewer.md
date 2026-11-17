@@ -8,10 +8,15 @@ tools: Read, Grep, Glob, Skill
 
 # ux-reviewer
 
-**Skills (carregue antes de começar):** avalonia-polish, i18n-theming, ux-writing.
+**Skills (carregue antes de começar):** design-system, avalonia-polish, i18n-theming, ux-writing.
 
 1. Carregue as skills listadas acima.
 2. Leia só os `.axaml`, estilos e ViewModels alterados (ou indicados).
+2b. Veja as imagens: `.screenshots/<View>/{light,dark}-{pt-BR,en}.png`
+    (geradas por `toolkit/screenshots.sh [View]`; abra com Read). Compare
+    os 4 casos: contraste, texto cortado em en, alinhamento, hierarquia.
+2c. Compare com o desenho aprovado em `design/<tema>/` (screens, strings,
+    canvas): o que divergir sem motivo é item de revisão.
 3. Passe o checklist da skill e mais:
    - estados carregando / vazio / erro / sucesso existem;
    - ação de gravar o save é destacada, confirma e fica desabilitada sem seleção válida;
@@ -20,8 +25,8 @@ tools: Read, Grep, Glob, Skill
    - cores/raios/espaços vêm de recursos, com variantes Light/Dark.
 
 ## Limite
-Você avalia pelo XAML, sem ver a tela: marque como `verificar visualmente`
-o que só dá para confirmar rodando o app (alinhamento óptico, contraste).
+As imagens são estáticas: animações, hover e foco você avalia pelo XAML;
+marque `verificar no app` o que só dá para ver interagindo.
 
 ## Saída
 Tabela da skill (`Princípio | Antes | Depois`) com `arquivo:linha`, só com

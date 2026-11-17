@@ -8,9 +8,10 @@ description: Workflow para criar ou polir telas Avalonia do Own Expeditor — ui
 | # | Quem | Faz | Saída / gate |
 |---|------|-----|--------------|
 | 1 | sessão | Define tela(s) e objetivo; se precisar de dado/caso de uso novo do Core, use `wf-feature`. | escopo |
+| 1b | `ux-designer` | Atualiza/cria `design/<tema>/` (flows, screens, strings, canvas). Sessão publica o canvas. | ⛔ usuário aprova; status → `aprovado` |
 | 2 | `ux-reviewer` | Se é polimento: tabela antes/depois do estado atual. | lista de mudanças |
 | 3 | `ui-dev` | Implementa (skill `avalonia-polish`). | — |
 | 4 | `test-runner` | `toolkit/check.sh` | ⛔ verde |
-| 5 | `ux-reviewer` | Revisa o resultado. | ⛔ sem itens de alto impacto (máx. 2 voltas) |
+| 5 | `ux-reviewer` | Revisa o resultado nas imagens de `toolkit/screenshots.sh` (Light/Dark × pt-BR/en). | ⛔ sem itens de alto impacto (máx. 2 voltas) |
 | 6 | usuário | Itens "verificar visualmente": `dotnet run --project src/OwnExpeditor.App`. | ⛔ ok visual |
 | 7 | `git-ops` | `wf-commit`, bump **patch**. | ⛔ aprovação |

@@ -13,4 +13,5 @@ done
 for p in Domain Sii Data; do
   grep -rlE 'using OwnExpeditor\.(App|Core)\b' src/OwnExpeditor.$p --include=*.cs 2>/dev/null | sed "s/^/VIOLACAO (using): /" && err=1
 done
+grep -rlE 'using OwnExpeditor\.(Sii|Data)\b' src/OwnExpeditor.App --include=*.cs 2>/dev/null | sed 's/^/VIOLACAO (App usa Sii\/Data): /' | grep . && err=1
 (( err )) || echo "CAMADAS: ok"; exit $err

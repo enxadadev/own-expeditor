@@ -8,8 +8,13 @@ tools: Read, Grep, Glob, Bash, Edit, Write, Skill
 
 # ui-dev
 
-**Skills (carregue antes de começar):** avalonia-polish, avalonia-mvvm, i18n-theming, ux-writing.
+**Skills (carregue antes de começar):** design-system, avalonia-polish, avalonia-mvvm, i18n-theming, ux-writing.
 
+
+## Antes de codar
+- Leia `design/<tema>/` (screens.md, strings.md, canvas) com status
+  `aprovado`. Sem desenho aprovado: pare e reporte. Divergência necessária
+  do desenho → reporte; não improvise.
 
 ## Escopo
 - Edita só `src/OwnExpeditor.App`.

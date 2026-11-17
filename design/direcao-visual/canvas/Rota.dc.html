@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Direção C — Logística e rota</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&amp;family=IBM+Plex+Mono:wght@500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0f766e}a:hover{color:#115e59}
+button{font:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="min-height: 800px; display: flex; flex-wrap: wrap; background: {{t.bg}}; color: {{t.text}}; font-family: 'IBM Plex Sans', system-ui, sans-serif; font-size: 14px;">
+  <nav aria-label="Módulos" style="flex: 0 0 72px; box-sizing: border-box; padding: 16px 0; display: flex; flex-direction: column; align-items: center; gap: 6px; background: {{t.side}};">
+    <div style="width: 40px; height: 40px; border-radius: 12px; background: {{t.accent}}; color: #ffffff; display: flex; align-items: center; justify-content: center; font-weight: 700; margin-bottom: 14px;">OE</div>
+    <sc-for list="{{nav}}" as="n" hint-placeholder-count="5">
+      <button type="button" aria-label="{{n.label}}" style="{{n.style}}">
+        <span style="font-size: 10px; letter-spacing: 0.02em;">{{n.short}}</span>
+      </button>
+    </sc-for>
+    <div style="flex-grow: 1;"></div>
+    <button type="button" onClick="{{toggle}}" aria-label="{{themeLabel}}" style="width: 44px; height: 44px; border-radius: 12px; border: none; background: transparent; color: {{t.sideText}}; display: flex; align-items: center; justify-content: center;">
+      <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
+  </nav>
+  <section aria-label="Ofertas" style="flex: 1 1 320px; max-width: 360px; box-sizing: border-box; padding: 20px 16px; display: flex; flex-direction: column; gap: 10px; border-right: 1px solid {{t.line}};">
+    <div style="display: flex; flex-direction: column; gap: 2px; padding: 0 4px 6px;">
+      <span style="font-size: 12px; color: {{t.muted}};">Perfil 1 · Save 4</span>
+      <h1 style="margin: 0; font-size: 20px; font-weight: 600;">Mercado de fretes</h1>
+    </div>
+    <label for="busca-c" style="position: absolute; left: -9999px;">Buscar</label>
+    <input id="busca-c" type="search" placeholder="Cidade de origem ou destino…" style="min-height: 44px; padding: 0 12px; border-radius: 12px; border: 1px solid {{t.line}}; background: {{t.panel}}; color: {{t.text}}; font: inherit;">
+    <sc-for list="{{offers}}" as="o" hint-placeholder-count="5">
+      <button type="button" onClick="{{o.pick}}" style="{{o.style}}">
+        <div style="display: flex; align-items: center; gap: 8px; width: 100%;">
+          <span style="font-weight: 600;">{{o.from}}</span>
+          <svg aria-hidden="true" width="28" height="8" viewBox="0 0 28 8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="2 3"><path d="M1 4h26"/></svg>
+          <span style="font-weight: 600;">{{o.to}}</span>
+          <span style="margin-left: auto; font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: {{t.muted}};">{{o.km}}</span>
+        </div>
+        <span style="color: {{t.muted}}; font-size: 13px;">{{o.cargo}}</span>
+      </button>
+    </sc-for>
+  </section>
+  <main style="flex: 999 1 520px; min-width: 0; box-sizing: border-box; padding: 24px; display: flex; flex-direction: column; gap: 18px;">
+    <div style="position: relative; border-radius: 18px; overflow: hidden; background: {{t.map}}; border: 1px solid {{t.line}}; min-height: 300px;">
+      <svg role="img" aria-label="Rota de {{s.from}} até {{s.to}}" width="100%" height="300" viewBox="0 0 800 300" preserveAspectRatio="xMidYMid slice">
+        <g stroke="{{t.grid}}" stroke-width="1">
+          <path d="M0 60H800M0 120H800M0 180H800M0 240H800M100 0V300M200 0V300M300 0V300M400 0V300M500 0V300M600 0V300M700 0V300"/>
+        </g>
+        <path d="M150 210 C 290 210, 300 90, 420 120 S 600 80, 650 90" fill="none" stroke="{{t.accent}}" stroke-width="5" stroke-linecap="round"/>
+        <circle cx="150" cy="210" r="10" fill="{{t.bg}}" stroke="{{t.accent}}" stroke-width="4"/>
+        <circle cx="650" cy="90" r="12" fill="{{t.accent}}"/>
+      </svg>
+      <div style="position: absolute; left: 20px; bottom: 16px; padding: 8px 12px; border-radius: 10px; background: {{t.panel}}; box-shadow: 0 1px 2px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.08);">
+        <span style="font-size: 12px; color: {{t.muted}};">Origem</span><div style="font-weight: 600;">{{s.co}} · {{s.from}}</div>
+      </div>
+      <div style="position: absolute; right: 20px; top: 16px; padding: 8px 12px; border-radius: 10px; background: {{t.panel}}; box-shadow: 0 1px 2px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.08);">
+        <span style="font-size: 12px; color: {{t.muted}};">Destino</span><div style="font-weight: 600;">{{s.dco}} · {{s.to}}</div>
+      </div>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px;">
+      <sc-for list="{{stats}}" as="st" hint-placeholder-count="4">
+        <div style="padding: 14px; border-radius: 14px; background: {{t.panel}}; border: 1px solid {{t.line}}; display: flex; flex-direction: column; gap: 4px;">
+          <span style="font-size: 12px; color: {{t.muted}};">{{st.label}}</span>
+          <span style="font-weight: 600; font-variant-numeric: tabular-nums;">{{st.value}}</span>
+        </div>
+      </sc-for>
+    </div>
+    <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center;">
+      <button type="button" style="min-height: 44px; padding: 0 16px; border-radius: 12px; border: 1px solid {{t.line}}; background: transparent; color: {{t.text}};">Trocar destino</button>
+      <button type="button" style="min-height: 44px; padding: 0 16px; border-radius: 12px; border: 1px solid {{t.line}}; background: transparent; color: {{t.text}};">Trocar carga</button>
+      <div style="flex-grow: 1;"></div>
+      <button type="button" style="min-height: 44px; padding: 0 20px; border-radius: 12px; border: none; background: {{t.accent}}; color: #ffffff; font-weight: 600;">Revisar mudanças</button>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+  constructor(p){ super(p); this.state = { sel: 0, dark: null }; }
+  renderVals() {
+    const dark = this.state.dark ?? (this.props.dark ?? false);
+    const t = dark
+      ? { bg:'#0f1716', side:'#0a1110', sideText:'#9fb3af', panel:'#162120', line:'#24332f', text:'#e6efed', muted:'#93a8a3', accent:'#2bb3a3', map:'#13201e', grid:'#1d2c29', sel:'#173a35' }
+      : { bg:'#f3f6f5', side:'#0f2a27', sideText:'#a9c4bf', panel:'#ffffff', line:'#d6e0dd', text:'#132422', muted:'#4f6460', accent:'#0f766e', map:'#e8efed', grid:'#d8e3e0', sel:'#e3f2ef' };
+    const data = [
+      { from:'Sofia', to:'Istanbul', co:'Radus', dco:'LogNStick', cargo:'Vigas de concreto · Prancha', km:'569 km', exp:'12h 14min', ferry:'—', units:'2 un.' },
+      { from:'Beograd', to:'Sofia', co:'Rock Eat', dco:'Radus', cargo:'Tanque de água · Baú', km:'394 km', exp:'10h 19min', ferry:'—', units:'1 un.' },
+      { from:'Wien', to:'Praha', co:'Trameri', dco:'Tradeaux', cargo:'Maquinário · Rebaixado', km:'332 km', exp:'8h 02min', ferry:'—', units:'1 un.' },
+      { from:'Calais', to:'Dover', co:'Fle', dco:'Tesco', cargo:'Frutas · Refrigerado', km:'71 km', exp:'5h 40min', ferry:'1h 30min', units:'18 un.' },
+      { from:'Lyon', to:'Milano', co:'Fle', dco:'Quarry', cargo:'Vinho · Tanque', km:'441 km', exp:'9h 55min', ferry:'—', units:'1 un.' }
+    ];
+    const sel = this.state.sel;
+    const offers = data.map((o, i) => ({ ...o, pick: () => this.setState({ sel: i }),
+      style: `display:flex;flex-direction:column;gap:4px;width:100%;padding:12px 14px;border-radius:14px;border:1px solid ${i===sel?t.accent:t.line};background:${i===sel?t.sel:t.panel};color:${t.text};text-align:left;` }));
+    const s = data[sel];
+    const nav = [['Fretes','FRETES'],['Caminhões','FROTA'],['Perfil','PERFIL'],['Empresa','EMPRESA'],['Mapa','MAPA']].map(([l,sh], i) => ({ label:l, short:sh,
+      style:`width:56px;height:52px;border-radius:12px;border:none;display:flex;align-items:center;justify-content:center;background:${i===0?'rgba(255,255,255,0.12)':'transparent'};color:${i===0?'#ffffff':t.sideText};font-weight:600;` }));
+    return { t, s, offers, nav,
+      stats: [ {label:'Distância', value:s.km}, {label:'Expira em', value:s.exp}, {label:'Balsa', value:s.ferry}, {label:'Unidades', value:s.units} ],
+      themeLabel: dark ? 'Usar tema claro' : 'Usar tema escuro',
+      toggle: () => this.setState({ dark: !dark }) };
+  }
+}
+</script>
+</body>
+</html>

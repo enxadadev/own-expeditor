@@ -1,0 +1,21 @@
+{
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "Ferramenta.dc.html": {"expand": "fill", "h": 800, "is_interactive": true, "title": "B · Ferramenta limpa", "w": 1280, "x": 1360, "y": 0},
+    "Main.dc.html": {"expand": "fill", "h": 800, "is_interactive": true, "title": "A · Cabine", "w": 1280, "x": -146, "y": -260},
+    "Rota.dc.html": {"expand": "fill", "h": 800, "is_interactive": true, "title": "C · Logística / rota", "w": 1280, "x": 2720, "y": 0},
+    "CabineRota.dc.html": {"expand": "fill", "h": 820, "is_interactive": true, "title": "A+C · Cabine com mapa da rota (escolhida)", "w": 1280, "x": 0, "y": 1000}
+  },
+  "createdOnFiles": {"at": "2026-11-17T16:30:00Z", "v": 1},
+  "designSystems": [],
+  "launch": {"view": "canvas"},
+  "noteOrder": ["t", "s"],
+  "notes": {
+    "s": {"size": 24, "text": "Cada tela tem o botão Claro/Escuro e a lista de ofertas é clicável. Dados de um save real (anonimizados). Escolha uma direção (ou misture).", "w": 1200, "x": 0, "y": -150},
+    "t": {"kind": "title1", "maxW": 4000, "text": "Own Expeditor — 3 direções para o módulo Fretes", "w": 240, "x": 0, "y": -260}
+  },
+  "order": ["Main.dc.html", "Ferramenta.dc.html", "Rota.dc.html", "CabineRota.dc.html"],
+  "pages": [],
+  "title": "Own Expeditor — direções visuais"
+}

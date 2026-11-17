@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Direção A — Cabine</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&amp;family=Barlow+Condensed:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#f5a524}a:hover{color:#ffc35c}
+button{font:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="min-height: 800px; display: flex; flex-wrap: wrap; background: {{t.bg}}; color: {{t.text}}; font-family: Barlow, system-ui, sans-serif; font-size: 14px;">
+  <nav aria-label="Módulos" style="flex: 1 1 220px; max-width: 240px; box-sizing: border-box; padding: 20px 14px; background: {{t.side}}; border-right: 1px solid {{t.line}}; display: flex; flex-direction: column; gap: 4px;">
+    <div style="display: flex; align-items: center; gap: 10px; padding: 4px 10px 20px;">
+      <div style="width: 32px; height: 32px; border-radius: 8px; background: {{t.accent}}; display: flex; align-items: center; justify-content: center;">
+        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1a1206" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h11v9H3z"/><path d="M14 10h4l3 3v3h-7"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>
+      </div>
+      <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 20px; letter-spacing: 0.04em; text-transform: uppercase;">Own Expeditor</span>
+    </div>
+    <sc-for list="{{nav}}" as="n" hint-placeholder-count="5">
+      <button type="button" style="{{n.style}}">
+        <span style="width: 6px; height: 6px; border-radius: 3px; background: {{n.dot}};"></span>{{n.label}}
+      </button>
+    </sc-for>
+    <div style="flex-grow: 1;"></div>
+    <button type="button" onClick="{{toggle}}" style="display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 12px; border-radius: 8px; border: 1px solid {{t.line}}; background: transparent; color: {{t.muted}};">
+      <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>{{themeLabel}}
+    </button>
+  </nav>
+  <main style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column;">
+    <header style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px; padding: 16px 28px; border-bottom: 1px solid {{t.line}};">
+      <div style="display: flex; flex-direction: column;">
+        <span style="font-size: 12px; color: {{t.muted}}; text-transform: uppercase; letter-spacing: 0.08em;">Perfil · Save</span>
+        <span style="font-weight: 600;">Perfil 1 · Save 4 — Autosave</span>
+      </div>
+      <div style="flex-grow: 1;"></div>
+      <div style="display: flex; gap: 24px;">
+        <div style="display: flex; flex-direction: column; align-items: flex-end;"><span style="font-size: 12px; color: {{t.muted}};">OFERTAS</span><span style="font-family: 'Barlow Condensed', sans-serif; font-size: 24px; font-weight: 600; font-variant-numeric: tabular-nums;">6.485</span></div>
+        <div style="display: flex; flex-direction: column; align-items: flex-end;"><span style="font-size: 12px; color: {{t.muted}};">EMPRESAS</span><span style="font-family: 'Barlow Condensed', sans-serif; font-size: 24px; font-weight: 600; font-variant-numeric: tabular-nums;">1.941</span></div>
+      </div>
+    </header>
+    <div style="display: flex; flex-wrap: wrap; gap: 20px; padding: 24px 28px; flex-grow: 1;">
+      <section aria-label="Ofertas" style="flex: 1 1 420px; min-width: 0; display: flex; flex-direction: column; gap: 12px;">
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <label for="busca-a" style="position: absolute; left: -9999px;">Buscar oferta</label>
+          <input id="busca-a" type="search" placeholder="Buscar cidade, empresa ou carga…" style="flex-grow: 1; min-height: 44px; padding: 0 14px; border-radius: 8px; border: 1px solid {{t.line}}; background: {{t.panel}}; color: {{t.text}}; font: inherit;">
+        </div>
+        <sc-for list="{{offers}}" as="o" hint-placeholder-count="5">
+          <button type="button" onClick="{{o.pick}}" style="{{o.style}}">
+            <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0; flex-grow: 1; text-align: left;">
+              <span style="font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{o.from}} → {{o.to}}</span>
+              <span style="color: {{t.muted}}; font-size: 13px;">{{o.cargo}} · {{o.trailer}}</span>
+            </div>
+            <span style="font-family: 'Barlow Condensed', sans-serif; font-size: 22px; font-weight: 600; font-variant-numeric: tabular-nums; color: {{t.accent}};">{{o.km}}</span>
+          </button>
+        </sc-for>
+      </section>
+      <section aria-label="Editar frete" style="flex: 1 1 340px; min-width: 0; box-sizing: border-box; padding: 22px; border-radius: 14px; background: {{t.panel}}; border: 1px solid {{t.line}}; display: flex; flex-direction: column; gap: 16px;">
+        <span style="font-family: 'Barlow Condensed', sans-serif; font-size: 22px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;">Editar frete</span>
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;">
+          <sc-for list="{{fields}}" as="f" hint-placeholder-count="4">
+            <div style="display: flex; flex-direction: column; gap: 4px; padding: 10px 12px; border-radius: 8px; background: {{t.bg}}; border: 1px solid {{t.line}};">
+              <span style="font-size: 12px; color: {{t.muted}}; text-transform: uppercase; letter-spacing: 0.06em;">{{f.label}}</span>
+              <span style="font-weight: 600;">{{f.value}}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display: flex; align-items: baseline; gap: 8px; padding: 14px; border-radius: 10px; background: {{t.bg}};">
+          <span style="font-family: 'Barlow Condensed', sans-serif; font-size: 44px; font-weight: 700; font-variant-numeric: tabular-nums; color: {{t.accent}};">{{selKm}}</span>
+          <span style="color: {{t.muted}};">distância estimada</span>
+        </div>
+        <div style="flex-grow: 1;"></div>
+        <button type="button" style="min-height: 48px; border-radius: 10px; border: none; background: {{t.accent}}; color: #1a1206; font-weight: 700; font-size: 15px; letter-spacing: 0.03em;">Revisar mudanças</button>
+        <span style="font-size: 12px; color: {{t.muted}};">Nada é gravado sem revisão. Um backup é criado antes.</span>
+      </section>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":true},"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+  constructor(p){ super(p); this.state = { sel: 0, dark: null }; }
+  renderVals() {
+    const dark = this.state.dark ?? (this.props.dark ?? true);
+    const t = dark
+      ? { bg:'#121417', side:'#0c0e10', panel:'#1a1d21', line:'#2a2f35', text:'#eef0f2', muted:'#9aa3ad', accent:'#f5a524', sel:'#2a2414' }
+      : { bg:'#f4f2ee', side:'#ebe7df', panel:'#ffffff', line:'#d9d3c7', text:'#1b1d20', muted:'#5f6670', accent:'#b86e00', sel:'#fbecd2' };
+    const data = [
+      { from:'Sofia', to:'Istanbul', cargo:'Vigas de concreto', trailer:'Prancha', km:'569 km', co:'Radus', dco:'LogNStick' },
+      { from:'Beograd', to:'Sofia', cargo:'Tanque de água', trailer:'Baú', km:'394 km', co:'Rock Eat', dco:'Radus' },
+      { from:'Wien', to:'Praha', cargo:'Maquinário', trailer:'Rebaixado', km:'332 km', co:'Trameri', dco:'Tradeaux' },
+      { from:'Berlin', to:'Hamburg', cargo:'Eletrônicos', trailer:'Baú refrigerado', km:'289 km', co:'Posped', dco:'Eurogoodies' },
+      { from:'Lyon', to:'Milano', cargo:'Vinho', trailer:'Tanque', km:'441 km', co:'Fle', dco:'Quarry' }
+    ];
+    const sel = this.state.sel;
+    const offers = data.map((o, i) => ({ ...o,
+      pick: () => this.setState({ sel: i }),
+      style: `display:flex;align-items:center;gap:12px;width:100%;min-height:56px;padding:10px 14px;border-radius:10px;border:1px solid ${i===sel?t.accent:t.line};background:${i===sel?t.sel:t.panel};color:${t.text};` }));
+    const s = data[sel];
+    const names = ['Fretes','Caminhões','Perfil','Empresa','Mapa'];
+    const nav = names.map((n, i) => ({ label:n, dot: i===0?t.accent:'transparent',
+      style:`display:flex;align-items:center;gap:10px;min-height:44px;padding:0 12px;border-radius:8px;border:none;text-align:left;background:${i===0?t.panel:'transparent'};color:${i===0?t.text:t.muted};font-weight:${i===0?600:500};` }));
+    return { t, offers, nav, selKm: s.km,
+      fields: [ {label:'Origem', value:`${s.co} · ${s.from}`}, {label:'Destino', value:`${s.dco} · ${s.to}`}, {label:'Carga', value:s.cargo}, {label:'Reboque', value:s.trailer} ],
+      themeLabel: dark ? 'Tema claro' : 'Tema escuro',
+      toggle: () => this.setState({ dark: !dark }) };
+  }
+}
+</script>
+</body>
+</html>
