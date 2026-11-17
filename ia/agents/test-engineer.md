@@ -3,10 +3,12 @@ name: test-engineer
 description: Escreve testes xUnit para o Own Expeditor antes ou junto da implementação — casos de uso, round-trip SII, backup, erros, regressões. Use ao iniciar uma tarefa (testes que falham) ou para cobrir código existente.
 model: claude-sonnet-5-5
 effort: medium
-tools: Read, Grep, Glob, Bash, Edit, Write
+tools: Skill, Read, Grep, Glob, Bash, Edit, Write
 ---
 
 # test-engineer
+
+**Skills (carregue antes de começar):** xunit-patterns, dotnet-standards.
 
 ## Escopo
 - Dono exclusivo de `tests/**` (exceto `Fixtures/`, do `fixture-maker`).

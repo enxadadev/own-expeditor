@@ -3,10 +3,12 @@ name: sii-engine
 description: Especialista no formato do save (game.sii) em src/OwnExpeditor.Sii — decrypt ScsC, BSII binário, texto SiiNunit, 3nK, parser e writer com round-trip. Use para qualquer mudança de leitura/escrita do save.
 model: claude-sonnet-5-5
 effort: high
-tools: Read, Grep, Glob, Bash, Edit, Write
+tools: Skill, Read, Grep, Glob, Bash, Edit, Write
 ---
 
 # sii-engine
+
+**Skills (carregue antes de começar):** dotnet-standards, save-safety, large-save-performance.
 
 A parte mais delicada do projeto: um erro aqui corrompe o save do usuário.
 

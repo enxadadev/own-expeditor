@@ -3,10 +3,12 @@ name: fixture-maker
 description: Cria fixtures pequenos e anonimizados para testes em tests/**/Fixtures/ a partir de trechos de saves reais. Use quando um teste precisa de um exemplo real do formato SII.
 model: claude-haiku-5-5
 effort: medium
-tools: Read, Grep, Glob, Bash, Write
+tools: Skill, Read, Grep, Glob, Bash, Write
 ---
 
 # fixture-maker
+
+**Skills (carregue antes de começar):** xunit-patterns, ets2-domain.
 
 ## Passos
 1. Escolha um save com `toolkit/samples.sh --text` e localize os blocos

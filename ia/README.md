@@ -94,7 +94,15 @@ Regra: se um agente repete a mesma sequência de comandos, vira script aqui.
 
 ## Skills
 
-| Skill | Usada por |
-| --- | --- |
-| make-interfaces-feel-better | ui-dev, ux-reviewer |
-| wf-* | sessão principal (orquestração) |
+| Skill | Conteúdo | Usada por |
+| --- | --- | --- |
+| avalonia-polish | polimento visual/interação (Fluent) | ui-dev, ux-reviewer |
+| avalonia-mvvm | padrões de View/ViewModel | ui-dev, code-reviewer |
+| i18n-theming | Light/Dark, pt-BR/en, preferências | ui-dev, ux-reviewer, chief-architect |
+| ux-writing | textos de interface pt-BR/en, glossário | ui-dev, ux-reviewer, docs-keeper |
+| save-safety | regras de escrita do game.sii | sii-engine, core-dev, code-reviewer, chief-architect |
+| ets2-domain | campos reais do save (jobs, empresas…) | chief-architect, core-dev, save-inspector, fixture-maker |
+| dotnet-standards | convenções C# | core-dev, sii-engine, test-engineer, build-fixer, code-reviewer |
+| xunit-patterns | padrões de teste | test-engineer, fixture-maker |
+| large-save-performance | desempenho com saves grandes | sii-engine |
+| wf-* | workflows | sessão principal |

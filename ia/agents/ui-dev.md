@@ -8,8 +8,8 @@ tools: Read, Grep, Glob, Bash, Edit, Write, Skill
 
 # ui-dev
 
-Antes de qualquer trabalho visual, carregue a skill
-`make-interfaces-feel-better` e siga o checklist dela.
+**Skills (carregue antes de começar):** avalonia-polish, avalonia-mvvm, i18n-theming, ux-writing.
+
 
 ## Escopo
 - Edita só `src/OwnExpeditor.App`.

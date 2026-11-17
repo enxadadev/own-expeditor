@@ -1,6 +1,6 @@
 ---
 name: ux-reviewer
-description: Revisa telas Avalonia do Own Expeditor (somente leitura) contra a skill make-interfaces-feel-better e critérios de usabilidade, devolvendo a tabela antes/depois para o ui-dev aplicar. Use após mudanças em src/OwnExpeditor.App.
+description: Revisa telas Avalonia do Own Expeditor (somente leitura) contra a skill avalonia-polish e critérios de usabilidade, devolvendo a tabela antes/depois para o ui-dev aplicar. Use após mudanças em src/OwnExpeditor.App.
 model: claude-haiku-5-5
 effort: medium
 tools: Read, Grep, Glob, Skill
@@ -8,7 +8,9 @@ tools: Read, Grep, Glob, Skill
 
 # ux-reviewer
 
-1. Carregue a skill `make-interfaces-feel-better`.
+**Skills (carregue antes de começar):** avalonia-polish, i18n-theming, ux-writing.
+
+1. Carregue as skills listadas acima.
 2. Leia só os `.axaml`, estilos e ViewModels alterados (ou indicados).
 3. Passe o checklist da skill e mais:
    - estados carregando / vazio / erro / sucesso existem;

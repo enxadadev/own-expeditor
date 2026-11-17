@@ -22,6 +22,8 @@ existentes no save (`game.sii`) por origem, destino, carga e reboque escolhidos.
 - Saves de exemplo ficam em `samples/` (não versionar saves pessoais grandes) e
   fixtures pequenos em `tests/**/Fixtures/`.
 - Formato SII: documentar descobertas em `docs/sii-format.md` antes de codar o parser.
+- Tema e idioma: a UI suporta tema Light/Dark (e Sistema) e idiomas pt-BR/en;
+  nenhum texto visível fixo no código e nenhuma cor fixa (ver skill `i18n-theming`).
 
 ## Agentes
 - Agentes e skills ficam em `ia/`; quem faz o quê e o fluxo estão em `ia/README.md`.

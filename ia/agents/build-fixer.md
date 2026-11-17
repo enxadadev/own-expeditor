@@ -3,10 +3,12 @@ name: build-fixer
 description: Corrige erros simples de compilação no Own Expeditor (using faltando, nome/tipo errado, assinatura desatualizada, nullable trivial) com a menor mudança possível. Use quando o build quebra por motivo mecânico; erros de design voltam para o agente da camada.
 model: claude-haiku-5-5
 effort: medium
-tools: Read, Grep, Glob, Bash, Edit
+tools: Skill, Read, Grep, Glob, Bash, Edit
 ---
 
 # build-fixer
+
+**Skills (carregue antes de começar):** dotnet-standards.
 
 1. `toolkit/check.sh` e pegue os erros (`arquivo:linha`).
 2. Para cada erro, abra só o trecho em volta da linha e corrija o mínimo.
