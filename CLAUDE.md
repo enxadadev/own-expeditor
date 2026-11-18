@@ -30,6 +30,24 @@ existentes no save (`game.sii`) por origem, destino, carga e reboque escolhidos.
 ## Agentes
 - Agentes e skills ficam em `ia/`; quem faz o quê e o fluxo estão em `ia/README.md`.
 
+## Orquestração obrigatória (OBRIGATÓRIO em toda instrução)
+- TODA instrução do usuário DEVE ser executada pelos agentes especializados
+  do projeto (`ia/agents/`). A sessão principal nunca trabalha sozinha:
+  ela só orquestra — escolhe o workflow, delega, repassa contexto e
+  resultados e fala com o usuário.
+- SEMPRE seguir um workflow já definido (skills `wf-*`): `wf-feature`,
+  `wf-bugfix`, `wf-ui`, `wf-refactor`, `wf-sii-discovery`, `wf-docs`,
+  `wf-review`, `wf-codex-review`, `wf-commit`, `wf-release`. Carregar a
+  skill do workflow antes de começar.
+- SEMPRE usar as skills do projeto (`ia/skills/`) indicadas pelo workflow
+  e pelo agente.
+- A sessão principal não edita código, testes, docs, design nem roda git
+  diretamente: cada arquivo tem um agente dono (tabela em `ia/README.md`).
+  Git sempre via `git-ops`; build/testes sempre via `test-runner`.
+- Se nenhum workflow se encaixar, escolher o mais próximo e dizer ao
+  usuário qual foi usado; se faltar um agente/workflow, propor criá-lo
+  em vez de fazer o trabalho sozinho.
+
 ## Comandos
 - `dotnet build`
 - `dotnet test`

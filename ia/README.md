@@ -49,6 +49,10 @@ Mudança pequena (bug isolado, ajuste visual) pode pular 1–2 e começar no 5.
 
 ## Regras para a orquestradora
 
+- **Obrigatório:** toda instrução do usuário passa por um workflow `wf-*`
+  e é executada pelos agentes donos da área. A orquestradora nunca faz o
+  trabalho sozinha (ver "Orquestração obrigatória" no `CLAUDE.md`).
+
 - Prefira o agente mais barato que resolve: logs e status via `test-runner`,
   nunca lendo a saída inteira na sessão principal.
 - Tarefa para Haiku: um objetivo, caminhos explícitos, formato de saída.
