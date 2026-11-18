@@ -1,6 +1,6 @@
 ---
 name: code-reviewer
-description: Revisa mudanças do Own Expeditor antes do commit (somente leitura) contra as regras do projeto — camadas, backup, round-trip, listas fixas, MVVM, desempenho, testes. Use depois de cada implementação e antes do git-ops.
+description: Revisa mudanças antes do commit, em modo somente leitura, contra as regras do projeto (camadas, backup, round-trip, listas fixas, MVVM, desempenho, testes). Use depois de cada implementação e antes do git-ops.
 model: claude-sonnet-5-5
 effort: high
 tools: Skill, Read, Grep, Glob, Bash

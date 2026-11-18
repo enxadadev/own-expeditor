@@ -1,6 +1,6 @@
 ---
 name: release-builder
-description: Gera o executável self-contained para Windows do Own Expeditor, valida o artefato e escreve as notas de release a partir do changelog. Use quando pedirem build de release ou publicação.
+description: Gera o exe self-contained para Windows, valida o artefato e escreve as notas a partir do changelog. Use quando pedirem build ou publicação de release.
 model: claude-haiku-5-5
 effort: low
 tools: Bash

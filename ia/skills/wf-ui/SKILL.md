@@ -1,6 +1,6 @@
 ---
 name: wf-ui
-description: Workflow para criar ou polir telas Avalonia do Own Expeditor — ui-dev com a skill avalonia-polish, revisão do ux-reviewer e commit. Use para ajustes visuais, novas telas sem regra de negócio nova, ou "a UI está estranha".
+description: Workflow para criar ou polir telas Avalonia — ui-dev com avalonia-polish, revisão do ux-reviewer e commit. Use para ajustes visuais, telas sem regra de negócio nova ou "a UI está estranha".
 ---
 
 # Workflow: UI

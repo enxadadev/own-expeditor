@@ -1,6 +1,6 @@
 ---
 name: save-inspector
-description: Responde perguntas sobre o conteúdo de saves de exemplo (samples/, dataset/) — quais blocos, atributos, cargas, empresas, como é um job_offer_data — devolvendo só o trecho relevante. Somente leitura. Use antes de implementar algo que dependa do formato real.
+description: Responde perguntas sobre saves de exemplo (samples/, dataset/) em modo somente leitura, devolvendo só o trecho relevante. Use antes de implementar algo que dependa do formato real.
 model: claude-haiku-5-5
 effort: low
 tools: Skill, Read, Grep, Glob, Bash

@@ -1,6 +1,6 @@
 ---
 name: wf-feature
-description: Workflow para criar uma feature nova no Own Expeditor, do desenho ao commit — arquiteto, contratos, testes, implementação, revisão, docs e commit com aprovação. Use quando o usuário pedir uma funcionalidade nova ou mudança de comportamento que atravessa camadas.
+description: Workflow de feature nova, do desenho ao commit com aprovação — arquiteto, contratos, testes, implementação, revisão, docs e commit. Use para funcionalidade ou mudança de comportamento que atravessa camadas.
 ---
 
 # Workflow: feature

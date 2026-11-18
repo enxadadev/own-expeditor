@@ -1,6 +1,6 @@
 ---
 name: wf-commit
-description: Workflow de commit do Own Expeditor com o agente git-ops — preparo por script, proposta, aprovação do usuário, commit validado. Use sempre que for commitar.
+description: Workflow de commit com git-ops — preparo por script, proposta, aprovação e commit validado. Use sempre que for commitar.
 ---
 
 # Workflow: commit

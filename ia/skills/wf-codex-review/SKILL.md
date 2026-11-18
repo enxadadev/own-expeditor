@@ -1,6 +1,6 @@
 ---
 name: wf-codex-review
-description: Workflow de revisão independente pelo Codex CLI (OpenAI) do diff atual do Own Expeditor, com triagem dos achados pelo code-reviewer. Use quando o usuário pedir "Codex review", segunda opinião, ou antes de mudanças de alto risco (escrita de save, formato SII).
+description: Revisão independente pelo Codex CLI (OpenAI) do diff atual, com triagem pelo code-reviewer. Use quando pedirem Codex review, segunda opinião ou antes de mudanças de alto risco (escrita de save ou formato SII).
 ---
 
 # Workflow: Codex review

@@ -1,6 +1,6 @@
 ---
 name: wf-bugfix
-description: Workflow para corrigir um bug no Own Expeditor — reproduzir com teste de regressão, corrigir, revisar e commitar com bump patch. Use quando algo não funciona como deveria.
+description: Workflow de correção de bug — teste de regressão, correção, revisão e commit com bump patch. Use quando algo não funciona como deveria.
 ---
 
 # Workflow: bugfix

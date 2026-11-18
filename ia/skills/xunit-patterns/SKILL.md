@@ -1,6 +1,6 @@
 ---
 name: xunit-patterns
-description: Padrões de teste xUnit do Own Expeditor — nomes, AAA, fixtures, testes com saves reais opcionais, arquivos temporários, round-trip, testes de ViewModel. Use ao escrever ou revisar testes (test-engineer, fixture-maker, code-reviewer).
+description: Padrões de teste xUnit — nomes, AAA, fixtures, saves reais opcionais, arquivos temporários, round-trip, testes de ViewModel. Use ao escrever ou revisar testes.
 ---
 
 # xUnit patterns

@@ -1,6 +1,6 @@
 ---
 name: wf-sii-discovery
-description: Workflow para investigar e documentar uma parte do formato do save (game.sii) antes de codar — inspeção nos samples, documentação em sii-format.md, fixture e testes. Use quando for preciso entender blocos/atributos novos ou suportar BSII/3nK.
+description: Workflow para investigar e documentar parte do formato do save antes de codar — samples, sii-format.md, fixture e testes. Use para blocos ou atributos novos, ou suporte a BSII/3nK.
 ---
 
 # Workflow: descoberta do formato SII

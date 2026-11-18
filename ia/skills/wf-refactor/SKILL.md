@@ -1,6 +1,6 @@
 ---
 name: wf-refactor
-description: Workflow para refatorar código do Own Expeditor sem mudar comportamento — testes verdes antes e depois, revisão e commit sem bump. Use para reorganizar, simplificar ou renomear.
+description: Workflow de refatoração sem mudar comportamento — testes verdes antes e depois, revisão e commit sem bump. Use para reorganizar, simplificar ou renomear.
 ---
 
 # Workflow: refactor

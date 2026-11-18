@@ -1,6 +1,6 @@
 ---
 name: build-fixer
-description: Corrige erros simples de compilação no Own Expeditor (using faltando, nome/tipo errado, assinatura desatualizada, nullable trivial) com a menor mudança possível. Use quando o build quebra por motivo mecânico; erros de design voltam para o agente da camada.
+description: Corrige erros mecânicos de compilação no Own Expeditor (using faltando, nome/tipo errado, nullable trivial) com a menor mudança possível. Use quando o build quebra por motivo mecânico; erros de design voltam para o agente da camada.
 model: claude-haiku-5-5
 effort: medium
 tools: Skill, Read, Grep, Glob, Bash, Edit

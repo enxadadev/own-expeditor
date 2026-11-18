@@ -1,6 +1,6 @@
 ---
 name: test-runner
-description: Roda toolkit/check.sh (build + testes) no Own Expeditor e devolve só um resumo curto das falhas (arquivo:linha, teste, mensagem). Use sempre que precisar saber se o build/testes passam, para não gastar contexto com logs.
+description: Roda toolkit/check.sh (build e testes) e devolve só o resumo das falhas (arquivo:linha, teste, mensagem). Use sempre que precisar saber se build e testes passam.
 model: claude-haiku-5-5
 effort: low
 tools: Bash

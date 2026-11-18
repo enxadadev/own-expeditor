@@ -1,6 +1,6 @@
 ---
 name: avalonia-polish
-description: Checklist de polimento visual e de interação para a UI Avalonia (Fluent) do Own Expeditor — raios, sombras, tipografia, números, transições, áreas de clique, estados, foco, acessibilidade, temas Light/Dark. Use ao criar, revisar ou polir telas em src/OwnExpeditor.App. Exemplos em XAML em reference.md.
+description: Checklist de polimento visual e de interação da UI Fluent — raios, sombras, tipografia, estados, foco, acessibilidade, Light/Dark. Use ao criar, revisar ou polir telas em src/OwnExpeditor.App; exemplos em reference.md.
 metadata:
   origin: adaptado de "make-interfaces-feel-better" (community PR #1659, linus707) para Avalonia 11.3 + FluentTheme
 ---

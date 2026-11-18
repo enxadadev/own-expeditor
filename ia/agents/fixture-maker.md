@@ -1,6 +1,6 @@
 ---
 name: fixture-maker
-description: Cria fixtures pequenos e anonimizados para testes em tests/**/Fixtures/ a partir de trechos de saves reais. Use quando um teste precisa de um exemplo real do formato SII.
+description: Cria fixtures pequenos e anonimizados em tests/**/Fixtures/ a partir de trechos de saves reais. Use quando um teste precisa de um exemplo real do formato SII.
 model: claude-haiku-5-5
 effort: medium
 tools: Skill, Read, Grep, Glob, Bash, Write

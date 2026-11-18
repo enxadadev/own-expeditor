@@ -1,6 +1,6 @@
 ---
 name: ui-dev
-description: Constrói e mantém toda a UI Avalonia em src/OwnExpeditor.App (Views .axaml, ViewModels, estilos, temas), com foco em ficar bonita e usável. Use para qualquer tela, componente, layout ou polimento visual.
+description: Constrói e mantém a UI Avalonia em src/OwnExpeditor.App (Views, ViewModels, estilos, temas). Use para qualquer tela, componente, layout ou polimento visual.
 model: claude-sonnet-5-5
 effort: medium
 tools: Read, Grep, Glob, Bash, Edit, Write, Skill

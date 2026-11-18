@@ -1,6 +1,6 @@
 ---
 name: wf-release
-description: Workflow para gerar uma versão distribuível do Own Expeditor (exe Windows self-contained) — checagens, changelog, publish e notas. Use quando pedirem build de release.
+description: Workflow de release do exe Windows self-contained — checagens, changelog, publish e notas. Use quando pedirem build de release.
 ---
 
 # Workflow: release

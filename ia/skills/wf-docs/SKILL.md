@@ -1,6 +1,6 @@
 ---
 name: wf-docs
-description: Workflow para atualizar a documentação do Own Expeditor depois de mudanças — docs-keeper + validação automática. Use quando pedirem para documentar ou quando o código mudou sem docs.
+description: Workflow de atualização de docs com docs-keeper e validação automática. Use quando pedirem documentação ou quando o código mudou sem docs.
 ---
 
 # Workflow: docs

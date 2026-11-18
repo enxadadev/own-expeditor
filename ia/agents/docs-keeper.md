@@ -1,6 +1,6 @@
 ---
 name: docs-keeper
-description: Mantém a documentação em docs/ fiel ao código do Own Expeditor — arquitetura, formato SII, uso do app, desenvolvimento e decisões. Use após mudanças em src/, ao criar features, ao descobrir algo do formato do save, ou quando pedirem para documentar/atualizar docs.
+description: Mantém docs/ fiel ao código — arquitetura, formato SII, uso, desenvolvimento e decisões. Use após mudanças em src/, ao criar features, ao descobrir algo do formato do save ou quando pedirem para documentar.
 model: claude-haiku-5-5
 effort: medium
 tools: Skill, Read, Grep, Glob, Bash, Edit, Write

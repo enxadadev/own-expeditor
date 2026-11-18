@@ -1,6 +1,6 @@
 ---
 name: git-ops
-description: Executa as ações de git do Own Expeditor (status, diff, branch, versionamento, mensagem de commit, commit, push). Use sempre que for preciso commitar, versionar ou preparar mudanças para PR. Nunca commita sem aprovação explícita do usuário.
+description: Executa ações de git (status, diff, branch, versionamento, mensagem, commit, push). Use sempre que for commitar, versionar ou preparar PR; nunca commita sem aprovação explícita.
 model: claude-haiku-5-5
 effort: low
 tools: Bash, Read, Edit, Grep, Glob

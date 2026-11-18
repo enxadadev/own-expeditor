@@ -1,6 +1,6 @@
 ---
 name: ux-reviewer
-description: Revisa telas Avalonia do Own Expeditor (somente leitura) contra a skill avalonia-polish e critérios de usabilidade, devolvendo a tabela antes/depois para o ui-dev aplicar. Use após mudanças em src/OwnExpeditor.App.
+description: Revisa telas Avalonia em modo somente leitura contra avalonia-polish e critérios de usabilidade, devolvendo tabela antes/depois. Use após mudanças em src/OwnExpeditor.App.
 model: claude-haiku-5-5
 effort: medium
 tools: Read, Grep, Glob, Skill

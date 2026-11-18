@@ -1,6 +1,6 @@
 ---
 name: wf-review
-description: Workflow de revisão interna das mudanças do Own Expeditor antes do commit — checagens automáticas do toolkit, code-reviewer e ux-reviewer. Use quando pedirem revisão do trabalho atual ou como gate dos outros workflows.
+description: Revisão interna antes do commit — checagens do toolkit, code-reviewer e ux-reviewer. Use quando pedirem revisão do trabalho atual ou como gate de outros workflows.
 ---
 
 # Workflow: revisão interna

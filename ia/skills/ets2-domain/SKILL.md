@@ -1,6 +1,6 @@
 ---
 name: ets2-domain
-description: Glossário do domínio ETS2/ATS como aparece no game.sii — job offers, empresas, cidades, cargas, reboques, tempo de jogo — com os campos reais levantados nos saves de exemplo. Use ao desenhar ou implementar leitura/injeção de jobs (chief-architect, core-dev, sii-engine, test-engineer, save-inspector).
+description: Glossário ETS2/ATS como aparece no game.sii — job offers, empresas, cidades, cargas, reboques, com campos reais dos saves. Use ao desenhar ou implementar leitura e injeção de jobs.
 ---
 
 # Domínio ETS2/ATS no save

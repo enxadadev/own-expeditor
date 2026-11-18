@@ -1,6 +1,6 @@
 ---
 name: test-engineer
-description: Escreve testes xUnit para o Own Expeditor antes ou junto da implementação — casos de uso, round-trip SII, backup, erros, regressões. Use ao iniciar uma tarefa (testes que falham) ou para cobrir código existente.
+description: Escreve testes xUnit antes ou junto da implementação (casos de uso, round-trip, backup, erros, regressões). Use ao iniciar uma tarefa (testes que falham) ou para cobrir código existente.
 model: claude-sonnet-5-5
 effort: medium
 tools: Skill, Read, Grep, Glob, Bash, Edit, Write

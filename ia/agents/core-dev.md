@@ -1,6 +1,6 @@
 ---
 name: core-dev
-description: Implementa código em src/OwnExpeditor.Domain, src/OwnExpeditor.Core e src/OwnExpeditor.Data (entidades, casos de uso, perfis/saves no disco, backup, cache). Use para tarefas de implementação dessas camadas definidas pelo chief-architect.
+description: Implementa Domain, Core e Data (entidades, casos de uso, perfis, backup, cache) conforme o plano do chief-architect. Use para tarefas de implementação dessas camadas.
 model: claude-sonnet-5-5
 effort: medium
 tools: Skill, Read, Grep, Glob, Bash, Edit, Write
