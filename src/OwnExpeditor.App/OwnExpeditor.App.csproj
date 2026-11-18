@@ -7,6 +7,7 @@
     <!-- App so enxerga Core e Domain; Sii/Data nao vazam por referencia transitiva (ADR 0006). -->
     <DisableTransitiveProjectReferences>true</DisableTransitiveProjectReferences>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    <NeutralLanguage>en</NeutralLanguage>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,6 +21,13 @@
     <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.0" />
     <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.0" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+  </ItemGroup>
+
+  <!-- Galeria e seus textos só existem em Debug (ADR 0005, decisão 6). -->
+  <ItemGroup Condition="'$(Configuration)' == 'Release'">
+    <Compile Remove="Gallery\**" />
+    <AvaloniaXaml Remove="Gallery\**" />
+    <EmbeddedResource Remove="Resources\Gallery*.resx" />
   </ItemGroup>
 
   <ItemGroup>

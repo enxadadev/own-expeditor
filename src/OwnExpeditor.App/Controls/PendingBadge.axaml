@@ -1,0 +1,16 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:OwnExpeditor.App.Controls"
+             x:Class="OwnExpeditor.App.Controls.PendingBadge"
+             x:Name="Root" x:DataType="c:PendingBadge" HorizontalAlignment="Left" VerticalAlignment="Center">
+  <Panel IsVisible="{Binding #Root.IsShown}">
+    <Border Height="20" MinWidth="20" Padding="6,0" CornerRadius="{StaticResource RadiusPill}" BorderThickness="1"
+            Background="{DynamicResource SelectionBrush}" BorderBrush="{DynamicResource AccentTextBrush}"
+            IsVisible="{Binding !#Root.IsDot}" RenderTransformOrigin="50%,50%">
+      <TextBlock Classes="num" Text="{Binding #Root.DisplayText}" Foreground="{DynamicResource AccentTextBrush}"
+                 FontFamily="{StaticResource FontDisplay}" FontWeight="Bold" FontSize="13" HorizontalAlignment="Center"
+                 VerticalAlignment="Center" TextTrimming="CharacterEllipsis" MaxWidth="110" ToolTip.Tip="{Binding #Root.DisplayText}" />
+    </Border>
+    <Ellipse Width="10" Height="10" Margin="5" Fill="{DynamicResource AccentBrush}" IsVisible="{Binding #Root.IsDot}" />
+  </Panel>
+</UserControl>

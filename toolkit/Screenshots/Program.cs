@@ -6,9 +6,11 @@ using Avalonia.Headless;
 using Avalonia.Styling;
 using Avalonia.Threading;
 using OwnExpeditor.App;
+using OwnExpeditor.App.Services;
+using OwnExpeditor.Domain.Settings;
 
 // Renderiza cada View do App (Window/UserControl em OwnExpeditor.App.Views*) sem abrir janela,
-// em Light/Dark × pt-BR/en, e grava PNGs em <out>/<View>/<tema>-<cultura>.png.
+// em Light/Dark × pt-BR/en (a Galeria só existe em Debug), e grava PNGs em <out>/<View>/<tema>-<cultura>.png.
 // DataContext: <Nome>ViewModel com construtor sem parâmetros (dados de exemplo), se existir.
 // uso: Screenshots <out> [filtro-de-nome] [largura] [altura]
 var outDir = args.Length > 0 ? args[0] : ".screenshots";
@@ -23,7 +25,7 @@ AppBuilder.Configure<App>()
 
 var asm = typeof(App).Assembly;
 var views = asm.GetTypes()
-    .Where(t => t is { IsAbstract: false, IsPublic: true } && t.Namespace?.StartsWith("OwnExpeditor.App.Views") == true
+    .Where(t => t is { IsAbstract: false, IsPublic: true } && (t.Namespace?.StartsWith("OwnExpeditor.App.Views") == true || t.Namespace == "OwnExpeditor.App.Gallery")
                 && (typeof(Window).IsAssignableFrom(t) || typeof(UserControl).IsAssignableFrom(t))
                 && t.GetConstructor(Type.EmptyTypes) is not null
                 && t.Name.Contains(filter, StringComparison.OrdinalIgnoreCase))
@@ -40,14 +42,20 @@ foreach (var culture in cultures)
     try
     {
         CultureInfo.CurrentUICulture = CultureInfo.CurrentCulture = new CultureInfo(culture);
+        Localizer.Instance.SetLanguage(culture == "pt-BR" ? Language.PtBr : Language.En);
         Application.Current!.RequestedThemeVariant = theme;
         var view = (Control)Activator.CreateInstance(type)!;
         view.DataContext ??= CreateViewModel(asm, type);
         var window = view as Window ?? new Window { Content = view };
         window.Width = width; window.Height = height;
         window.Show();
-        Dispatcher.UIThread.RunJobs();
-        AvaloniaHeadlessPlatform.ForceRenderTimerTick();
+        // Vários ciclos com pausa curta: transições (150-200 ms) e animações precisam de tempo de relógio.
+        for (var i = 0; i < 8; i++)
+        {
+            Dispatcher.UIThread.RunJobs();
+            AvaloniaHeadlessPlatform.ForceRenderTimerTick();
+            Thread.Sleep(40);
+        }
         var frame = window.CaptureRenderedFrame() ?? throw new InvalidOperationException("frame vazio");
         var path = Path.Combine(outDir, type.Name, $"{themeName}-{culture}.png");
         Directory.CreateDirectory(Path.GetDirectoryName(path)!);

@@ -1,0 +1,24 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:OwnExpeditor.App.Controls"
+             xmlns:shapes="using:Avalonia.Controls.Shapes"
+             x:Class="OwnExpeditor.App.Controls.Spinner"
+             x:DataType="c:Spinner" Width="28" Height="28" AutomationProperties.AccessibilityView="Raw">
+  <UserControl.Styles>
+    <Style Selector="shapes|Arc.spin">
+      <Style.Animations>
+        <Animation Duration="0:0:0.9" IterationCount="Infinite">
+          <KeyFrame Cue="0%"><Setter Property="RotateTransform.Angle" Value="0" /></KeyFrame>
+          <KeyFrame Cue="100%"><Setter Property="RotateTransform.Angle" Value="360" /></KeyFrame>
+        </Animation>
+      </Style.Animations>
+    </Style>
+  </UserControl.Styles>
+  <Panel>
+    <Ellipse x:Name="Track" Stroke="{DynamicResource LineBrush}" StrokeThickness="3" Margin="1.5" />
+    <shapes:Arc x:Name="Arc" Classes="spin" Stroke="{DynamicResource AccentBrush}" StrokeThickness="3" StartAngle="0" SweepAngle="100"
+                StrokeLineCap="Round" RenderTransformOrigin="50%,50%" Margin="1.5">
+      <shapes:Arc.RenderTransform><RotateTransform /></shapes:Arc.RenderTransform>
+    </shapes:Arc>
+  </Panel>
+</UserControl>

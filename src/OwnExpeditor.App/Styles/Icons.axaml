@@ -1,0 +1,14 @@
+<!-- Ícones (24 × 24, preenchidos). Decorativos: sempre com AutomationProperties.AccessibilityView="Raw". -->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <StreamGeometry x:Key="IconSearch">M10.5 3a7.5 7.5 0 0 1 5.9 12.1l4.3 4.3-1.4 1.4-4.3-4.3A7.5 7.5 0 1 1 10.5 3zm0 2a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11z</StreamGeometry>
+  <StreamGeometry x:Key="IconClose">M6.4 5l5.6 5.6L17.6 5 19 6.4 13.4 12l5.6 5.6-1.4 1.4-5.6-5.6L6.4 19 5 17.6 10.6 12 5 6.4z</StreamGeometry>
+  <StreamGeometry x:Key="IconChevronDown">M6.4 9l5.6 5.6L17.6 9 19 10.4l-7 7-7-7z</StreamGeometry>
+  <StreamGeometry x:Key="IconCheck">M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z</StreamGeometry>
+  <StreamGeometry x:Key="IconError">F0 M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm4.3 12.9-1.4 1.4-2.9-2.9-2.9 2.9-1.4-1.4 2.9-2.9-2.9-2.9 1.4-1.4 2.9 2.9 2.9-2.9 1.4 1.4-2.9 2.9z</StreamGeometry>
+  <StreamGeometry x:Key="IconWarning">F0 M12 2 1 21h22zm-1 7h2v6h-2zm0 8h2v2h-2z</StreamGeometry>
+  <StreamGeometry x:Key="IconInfo">F0 M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-1 5h2v2h-2zm0 4h2v6h-2z</StreamGeometry>
+  <StreamGeometry x:Key="IconArrowRight">M4 11h12.2l-4.6-4.6L13 5l7 7-7 7-1.4-1.4 4.6-4.6H4z</StreamGeometry>
+  <StreamGeometry x:Key="IconInbox">F0 M19 3H5L2 12v9h20v-9zM5.9 5h12.2l2.1 6H16l-1 2H9l-1-2H3.8zM4 19v-6h3.5l1 2h7l1-2H20v6z</StreamGeometry>
+  <StreamGeometry x:Key="IconRefresh">M17.7 6.3A8 8 0 1 0 20 12h-2a6 6 0 1 1-1.8-4.3L13 11h8V3z</StreamGeometry>
+</ResourceDictionary>

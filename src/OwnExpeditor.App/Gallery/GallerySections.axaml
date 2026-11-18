@@ -1,0 +1,245 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:g="using:OwnExpeditor.App.Gallery"
+             xmlns:c="using:OwnExpeditor.App.Controls"
+             xmlns:loc="using:OwnExpeditor.App.Markup"
+             x:Class="OwnExpeditor.App.Gallery.GallerySections"
+             x:DataType="g:GalleryViewModel">
+  <UserControl.Styles>
+    <Style Selector="g|GallerySection">
+      <Setter Property="Template">
+        <ControlTemplate>
+          <StackPanel Spacing="8" Margin="0,0,0,28">
+            <TextBlock Classes="subtitle" Text="{TemplateBinding Title}" />
+            <TextBlock Classes="bodysm muted" Text="{TemplateBinding Description}" TextWrapping="Wrap"
+                       IsVisible="{TemplateBinding Description, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+            <Border Height="1" Background="{DynamicResource LineBrush}" Margin="0,2,0,6" />
+            <ContentPresenter Content="{TemplateBinding Content}" />
+          </StackPanel>
+        </ControlTemplate>
+      </Setter>
+    </Style>
+    <Style Selector="g|GalleryCell">
+      <Setter Property="Template">
+        <ControlTemplate>
+          <StackPanel Spacing="4">
+            <ContentPresenter Content="{TemplateBinding Content}" />
+            <TextBlock Classes="caption" Text="{TemplateBinding Caption}" />
+          </StackPanel>
+        </ControlTemplate>
+      </Setter>
+    </Style>
+    <Style Selector="WrapPanel.cells"><Setter Property="ItemSpacing" Value="16" /><Setter Property="LineSpacing" Value="16" /></Style>
+    <!-- "Áreas de clique": contorno em todo botão -->
+    <Style Selector="StackPanel.hit Button /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="BorderBrush" Value="{DynamicResource DangerBrush}" />
+    </Style>
+  </UserControl.Styles>
+
+  <StackPanel Classes.hit="{Binding ShowHitAreas}">
+
+    <!-- Botões -->
+    <g:GallerySection Title="Button" Description="accent · danger · neutral">
+      <StackPanel Spacing="12">
+        <WrapPanel Classes="cells">
+          <g:GalleryCell Caption="{loc:Tr Gallery_State_Normal}"><Button Classes="accent" Content="{Binding Review}" /></g:GalleryCell>
+          <g:GalleryCell Caption="{loc:Tr Gallery_State_Hover}"><Button Classes="accent" Content="{Binding Review}" g:Gallery.ForceState="Hover" /></g:GalleryCell>
+          <g:GalleryCell Caption="{loc:Tr Gallery_State_Pressed}"><Button Classes="accent" Content="{Binding Review}" g:Gallery.ForceState="Pressed" /></g:GalleryCell>
+          <g:GalleryCell Caption="{loc:Tr Gallery_State_Focus}"><Button Classes="accent" Content="{Binding Review}" g:Gallery.ForceState="Focus" /></g:GalleryCell>
+          <g:GalleryCell Caption="{loc:Tr Gallery_State_Disabled}"><Button Classes="accent" Content="{Binding Review}" g:Gallery.ForceState="Disabled" /></g:GalleryCell>
+        </WrapPanel>
+        <WrapPanel Classes="cells">
+          <g:GalleryCell Caption="{loc:Tr Gallery_State_Normal}"><Button Classes="danger" Content="{Binding Discard}" /></g:GalleryCell>
+          <g:GalleryCell Caption="{loc:Tr Gallery_State_Hover}"><Button Classes="danger" Content="{Binding Discard}" g:Gallery.ForceState="Hover" /></g:GalleryCell>
+          <g:GalleryCell Caption="{loc:Tr Gallery_State_Pressed}"><Button Classes="danger" Content="{Binding Discard}" g:Gallery.ForceState="Pressed" /></g:GalleryCell>
+          <g:GalleryCell Caption="{loc:Tr Gallery_State_Focus}"><Button Classes="danger" Content="{Binding Discard}" g:Gallery.ForceState="Focus" /></g:GalleryCell>
+          <g:GalleryCell Caption="{loc:Tr Gallery_State_Disabled}"><Button Classes="danger" Content="{Binding Discard}" g:Gallery.ForceState="Disabled" /></g:GalleryCell>
+        </WrapPanel>
+        <WrapPanel Classes="cells">
+          <g:GalleryCell Caption="{loc:Tr Gallery_State_Normal}"><Button Content="{Binding Cancel}" /></g:GalleryCell>
+          <g:GalleryCell Caption="{loc:Tr Gallery_State_Hover}"><Button Content="{Binding Cancel}" g:Gallery.ForceState="Hover" /></g:GalleryCell>
+          <g:GalleryCell Caption="{loc:Tr Gallery_State_Pressed}"><Button Content="{Binding Cancel}" g:Gallery.ForceState="Pressed" /></g:GalleryCell>
+          <g:GalleryCell Caption="{loc:Tr Gallery_State_Focus}"><Button Content="{Binding Cancel}" g:Gallery.ForceState="Focus" /></g:GalleryCell>
+          <g:GalleryCell Caption="{loc:Tr Gallery_State_Disabled}"><Button Content="{Binding Cancel}" g:Gallery.ForceState="Disabled" /></g:GalleryCell>
+        </WrapPanel>
+        <WrapPanel Classes="cells">
+          <g:GalleryCell Caption="icon">
+            <Button Classes="icon compact" AutomationProperties.Name="{loc:Tr Common_Refresh}">
+              <Path Data="{StaticResource IconRefresh}" Fill="{DynamicResource TextBrush}" Width="16" Height="16" Stretch="Uniform" />
+            </Button>
+          </g:GalleryCell>
+          <g:GalleryCell Caption="{loc:Tr Gallery_State_LongText}"><Button Classes="accent" MaxWidth="200" Content="{Binding ButtonLong}" ToolTip.Tip="{Binding ButtonLong}"><Button.Styles><Style Selector="Button ContentPresenter"><Setter Property="TextBlock.TextTrimming" Value="CharacterEllipsis" /></Style></Button.Styles></Button></g:GalleryCell>
+        </WrapPanel>
+      </StackPanel>
+    </g:GallerySection>
+
+    <!-- PageHeader -->
+    <g:GallerySection Title="PageHeader">
+      <StackPanel Spacing="16">
+        <c:PageHeader Eyebrow="{Binding Eyebrow}" Title="{Binding PageTitle}" Count="{Binding Count6485}">
+          <c:PageHeader.Actions><Button Classes="accent" Content="{Binding Review}" /></c:PageHeader.Actions>
+        </c:PageHeader>
+        <c:PageHeader Title="{Binding PageTitle}" Count="{Binding Count6485}" />
+        <c:PageHeader Eyebrow="{Binding Eyebrow}" Title="{Binding PageTitle}" />
+      </StackPanel>
+    </g:GallerySection>
+
+    <!-- SearchBox -->
+    <g:GallerySection Title="SearchBox">
+      <WrapPanel Classes="cells">
+        <g:GalleryCell Caption="{loc:Tr Gallery_State_Normal}"><c:SearchBox Width="260" Watermark="{Binding SearchWatermark}" /></g:GalleryCell>
+        <g:GalleryCell Caption="{loc:Tr Gallery_State_Hover}"><c:SearchBox Width="260" Watermark="{Binding SearchWatermark}" g:Gallery.ForceState="Hover" /></g:GalleryCell>
+        <g:GalleryCell Caption="{loc:Tr Gallery_State_Focus}"><c:SearchBox Width="260" Watermark="{Binding SearchWatermark}" g:Gallery.ForceState="Focus" /></g:GalleryCell>
+        <g:GalleryCell Caption="Text"><c:SearchBox Width="260" Text="Sofia" Watermark="{Binding SearchWatermark}" /></g:GalleryCell>
+        <g:GalleryCell Caption="{loc:Tr Search_Busy}"><c:SearchBox Width="260" Text="Sof" IsBusy="True" Watermark="{Binding SearchWatermark}" /></g:GalleryCell>
+        <g:GalleryCell Caption="{loc:Tr Gallery_State_Disabled}"><c:SearchBox Width="260" Watermark="{Binding SearchWatermark}" g:Gallery.ForceState="Disabled" /></g:GalleryCell>
+      </WrapPanel>
+    </g:GallerySection>
+
+    <!-- SearchablePicker -->
+    <g:GallerySection Title="SearchablePicker">
+      <WrapPanel Classes="cells">
+        <g:GalleryCell Caption="{loc:Tr Gallery_State_Empty}">
+          <c:SearchablePicker Width="280" Label="{Binding PickerLabel}" Placeholder="{Binding PickerPlaceholder}" Items="{Binding Options}" />
+        </g:GalleryCell>
+        <g:GalleryCell Caption="{loc:Tr Gallery_State_Selected}">
+          <c:SearchablePicker Width="280" Label="{Binding PickerLabel}" Placeholder="{Binding PickerPlaceholder}" Items="{Binding Options}"
+                              SelectedItem="{Binding SelectedOrigin, Mode=TwoWay}" AllowClear="True" TotalCount="1842" />
+        </g:GalleryCell>
+        <g:GalleryCell Caption="{loc:Tr Gallery_State_Error}">
+          <c:SearchablePicker Width="280" Label="{Binding PickerLabel2}" Placeholder="{Binding PickerPlaceholder}" Items="{Binding Options}"
+                              IsRequired="True" ErrorText="{loc:Tr Picker_Required_Error}" />
+        </g:GalleryCell>
+        <g:GalleryCell Caption="{loc:Tr Gallery_State_Disabled}">
+          <c:SearchablePicker Width="280" Label="{Binding PickerLabel}" Placeholder="{Binding PickerPlaceholder}" Items="{Binding Options}" g:Gallery.ForceState="Disabled" />
+        </g:GalleryCell>
+        <g:GalleryCell Caption="{loc:Tr Gallery_State_LongText}">
+          <c:SearchablePicker Width="280" Label="{Binding PickerLabel}" Placeholder="{Binding PickerPlaceholder}" Items="{Binding LongOptions}"
+                              SelectedItem="{Binding LongOptions[0]}" />
+        </g:GalleryCell>
+      </WrapPanel>
+    </g:GallerySection>
+
+    <!-- RouteOfferItem -->
+    <g:GallerySection Title="RouteOfferItem">
+      <WrapPanel Classes="cells">
+        <g:GalleryCell Caption="{loc:Tr Gallery_State_Normal}"><c:RouteOfferItem Width="292" Origin="{Binding CityA}" Destination="{Binding CityB}" OriginCompany="{Binding CompanyA}" DestinationCompany="{Binding CompanyB}" DistanceText="{Binding Km569}" CargoText="{Binding CargoLine}" TrailerText="{Binding TrailerLine}" /></g:GalleryCell>
+        <g:GalleryCell Caption="{loc:Tr Gallery_State_Hover}"><c:RouteOfferItem Width="292" Origin="{Binding CityA}" Destination="{Binding CityB}" DistanceText="{Binding Km569}" CargoText="{Binding CargoLine}" TrailerText="{Binding TrailerLine}" g:Gallery.ForceState="Hover" /></g:GalleryCell>
+        <g:GalleryCell Caption="{loc:Tr Gallery_State_Selected}"><c:RouteOfferItem Width="292" Origin="{Binding CityA}" Destination="{Binding CityB}" DistanceText="{Binding Km569}" CargoText="{Binding CargoLine}" TrailerText="{Binding TrailerLine}" IsSelected="True" /></g:GalleryCell>
+        <g:GalleryCell Caption="{loc:Tr Offer_Modified}"><c:RouteOfferItem Width="292" Origin="{Binding CityA}" Destination="{Binding CityB}" DistanceText="{Binding Km569}" CargoText="{Binding CargoLine}" TrailerText="{Binding TrailerLine}" IsModified="True" /></g:GalleryCell>
+        <g:GalleryCell Caption="{loc:Tr Offer_Expired}"><c:RouteOfferItem Width="292" Origin="{Binding CityA}" Destination="{Binding CityB}" DistanceText="{Binding Km569}" CargoText="{Binding CargoLine}" TrailerText="{Binding TrailerLine}" StatusText="{loc:Tr Offer_Expired}" /></g:GalleryCell>
+        <g:GalleryCell Caption="{loc:Tr Gallery_State_Focus}"><c:RouteOfferItem Width="292" Origin="{Binding CityA}" Destination="{Binding CityB}" DistanceText="{Binding Km569}" CargoText="{Binding CargoLine}" TrailerText="{Binding TrailerLine}" g:Gallery.ForceState="Focus" /></g:GalleryCell>
+        <g:GalleryCell Caption="{loc:Tr Gallery_State_Disabled}"><c:RouteOfferItem Width="292" Origin="{Binding CityA}" Destination="{Binding CityB}" DistanceText="{Binding Km569}" CargoText="{Binding CargoLine}" IsDimmed="True" /></g:GalleryCell>
+      </WrapPanel>
+    </g:GallerySection>
+
+    <!-- RouteMap -->
+    <g:GallerySection Title="RouteMap">
+      <WrapPanel Classes="cells">
+        <g:GalleryCell Caption="Schematic"><c:RouteMap Width="400" Height="260" Origin="{Binding OriginNoGeo}" Destination="{Binding DestinationNoGeo}" DistanceText="{Binding Km569}" RouteLabel="{Binding RouteChip}" /></g:GalleryCell>
+        <g:GalleryCell Caption="Geographic"><c:RouteMap Width="400" Height="260" Origin="{Binding Origin}" Destination="{Binding Destination}" Cities="{Binding Cities}" DistanceText="{Binding Km1240}" RouteLabel="{Binding RouteChip}" /></g:GalleryCell>
+        <g:GalleryCell Caption="{loc:Tr Gallery_State_Empty}"><c:RouteMap Width="400" Height="260" /></g:GalleryCell>
+        <g:GalleryCell Caption="{loc:Tr Gallery_State_Loading}"><c:RouteMap Width="400" Height="260" IsLoading="True" /></g:GalleryCell>
+      </WrapPanel>
+    </g:GallerySection>
+
+    <!-- StatTile -->
+    <g:GallerySection Title="StatTile">
+      <WrapPanel Classes="cells">
+        <g:GalleryCell Caption="{loc:Tr Gallery_State_Normal}"><c:StatTile Width="150" Label="{Binding Eyebrow}" Value="{Binding Count6485}" /></g:GalleryCell>
+        <g:GalleryCell Caption="Accent"><c:StatTile Width="150" Label="km" Value="{Binding Km569}" Emphasis="Accent" /></g:GalleryCell>
+        <g:GalleryCell Caption="Danger"><c:StatTile Width="150" Label="km" Value="{Binding Km569}" Emphasis="Danger" /></g:GalleryCell>
+        <g:GalleryCell Caption="Success"><c:StatTile Width="150" Label="km" Value="{Binding Km569}" Emphasis="Success" /></g:GalleryCell>
+        <g:GalleryCell Caption="{loc:Tr Common_Unknown}"><c:StatTile Width="150" Label="km" /></g:GalleryCell>
+        <g:GalleryCell Caption="{loc:Tr Gallery_State_Loading}"><c:StatTile Width="150" Label="km" IsLoading="True" /></g:GalleryCell>
+        <g:GalleryCell Caption="{loc:Tr Gallery_State_LongText}"><c:StatTile Width="150" Label="{Binding CityA}" Value="{Binding CompanyA}" /></g:GalleryCell>
+      </WrapPanel>
+    </g:GallerySection>
+
+    <!-- SectionCard -->
+    <g:GallerySection Title="SectionCard">
+      <WrapPanel Classes="cells">
+        <g:GalleryCell Caption="{loc:Tr Gallery_State_Normal}">
+          <c:SectionCard Width="280" Title="{Binding ModuleJobs}" Description="{Binding InfoMsg}"><TextBlock Classes="body" Text="{Binding Km569}" /></c:SectionCard>
+        </g:GalleryCell>
+        <g:GalleryCell Caption="Actions">
+          <c:SectionCard Width="280" Title="{Binding ModuleJobs}">
+            <c:SectionCard.HeaderActions><Button Classes="compact" Content="{Binding Cancel}" /></c:SectionCard.HeaderActions>
+            <TextBlock Classes="body" Text="{Binding Km569}" />
+          </c:SectionCard>
+        </g:GalleryCell>
+        <g:GalleryCell Caption="{loc:Tr Gallery_State_LongText}">
+          <c:SectionCard Width="280" Title="{Binding PageTitle}"><TextBlock Classes="body" Text="{Binding Km569}" /></c:SectionCard>
+        </g:GalleryCell>
+      </WrapPanel>
+    </g:GallerySection>
+
+    <!-- ValueChange -->
+    <g:GallerySection Title="ValueChange">
+      <WrapPanel Classes="cells">
+        <g:GalleryCell Caption="Number"><c:ValueChange Layout="Horizontal" Width="220" Before="{Binding MoneyBefore}" After="{Binding Money}" IsNumeric="True" /></g:GalleryCell>
+        <g:GalleryCell Caption="Text"><c:ValueChange Layout="Horizontal" Width="260" Before="{Binding CityA}" After="{Binding CityB}" /></g:GalleryCell>
+        <g:GalleryCell Caption="Added"><c:ValueChange Layout="Horizontal" Width="220" After="{Binding CityB}" /></g:GalleryCell>
+        <g:GalleryCell Caption="Removed"><c:ValueChange Layout="Horizontal" Width="220" Before="{Binding CityA}" /></g:GalleryCell>
+        <g:GalleryCell Caption="Vertical"><c:ValueChange Layout="Vertical" Width="200" Before="{Binding CompanyA}" After="{Binding CompanyB}" /></g:GalleryCell>
+        <g:GalleryCell Caption="Auto"><c:ValueChange Layout="Auto" Width="200" Before="{Binding CompanyA}" After="{Binding CompanyB}" /></g:GalleryCell>
+      </WrapPanel>
+    </g:GallerySection>
+
+    <!-- DiffList -->
+    <g:GallerySection Title="DiffList">
+      <StackPanel Spacing="16">
+        <g:GalleryCell Caption="Many"><c:DiffList Groups="{Binding DiffGroups}" /></g:GalleryCell>
+        <g:GalleryCell Caption="Discarding"><c:DiffList Groups="{Binding DiffOne}" IsDiscardEnabled="False" /></g:GalleryCell>
+        <g:GalleryCell Caption="{loc:Tr Gallery_State_Empty}"><c:DiffList Groups="{Binding DiffNone}" /></g:GalleryCell>
+      </StackPanel>
+    </g:GallerySection>
+
+    <!-- PendingBadge -->
+    <g:GallerySection Title="PendingBadge">
+      <WrapPanel Classes="cells">
+        <g:GalleryCell Caption="Count"><c:PendingBadge Count="3" /></g:GalleryCell>
+        <g:GalleryCell Caption="12"><c:PendingBadge Count="12" /></g:GalleryCell>
+        <g:GalleryCell Caption="99+"><c:PendingBadge Count="140" /></g:GalleryCell>
+        <g:GalleryCell Caption="Tag"><c:PendingBadge Variant="Tag" Text="{loc:Tr Pending_Modified}" /></g:GalleryCell>
+        <g:GalleryCell Caption="Dot"><c:PendingBadge Variant="Dot" /></g:GalleryCell>
+        <g:GalleryCell Caption="0"><c:PendingBadge Count="0" ShowZero="True" /></g:GalleryCell>
+      </WrapPanel>
+    </g:GallerySection>
+
+    <!-- EmptyState -->
+    <g:GallerySection Title="EmptyState">
+      <WrapPanel Classes="cells">
+        <g:GalleryCell Caption="{loc:Tr Gallery_State_Empty}">
+          <c:EmptyState Width="360" Icon="{StaticResource IconInbox}" Title="{Binding EmptyTitle}" Message="{Binding EmptyBody}" ActionText="{loc:Tr Common_Refresh}" ActionCommand="{Binding NoOp}" />
+        </g:GalleryCell>
+        <g:GalleryCell Caption="Search">
+          <c:EmptyState Width="360" Icon="{StaticResource IconSearch}" Title="{loc:Tr Empty_NoResults_Title}" Message="{Binding NoResultsMessage}" ActionText="{loc:Tr Empty_NoResults_Action}" ActionCommand="{Binding NoOp}" />
+        </g:GalleryCell>
+        <g:GalleryCell Caption="Compact">
+          <c:EmptyState Width="360" IsCompact="True" Title="{loc:Tr Picker_NoResults}" />
+        </g:GalleryCell>
+      </WrapPanel>
+    </g:GallerySection>
+
+    <!-- ErrorBanner -->
+    <g:GallerySection Title="ErrorBanner">
+      <StackPanel Spacing="12">
+        <c:ErrorBanner Severity="Error" Title="{Binding ErrTitle}" Message="{Binding ErrMsg}" ActionText="{Binding Retry}" ActionCommand="{Binding NoOp}" DismissCommand="{Binding NoOp}" />
+        <c:ErrorBanner Severity="Warning" Title="{Binding WarnTitle}" Message="{Binding WarnMsg}" />
+        <c:ErrorBanner Severity="Info" Title="{Binding InfoTitle}" Message="{Binding InfoMsg}" />
+        <c:ErrorBanner Severity="Error" Title="{Binding ErrTitle}" Message="{Binding ErrMsg}" Details="{Binding ErrDetails}" IsDetailsOpen="True" />
+        <c:ErrorBanner Severity="Error" Layout="Block" Title="{Binding ErrTitle}" Message="{Binding ErrMsg}" ActionText="{Binding Retry}" ActionCommand="{Binding NoOp}" />
+      </StackPanel>
+    </g:GallerySection>
+
+    <!-- LoadingPanel -->
+    <g:GallerySection Title="LoadingPanel">
+      <WrapPanel Classes="cells">
+        <g:GalleryCell Caption="Indeterminate"><c:LoadingPanel Width="300" ShowDelay="0:0:0" Text="{Binding LoadingReading}" /></g:GalleryCell>
+        <g:GalleryCell Caption="Progress"><c:LoadingPanel Width="300" ShowDelay="0:0:0" Text="{Binding LoadingReading}" Progress="0.62" Detail="{Binding LoadingDetail}" /></g:GalleryCell>
+        <g:GalleryCell Caption="Cancel"><c:LoadingPanel Width="300" ShowDelay="0:0:0" Text="{Binding LoadingReading}" Progress="0.3" CancelCommand="{Binding NoOp}" /></g:GalleryCell>
+      </WrapPanel>
+    </g:GallerySection>
+  </StackPanel>
+</UserControl>

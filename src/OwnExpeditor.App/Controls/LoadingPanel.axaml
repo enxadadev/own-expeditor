@@ -1,0 +1,25 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:OwnExpeditor.App.Controls"
+             xmlns:loc="using:OwnExpeditor.App.Markup"
+             x:Class="OwnExpeditor.App.Controls.LoadingPanel"
+             x:Name="Root" x:DataType="c:LoadingPanel">
+  <StackPanel x:Name="Body" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="12" Margin="24"
+              Opacity="{Binding #Root.PanelOpacity}">
+    <c:Spinner HorizontalAlignment="Center" IsVisible="{Binding #Root.IsIndeterminate}" />
+    <ProgressBar Minimum="0" Maximum="1" Value="{Binding #Root.ProgressValue}" Height="6" Width="240"
+                 IsVisible="{Binding !#Root.IsIndeterminate}" Background="{DynamicResource LineBrush}"
+                 Foreground="{DynamicResource AccentBrush}" CornerRadius="3" HorizontalAlignment="Center"
+                 AutomationProperties.Name="{Binding #Root.Text}">
+      <ProgressBar.Styles>
+        <Style Selector="ProgressBar /template/ Border#PART_Indicator"><Setter Property="CornerRadius" Value="3" /></Style>
+      </ProgressBar.Styles>
+    </ProgressBar>
+    <TextBlock Classes="body" FontWeight="SemiBold" Text="{Binding #Root.Text}" TextAlignment="Center" TextWrapping="Wrap"
+               MaxHeight="44" TextTrimming="CharacterEllipsis" MaxWidth="320" AutomationProperties.LiveSetting="Polite" />
+    <TextBlock Classes="bodysm muted num trim" Text="{Binding #Root.Detail}" TextAlignment="Center"
+               IsVisible="{Binding #Root.Detail, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+    <Button Content="{loc:Tr Common_Cancel}" Command="{Binding #Root.CancelCommand}" HorizontalAlignment="Center"
+            IsVisible="{Binding #Root.CancelCommand, Converter={x:Static ObjectConverters.IsNotNull}}" />
+  </StackPanel>
+</UserControl>

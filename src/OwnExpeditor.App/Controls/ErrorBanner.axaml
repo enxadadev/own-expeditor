@@ -1,0 +1,54 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:OwnExpeditor.App.Controls"
+             xmlns:loc="using:OwnExpeditor.App.Markup"
+             x:Class="OwnExpeditor.App.Controls.ErrorBanner"
+             x:Name="Root" x:DataType="c:ErrorBanner">
+  <UserControl.Styles>
+    <Style Selector="Border#Frame.error">
+      <Setter Property="Background" Value="{DynamicResource DangerBgBrush}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource DangerBrush}" />
+    </Style>
+    <Style Selector="Border#Frame.warning">
+      <Setter Property="Background" Value="{DynamicResource SelectionBrush}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource AccentTextBrush}" />
+    </Style>
+    <Style Selector="Border#Frame.info">
+      <Setter Property="Background" Value="{DynamicResource SurfaceBrush}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource BorderStrongBrush}" />
+    </Style>
+    <Style Selector="Path#SeverityIcon.error"><Setter Property="Fill" Value="{DynamicResource DangerBrush}" /><Setter Property="Data" Value="{StaticResource IconError}" /></Style>
+    <Style Selector="Path#SeverityIcon.warning"><Setter Property="Fill" Value="{DynamicResource AccentTextBrush}" /><Setter Property="Data" Value="{StaticResource IconWarning}" /></Style>
+    <Style Selector="Path#SeverityIcon.info"><Setter Property="Fill" Value="{DynamicResource TextMutedBrush}" /><Setter Property="Data" Value="{StaticResource IconInfo}" /></Style>
+  </UserControl.Styles>
+  <Border x:Name="Frame" BorderThickness="1" CornerRadius="{StaticResource RadiusLg}" Padding="12,10">
+    <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="12">
+      <Path x:Name="SeverityIcon" Grid.Column="0" Width="20" Height="20" Stretch="Uniform" VerticalAlignment="Top" Margin="0,2,0,0"
+            AutomationProperties.AccessibilityView="Raw" />
+      <StackPanel x:Name="TextPanel" Grid.Column="1" Spacing="2" MinWidth="0">
+        <TextBlock Classes="body" FontWeight="SemiBold" Text="{Binding #Root.Title}" TextWrapping="Wrap"
+                   MaxHeight="44" TextTrimming="CharacterEllipsis" />
+        <TextBlock Classes="bodysm" Text="{Binding #Root.Message}" TextWrapping="Wrap" />
+        <Button Classes="compact" HorizontalAlignment="Left" Margin="-14,0,0,0" Padding="14,0" BorderThickness="0"
+                Background="Transparent" Click="OnToggleDetails"
+                IsVisible="{Binding #Root.HasDetails}">
+          <TextBlock Classes="bodysm" Foreground="{DynamicResource AccentTextBrush}" FontWeight="SemiBold"
+                     Text="{Binding #Root.DetailsToggleText}" />
+        </Button>
+        <TextBox Classes="detail" IsReadOnly="True" TextWrapping="Wrap" FontFamily="{StaticResource FontMono}" FontSize="12"
+                 Text="{Binding #Root.Details}" IsVisible="{Binding #Root.IsDetailsOpen}"
+                 Foreground="{DynamicResource TextMutedBrush}" Background="Transparent" BorderThickness="0" Padding="0" />
+      </StackPanel>
+      <Button x:Name="ActionButton" Grid.Column="2" Classes="compact" VerticalAlignment="Top"
+              Content="{Binding #Root.ActionText}" Command="{Binding #Root.ActionCommand}"
+              IsVisible="{Binding #Root.ActionText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+      <Button x:Name="DismissButton" Grid.Column="3" Classes="compact icon" VerticalAlignment="Top"
+              Command="{Binding #Root.DismissCommand}"
+              AutomationProperties.Name="{loc:Tr Banner_Dismiss_A11y}"
+              IsVisible="{Binding #Root.DismissCommand, Converter={x:Static ObjectConverters.IsNotNull}}">
+        <Path Data="{StaticResource IconClose}" Fill="{DynamicResource TextMutedBrush}" Width="16" Height="16" Stretch="Uniform"
+              AutomationProperties.AccessibilityView="Raw" />
+      </Button>
+    </Grid>
+  </Border>
+</UserControl>

@@ -1,0 +1,126 @@
+<!-- Tokens de cor (design/controles/screens.md §1.1). Só aqui há cor fixa; o resto usa DynamicResource. -->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <ResourceDictionary.ThemeDictionaries>
+    <ResourceDictionary x:Key="Dark">
+      <Color x:Key="BgColor">#121417</Color>
+      <Color x:Key="SideColor">#0C0E10</Color>
+      <Color x:Key="SurfaceColor">#1A1D21</Color>
+      <Color x:Key="SurfaceHoverColor">#22262B</Color>
+      <Color x:Key="SurfacePressedColor">#2A2F35</Color>
+      <Color x:Key="MapColor">#101316</Color>
+      <Color x:Key="LineColor">#2A2F35</Color>
+      <Color x:Key="BorderStrongColor">#66717D</Color>
+      <Color x:Key="TextColor">#EEF0F2</Color>
+      <Color x:Key="TextMutedColor">#9AA3AD</Color>
+      <Color x:Key="AccentColor">#F5A524</Color>
+      <Color x:Key="AccentHoverColor">#FFB84A</Color>
+      <Color x:Key="AccentPressedColor">#E8991A</Color>
+      <Color x:Key="AccentTextColor">#F5A524</Color>
+      <Color x:Key="OnAccentColor">#1A1206</Color>
+      <Color x:Key="SelectionColor">#2A2414</Color>
+      <Color x:Key="DangerColor">#F87171</Color>
+      <Color x:Key="DangerHoverColor">#FA8A8A</Color>
+      <Color x:Key="DangerPressedColor">#E25C5C</Color>
+      <Color x:Key="OnDangerColor">#1F0A0A</Color>
+      <Color x:Key="DangerBgColor">#39292C</Color>
+      <Color x:Key="SuccessColor">#4ADE80</Color>
+      <Color x:Key="SuccessBgColor">#21382E</Color>
+      <Color x:Key="FocusColor">#EEF0F2</Color>
+      <Color x:Key="MapGridColor">#1A1F24</Color>
+      <Color x:Key="MapCityDotColor">#6B7783</Color>
+      <Color x:Key="MapCityTextColor">#8A949E</Color>
+      <Color x:Key="RouteGlowColor">#2EF5A524</Color>
+      <Color x:Key="OverlayColor">#E0121417</Color>
+      <SolidColorBrush x:Key="BgBrush" Color="{DynamicResource BgColor}" />
+      <SolidColorBrush x:Key="SideBrush" Color="{DynamicResource SideColor}" />
+      <SolidColorBrush x:Key="SurfaceBrush" Color="{DynamicResource SurfaceColor}" />
+      <SolidColorBrush x:Key="SurfaceHoverBrush" Color="{DynamicResource SurfaceHoverColor}" />
+      <SolidColorBrush x:Key="SurfacePressedBrush" Color="{DynamicResource SurfacePressedColor}" />
+      <SolidColorBrush x:Key="MapBrush" Color="{DynamicResource MapColor}" />
+      <SolidColorBrush x:Key="LineBrush" Color="{DynamicResource LineColor}" />
+      <SolidColorBrush x:Key="BorderStrongBrush" Color="{DynamicResource BorderStrongColor}" />
+      <SolidColorBrush x:Key="TextBrush" Color="{DynamicResource TextColor}" />
+      <SolidColorBrush x:Key="TextMutedBrush" Color="{DynamicResource TextMutedColor}" />
+      <SolidColorBrush x:Key="AccentBrush" Color="{DynamicResource AccentColor}" />
+      <SolidColorBrush x:Key="AccentHoverBrush" Color="{DynamicResource AccentHoverColor}" />
+      <SolidColorBrush x:Key="AccentPressedBrush" Color="{DynamicResource AccentPressedColor}" />
+      <SolidColorBrush x:Key="AccentTextBrush" Color="{DynamicResource AccentTextColor}" />
+      <SolidColorBrush x:Key="OnAccentBrush" Color="{DynamicResource OnAccentColor}" />
+      <SolidColorBrush x:Key="SelectionBrush" Color="{DynamicResource SelectionColor}" />
+      <SolidColorBrush x:Key="DangerBrush" Color="{DynamicResource DangerColor}" />
+      <SolidColorBrush x:Key="DangerHoverBrush" Color="{DynamicResource DangerHoverColor}" />
+      <SolidColorBrush x:Key="DangerPressedBrush" Color="{DynamicResource DangerPressedColor}" />
+      <SolidColorBrush x:Key="OnDangerBrush" Color="{DynamicResource OnDangerColor}" />
+      <SolidColorBrush x:Key="DangerBgBrush" Color="{DynamicResource DangerBgColor}" />
+      <SolidColorBrush x:Key="SuccessBrush" Color="{DynamicResource SuccessColor}" />
+      <SolidColorBrush x:Key="SuccessBgBrush" Color="{DynamicResource SuccessBgColor}" />
+      <SolidColorBrush x:Key="FocusBrush" Color="{DynamicResource FocusColor}" />
+      <SolidColorBrush x:Key="MapGridBrush" Color="{DynamicResource MapGridColor}" />
+      <SolidColorBrush x:Key="MapCityDotBrush" Color="{DynamicResource MapCityDotColor}" />
+      <SolidColorBrush x:Key="MapCityTextBrush" Color="{DynamicResource MapCityTextColor}" />
+      <SolidColorBrush x:Key="RouteGlowBrush" Color="{DynamicResource RouteGlowColor}" />
+      <SolidColorBrush x:Key="OverlayBrush" Color="{DynamicResource OverlayColor}" />
+    </ResourceDictionary>
+    <ResourceDictionary x:Key="Light">
+      <Color x:Key="BgColor">#F4F2EE</Color>
+      <Color x:Key="SideColor">#EBE7DF</Color>
+      <Color x:Key="SurfaceColor">#FFFFFF</Color>
+      <Color x:Key="SurfaceHoverColor">#F6F3EC</Color>
+      <Color x:Key="SurfacePressedColor">#EDE8DD</Color>
+      <Color x:Key="MapColor">#EFEBE3</Color>
+      <Color x:Key="LineColor">#D9D3C7</Color>
+      <Color x:Key="BorderStrongColor">#857E6F</Color>
+      <Color x:Key="TextColor">#1B1D20</Color>
+      <Color x:Key="TextMutedColor">#5F6670</Color>
+      <Color x:Key="AccentColor">#B86E00</Color>
+      <Color x:Key="AccentHoverColor">#C47A0A</Color>
+      <Color x:Key="AccentPressedColor">#B86E00</Color>
+      <Color x:Key="AccentTextColor">#8A5200</Color>
+      <Color x:Key="OnAccentColor">#1A1206</Color>
+      <Color x:Key="SelectionColor">#FBECD2</Color>
+      <Color x:Key="DangerColor">#B42318</Color>
+      <Color x:Key="DangerHoverColor">#C42B1C</Color>
+      <Color x:Key="DangerPressedColor">#9A1B12</Color>
+      <Color x:Key="OnDangerColor">#FFFFFF</Color>
+      <Color x:Key="DangerBgColor">#F8E9E8</Color>
+      <Color x:Key="SuccessColor">#0F6B33</Color>
+      <Color x:Key="SuccessBgColor">#E8F2EB</Color>
+      <Color x:Key="FocusColor">#1B1D20</Color>
+      <Color x:Key="MapGridColor">#E2DCCF</Color>
+      <Color x:Key="MapCityDotColor">#8F8675</Color>
+      <Color x:Key="MapCityTextColor">#6A624F</Color>
+      <Color x:Key="RouteGlowColor">#29B86E00</Color>
+      <Color x:Key="OverlayColor">#EBFFFFFF</Color>
+      <SolidColorBrush x:Key="BgBrush" Color="{DynamicResource BgColor}" />
+      <SolidColorBrush x:Key="SideBrush" Color="{DynamicResource SideColor}" />
+      <SolidColorBrush x:Key="SurfaceBrush" Color="{DynamicResource SurfaceColor}" />
+      <SolidColorBrush x:Key="SurfaceHoverBrush" Color="{DynamicResource SurfaceHoverColor}" />
+      <SolidColorBrush x:Key="SurfacePressedBrush" Color="{DynamicResource SurfacePressedColor}" />
+      <SolidColorBrush x:Key="MapBrush" Color="{DynamicResource MapColor}" />
+      <SolidColorBrush x:Key="LineBrush" Color="{DynamicResource LineColor}" />
+      <SolidColorBrush x:Key="BorderStrongBrush" Color="{DynamicResource BorderStrongColor}" />
+      <SolidColorBrush x:Key="TextBrush" Color="{DynamicResource TextColor}" />
+      <SolidColorBrush x:Key="TextMutedBrush" Color="{DynamicResource TextMutedColor}" />
+      <SolidColorBrush x:Key="AccentBrush" Color="{DynamicResource AccentColor}" />
+      <SolidColorBrush x:Key="AccentHoverBrush" Color="{DynamicResource AccentHoverColor}" />
+      <SolidColorBrush x:Key="AccentPressedBrush" Color="{DynamicResource AccentPressedColor}" />
+      <SolidColorBrush x:Key="AccentTextBrush" Color="{DynamicResource AccentTextColor}" />
+      <SolidColorBrush x:Key="OnAccentBrush" Color="{DynamicResource OnAccentColor}" />
+      <SolidColorBrush x:Key="SelectionBrush" Color="{DynamicResource SelectionColor}" />
+      <SolidColorBrush x:Key="DangerBrush" Color="{DynamicResource DangerColor}" />
+      <SolidColorBrush x:Key="DangerHoverBrush" Color="{DynamicResource DangerHoverColor}" />
+      <SolidColorBrush x:Key="DangerPressedBrush" Color="{DynamicResource DangerPressedColor}" />
+      <SolidColorBrush x:Key="OnDangerBrush" Color="{DynamicResource OnDangerColor}" />
+      <SolidColorBrush x:Key="DangerBgBrush" Color="{DynamicResource DangerBgColor}" />
+      <SolidColorBrush x:Key="SuccessBrush" Color="{DynamicResource SuccessColor}" />
+      <SolidColorBrush x:Key="SuccessBgBrush" Color="{DynamicResource SuccessBgColor}" />
+      <SolidColorBrush x:Key="FocusBrush" Color="{DynamicResource FocusColor}" />
+      <SolidColorBrush x:Key="MapGridBrush" Color="{DynamicResource MapGridColor}" />
+      <SolidColorBrush x:Key="MapCityDotBrush" Color="{DynamicResource MapCityDotColor}" />
+      <SolidColorBrush x:Key="MapCityTextBrush" Color="{DynamicResource MapCityTextColor}" />
+      <SolidColorBrush x:Key="RouteGlowBrush" Color="{DynamicResource RouteGlowColor}" />
+      <SolidColorBrush x:Key="OverlayBrush" Color="{DynamicResource OverlayColor}" />
+    </ResourceDictionary>
+  </ResourceDictionary.ThemeDictionaries>
+</ResourceDictionary>

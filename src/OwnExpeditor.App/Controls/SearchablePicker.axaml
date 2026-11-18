@@ -1,0 +1,88 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:OwnExpeditor.App.Controls"
+             xmlns:loc="using:OwnExpeditor.App.Markup"
+             x:Class="OwnExpeditor.App.Controls.SearchablePicker"
+             x:Name="Root" x:DataType="c:SearchablePicker">
+  <UserControl.Styles>
+    <Style Selector="Button#FieldButton.error /template/ ContentPresenter#PART_ContentPresenter"><Setter Property="BorderBrush" Value="{DynamicResource DangerBrush}" /></Style>
+    <Style Selector="Button#FieldButton.selected /template/ ContentPresenter#PART_ContentPresenter"><Setter Property="BorderBrush" Value="{DynamicResource AccentTextBrush}" /></Style>
+    <Style Selector="TextBlock#ValueText.placeholder"><Setter Property="Foreground" Value="{DynamicResource TextMutedBrush}" /><Setter Property="FontWeight" Value="Normal" /></Style>
+    <Style Selector="ListBox#OptionList ListBoxItem">
+      <Setter Property="Padding" Value="10,0" />
+      <Setter Property="MinHeight" Value="44" />
+      <Setter Property="CornerRadius" Value="{StaticResource RadiusSm}" />
+      <Setter Property="Margin" Value="0,1" />
+      <Setter Property="Background" Value="Transparent" />
+    </Style>
+    <Style Selector="ListBox#OptionList ListBoxItem:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="{DynamicResource SurfaceHoverBrush}" />
+    </Style>
+    <Style Selector="ListBox#OptionList ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="{DynamicResource SelectionBrush}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource AccentTextBrush}" />
+      <Setter Property="BorderThickness" Value="1" />
+    </Style>
+    <Style Selector="ListBox#OptionList ListBoxItem:selected TextBlock.primary"><Setter Property="Foreground" Value="{DynamicResource AccentTextBrush}" /></Style>
+  </UserControl.Styles>
+  <StackPanel Spacing="4">
+    <Panel>
+      <Button x:Name="FieldButton" Padding="14,6,14,6" CornerRadius="{StaticResource RadiusMd}" HorizontalAlignment="Stretch"
+              HorizontalContentAlignment="Stretch" MinHeight="56" Click="OnToggle" KeyDown="OnFieldKeyDown"
+              AutomationProperties.Name="{Binding #Root.AccessibleName}">
+        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="6">
+          <StackPanel VerticalAlignment="Center" HorizontalAlignment="Left" MinWidth="0" Margin="{Binding #Root.ClearGap}">
+            <TextBlock Classes="caption trim" Text="{Binding #Root.LabelUpper}" />
+            <TextBlock x:Name="ValueText" Classes="body trim" FontWeight="SemiBold" Text="{Binding #Root.DisplayText}"
+                       ToolTip.Tip="{Binding #Root.DisplayText}" />
+          </StackPanel>
+          <Path Grid.Column="1" Data="{StaticResource IconChevronDown}" Fill="{DynamicResource TextMutedBrush}" Width="16" Height="16"
+                Stretch="Uniform" VerticalAlignment="Center" AutomationProperties.AccessibilityView="Raw" />
+        </Grid>
+      </Button>
+      <Button Classes="compact icon" Width="40" Height="40" Click="OnClear" Padding="0" Margin="0,0,34,0"
+              HorizontalAlignment="Right" VerticalAlignment="Center"
+              AutomationProperties.Name="{loc:Tr Picker_Clear_A11y}" IsVisible="{Binding #Root.ShowClear}">
+        <Path Data="{StaticResource IconClose}" Fill="{DynamicResource TextMutedBrush}" Width="14" Height="14" Stretch="Uniform"
+              AutomationProperties.AccessibilityView="Raw" />
+      </Button>
+    </Panel>
+    <TextBlock Classes="bodysm" Foreground="{DynamicResource DangerBrush}" Text="{Binding #Root.ErrorText}"
+               IsVisible="{Binding #Root.ErrorText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+    <Popup x:Name="Dropdown" PlacementTarget="{Binding #FieldButton}" Placement="BottomEdgeAlignedLeft" IsLightDismissEnabled="True" Width="{Binding #Root.PopupWidth}"
+           IsOpen="{Binding #Root.IsDropDownOpen, Mode=TwoWay}"  Opened="OnOpened">
+      <Border x:Name="PopupRoot" Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource LineBrush}" BorderThickness="1"
+              CornerRadius="{StaticResource RadiusLg}" BoxShadow="{StaticResource ShadowPopup}" Padding="6" MaxHeight="360"
+              >
+        <DockPanel LastChildFill="True">
+          <c:SearchBox x:Name="Search" DockPanel.Dock="Top" Text="{Binding #Root.Query, Mode=TwoWay}" Query="{Binding #Root.Query, Mode=TwoWay}"
+                       Watermark="{loc:Tr Search_Placeholder_Default}" IsBusy="{Binding #Root.IsLoading}" Margin="0,0,0,4" />
+          <TextBlock DockPanel.Dock="Top" Classes="bodysm muted" Margin="8,0,8,6" Text="{Binding #Root.CountText}"
+                     IsVisible="{Binding #Root.CountText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+          <c:LoadingPanel Text="{loc:Tr Picker_Loading}" IsCompact="True" ShowDelay="0:0:0" IsVisible="{Binding #Root.IsLoading}" />
+          <c:EmptyState IsCompact="True" Title="{Binding #Root.EmptyTitle}" IsVisible="{Binding #Root.ShowEmpty}" />
+          <ListBox x:Name="OptionList" ItemsSource="{Binding #Root.Items}" SelectedItem="{Binding #Root.SelectedItem, Mode=TwoWay}"
+                   IsVisible="{Binding #Root.ShowList}" Background="Transparent" Padding="0" MaxHeight="260"
+                   PointerReleased="OnListPointerReleased" AutomationProperties.Name="{Binding #Root.Label}">
+            <ListBox.ItemTemplate>
+              <DataTemplate x:DataType="c:PickerOption">
+                <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8" ToolTip.Tip="{Binding Primary}"
+                      Opacity="{Binding IsEnabled, Converter={x:Static c:Converters.DisabledOpacity}}">
+                  <StackPanel VerticalAlignment="Center" MinWidth="0">
+                    <TextBlock Classes="body trim primary" FontWeight="SemiBold" Text="{Binding Primary}" />
+                    <TextBlock Classes="bodysm muted trim" Text="{Binding Secondary}"
+                               IsVisible="{Binding Secondary, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                  </StackPanel>
+                  <Border Grid.Column="1" BorderBrush="{DynamicResource BorderStrongBrush}" BorderThickness="1" CornerRadius="{StaticResource RadiusPill}"
+                          Padding="8,1" VerticalAlignment="Center" IsVisible="{Binding Tag, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                    <TextBlock FontSize="11" Text="{Binding Tag}" />
+                  </Border>
+                </Grid>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+        </DockPanel>
+      </Border>
+    </Popup>
+  </StackPanel>
+</UserControl>

@@ -1,0 +1,22 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:OwnExpeditor.App.Controls"
+             x:Class="OwnExpeditor.App.Controls.EmptyState"
+             x:Name="Root" x:DataType="c:EmptyState">
+  <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="8" Margin="{Binding #Root.BodyMargin}">
+    <Border Width="48" Height="48" CornerRadius="{StaticResource RadiusLg}"
+            Background="{DynamicResource SelectionBrush}" HorizontalAlignment="Center"
+            IsVisible="{Binding #Root.ShowIcon}"
+            AutomationProperties.AccessibilityView="Raw">
+      <Path Data="{Binding #Root.Icon}" Fill="{DynamicResource AccentTextBrush}" Width="24" Height="24"
+            Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center" />
+    </Border>
+    <TextBlock Classes="subtitle" Text="{Binding #Root.Title}" TextAlignment="Center" TextWrapping="Wrap"
+               MaxHeight="48" TextTrimming="CharacterEllipsis" MaxWidth="320" />
+    <TextBlock Classes="bodysm muted" Text="{Binding #Root.Message}" TextAlignment="Center" TextWrapping="Wrap"
+               MaxWidth="280" MaxHeight="72" TextTrimming="CharacterEllipsis"
+               IsVisible="{Binding #Root.Message, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+    <Button Content="{Binding #Root.ActionText}" Command="{Binding #Root.ActionCommand}" HorizontalAlignment="Center"
+            Margin="0,8,0,0" IsVisible="{Binding #Root.ActionText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+  </StackPanel>
+</UserControl>

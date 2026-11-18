@@ -1,0 +1,25 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:OwnExpeditor.App.Controls"
+             xmlns:loc="using:OwnExpeditor.App.Markup"
+             x:Class="OwnExpeditor.App.Controls.RouteMap"
+             x:Name="Root" x:DataType="c:RouteMap" MinHeight="220">
+  <Border Background="{DynamicResource MapBrush}" BorderBrush="{DynamicResource LineBrush}" BorderThickness="1"
+          CornerRadius="{StaticResource RadiusXl}" ClipToBounds="True">
+    <Panel>
+      <c:RouteCanvas x:Name="Canvas" />
+      <Border Background="{DynamicResource OverlayBrush}" BorderBrush="{DynamicResource LineBrush}" BorderThickness="1"
+              CornerRadius="{StaticResource RadiusMd}" Padding="10,6" Margin="12" HorizontalAlignment="Left" VerticalAlignment="Top"
+              MaxWidth="{Binding #Root.ChipMaxWidth}" IsVisible="{Binding #Root.ShowChip}">
+        <TextBlock Classes="bodysm trim" FontWeight="SemiBold" Text="{Binding #Root.RouteLabel}" ToolTip.Tip="{Binding #Root.RouteLabel}" />
+      </Border>
+      <Border Background="{DynamicResource OverlayBrush}" BorderBrush="{DynamicResource LineBrush}" BorderThickness="1"
+              CornerRadius="{StaticResource RadiusMd}" Padding="12,4" Margin="12" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+              IsVisible="{Binding #Root.ShowDistance}">
+        <TextBlock Classes="hero" Text="{Binding #Root.DistanceText}" />
+      </Border>
+      <c:EmptyState Title="{loc:Tr Route_Empty_Title}" Message="{loc:Tr Route_Empty_Message}" IsVisible="{Binding #Root.IsEmpty}" />
+      <c:LoadingPanel Text="{loc:Tr Loading_Map}" ShowDelay="0:0:0" IsVisible="{Binding #Root.IsLoading}" />
+    </Panel>
+  </Border>
+</UserControl>
