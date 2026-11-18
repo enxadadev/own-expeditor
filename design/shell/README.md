@@ -36,7 +36,7 @@ Ela não faz parte do app. Documentos: [flows.md](flows.md), [screens.md](screen
 5. **Estado do jogo visível** (fechado/aberto): aplicar falha com `GameRunning`; melhor avisar antes. Revisar continua
    possível com o jogo aberto, só aplicar é que não.
 6. **Erro ao abrir o save tem uma tela própria no lugar do módulo**, nunca um diálogo, e são **duas telas**:
-   "Não foi possível entender o save" (o arquivo foi lido, o conteúdo não foi entendido: `SaveFormatUnsupported`) e
+   "Não foi possível entender o save" (o arquivo foi lido, o conteúdo não foi entendido: `SaveParseFailed`) e
    "Não foi possível ler este save" (incompleto/ilegível, não encontrado, sem permissão: `SaveCorrupt` e afins). O app
    decodifica saves em texto e binários, então não há mais tela "formato binário" nem instrução de `g_save_format`.
    O texto nunca usa termos do formato (`BSII`, `SII`, `unit`). A tela "entender" oferece Copiar detalhes para reportar.
@@ -72,9 +72,7 @@ não encontrado e sem permissão. Diferença entre as duas: ver [screens.md](scr
 4. Tamanho mínimo da janela **960×600**.
 
 ## Perguntas em aberto
-0. **Nome do código de erro:** `CoreError.SaveFormatUnsupported` agora significa "arquivo lido, conteúdo não entendido"; o nome
-   sugere "não suportado". Renomear (ex.: `SaveParseFailed`) e confirmar se o Core separa isto de `SaveCorrupt` (arquivo
-   ilegível). Se não separar, as duas telas de erro viram uma. Levar ao `chief-architect`.
+0. ~~**Nome do código de erro**~~ resolvido pela ADR 0006: renomeado para `CoreError.SaveParseFailed` ("arquivo lido, conteúdo não entendido") e separado de `SaveCorrupt` (arquivo ilegível), então as duas telas de erro continuam. Veja `design/review-apply/strings.md` (`Error_SaveParseFailed`).
 1. **Serviço `IShellLauncher`** (abrir pasta no sistema) na App ou no Core? Atendem "Abrir pasta do save" (erro), "Abrir pasta" da
    instalação e o "Abrir pasta" do Resultado (UX-2).
 2. **Pasta de instalação do jogo precisa de contrato novo:** `AppSettings` hoje só tem tema, idioma e `LastSavePath`;

@@ -129,14 +129,14 @@ com causas e ações diferentes:
 | | Não foi possível entender o save (4.1) | Não foi possível ler este save (4.2) |
 | --- | --- | --- |
 | Canvas | `ErroInterpretacao.dc.html` | `ErroCorrompido.dc.html` |
-| `CoreError` | `SaveFormatUnsupported` (formato/conteúdo não reconhecido) | `SaveCorrupt`; também `SaveNotFound`, `AccessDenied` e outros |
+| `CoreError` | `SaveParseFailed` (formato/conteúdo não reconhecido) | `SaveCorrupt`; também `SaveNotFound`, `AccessDenied` e outros |
 | O que aconteceu | o arquivo **foi lido**, mas o conteúdo não foi entendido | o arquivo **não pôde ser lido por inteiro** (incompleto, ilegível, sumiu, sem permissão) |
 | Causas mostradas | versão nova do jogo, mod incomum, arquivo danificado | só a causa do caso (corrompido: jogo fechou ao salvar; não encontrado: movido/apagado; permissão: outro programa ou pasta protegida) |
 | Ação principal | Escolher outro save | Escolher outro save |
 | Extras | Abrir pasta do save, **Copiar detalhes** (para reportar), detalhes técnicos recolhidos | detalhes recolhidos só no corrompido (código e linha) |
 | Quando "Tentar de novo" ajuda | depois de atualizar o app, ou de salvar de novo no jogo | depois de o jogo terminar de salvar ou de resolver a permissão |
 
-### 4.1 Não foi possível entender o save (`ErroInterpretacao.dc.html`) — `CoreError.SaveFormatUnsupported`
+### 4.1 Não foi possível entender o save (`ErroInterpretacao.dc.html`) — `CoreError.SaveParseFailed`
 ```
  Demo A | Save 4 | ETS2   (bordas vermelhas)
   [⚠] NÃO FOI POSSÍVEL ENTENDER O SAVE

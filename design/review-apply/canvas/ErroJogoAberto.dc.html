@@ -88,7 +88,7 @@ button{font:inherit;cursor:pointer}
   <div style="position: absolute; left: 0; right: 0; bottom: 0; height: 96px; box-sizing: border-box; padding: 10px 24px; background: {{t.side}}; border-top: 1px solid {{t.line}}; display: flex; flex-direction: column; gap: 6px;">
     <span style="font-size: 11px; color: {{t.muted}}; text-transform: uppercase; letter-spacing: 0.08em;">{{x.preview}}</span>
     <div style="display: flex; flex-wrap: wrap; gap: 4px 6px;">
-      <sc-for list="{{chips}}" as="c" hint-placeholder-count="18">
+      <sc-for list="{{chips}}" as="c" hint-placeholder-count="20">
         <button type="button" onClick="{{c.pick}}" aria-pressed="{{c.pressed}}" style="{{c.style}}">{{c.name}}</button>
       </sc-for>
     </div>
@@ -141,22 +141,24 @@ class Component extends DCLogic {
     const sel = this.state.sel;
     // [código, contexto (open|apply|edit), ação primária, ação secundária, mudanças pendentes (kept|lost|na)]
     const E = [
-      ['SaveNotFound','open','choose',null,'na'], ['SaveFormatUnsupported','open','choose',null,'na'], ['SaveCorrupt','open','choose',null,'na'],
+      ['SaveNotFound','open','choose',null,'na'], ['SaveParseFailed','open','choose',null,'na'], ['SaveCorrupt','open','choose',null,'na'],
       ['NoSession','open','choose',null,'na'], ['SessionBusy','apply','retry','back','kept'], ['ReadOnlySession','apply','close',null,'kept'],
-      ['Conflict','edit','review','close','kept'], ['StalePatch','apply','back','reopen','kept'], ['UnknownUnit','apply','back','reopen','kept'],
+      ['Conflict','edit','review','close','kept'], ['InvalidEdit','edit','review','close','kept'], ['StalePatch','apply','back','reopen','kept'], ['UnknownUnit','apply','back','reopen','kept'],
       ['UnknownAttribute','apply','back','reopen','kept'], ['NothingToApply','apply','close',null,'na'], ['GameRunning','apply','retryGame','back','kept'],
       ['SaveChangedOnDisk','apply','reopen',null,'lost'], ['BackupExists','apply','retry',null,'kept'], ['BackupFailed','apply','retry','back','kept'],
-      ['WriteFailed','apply','retry','back','kept'], ['VerifyFailed','apply','retry','back','kept'], ['AccessDenied','apply','retry','folder','kept']
+      ['WriteFailed','apply','retry','back','kept'], ['VerifyFailed','apply','retry','back','kept'], ['AccessDenied','apply','retry','folder','kept'],
+      ['SlotUnavailable','apply','retry','back','kept']
     ];
     const M = {
       pt: {
         SaveNotFound:'Não encontramos o arquivo do save. Ele pode ter sido movido, renomeado ou apagado. Volte à lista de saves e escolha outro.',
-        SaveFormatUnsupported:'Não foi possível entender este save: o formato não foi reconhecido. Tente outro save do mesmo perfil ou, se continuar, relate o problema.',
+        SaveParseFailed:'Não foi possível entender este save: o conteúdo não foi reconhecido. Pode ser de uma versão do jogo mais nova, de um mod incomum ou um arquivo danificado. Tente outro save do mesmo perfil ou, se continuar, relate o problema.',
         SaveCorrupt:'O arquivo do save parece danificado e não foi possível lê-lo. Escolha outro save ou restaure um backup (game.sii.bak-…).',
         NoSession:'Nenhum save está aberto. Escolha um perfil e um save para começar.',
         SessionBusy:'O save ainda está sendo lido ou gravado. Espere alguns segundos e tente de novo.',
         ReadOnlySession:'Este save está aberto só para visualização, então não dá para gravar. Abra o save de novo pelo seletor de saves.',
         Conflict:'Esta mudança altera algo que outra mudança pendente já alterou. Abra a revisão, descarte uma das duas e refaça a edição.',
+        InvalidEdit:'Esta mudança não é válida para este save. Descarte-a, ajuste a escolha e tente de novo.',
         StalePatch:'Os dados desta mudança ficaram desatualizados. Volte à revisão, descarte a mudança e refaça a edição. Se continuar, abra o save de novo.',
         UnknownUnit:'Não encontramos no save o item que você quis alterar. Ele pode ter sido removido. Volte à revisão, descarte a mudança e escolha o item de novo.',
         UnknownAttribute:'Este save não tem o campo que o app tentou alterar. Isso costuma acontecer com saves de mods ou de outra versão do jogo. Descarte a mudança, tente outro item ou atualize o app.',
@@ -167,15 +169,17 @@ class Component extends DCLogic {
         BackupFailed:'Não foi possível criar o backup, então o app não gravou. Verifique o espaço livre e as permissões da pasta do save e tente de novo.',
         WriteFailed:'Não foi possível gravar o arquivo. Veja se outro programa (como antivírus ou backup na nuvem) está usando a pasta do save e tente de novo.',
         VerifyFailed:'O arquivo gravado não passou na verificação, então o save original foi mantido. Tente de novo; se repetir, abra o save de novo e refaça as mudanças.',
-        AccessDenied:'O sistema negou o acesso à pasta do save. Veja se a pasta não é somente leitura nem está protegida (por exemplo, por antivírus ou nuvem) e tente de novo.' },
+        AccessDenied:'O sistema negou o acesso à pasta do save. Veja se a pasta não é somente leitura nem está protegida (por exemplo, por antivírus ou nuvem) e tente de novo.',
+        SlotUnavailable:'Não foi possível criar um novo save: o perfil não tem slot livre ou a pasta não pôde ser criada. Volte à revisão e grave com “Sobrescrever este save”, ou apague um save antigo no jogo.' },
       en: {
         SaveNotFound:'We couldn’t find the save file. It may have been moved, renamed or deleted. Go back to the save list and pick another one.',
-        SaveFormatUnsupported:'Couldn’t understand this save: the format wasn’t recognized. Try another save from the same profile or, if it keeps happening, report the problem.',
+        SaveParseFailed:'Couldn’t understand this save: its content wasn’t recognized. It may come from a newer game version, an unusual mod or a damaged file. Try another save from the same profile or, if it keeps happening, report the problem.',
         SaveCorrupt:'The save file looks damaged and couldn’t be read. Pick another save or restore a backup (game.sii.bak-…).',
         NoSession:'No save is open. Choose a profile and a save to get started.',
         SessionBusy:'The save is still being read or written. Wait a few seconds and try again.',
         ReadOnlySession:'This save is open for viewing only, so it can’t be written. Open the save again from the save picker.',
         Conflict:'This change edits something another pending change already edited. Open the review, discard one of the two and redo the edit.',
+        InvalidEdit:'This change isn’t valid for this save. Discard it, adjust your choice and try again.',
         StalePatch:'The data behind this change is out of date. Go back to the review, discard the change and redo the edit. If it keeps happening, open the save again.',
         UnknownUnit:'We couldn’t find the item you wanted to change in the save. It may have been removed. Go back to the review, discard the change and pick the item again.',
         UnknownAttribute:'This save doesn’t have the field the app tried to change. This usually happens with saves from mods or another game version. Discard the change, try another item or update the app.',
@@ -186,7 +190,8 @@ class Component extends DCLogic {
         BackupFailed:'The backup couldn’t be created, so the app didn’t write. Check the free space and permissions of the save folder and try again.',
         WriteFailed:'The file couldn’t be written. Check whether another program (such as antivirus or cloud backup) is using the save folder and try again.',
         VerifyFailed:'The written file didn’t pass verification, so the original save was kept. Try again; if it repeats, open the save again and redo your changes.',
-        AccessDenied:'The system denied access to the save folder. Check that the folder isn’t read-only or protected (for example by antivirus or cloud sync) and try again.' }
+        AccessDenied:'The system denied access to the save folder. Check that the folder isn’t read-only or protected (for example by antivirus or cloud sync) and try again.',
+        SlotUnavailable:'Couldn’t create a new save: the profile has no free slot or the folder couldn’t be created. Go back to the review and write with “Overwrite this save”, or delete an old save in the game.' }
     }[lang];
     const X = {
       pt: { titles:{ open:'Não foi possível abrir o save', apply:'Não foi possível gravar', edit:'Não foi possível adicionar a mudança' },

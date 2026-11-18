@@ -2,7 +2,9 @@
 
 Parte do ciclo explorar → editar → **revisar → aplicar**. Contratos: ADR 0005
 e `docs/architecture/plan-0005-shell.md` (`IEditSession`, `ChangeSet`,
-`CoreError`, `ApplyResult`).
+`CoreError`, `ApplyResult`), com o delta da ADR 0006 / plano 0006
+(`ApplyAsync(ApplyTarget)`, `ApplyTarget.Overwrite` / `NewSlot(displayName)`,
+`ApplyResult(WrittenSlot, BackupPath?, ChangeSetCount, PatchCount)`).
 
 ## 1. Fluxo principal
 
@@ -21,13 +23,17 @@ flowchart TD
     D2 -->|confirma| V
     D2 -->|cancela| R
     R -->|Continuar editando ou Esc| A
-    R -->|Aplicar mudanças ou Ctrl+Enter| K["Diálogo de confirmação destrutiva"]
+    R -->|Aplicar mudanças ou Ctrl+Enter| K["Diálogo de confirmação destrutiva<br/>escolher como gravar"]
     K -->|Cancelar ou Esc| R
-    K -->|Gravar no save| W["Gravando…<br/>ApplyAsync"]
-    W -->|ApplyResult| OK["Tela Resultado<br/>caminho do backup"]
+    K -->|"Sobrescrever este save (padrão)"| W["Gravando…<br/>ApplyAsync(Overwrite)"]
+    K -->|"Criar um novo save + nome"| W2["Gravando…<br/>ApplyAsync(NewSlot(nome))"]
+    W -->|ApplyResult| OK["Tela Resultado<br/>slot gravado + caminho do backup"]
+    W2 -->|ApplyResult| OK2["Tela Resultado<br/>novo slot, original intacto"]
+    W2 -->|CoreException| ER
     W -->|CoreException| ER["Erro no próprio diálogo<br/>(ver fluxo 2)"]
     OK -->|Abrir pasta| F["Explorador de arquivos"]
     OK -->|Continuar editando| A
+    OK2 -->|Continuar editando| A2["Módulo, agora sobre o novo save<br/>(nova base da sessão)"]
 ```
 
 Regras do fluxo:
@@ -37,7 +43,15 @@ Regras do fluxo:
   6 s: a App guarda os `ChangeSet`s descartados e os re-enfileira). Descartar
   **tudo** pede confirmação, porque é a única ação que perde o trabalho todo.
 - Depois do sucesso a sessão tem nova base e `Pending` vazio: o selo some o
-  número e voltar ao módulo mostra os dados já gravados.
+  número e voltar ao módulo mostra os dados já gravados. Com **Criar um novo
+  save** a nova base é o **slot novo** (a barra do shell passa a mostrar o nome
+  novo) e o save original fica como estava.
+- A escolha do destino é feita **só na confirmação**; "Sobrescrever este save"
+  vem selecionado, o nome do novo save vem preenchido (`{save} (editado)`) e
+  o botão muda de "Gravar no save" para "Criar novo save". Nome vazio ou com
+  mais de 40 caracteres desabilita o botão e mostra o erro ao lado do campo.
+- Perfil com Steam Cloud: aviso na confirmação (texto por destino) e uma linha no
+  Resultado; nenhuma das opções é bloqueada.
 
 ## 2. Aplicar: etapas e onde cada erro aparece
 
@@ -56,7 +70,8 @@ flowchart TD
     Q -->|item não existe| E7["UnknownUnit"]
     Q -->|campo não existe| E8["UnknownAttribute"]
     Q -->|valor antigo difere| E9["StalePatch"]
-    Q -->|ok| B["Backup game.sii.bak-data-hora"]
+    Q -->|ok| D{"Destino"}
+    D -->|Overwrite| B["Backup game.sii.bak-data-hora"]
     B -->|já existe| E10["BackupExists"]
     B -->|falhou| E11["BackupFailed"]
     B -->|ok| T["Grava game.sii.tmp e verifica"]
@@ -65,23 +80,31 @@ flowchart TD
     T -->|verificação falhou| E14["VerifyFailed"]
     T -->|ok| M["Substitui game.sii<br/>nova base da sessão"]
     M --> OK["ApplyResult → tela Resultado"]
+    D -->|"NewSlot(nome)"| N1["Escolhe o próximo slot livre do perfil"]
+    N1 -->|sem slot livre ou pasta não criada| E15["SlotUnavailable"]
+    N1 -->|ok| N2["Copia a pasta do slot,<br/>grava game.sii.tmp e verifica,<br/>ajusta o nome em info.sii"]
+    N2 -->|"sem permissão / IO / verificação"| E12
+    N2 -->|ok| N3["Slot novo vira a base da sessão<br/>original intocado"]
+    N3 --> OK
 ```
 
-Erros fora do `ApplyAsync` (mesmo vocabulário `CoreError`):
-`SaveFormatUnsupported`, `SaveCorrupt`, `SaveNotFound`, `NoSession` ao **abrir** o save (UX-1);
-`Conflict`, `StalePatch`, `UnknownUnit`, `UnknownAttribute` ao **enfileirar** (`Stage`) no módulo.
+Erros fora do `ApplyAsync` (mesmo vocabulário `CoreError`, agora **20 códigos**):
+`SaveParseFailed` (renomeado de `SaveFormatUnsupported`), `SaveCorrupt`, `SaveNotFound`, `NoSession` ao **abrir** o save (UX-1);
+`Conflict`, `StalePatch`, `UnknownUnit`, `UnknownAttribute`, `InvalidEdit` (regra do módulo, com `Reason`, ex.: `Jobs_Error_*`) ao **enfileirar** (`Stage`) no módulo.
 
 Em todo erro do `ApplyAsync` o save original fica intacto (ADR 0005); a tela
-diz isso ("Nada foi gravado. Seu save continua como estava.").
+diz isso ("Nada foi gravado. Seu save continua como estava."). No destino
+**novo save**, uma falha depois de criar a pasta apaga a pasta nova (o Core
+garante), então a frase continua verdadeira.
 
 ## 3. Recuperação por erro
 
 ```mermaid
 flowchart LR
     X["Erro ao aplicar"] --> T{"Tipo"}
-    T -->|"Tentar de novo resolve"| R["GameRunning, SessionBusy, BackupExists,<br/>BackupFailed, WriteFailed, VerifyFailed, AccessDenied"]
-    R --> R1["Botão Tentar de novo<br/>mudanças pendentes continuam"]
-    T -->|"Mudança inválida"| I["StalePatch, UnknownUnit, UnknownAttribute"]
+    T -->|"Tentar de novo resolve"| R["GameRunning, SessionBusy, BackupExists,<br/>BackupFailed, WriteFailed, VerifyFailed, AccessDenied,<br/>SlotUnavailable (depois de liberar um slot)"]
+    R --> R1["Botão Tentar de novo<br/>mudanças pendentes continuam<br/>(SlotUnavailable: voltar à revisão e escolher Sobrescrever)"]
+    T -->|"Mudança inválida"| I["StalePatch, UnknownUnit, UnknownAttribute, InvalidEdit"]
     I --> I1["Voltar à revisão: descartar a mudança<br/>ou Abrir o save de novo"]
     T -->|"Save mudou ou sumiu"| C["SaveChangedOnDisk, SaveNotFound"]
     C --> C1["Abrir o save de novo / escolher outro<br/>pendentes são descartadas"]

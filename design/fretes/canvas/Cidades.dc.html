@@ -1,0 +1,1169 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Fretes · Cidades e dependências</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&amp;family=Barlow+Condensed:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+button{font:inherit;cursor:pointer}
+button[aria-disabled="true"]{cursor:default}
+button:focus-visible,[tabindex]:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+</style>
+</helmet>
+<div style="--accent: {{t.accent}}; --accent-text: {{t.accentText}}; --muted: {{t.muted}}; --border2: {{t.border2}}; display: flex; flex-direction: column; width: 100%; min-height: 800px; box-sizing: border-box; background: {{t.bg}}; color: {{t.text}}; font-family: Barlow, system-ui, sans-serif; font-size: 14px;">
+  <div style="display: flex; height: 768px; min-height: 0;">
+    <nav aria-label="{{tx.Nav_Label}}" style="flex: 0 0 76px; box-sizing: border-box; padding: 16px 0; display: flex; flex-direction: column; align-items: center; gap: 6px; background: {{t.side}}; border-right: 1px solid {{t.line}};">
+      <div aria-hidden="true" style="width: 40px; height: 40px; border-radius: 10px; background: {{t.accent}}; display: flex; align-items: center; justify-content: center; margin-bottom: 14px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1a1206" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h11v9H3z"/><path d="M14 10h4l3 3v3h-7"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>
+      </div>
+      <sc-for list="{{nav}}" as="n" hint-placeholder-count="5">
+      <button type="button" aria-label="{{n.label}}" aria-current="{{n.current}}" title="{{n.tip}}" style="{{n.style}}">
+        <span style="width: 18px; height: 3px; border-radius: 2px; background: {{n.bar}};"></span>
+        <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="{{n.icon}}"/></svg>
+        <span style="font-family: 'Barlow Condensed', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.06em;">{{n.short}}</span>
+      </button>
+      </sc-for>
+      <div style="flex-grow: 1;"></div>
+      <button type="button" aria-label="{{tx.Nav_Settings}}" title="{{tx.Nav_Settings}}" style="{{navSet.style}}">
+        <span style="width: 18px; height: 3px; border-radius: 2px; background: transparent;"></span>
+        <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="{{navSet.icon}}"/></svg>
+        <span style="font-family: 'Barlow Condensed', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.06em;">{{navSet.short}}</span>
+      </button>
+    </nav>
+    <div style="flex: 1 1 0; min-width: 0; display: flex; flex-direction: column;">
+      <header aria-label="{{tx.SessionBar_Label}}" style="flex: 0 0 60px; box-sizing: border-box; padding: 0 20px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid {{t.line}};">
+        <div style="display: flex; align-items: center; gap: 8px; min-width: 0;">
+          <button type="button" title="{{tx.SessionBar_ChangeHint}}" aria-label="{{bar.profileAria}}" style="{{bar.chip}}">
+            <span style="display: flex; flex-direction: column; align-items: flex-start; min-width: 0;">
+              <span style="font-size: 10px; line-height: 12px; color: {{t.muted}}; text-transform: uppercase; letter-spacing: 0.08em;">{{tx.SessionBar_Profile}}</span>
+              <span style="font-weight: 600; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Demo A</span>
+            </span>
+            <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="{{t.muted}}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <button type="button" title="{{tx.SessionBar_ChangeHint}}" aria-label="{{bar.saveAria}}" style="{{bar.chip}}">
+            <span style="display: flex; flex-direction: column; align-items: flex-start; min-width: 0;">
+              <span style="font-size: 10px; line-height: 12px; color: {{t.muted}}; text-transform: uppercase; letter-spacing: 0.08em;">{{tx.SessionBar_Save}}</span>
+              <span style="font-weight: 600; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Save 4</span>
+            </span>
+            <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="{{t.muted}}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <span title="{{tx.Game_Ets2}}" aria-label="{{tx.Game_Ets2}}" role="img" style="padding: 3px 9px; border-radius: 999px; border: 1px solid {{t.line}}; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; letter-spacing: 0.06em; font-size: 13px; color: {{t.text}};">{{tx.Game_Ets2_Short}}</span>
+          <span style="display: flex; align-items: center; gap: 6px; color: {{t.muted}}; font-size: 13px; white-space: nowrap;">
+            <span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: {{t.success}};"></span>{{tx.SessionBar_GameClosed}}
+          </span>
+          <span style="display: {{bar.cloudD}}; align-items: center; gap: 6px; padding: 3px 9px; border-radius: 999px; border: 1px solid {{t.border2}}; color: {{t.text}}; font-size: 12px; white-space: nowrap;" title="{{tx.Jobs_Cloud_Title}}">
+            <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18a4 4 0 0 1-.6-7.96A6 6 0 0 1 18 9.5 4.3 4.3 0 0 1 17.5 18z"/></svg>{{tx.Jobs_Cloud_Chip}}
+          </span>
+        </div>
+        <div style="flex-grow: 1;"></div>
+        <button type="button" title="{{tx.SessionBar_ReviewHint}}" aria-label="{{bar.reviewAria}}" aria-disabled="{{bar.reviewDisabled}}" style="{{bar.reviewStyle}}">{{bar.reviewLabel}}</button>
+      </header>
+
+      <main aria-label="{{tx.Module_jobs}}" style="position: relative; flex: 1 1 0; min-height: 0; display: flex; overflow: hidden;">
+        <!-- Lista de cidades de saída -->
+        <section aria-label="{{tx.Jobs_List_Title}}" style="flex: 0 0 320px; box-sizing: border-box; padding: 20px 16px 16px; display: {{lay.listPaneD}}; flex-direction: column; gap: 10px; border-right: 1px solid {{t.line}};">
+          <div style="display: flex; align-items: flex-end; gap: 10px; padding: 0 4px 4px;">
+            <div style="display: flex; flex-direction: column;">
+              <span style="font-size: 12px; color: {{t.muted}}; text-transform: uppercase; letter-spacing: 0.08em; display: flex; align-items: center; gap: 6px;"><span style="{{row.n1Style}}">1</span>{{tx.Jobs_Step_FromCity}}</span>
+              <h1 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-size: 26px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em;">{{tx.Module_jobs}}</h1>
+            </div>
+            <div style="flex-grow: 1;"></div>
+            <span aria-label="{{list.countAria}}" style="font-family: 'Barlow Condensed', sans-serif; font-size: 22px; font-weight: 600; font-variant-numeric: tabular-nums; color: {{t.muted}};">{{list.count}}</span>
+          </div>
+          <label for="busca" style="position: absolute; left: -9999px;">{{tx.Jobs_List_SearchLabel}}</label>
+          <input id="busca" type="search" value="{{list.q}}" placeholder="{{tx.Jobs_List_Search}}" style="min-height: 44px; padding: 0 14px; border-radius: 10px; border: 1px solid {{t.border2}}; background: {{t.panel}}; color: {{t.text}}; font: inherit;">
+          <div role="listbox" aria-label="{{tx.Jobs_List_Title}}" style="display: {{list.listD}}; flex: 1 1 0; min-height: 0; overflow: hidden; flex-direction: column; gap: 8px;">
+            <sc-for list="{{cities}}" as="c" hint-placeholder-count="7">
+              <button type="button" role="option" aria-selected="{{c.sel}}" onClick="{{c.pick}}" style="{{c.style}}">
+                <div style="display: flex; align-items: center; gap: 8px; width: 100%; min-width: 0;">
+                  <span style="font-weight: 600; font-size: 15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: {{c.nameColor}};">{{c.name}}</span>
+                  <span style="margin-left: auto; display: {{c.pendD}}; padding: 1px 8px; border-radius: 999px; background: {{t.accent}}; color: {{t.onAccent}}; font-size: 12px; font-weight: 700; white-space: nowrap;">{{c.pend}}</span>
+                </div>
+                <span style="color: {{t.muted}}; font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%;">{{c.meta}}</span>
+              </button>
+            </sc-for>
+          </div>
+          <div role="status" style="display: {{list.emptyD}}; flex: 1 1 0; flex-direction: column; align-items: center; justify-content: center; gap: 10px; text-align: center; padding: 16px 12px;">
+            <div aria-hidden="true" style="width: 48px; height: 48px; border-radius: 12px; background: {{t.sel}}; color: {{t.accentText}}; display: flex; align-items: center; justify-content: center;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="{{list.emptyIcon}}"/></svg></div>
+            <span style="font-size: 16px; font-weight: 600;">{{list.emptyTitle}}</span>
+            <span style="color: {{t.muted}}; font-size: 13px; max-width: 270px;">{{list.emptyBody}}</span>
+            <span style="color: {{t.muted}}; font-size: 13px; max-width: 270px;">{{list.emptyTip}}</span>
+            <button type="button" style="{{list.emptyBtn}}">{{list.emptyAction}}</button>
+          </div>
+        </section>
+
+        <!-- Área de edição -->
+        <section aria-label="{{tx.Jobs_Form_Label}}" style="flex: 1 1 0; min-width: 0; box-sizing: border-box; display: {{lay.formD}}; flex-direction: column; overflow: hidden;">
+          <div style="flex: 1 1 0; min-height: 0; box-sizing: border-box; padding: 18px 24px 8px; display: flex; flex-direction: column; gap: 12px; overflow: auto;">
+          <div style="display: {{ban.catD}}; flex: 0 0 72px; box-sizing: border-box; gap: 12px; padding: 10px 14px; border-radius: 12px; background: {{t.panel}}; border: 1px solid {{t.border2}}; align-items: center;">
+            <span style="color: {{t.muted}}; flex: 0 0 auto;"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8v.1"/></svg></span>
+            <div style="display: flex; flex-direction: column; gap: 1px; min-width: 0; flex: 1 1 0;">
+              <span style="font-weight: 600;">{{ban.catTitle}}</span>
+              <span style="color: {{t.muted}}; font-size: 13px;">{{ban.catBody}}</span>
+            </div>
+            <button type="button" style="{{ban.btn}}">{{tx.Jobs_NoCatalog_Action}}</button>
+          </div>
+          <div role="status" style="display: {{ban.cloudD}}; flex: 0 0 72px; box-sizing: border-box; gap: 12px; padding: 10px 14px; border-radius: 12px; background: {{t.sel}}; border: 1px solid {{t.accentText}}; align-items: center;">
+            <span style="color: {{t.accentText}}; flex: 0 0 auto;"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18.2v.1"/></svg></span>
+            <div style="display: flex; flex-direction: column; gap: 1px; min-width: 0; flex: 1 1 0;">
+              <span style="font-weight: 600;">{{tx.Jobs_Cloud_Title}}</span>
+              <span style="color: {{t.text}}; font-size: 13px;">{{tx.Jobs_Cloud_Body}}</span>
+            </div>
+            <button type="button" onClick="{{ban.cloudClose}}" style="{{ban.btn}}">{{tx.Jobs_Cloud_Dismiss}}</button>
+          </div>
+          <div role="status" style="display: {{ban.editD}}; flex: 0 0 56px; box-sizing: border-box; gap: 12px; padding: 8px 14px; border-radius: 12px; background: {{t.sel}}; border: 1px solid {{t.accentText}}; align-items: center;">
+            <div style="display: flex; flex-direction: column; gap: 1px; min-width: 0; flex: 1 1 0;">
+              <span style="font-weight: 600;">{{tx.Jobs_Editing_Title}}</span>
+              <span style="color: {{t.text}}; font-size: 13px;">{{tx.Jobs_Editing_Body}}</span>
+            </div>
+            <button type="button" onClick="{{ban.editCancel}}" style="{{ban.btn}}">{{tx.Jobs_CancelEdit}}</button>
+          </div>
+
+          <!-- Linha das cidades -->
+          <div style="flex: 0 0 56px; display: grid; grid-template-columns: minmax(0, 1fr) 44px minmax(0, 1fr); gap: 12px; align-items: center;">
+            <button type="button" title="{{tx.Jobs_Chip_FromHint}}" aria-label="{{row.fromAria}}" style="{{row.fromStyle}}">
+              <span style="font-size: 11px; color: {{t.muted}}; text-transform: uppercase; letter-spacing: 0.08em; display: flex; gap: 6px;"><span style="{{row.n1Style}}">1</span>{{tx.Jobs_Step_FromCity}}</span>
+              <span style="font-weight: 600; color: {{row.fromColor}}; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{row.from}}</span>
+            </button>
+            <button type="button" onClick="{{row.swap}}" aria-label="{{tx.Jobs_Swap}}" title="{{tx.Jobs_Swap}}" aria-disabled="{{row.swapDis}}" style="{{row.swapStyle}}">
+              <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4 3 8l4 4M3 8h14M17 20l4-4-4-4M21 16H7"/></svg>
+            </button>
+            <button type="button" onClick="{{row.openTo}}" aria-haspopup="listbox" aria-expanded="{{row.toOpen}}" aria-label="{{row.toAria}}" style="{{row.toStyle}}">
+              <span style="font-size: 11px; color: {{t.muted}}; text-transform: uppercase; letter-spacing: 0.08em; display: flex; width: 100%; gap: 6px;"><span style="{{row.n2Style}}">2</span>{{tx.Jobs_Step_ToCity}}</span>
+              <span style="display: flex; align-items: center; width: 100%; gap: 8px;">
+                <span style="font-weight: 600; color: {{row.toColor}}; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{row.to}}</span>
+                <svg aria-hidden="true" style="margin-left: auto; flex: 0 0 auto;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="{{t.muted}}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+              </span>
+            </button>
+          </div>
+
+          <!-- Mapa da rota -->
+          <div style="position: relative; flex: 0 0 {{map.h}}px; border-radius: 16px; overflow: hidden; background: {{t.map}}; border: 1px solid {{t.line}};">
+            <svg role="img" aria-label="{{map.aria}}" width="100%" height="{{map.h}}" viewBox="0 0 836 {{map.h}}" preserveAspectRatio="xMidYMid slice">
+              <g stroke="{{t.grid}}" stroke-width="1"><path d="{{map.grid}}"/></g>
+              <path d="{{map.d}}" fill="none" stroke="{{t.routeGlow}}" stroke-width="12" stroke-linecap="round" style="display: {{map.routeD}};"/>
+              <path d="{{map.d}}" fill="none" stroke="{{t.accent}}" stroke-width="4" stroke-linecap="round" style="display: {{map.routeD}};"/>
+              <path d="{{map.dd}}" fill="none" stroke="{{t.border2}}" stroke-width="2" stroke-dasharray="4 6" stroke-linecap="round" style="display: {{map.dashD}};"/>
+              <circle cx="{{map.ax}}" cy="{{map.ay}}" r="9" fill="{{t.map}}" stroke="{{t.accent}}" stroke-width="4" style="display: {{map.aD}};"/>
+              <circle cx="{{map.bx}}" cy="{{map.by}}" r="10" fill="{{t.accent}}" style="display: {{map.routeD}};"/>
+              <circle cx="{{map.bx}}" cy="{{map.by}}" r="10" fill="none" stroke="{{t.border2}}" stroke-width="2" stroke-dasharray="3 4" style="display: {{map.dashD}};"/>
+              <text x="{{map.ax}}" y="{{map.aly}}" text-anchor="middle" fill="{{t.text}}" font-size="15" font-weight="600" font-family="Barlow, sans-serif">{{map.aName}}</text>
+              <text x="{{map.bx}}" y="{{map.bly}}" text-anchor="middle" fill="{{t.text}}" font-size="15" font-weight="600" font-family="Barlow, sans-serif">{{map.bName}}</text>
+            </svg>
+            <div style="position: absolute; left: 14px; top: 12px; display: {{map.chipD}}; flex-direction: column; gap: 2px; padding: 8px 12px; border-radius: 10px; background: {{t.overlay}}; border: 1px solid {{t.line}}; max-width: 62%;">
+              <span style="font-size: 11px; color: {{t.muted}}; text-transform: uppercase; letter-spacing: 0.08em;">{{tx.Jobs_Map_Route}}</span>
+              <span style="font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="{{map.chip}}">{{map.chip}}</span>
+            </div>
+            <div style="position: absolute; left: 14px; bottom: 10px; font-size: 12px; color: {{t.muted}};">{{tx.Jobs_Map_Schematic}}</div>
+            <div style="position: absolute; right: 14px; bottom: 10px; display: {{map.kmD}}; padding: 4px 12px; border-radius: 10px; background: {{t.overlay}}; border: 1px solid {{t.line}}; align-items: baseline; gap: 6px;">
+              <span style="font-family: 'Barlow Condensed', sans-serif; font-size: 34px; font-weight: 700; font-variant-numeric: tabular-nums; color: {{map.kmColor}};">{{map.km}}</span>
+              <span style="color: {{t.muted}};">{{map.unit}}</span>
+            </div>
+            <div style="position: absolute; inset: 0; display: {{map.hintD}}; align-items: center; justify-content: center; color: {{t.muted}}; text-align: center; padding: 0 24px;">{{map.hint}}</div>
+          </div>
+
+          <!-- Mudanças pendentes da cidade -->
+          <div role="group" aria-label="{{tx.Jobs_Pending_Title}}" style="display: {{pend.d}}; flex: 0 0 auto; flex-direction: column; gap: 6px; padding: 10px 14px; border-radius: 12px; background: {{t.panel}}; border: 1px solid {{t.line}};">
+            <span style="font-size: 11px; color: {{t.muted}}; text-transform: uppercase; letter-spacing: 0.08em;">{{tx.Jobs_Pending_Title}}</span>
+            <sc-for list="{{pendRows}}" as="p" hint-placeholder-count="2">
+              <div style="display: flex; align-items: center; gap: 10px; min-height: 44px; border-top: 1px solid {{t.line}}; {{p.rowStyle}}">
+                <div style="display: flex; flex-direction: column; min-width: 0; flex: 1 1 0;">
+                  <span style="font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="{{p.title}}">{{p.title}}</span>
+                  <span style="color: {{t.muted}}; font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{p.sub}}</span>
+                </div>
+                <button type="button" onClick="{{p.edit}}" aria-label="{{p.editAria}}" style="{{p.btn}}">{{tx.Jobs_Pending_Edit}}</button>
+                <button type="button" onClick="{{p.discard}}" aria-label="{{p.discardAria}}" style="{{p.btnDanger}}">{{tx.Review_Discard}}</button>
+              </div>
+            </sc-for>
+          </div>
+
+          <!-- Indicadores -->
+          <div style="flex: 0 0 auto; display: {{tile.rowD}}; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px;">
+            <div style="{{tile.box}}">
+              <span style="font-size: 11px; color: {{t.muted}}; text-transform: uppercase; letter-spacing: 0.08em;">{{tx.Jobs_Field_Distance}}</span>
+              <div style="display: flex; align-items: center; gap: 8px; min-width: 0;">
+                <span style="font-family: 'Barlow Condensed', sans-serif; font-size: 22px; font-weight: 600; font-variant-numeric: tabular-nums; color: {{tile.kmColor}}; white-space: nowrap;">{{tile.km}}</span>
+                <span style="display: {{tile.estD}}; padding: 0 8px; border-radius: 999px; border: 1px solid {{t.border2}}; font-size: 11px; color: {{t.text}}; white-space: nowrap;">{{tx.Jobs_Distance_Estimated}}</span>
+              </div>
+              <span style="font-size: 12px; line-height: 1.25; color: {{t.muted}};">{{tile.kmHelp}}</span>
+            </div>
+            <div style="{{tile.box}}">
+              <span style="font-size: 11px; color: {{t.muted}}; text-transform: uppercase; letter-spacing: 0.08em;">{{tx.Jobs_Field_Expiration}}</span>
+              <div role="radiogroup" aria-label="{{tx.Jobs_Field_Expiration}}" style="display: flex; gap: 4px;">
+                <sc-for list="{{expOpts}}" as="e" hint-placeholder-count="4">
+                  <button type="button" role="radio" aria-checked="{{e.on}}" onClick="{{e.pick}}" style="{{e.style}}">{{e.label}}</button>
+                </sc-for>
+              </div>
+              <span style="font-size: 12px; line-height: 1.25; color: {{t.muted}};">{{tx.Jobs_Expiration_Help}}</span>
+            </div>
+            <div style="{{tile.box}}">
+              <span style="font-size: 11px; color: {{t.muted}}; text-transform: uppercase; letter-spacing: 0.08em;">{{tx.Jobs_Field_Units}}</span>
+              <span style="font-family: 'Barlow Condensed', sans-serif; font-size: 22px; font-weight: 600; font-variant-numeric: tabular-nums; color: {{tile.unitsColor}};">{{tile.units}}</span>
+              <span style="font-size: 12px; line-height: 1.25; color: {{t.muted}};">{{tx.Jobs_Units_Help}}</span>
+            </div>
+            <div style="{{tile.box}}">
+              <span style="font-size: 11px; color: {{t.muted}}; text-transform: uppercase; letter-spacing: 0.08em;">{{tx.Jobs_Field_Trailer}}</span>
+              <span style="font-family: 'Barlow Condensed', sans-serif; font-size: 22px; font-weight: 600; color: {{tile.trailerColor}}; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="{{tile.trailer}}">{{tile.trailer}}</span>
+              <span style="font-size: 12px; line-height: 1.25; color: {{t.muted}};">{{tx.Jobs_Trailer_Help}}</span>
+            </div>
+          </div>
+
+          <!-- Empresas e carga -->
+          <div style="display: {{fld.d}}; flex: 0 0 74px; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px;">
+            <sc-for list="{{fields}}" as="f" hint-placeholder-count="3">
+              <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0;">
+                <button type="button" onClick="{{f.open}}" aria-haspopup="listbox" aria-expanded="{{f.isOpen}}" aria-disabled="{{f.dis}}" aria-label="{{f.aria}}" style="{{f.style}}">
+                  <span style="font-size: 11px; color: {{t.muted}}; text-transform: uppercase; letter-spacing: 0.08em; display: flex; width: 100%; gap: 6px;"><span style="{{f.numStyle}}">{{f.num}}</span>{{f.label}}</span>
+                  <span style="display: flex; align-items: center; width: 100%; gap: 8px;">
+                    <span style="font-weight: 600; color: {{f.valColor}}; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="{{f.val}}">{{f.val}}</span>
+                    <svg aria-hidden="true" style="margin-left: auto; flex: 0 0 auto;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="{{t.muted}}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                  </span>
+                </button>
+                <span style="font-size: 12px; color: {{t.muted}}; padding: 0 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{f.hint}}</span>
+              </div>
+            </sc-for>
+          </div>
+
+          <!-- Onde entra o frete -->
+          <div style="display: {{mode.d}}; flex: 0 0 auto; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; align-items: start;">
+            <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0;">
+              <span style="font-size: 11px; color: {{t.muted}}; text-transform: uppercase; letter-spacing: 0.08em; display: flex; gap: 6px;"><span aria-hidden="true" style="color: var(--muted);">↳</span>{{tx.Jobs_Mode_Title}}</span>
+              <div role="radiogroup" aria-label="{{tx.Jobs_Mode_Title}}" style="display: flex; gap: 6px;">
+                <sc-for list="{{modeOpts}}" as="o" hint-placeholder-count="2">
+                  <button type="button" role="radio" aria-checked="{{o.on}}" aria-disabled="{{o.dis}}" onClick="{{o.pick}}" style="{{o.style}}">{{o.label}}</button>
+                </sc-for>
+              </div>
+              <span style="font-size: 12px; color: {{t.muted}}; padding: 0 4px;">{{mode.hint}}</span>
+            </div>
+            <div style="display: {{mode.offerD}}; flex-direction: column; gap: 4px; min-width: 0;">
+              <button type="button" onClick="{{mode.offer.open}}" aria-haspopup="listbox" aria-expanded="{{mode.offer.isOpen}}" aria-disabled="{{mode.offer.dis}}" aria-label="{{mode.offer.aria}}" style="{{mode.offer.style}}">
+                <span style="font-size: 11px; color: {{t.muted}}; text-transform: uppercase; letter-spacing: 0.08em; display: flex; width: 100%; gap: 6px;">{{mode.offer.label}}</span>
+                <span style="display: flex; align-items: center; width: 100%; gap: 8px;">
+                  <span style="font-weight: 600; color: {{mode.offer.valColor}}; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="{{mode.offer.val}}">{{mode.offer.val}}</span>
+                  <svg aria-hidden="true" style="margin-left: auto; flex: 0 0 auto;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="{{t.muted}}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                </span>
+              </button>
+              <span style="font-size: 12px; color: {{t.muted}}; padding: 0 4px;">{{mode.offerHint}}</span>
+            </div>
+          </div>
+
+          <!-- Sem combinação -->
+          <div role="alert" style="display: {{nm.d}}; flex: 0 0 auto; flex-direction: column; align-items: center; gap: 8px; text-align: center; padding: 14px 20px; border-radius: 12px; border: 1px dashed {{t.border2}}; background: {{t.panel}};">
+            <span style="font-size: 16px; font-weight: 600;">{{nm.title}}</span>
+            <span style="color: {{t.muted}}; max-width: 560px;">{{nm.body}}</span>
+            <span style="display: {{nm.noteD}}; color: {{t.muted}}; font-size: 13px; max-width: 560px;">{{tx.Jobs_NoMatch_CatalogNote}}</span>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
+              <button type="button" onClick="{{nm.openTo}}" style="{{nm.btnPrimary}}">{{tx.Jobs_NoMatch_ChangeTo}}</button>
+              <button type="button" style="{{nm.btn}}">{{tx.Jobs_NoMatch_ChangeFrom}}</button>
+            </div>
+          </div>
+
+          <!-- Sem vagas livres na cidade -->
+          <div role="status" style="display: {{ns.d}}; flex: 0 0 auto; flex-direction: column; align-items: center; gap: 6px; text-align: center; padding: 14px 20px; border-radius: 12px; border: 1px dashed {{t.border2}}; background: {{t.panel}};">
+            <span style="font-size: 16px; font-weight: 600;">{{ns.title}}</span>
+            <span style="color: {{t.muted}}; max-width: 560px;">{{ns.body}}</span>
+          </div>
+
+          <!-- Erro ao adicionar -->
+          <div role="alert" style="display: {{er.d}}; flex: 0 0 auto; gap: 12px; padding: 10px 14px; border-radius: 12px; background: {{t.dangerBg}}; border: 1px solid {{t.danger}}; align-items: flex-start;">
+            <span style="color: {{t.danger}}; flex: 0 0 auto; margin-top: 1px;"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg></span>
+            <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1 1 0;">
+              <span style="font-weight: 600;">{{tx.Error_Title_Edit}}</span>
+              <span style="color: {{t.text}}; font-size: 13px;">{{er.msg}}</span>
+              <span style="font-family: ui-monospace, Consolas, monospace; font-size: 12px; color: {{t.muted}};">{{er.code}}</span>
+            </div>
+            <button type="button" onClick="{{er.close}}" aria-label="{{tx.Jobs_Notice_Close}}" style="{{er.btn}}">{{tx.Common_Close}}</button>
+          </div>
+
+          <!-- Aviso de cascata / cidades iguais -->
+          <div role="status" aria-live="polite" style="display: {{nt.d}}; flex: 0 0 auto; flex-direction: column; gap: 2px; padding: 8px 14px; border-radius: 12px; background: {{t.panel}}; border: 1px solid {{t.border2}};">
+            <sc-for list="{{notes}}" as="n" hint-placeholder-count="1">
+              <span style="font-size: 13px;">{{n.text}}</span>
+            </sc-for>
+          </div>
+
+          </div>
+          <!-- Ação (fixa embaixo) -->
+          <div style="flex: 0 0 auto; box-sizing: border-box; padding: 10px 24px 14px; display: flex; align-items: center; gap: 12px; border-top: 1px solid {{t.line}};">
+            <span role="status" style="font-size: 13px; color: {{t.muted}}; min-width: 0;">{{act.help}}</span>
+            <div style="flex-grow: 1;"></div>
+            <button type="button" onClick="{{act.go}}" aria-disabled="{{act.dis}}" style="{{act.style}}">{{act.label}}</button>
+          </div>
+        </section>
+
+        <!-- Nenhuma cidade com vaga livre: o estado ocupa o módulo -->
+        <section role="status" style="flex: 1 1 0; min-width: 0; display: {{lay.emptyD}}; flex-direction: column; align-items: center; justify-content: center; gap: 12px; text-align: center; padding: 24px;">
+          <div aria-hidden="true" style="width: 56px; height: 56px; border-radius: 14px; background: {{t.sel}}; color: {{t.accentText}}; display: flex; align-items: center; justify-content: center;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="{{lay.emptyIcon}}"/></svg></div>
+          <span style="font-family: 'Barlow Condensed', sans-serif; font-size: 26px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em;">{{tx.Jobs_Empty_Title}}</span>
+          <span style="color: {{t.muted}}; max-width: 460px;">{{tx.Jobs_Empty_Body}}</span>
+          <span style="color: {{t.muted}}; max-width: 460px;">{{tx.Jobs_Empty_Tip}}</span>
+          <button type="button" style="{{list.emptyBtn}}">{{tx.Action_ChooseSave}}</button>
+        </section>
+
+        <!-- Popup do SearchablePicker -->
+        <div role="listbox" aria-label="{{pop.label}}" style="display: {{pop.d}}; position: absolute; left: {{pop.x}}px; top: {{pop.y}}px; width: {{pop.w}}px; box-sizing: border-box; padding: 6px; border-radius: 12px; background: {{t.panel}}; border: 1px solid {{t.line}}; box-shadow: {{t.shadow}}; flex-direction: column; gap: 4px; z-index: 5;">
+          <div style="display: flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 12px; border-radius: 10px; border: 1px solid {{t.border2}}; background: {{t.bg}}; color: {{t.muted}};">
+            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+            <span style="color: {{t.muted}};">{{pop.search}}</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px; padding: 2px 8px;">
+            <span style="font-size: 12px; color: {{t.muted}};">{{pop.count}}</span>
+            <div style="flex-grow: 1;"></div>
+            <button type="button" role="switch" aria-checked="{{pop.onlyOn}}" onClick="{{pop.toggleOnly}}" style="{{pop.onlyStyle}}">{{tx.Jobs_Picker_OnlyPossible}}</button>
+          </div>
+          <sc-for list="{{popRows}}" as="o" hint-placeholder-count="5">
+            <button type="button" role="option" aria-selected="{{o.sel}}" aria-disabled="{{o.dis}}" onClick="{{o.pick}}" style="{{o.style}}">
+              <div style="display: flex; flex-direction: column; min-width: 0; flex: 1 1 0; align-items: flex-start;">
+                <span style="font-weight: 600; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: {{o.color}};">{{o.primary}}</span>
+                <span style="font-size: 12px; color: {{t.muted}}; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{o.secondary}}</span>
+              </div>
+              <span style="display: {{o.tagD}}; padding: 1px 8px; border-radius: 999px; border: 1px solid {{t.border2}}; font-size: 11px; color: {{t.muted}}; white-space: nowrap;">{{o.tag}}</span>
+              <span style="display: {{o.kmD}}; font-family: 'Barlow Condensed', sans-serif; font-size: 17px; font-weight: 600; font-variant-numeric: tabular-nums; color: {{t.muted}}; white-space: nowrap;">{{o.km}}</span>
+              <span style="display: {{o.checkD}}; color: {{t.accentText}};"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg></span>
+            </button>
+          </sc-for>
+          <div style="display: {{pop.emptyD}}; padding: 16px 12px; text-align: center; color: {{t.muted}};">{{pop.empty}}</div>
+        </div>
+
+        <!-- Toast -->
+        <div role="status" aria-live="polite" style="display: {{toast.d}}; position: absolute; left: 50%; bottom: 20px; transform: translateX(-50%); align-items: center; gap: 12px; padding: 10px 16px; border-radius: 12px; background: {{t.panel}}; border: 1px solid {{t.line}}; box-shadow: {{t.shadow}}; z-index: 6;">
+          <span style="color: {{t.success}};"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg></span>
+          <span>{{toast.text}}</span>
+          <button type="button" style="{{toast.btn}}">{{toast.action}}</button>
+        </div>
+      </main>
+
+      <footer style="flex: 0 0 36px; box-sizing: border-box; padding: 0 20px; display: flex; align-items: center; gap: 16px; border-top: 1px solid {{t.line}}; font-size: 12px; color: {{t.muted}};">
+        <span>{{tx.Shell_SafetyNote}}</span>
+        <div style="flex-grow: 1;"></div>
+        <span style="display: flex; align-items: center; gap: 6px; white-space: nowrap;"><span style="{{kbd}}">Ctrl+R</span> {{tx.Shell_HintReview}}</span>
+      </footer>
+    </div>
+  </div>
+  <div role="group" aria-label="{{tb.label}}" style="flex: 0 0 32px; box-sizing: border-box; padding: 0 12px; display: flex; align-items: center; gap: 8px; border-top: 1px dashed {{t.line}}; background: {{t.tool}}; font-size: 12px; color: {{t.muted}}; overflow: hidden;">
+    <span style="white-space: nowrap;">{{tb.label}}</span>
+    <div style="flex-grow: 1;"></div>
+    <sc-for list="{{variants}}" as="v" hint-placeholder-count="6">
+      <button type="button" onClick="{{v.pick}}" aria-pressed="{{v.pressed}}" style="{{v.style}}">{{v.label}}</button>
+    </sc-for>
+    <button type="button" onClick="{{toggleTheme}}" style="{{tb.btn}}">{{tb.themeBtn}}</button>
+    <button type="button" onClick="{{toggleLang}}" style="{{tb.btn}}">{{tb.langBtn}}</button>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":true},"$preview":{"width":1280,"height":800}}'>
+const STR = {
+ "pt": {
+  "Nav_Label": "Módulos",
+  "Module_jobs": "Fretes",
+  "Module_fleet": "Frota",
+  "Module_profile": "Perfil",
+  "Module_company": "Empresa",
+  "Module_map": "Mapa",
+  "Nav_Settings": "Configurações",
+  "Nav_Settings_Short": "Config.",
+  "SessionBar_Label": "Sessão",
+  "SessionBar_Profile": "Perfil",
+  "SessionBar_Save": "Save",
+  "SessionBar_ChangeHint": "Trocar de save…",
+  "SessionBar_ProfileAutomation": "Perfil: {0}. Trocar de save",
+  "SessionBar_SaveAutomation": "Save: {0}. Trocar de save",
+  "Game_Ets2": "Euro Truck Simulator 2",
+  "Game_Ets2_Short": "ETS2",
+  "SessionBar_GameClosed": "Jogo fechado",
+  "SessionBar_Review": "Revisar ({0})",
+  "SessionBar_ReviewNone": "Sem mudanças",
+  "SessionBar_ReviewHint": "Revisar mudanças (Ctrl+R)",
+  "SessionBar_ReviewAutomation": "Revisar mudanças: {0}",
+  "SessionBar_ReviewAutomationNone": "Revisar mudanças: nenhuma pendente",
+  "Shell_Pending_One": "1 mudança pendente",
+  "Shell_Pending_Other": "{0} mudanças pendentes",
+  "Shell_SafetyNote": "Nada é gravado sem revisão. Um backup é criado antes.",
+  "Shell_HintReview": "Revisar",
+  "Review_Discard": "Descartar",
+  "Review_DiscardItem_Aria": "Descartar mudança: {0}",
+  "Toast_Discarded": "Mudança descartada.",
+  "Toast_Undo": "Desfazer",
+  "Error_Title_Edit": "Não foi possível adicionar a mudança",
+  "Common_Close": "Fechar",
+  "Action_ChooseSave": "Escolher outro save",
+  "Format_Km": "{0:N0} km",
+  "Jobs_List_Title": "Cidades de saída",
+  "Jobs_List_SearchLabel": "Buscar cidade de saída",
+  "Jobs_List_Search": "Buscar cidade…",
+  "Jobs_List_Count_One": "1 cidade de saída",
+  "Jobs_List_Count_Other": "{0} cidades de saída",
+  "Jobs_Companies_One": "1 empresa",
+  "Jobs_Companies_Other": "{0} empresas",
+  "Jobs_Slots_Zero": "Sem vagas livres",
+  "Jobs_Slots_One": "1 vaga livre",
+  "Jobs_Slots_Other": "{0} vagas livres",
+  "Jobs_Offers_One": "1 oferta",
+  "Jobs_Offers_Other": "{0} ofertas",
+  "Jobs_Pending_One": "1 pendente",
+  "Jobs_Pending_Other": "{0} pendentes",
+  "Jobs_Empty_Title": "Nenhuma cidade com vaga ou oferta",
+  "Jobs_Empty_Body": "Uma cidade só aparece aqui se uma empresa dela tiver uma vaga livre ou uma oferta para substituir e enviar uma carga que o app já viu num frete deste save.",
+  "Jobs_Empty_Tip": "Abra o mercado de fretes de algumas empresas no jogo, salve e abra o save de novo.",
+  "Jobs_Search_NoResult_Title": "Nenhuma cidade encontrada",
+  "Jobs_Search_NoResult_Body": "Nada para “{0}”. Confira o nome ou limpe a busca.",
+  "Jobs_Search_Clear": "Limpar busca",
+  "Jobs_Form_Label": "Novo frete",
+  "Jobs_Step_FromCity": "Cidade de saída",
+  "Jobs_Step_ToCity": "Cidade de destino",
+  "Jobs_Step_FromCompany": "Empresa de saída",
+  "Jobs_Step_Cargo": "Carga",
+  "Jobs_Step_ToCompany": "Empresa de chegada",
+  "Jobs_Step_Choose": "Escolher…",
+  "Jobs_FromCity_Placeholder": "Escolha na lista",
+  "Jobs_ToCity_Placeholder": "Escolher cidade…",
+  "Jobs_Chip_FromHint": "Escolha a cidade de saída na lista à esquerda",
+  "Jobs_Chip_FromAria": "Cidade de saída: {0}. Mude na lista",
+  "Jobs_Chip_ToAria": "Cidade de destino: {0}. Mudar",
+  "Jobs_Swap": "Trocar saída e destino",
+  "Jobs_Hint_NeedCities": "Escolha as duas cidades primeiro",
+  "Jobs_Hint_NeedFromCompany": "Escolha a empresa de saída primeiro",
+  "Jobs_Hint_NeedCargo": "Escolha a carga primeiro",
+  "Jobs_Hint_OnlyOption": "Única opção, já escolhida",
+  "Jobs_Hint_Options_One": "1 opção",
+  "Jobs_Hint_Options_Other": "{0} opções",
+  "Jobs_Hint_Locked": "Fixa na edição",
+  "Jobs_Mode_Title": "Onde entra o frete",
+  "Jobs_Mode_Free": "Usar vaga livre",
+  "Jobs_Mode_Replace": "Substituir uma oferta",
+  "Jobs_Mode_Help": "Substituir troca uma oferta atual da empresa: a revisão mostra antes → depois.",
+  "Jobs_Mode_NoFree": "Sem vaga livre nesta empresa. Substitua uma das ofertas atuais.",
+  "Jobs_Mode_NoOffers": "Esta empresa não tem ofertas para substituir. Use a vaga livre.",
+  "Jobs_Mode_Locked": "Fixo na edição: para mudar, descarte esta mudança e crie outra.",
+  "Jobs_Step_Offer": "Oferta a substituir",
+  "Jobs_Offer_Meta": "{0} · {1} · {2}",
+  "Jobs_Offer_Expires": "expira em {0}",
+  "Jobs_Picker_SearchCity": "Buscar cidade…",
+  "Jobs_Picker_SearchCompany": "Buscar empresa…",
+  "Jobs_Picker_SearchCargo": "Buscar carga…",
+  "Jobs_Picker_SearchOffer": "Buscar oferta…",
+  "Jobs_Picker_Count_One": "1 opção",
+  "Jobs_Picker_Count_Other": "{0} opções",
+  "Jobs_Picker_OnlyPossible": "Só combinações possíveis",
+  "Jobs_Picker_SameCity": "Já é a cidade de saída",
+  "Jobs_Picker_NoMatch": "Sem combinação",
+  "Jobs_Picker_NoItems": "Nada para escolher aqui.",
+  "Jobs_Map_Route": "Rota",
+  "Jobs_Map_Schematic": "Esquema da rota, sem posições reais",
+  "Jobs_Map_Label": "Rota de {0} até {1}",
+  "Jobs_Map_Empty_Aria": "Mapa da rota: escolha as cidades",
+  "Jobs_Map_PickFrom": "Escolha a cidade de saída na lista",
+  "Jobs_Map_PickTo": "Escolha a cidade de destino",
+  "Jobs_Field_Distance": "Distância",
+  "Jobs_Distance_FromSave": "Conhecida: vem de ofertas dos seus saves",
+  "Jobs_Distance_Estimated": "Estimada",
+  "Jobs_Distance_EstimatedShort": "estimada",
+  "Jobs_Distance_Estimated_Help": "É uma estimativa do app: seus saves não trazem esta rota. O jogo recalcula a rota no GPS.",
+  "Jobs_Distance_Pending": "Escolha as duas cidades",
+  "Jobs_Field_Expiration": "Expira em",
+  "Jobs_Expiration_Help": "Tempo de jogo, a partir do horário do save.",
+  "Format_Hours": "{0} h",
+  "Format_Days": "{0} d",
+  "Format_KmApprox": "≈ {0:N0} km",
+  "Jobs_Field_Units": "Unidades",
+  "Jobs_Units_Help": "Definidas pelo reboque",
+  "Jobs_Field_Trailer": "Reboque",
+  "Jobs_Trailer_Help": "Copiado de um frete deste save com a mesma carga",
+  "Jobs_Add": "Adicionar à revisão",
+  "Jobs_Update": "Atualizar na revisão",
+  "Jobs_Missing": "Falta escolher: {0}",
+  "Jobs_Missing_FromCity": "cidade de saída",
+  "Jobs_Missing_ToCity": "cidade de destino",
+  "Jobs_Missing_FromCompany": "empresa de saída",
+  "Jobs_Missing_Cargo": "carga",
+  "Jobs_Missing_Offer": "oferta a substituir",
+  "Jobs_Missing_ToCompany": "empresa de chegada",
+  "Jobs_Ready": "Pronto. Nada é gravado agora: o frete vai para a revisão.",
+  "Jobs_Added_Toast": "Frete adicionado à revisão.",
+  "Jobs_Added_View": "Ver revisão",
+  "Jobs_Updated_Toast": "Mudança atualizada na revisão.",
+  "Jobs_Notice_Cleared": "Limpamos {0}: a nova escolha muda as opções.",
+  "Jobs_Notice_Replaced": "{0}: só restou uma opção, então ela foi escolhida.",
+  "Jobs_Notice_SameCity": "Limpamos a cidade de destino: ela não pode ser igual à cidade de saída.",
+  "Jobs_Notice_Close": "Fechar aviso",
+  "Jobs_Pending_Title": "Mudanças pendentes nesta cidade",
+  "Jobs_Pending_Edit": "Editar",
+  "Jobs_Pending_EditAria": "Editar mudança: {0}",
+  "Jobs_Pending_Mode_Free": "Vaga livre",
+  "Jobs_Pending_Mode_Replace": "Substitui oferta",
+  "Jobs_Editing_Title": "Editando uma mudança pendente",
+  "Jobs_Editing_Body": "A empresa e a vaga ficam as mesmas. Ao atualizar, ela substitui a anterior na revisão.",
+  "Jobs_CancelEdit": "Cancelar edição",
+  "Jobs_NoMatch_Title": "Nenhuma combinação possível",
+  "Jobs_NoMatch_Body": "Nenhuma empresa de {0} com vaga livre envia uma carga que alguma empresa de {1} aceite. Troque uma das cidades.",
+  "Jobs_NoMatch_CatalogNote": "Sem a pasta do jogo, valem só as regras de carga vistas no save.",
+  "Jobs_NoMatch_ChangeTo": "Trocar cidade de destino",
+  "Jobs_NoMatch_ChangeFrom": "Trocar cidade de saída",
+  "Jobs_NoSlots_Title": "Sem vaga livre nem oferta em {0}",
+  "Jobs_NoSlots_Body": "Todas as vagas e ofertas de {0} já têm uma mudança pendente. Edite ou descarte uma delas para liberar.",
+  "Jobs_NoCatalog_Title": "Pasta do {0} não encontrada",
+  "Jobs_NoCatalog_Body": "Mostramos os nomes como estão no save e só as regras de carga que ele revela. Pode haver menos opções.",
+  "Jobs_NoCatalog_Action": "Abrir Configurações",
+  "Jobs_Cloud_Chip": "Steam Cloud",
+  "Jobs_Cloud_Title": "Este perfil usa Steam Cloud",
+  "Jobs_Cloud_Body": "A nuvem pode trazer de volta um save antigo ou esconder saves novos. Ao aplicar, você escolhe como gravar.",
+  "Jobs_Cloud_Dismiss": "Entendi",
+  "Jobs_Error_NoFreeSlot": "Esta empresa não tem mais vaga livre: outra mudança pendente já usa a vaga. Escolha uma oferta para substituir, edite ou descarte essa mudança, ou escolha outra empresa de saída.",
+  "Jobs_Error_OfferMissing": "A oferta que você ia substituir não existe mais ou já tem outra mudança pendente. Escolha outra oferta ou use uma vaga livre.",
+  "Jobs_Error_CargoNotShipped": "A empresa de saída não envia esta carga. Escolha outra carga ou outra empresa de saída.",
+  "Jobs_Error_CargoNotAccepted": "A empresa de chegada não recebe esta carga. Escolha outra empresa de chegada ou outra carga.",
+  "Jobs_Error_NoTrailer": "Este save não tem nenhum frete com esta carga para copiar o reboque. Escolha outra carga.",
+  "Jobs_Error_OriginMissing": "A empresa de saída não existe mais neste save. Escolha outra empresa de saída.",
+  "Jobs_Error_TargetMissing": "A empresa de chegada não existe neste save. Escolha outra empresa de chegada ou outra cidade de destino.",
+  "Jobs_Error_SameCity": "A cidade de saída e a de destino são iguais. Escolha outra cidade de destino.",
+  "Jobs_Error_ExpirationInvalid": "O prazo escolhido não é válido. Escolha 24 h, 48 h, 72 h ou 7 d.",
+  "Jobs_Error_NoGameTime": "Não encontramos a data do jogo neste save, então não dá para calcular quando o frete expira. Abra o save de novo; se continuar, escolha outro save.",
+  "Jobs_Change_Title": "Frete {0} → {1}",
+  "Jobs_Field_Origin": "Origem",
+  "Jobs_Field_Destination": "Destino",
+  "Jobs_Field_Cargo": "Carga"
+ },
+ "en": {
+  "Nav_Label": "Modules",
+  "Module_jobs": "Jobs",
+  "Module_fleet": "Fleet",
+  "Module_profile": "Profile",
+  "Module_company": "Company",
+  "Module_map": "Map",
+  "Nav_Settings": "Settings",
+  "Nav_Settings_Short": "Settings",
+  "SessionBar_Label": "Session",
+  "SessionBar_Profile": "Profile",
+  "SessionBar_Save": "Save",
+  "SessionBar_ChangeHint": "Change save…",
+  "SessionBar_ProfileAutomation": "Profile: {0}. Change save",
+  "SessionBar_SaveAutomation": "Save: {0}. Change save",
+  "Game_Ets2": "Euro Truck Simulator 2",
+  "Game_Ets2_Short": "ETS2",
+  "SessionBar_GameClosed": "Game closed",
+  "SessionBar_Review": "Review ({0})",
+  "SessionBar_ReviewNone": "No changes",
+  "SessionBar_ReviewHint": "Review changes (Ctrl+R)",
+  "SessionBar_ReviewAutomation": "Review changes: {0}",
+  "SessionBar_ReviewAutomationNone": "Review changes: none pending",
+  "Shell_Pending_One": "1 pending change",
+  "Shell_Pending_Other": "{0} pending changes",
+  "Shell_SafetyNote": "Nothing is saved without review. A backup is created first.",
+  "Shell_HintReview": "Review",
+  "Review_Discard": "Discard",
+  "Review_DiscardItem_Aria": "Discard change: {0}",
+  "Toast_Discarded": "Change discarded.",
+  "Toast_Undo": "Undo",
+  "Error_Title_Edit": "Couldn't add the change",
+  "Common_Close": "Close",
+  "Action_ChooseSave": "Choose another save",
+  "Format_Km": "{0:N0} km",
+  "Jobs_List_Title": "Departure cities",
+  "Jobs_List_SearchLabel": "Search departure city",
+  "Jobs_List_Search": "Search city…",
+  "Jobs_List_Count_One": "1 departure city",
+  "Jobs_List_Count_Other": "{0} departure cities",
+  "Jobs_Companies_One": "1 company",
+  "Jobs_Companies_Other": "{0} companies",
+  "Jobs_Slots_Zero": "No free slots",
+  "Jobs_Slots_One": "1 free slot",
+  "Jobs_Slots_Other": "{0} free slots",
+  "Jobs_Offers_One": "1 offer",
+  "Jobs_Offers_Other": "{0} offers",
+  "Jobs_Pending_One": "1 pending",
+  "Jobs_Pending_Other": "{0} pending",
+  "Jobs_Empty_Title": "No city with a slot or offer",
+  "Jobs_Empty_Body": "A city only shows up here if one of its companies has a free slot or an offer to replace and ships a cargo the app has already seen in a job in this save.",
+  "Jobs_Empty_Tip": "Open the freight market of a few companies in the game, save and open the save again.",
+  "Jobs_Search_NoResult_Title": "No city found",
+  "Jobs_Search_NoResult_Body": "Nothing for “{0}”. Check the name or clear the search.",
+  "Jobs_Search_Clear": "Clear search",
+  "Jobs_Form_Label": "New job",
+  "Jobs_Step_FromCity": "Departure city",
+  "Jobs_Step_ToCity": "Destination city",
+  "Jobs_Step_FromCompany": "Departure company",
+  "Jobs_Step_Cargo": "Cargo",
+  "Jobs_Step_ToCompany": "Arrival company",
+  "Jobs_Step_Choose": "Choose…",
+  "Jobs_FromCity_Placeholder": "Choose from the list",
+  "Jobs_ToCity_Placeholder": "Choose city…",
+  "Jobs_Chip_FromHint": "Choose the departure city in the list on the left",
+  "Jobs_Chip_FromAria": "Departure city: {0}. Change it in the list",
+  "Jobs_Chip_ToAria": "Destination city: {0}. Change",
+  "Jobs_Swap": "Swap departure and destination",
+  "Jobs_Hint_NeedCities": "Choose both cities first",
+  "Jobs_Hint_NeedFromCompany": "Choose the departure company first",
+  "Jobs_Hint_NeedCargo": "Choose the cargo first",
+  "Jobs_Hint_OnlyOption": "Only option, already chosen",
+  "Jobs_Hint_Options_One": "1 option",
+  "Jobs_Hint_Options_Other": "{0} options",
+  "Jobs_Hint_Locked": "Locked while editing",
+  "Jobs_Mode_Title": "Where the job goes",
+  "Jobs_Mode_Free": "Use a free slot",
+  "Jobs_Mode_Replace": "Replace an offer",
+  "Jobs_Mode_Help": "Replacing swaps one of the company's current offers: the review shows before → after.",
+  "Jobs_Mode_NoFree": "No free slot in this company. Replace one of the current offers.",
+  "Jobs_Mode_NoOffers": "This company has no offers to replace. Use the free slot.",
+  "Jobs_Mode_Locked": "Locked while editing: to change it, discard this change and create another.",
+  "Jobs_Step_Offer": "Offer to replace",
+  "Jobs_Offer_Meta": "{0} · {1} · {2}",
+  "Jobs_Offer_Expires": "expires in {0}",
+  "Jobs_Picker_SearchCity": "Search city…",
+  "Jobs_Picker_SearchCompany": "Search company…",
+  "Jobs_Picker_SearchCargo": "Search cargo…",
+  "Jobs_Picker_SearchOffer": "Search offer…",
+  "Jobs_Picker_Count_One": "1 option",
+  "Jobs_Picker_Count_Other": "{0} options",
+  "Jobs_Picker_OnlyPossible": "Only possible matches",
+  "Jobs_Picker_SameCity": "Already the departure city",
+  "Jobs_Picker_NoMatch": "No match",
+  "Jobs_Picker_NoItems": "Nothing to choose here.",
+  "Jobs_Map_Route": "Route",
+  "Jobs_Map_Schematic": "Route sketch, without real positions",
+  "Jobs_Map_Label": "Route from {0} to {1}",
+  "Jobs_Map_Empty_Aria": "Route map: choose the cities",
+  "Jobs_Map_PickFrom": "Choose the departure city in the list",
+  "Jobs_Map_PickTo": "Choose the destination city",
+  "Jobs_Field_Distance": "Distance",
+  "Jobs_Distance_FromSave": "Known: from offers in your saves",
+  "Jobs_Distance_Estimated": "Estimated",
+  "Jobs_Distance_EstimatedShort": "estimated",
+  "Jobs_Distance_Estimated_Help": "This is the app's estimate: your saves don't have this route. The game recalculates the route on the GPS.",
+  "Jobs_Distance_Pending": "Choose both cities",
+  "Jobs_Field_Expiration": "Expires in",
+  "Jobs_Expiration_Help": "Game time, counted from the save's clock.",
+  "Format_Hours": "{0} h",
+  "Format_Days": "{0} d",
+  "Format_KmApprox": "≈ {0:N0} km",
+  "Jobs_Field_Units": "Units",
+  "Jobs_Units_Help": "Set by the trailer",
+  "Jobs_Field_Trailer": "Trailer",
+  "Jobs_Trailer_Help": "Copied from a job in this save with the same cargo",
+  "Jobs_Add": "Add to review",
+  "Jobs_Update": "Update in review",
+  "Jobs_Missing": "Still to choose: {0}",
+  "Jobs_Missing_FromCity": "departure city",
+  "Jobs_Missing_ToCity": "destination city",
+  "Jobs_Missing_FromCompany": "departure company",
+  "Jobs_Missing_Cargo": "cargo",
+  "Jobs_Missing_Offer": "offer to replace",
+  "Jobs_Missing_ToCompany": "arrival company",
+  "Jobs_Ready": "Ready. Nothing is written now: the job goes to review.",
+  "Jobs_Added_Toast": "Job added to review.",
+  "Jobs_Added_View": "View review",
+  "Jobs_Updated_Toast": "Change updated in review.",
+  "Jobs_Notice_Cleared": "Cleared {0}: the new choice changes the options.",
+  "Jobs_Notice_Replaced": "{0}: only one option was left, so it was chosen.",
+  "Jobs_Notice_SameCity": "Cleared the destination city: it can't be the same as the departure city.",
+  "Jobs_Notice_Close": "Dismiss notice",
+  "Jobs_Pending_Title": "Pending changes in this city",
+  "Jobs_Pending_Edit": "Edit",
+  "Jobs_Pending_EditAria": "Edit change: {0}",
+  "Jobs_Pending_Mode_Free": "Free slot",
+  "Jobs_Pending_Mode_Replace": "Replaces offer",
+  "Jobs_Editing_Title": "Editing a pending change",
+  "Jobs_Editing_Body": "The company and slot stay the same. When you update, it replaces the previous one in review.",
+  "Jobs_CancelEdit": "Cancel editing",
+  "Jobs_NoMatch_Title": "No possible match",
+  "Jobs_NoMatch_Body": "No company in {0} with a free slot ships a cargo that a company in {1} accepts. Change one of the cities.",
+  "Jobs_NoMatch_CatalogNote": "Without the game folder, only the cargo rules seen in the save apply.",
+  "Jobs_NoMatch_ChangeTo": "Change destination city",
+  "Jobs_NoMatch_ChangeFrom": "Change departure city",
+  "Jobs_NoSlots_Title": "No free slot or offer in {0}",
+  "Jobs_NoSlots_Body": "Every slot and offer in {0} already has a pending change. Edit or discard one of them to free it.",
+  "Jobs_NoCatalog_Title": "{0} folder not found",
+  "Jobs_NoCatalog_Body": "We show names as they appear in the save and only the cargo rules it reveals. There may be fewer options.",
+  "Jobs_NoCatalog_Action": "Open Settings",
+  "Jobs_Cloud_Chip": "Steam Cloud",
+  "Jobs_Cloud_Title": "This profile uses Steam Cloud",
+  "Jobs_Cloud_Body": "The cloud may bring back an older save or hide new ones. When you apply, you choose how to write.",
+  "Jobs_Cloud_Dismiss": "Got it",
+  "Jobs_Error_NoFreeSlot": "This company has no free slot left: another pending change already uses it. Choose an offer to replace, edit or discard that change, or choose another departure company.",
+  "Jobs_Error_OfferMissing": "The offer you were going to replace is gone or already has another pending change. Choose another offer or use a free slot.",
+  "Jobs_Error_CargoNotShipped": "The departure company doesn't ship this cargo. Choose another cargo or another departure company.",
+  "Jobs_Error_CargoNotAccepted": "The arrival company doesn't accept this cargo. Choose another arrival company or another cargo.",
+  "Jobs_Error_NoTrailer": "This save has no job with this cargo to copy the trailer from. Choose another cargo.",
+  "Jobs_Error_OriginMissing": "The departure company is no longer in this save. Choose another departure company.",
+  "Jobs_Error_TargetMissing": "The arrival company isn't in this save. Choose another arrival company or another destination city.",
+  "Jobs_Error_SameCity": "The departure and destination cities are the same. Choose another destination city.",
+  "Jobs_Error_ExpirationInvalid": "The chosen time limit isn't valid. Choose 24 h, 48 h, 72 h or 7 d.",
+  "Jobs_Error_NoGameTime": "We couldn't find the game date in this save, so we can't work out when the job expires. Open the save again; if it keeps happening, choose another save.",
+  "Jobs_Change_Title": "Job {0} → {1}",
+  "Jobs_Field_Origin": "Origin",
+  "Jobs_Field_Destination": "Destination",
+  "Jobs_Field_Cargo": "Cargo"
+ }
+};
+
+const TH = {
+  dark:  { bg:'#121417', side:'#0c0e10', panel:'#1a1d21', line:'#2a2f35', text:'#eef0f2', muted:'#9aa3ad', accent:'#f5a524', accentText:'#f5a524', sel:'#2a2414', map:'#101316', grid:'#1a1f24', routeGlow:'rgba(245,165,36,0.18)', overlay:'rgba(18,20,23,0.88)', danger:'#f87171', onDanger:'#1a0606', dangerBg:'rgba(248,113,113,0.10)', success:'#4ade80', onAccent:'#1a1206', border2:'#66717d', tool:'#0c0e10', shadow:'0 18px 48px rgba(0,0,0,0.55)', hover:'#22262b' },
+  light: { bg:'#f4f2ee', side:'#ebe7df', panel:'#ffffff', line:'#d9d3c7', text:'#1b1d20', muted:'#5f6670', accent:'#b86e00', accentText:'#8a5200', sel:'#fbecd2', map:'#efebe3', grid:'#e2dccf', routeGlow:'rgba(184,110,0,0.16)', overlay:'rgba(255,255,255,0.92)', danger:'#b42318', onDanger:'#ffffff', dangerBg:'rgba(180,35,24,0.07)', success:'#0f6b33', onAccent:'#1a1206', border2:'#857e6f', tool:'#e3ded3', shadow:'0 18px 48px rgba(27,29,32,0.25)', hover:'#f0ece4' }
+};
+const ICONS = {
+  jobs: 'M4 7.5 12 3l8 4.5v9L12 21l-8-4.5z M4 7.5l8 4.5 8-4.5 M12 12v9',
+  fleet: 'M3 7h11v9H3z M14 10h4l3 3v3h-7 M5 17a2 2 0 1 0 4 0 2 2 0 1 0-4 0 M15 17a2 2 0 1 0 4 0 2 2 0 1 0-4 0',
+  profile: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8z M4 21c0-4 3.5-6 8-6s8 2 8 6',
+  company: 'M4 21V5l8-2v18 M12 8h8v13 M4 21h16 M7 9h2 M7 13h2 M7 17h2 M15 12h2 M15 16h2',
+  map: 'M9 4 3 6v14l6-2 6 2 6-2V4l-6 2z M9 4v14 M15 6v14',
+  settings: 'M4 7h10 M18 7h2 M4 17h2 M10 17h10 M16 5v4 M8 15v4',
+  search: 'M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14z M20 20l-4-4',
+  pin: 'M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z M12 12a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z'
+};
+function numCircle(done) { const c = done ? 'var(--accent-text)' : 'var(--muted)'; return `display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;border:1px solid ${done ? 'var(--accent-text)' : 'var(--border2)'};color:${c};font-size:10px;font-weight:700;letter-spacing:0;`; }
+function fmt(s, ...a) { return String(s).replace(/\{(\d)(?::[A-Z0-9]+)?\}/g, (m, i) => a[i]); }
+
+/* ---------- Dados de exemplo (anonimizados; nomes reais vêm da localização do jogo) ---------- */
+const CITIES = {
+  sofia:{pt:'Sófia',en:'Sofia',h:'Sofia'}, beograd:{pt:'Belgrado',en:'Belgrade',h:'Beograd'}, istanbul:{pt:'Istambul',en:'Istanbul',h:'Istanbul'},
+  wien:{pt:'Viena',en:'Vienna',h:'Wien'}, praha:{pt:'Praga',en:'Prague',h:'Praha'}, calais:{pt:'Calais',en:'Calais',h:'Calais'},
+  london:{pt:'Londres',en:'London',h:'London'}, lyon:{pt:'Lyon',en:'Lyon',h:'Lyon'}, milano:{pt:'Milão',en:'Milan',h:'Milano'},
+  berlin:{pt:'Berlim',en:'Berlin',h:'Berlin'}, warszawa:{pt:'Varsóvia',en:'Warsaw',h:'Warszawa'}, graz:{pt:'Graz',en:'Graz',h:'Graz'},
+  roma:{pt:'Roma',en:'Rome',h:'Roma'}, hamburg:{pt:'Hamburgo',en:'Hamburg',h:'Hamburg'}
+};
+// só para a estimativa do exemplo (o app real decide como estimar); não aparece no mapa
+const LL = { sofia:[42.70,23.32], beograd:[44.79,20.46], istanbul:[41.01,28.98], wien:[48.21,16.37], praha:[50.08,14.42], calais:[50.95,1.86], london:[51.51,-0.13],
+  lyon:[45.76,4.84], milano:[45.46,9.19], berlin:[52.52,13.40], warszawa:[52.23,21.01], graz:[47.07,15.44], roma:[41.90,12.50], hamburg:[53.55,9.99] };
+const CO = { radus:{n:'Radus',h:'Radus'}, rock:{n:'Rock Eat',h:'Rock eat'}, tradeaux:{n:'Tradeaux',h:'Tradeaux'}, eurog:{n:'Eurogoodies',h:'Eurogoodies'},
+  lognstick:{n:'LogNStick',h:'Lognstick'}, quarry:{n:'Quarry',h:'Quarry'}, trameri:{n:'Trameri',h:'Trameri'}, fle:{n:'Fle',h:'Fle'}, posped:{n:'Posped',h:'Posped'} };
+const CARGOS = {
+  beams:{pt:'Vigas de concreto',en:'Concrete beams',h:'Concr beams2',tr:{pt:'Prancha',en:'Flatbed',h:'Scs flat b'},units:2},
+  machinery:{pt:'Maquinário',en:'Machinery',h:'Machinery',tr:{pt:'Rebaixado',en:'Lowboy',h:'Scs lowboy'},units:1},
+  electronics:{pt:'Eletrônicos',en:'Electronics',h:'Electronics',tr:{pt:'Baú',en:'Box trailer',h:'Scs box'},units:6},
+  wine:{pt:'Vinho',en:'Wine',h:'Wine',tr:{pt:'Tanque',en:'Tank',h:'Scs tank'},units:1},
+  fruit:{pt:'Frutas',en:'Fruit',h:'Fruit',tr:{pt:'Refrigerado',en:'Reefer',h:'Scs reefer'},units:18},
+  paper:{pt:'Papel',en:'Paper',h:'Paper',tr:{pt:'Baú',en:'Box trailer',h:'Scs box'},units:12}
+};
+const SEEN = ['beams','machinery','electronics'];   // regras vistas no save (usadas sem a pasta do jogo)
+const O = (dest, cargo, km, exp) => ({ dest, cargo, km, exp });   // oferta atual (substituível): destino, carga, km, horas restantes
+// slots = vagas livres (slot de oferta vazio); offers = ofertas atuais que podem ser substituídas
+const COMPANIES = [
+  { id:'radus@sofia', co:'radus', city:'sofia', slots:3, offers:[O('lognstick@istanbul','beams',569,12), O('tradeaux@beograd','machinery',394,10)], ships:['beams','machinery'], acc:['electronics','paper'] },
+  { id:'rock@sofia', co:'rock', city:'sofia', slots:1, offers:[O('tradeaux@beograd','fruit',394,8)], ships:['fruit'], acc:['machinery','wine'] },
+  { id:'tradeaux@beograd', co:'tradeaux', city:'beograd', slots:2, offers:[O('trameri@wien','machinery',489,6)], ships:['machinery','electronics'], acc:['beams','machinery','fruit','paper'] },
+  { id:'eurog@beograd', co:'eurog', city:'beograd', slots:2, offers:[], ships:['paper'], acc:['electronics','machinery','beams'] },
+  { id:'lognstick@istanbul', co:'lognstick', city:'istanbul', slots:2, offers:[O('tradeaux@beograd','beams',980,9)], ships:['beams'], acc:['beams','machinery','wine'] },
+  { id:'quarry@istanbul', co:'quarry', city:'istanbul', slots:1, offers:[], ships:['wine'], acc:['fruit'] },
+  { id:'trameri@wien', co:'trameri', city:'wien', slots:0, offers:[O('tradeaux@praha','machinery',332,12), O('tradeaux@praha','paper',332,7)], ships:['machinery','paper'], acc:['beams','electronics'] },
+  { id:'fle@wien', co:'fle', city:'wien', slots:1, offers:[], ships:['fruit'], acc:['wine'] },
+  { id:'tradeaux@praha', co:'tradeaux', city:'praha', slots:1, offers:[], ships:['electronics'], acc:['machinery','paper'] },
+  { id:'posped@praha', co:'posped', city:'praha', slots:2, offers:[O('tradeaux@beograd','paper',640,11)], ships:['paper','beams'], acc:['fruit','electronics'] },
+  { id:'fle@calais', co:'fle', city:'calais', slots:2, offers:[O('quarry@london','fruit',166,5), O('quarry@london','fruit',166,9)], ships:['fruit'], acc:['paper'] },
+  { id:'quarry@london', co:'quarry', city:'london', slots:3, offers:[], ships:['wine'], acc:['fruit','paper'] },
+  { id:'fle@lyon', co:'fle', city:'lyon', slots:1, offers:[O('quarry@milano','wine',441,11)], ships:['wine','fruit'], acc:['electronics'] },
+  { id:'quarry@milano', co:'quarry', city:'milano', slots:2, offers:[], ships:['wine'], acc:['fruit','wine'] },
+  { id:'posped@berlin', co:'posped', city:'berlin', slots:2, offers:[O('eurog@warszawa','paper',574,14)], ships:['paper','electronics'], acc:['machinery'] },
+  { id:'eurog@warszawa', co:'eurog', city:'warszawa', slots:0, offers:[], ships:['electronics'], acc:['paper','machinery'] },
+  { id:'rock@graz', co:'rock', city:'graz', slots:0, offers:[], ships:[], acc:['electronics','beams'] },
+  { id:'lognstick@roma', co:'lognstick', city:'roma', slots:0, offers:[], ships:[], acc:['wine','paper','fruit'] },
+  { id:'posped@hamburg', co:'posped', city:'hamburg', slots:0, offers:[], ships:[], acc:['machinery','beams'] }
+];
+COMPANIES.forEach(c => c.offers.forEach((o, i) => { o.id = c.id + '#' + i; o.comp = c.id; }));
+// distâncias conhecidas: tabela do app (shortest_distance_km de todas as ofertas dos saves do usuário, em cache)
+const DIST = { 'sofia|beograd':394, 'sofia|istanbul':569, 'wien|praha':332, 'calais|london':166, 'lyon|milano':441, 'berlin|warszawa':574, 'praha|berlin':350, 'beograd|wien':489, 'istanbul|beograd':980, 'praha|beograd':640 };
+function estimateKm(a, b) {   // estimativa do exemplo: linha reta × 1,25, arredondada a 5 km
+  const R = Math.PI / 180, [la1, lo1] = LL[a], [la2, lo2] = LL[b];
+  const h = Math.sin((la2 - la1) * R / 2) ** 2 + Math.cos(la1 * R) * Math.cos(la2 * R) * Math.sin((lo2 - lo1) * R / 2) ** 2;
+  return Math.round(2 * 6371 * Math.asin(Math.sqrt(h)) * 1.25 / 5) * 5;
+}
+const COMP = Object.fromEntries(COMPANIES.map(c => [c.id, c]));
+const OFFER = Object.fromEntries(COMPANIES.flatMap(c => c.offers.map(o => [o.id, o])));
+
+/* ---------- Modelo (estado do formulário + regras de dependência) ---------- */
+class Model {
+  constructor(flags) {
+    this.f = flags || {};
+    Object.assign(this, { from:null, to:null, comp:null, cargo:null, arr:null, mode:null, offer:null, exp:72, picker:null, only:false, editing:null,
+      notes:[], toast:null, err:null, cloudOk:false, q:'', auto:{}, errIdx:0 });
+    this.pending = (this.f.pending || []).map(p => ({ ...p }));
+  }
+  clone() { const m = Object.assign(Object.create(Model.prototype), this); m.pending = this.pending.map(p => ({ ...p })); m.notes = [...this.notes]; m.auto = { ...this.auto }; return m; }
+  snap() { return { comp:this.comp, cargo:this.cargo, arr:this.arr }; }
+  /* regras: sem a pasta do jogo valem só as vistas no save */
+  rule(list) { return this.f.catalog === false ? list.filter(x => SEEN.includes(x)) : list; }
+  ships(c) { return this.rule(c.ships); }
+  acc(c) { return this.rule(c.acc); }
+  at(city) { return COMPANIES.filter(c => c.city === city); }
+  accAt(city) { const s = new Set(); this.at(city).forEach(c => this.acc(c).forEach(x => s.add(x))); return s; }
+  /* vagas livres e ofertas substituíveis, descontando o que as pendências já usam (cada uma tem uma Key por slot) */
+  usedFree(c) { return this.pending.filter((p, i) => p.mode === 'free' && p.comp === c.id && i !== this.editing).length; }
+  free(c) { return this.f.noSlots ? 0 : Math.max(0, c.slots - this.usedFree(c)); }
+  offersOf(c) {
+    if (this.f.noOffers) return [];
+    const used = new Set(this.pending.filter((p, i) => p.mode === 'replace' && i !== this.editing).map(p => p.offer));
+    return c.offers.filter(o => !used.has(o.id));
+  }
+  usable(c) { return this.free(c) > 0 || this.offersOf(c).length > 0; }
+  pendIn(city) { return this.pending.map((p, i) => ({ ...p, i })).filter(p => COMP[p.comp].city === city); }
+  canShip(c, to) { const a = this.accAt(to); return this.ships(c).filter(x => a.has(x)); }
+  compOpts(from = this.from, to = this.to) { return !from || !to ? [] : this.at(from).filter(c => this.usable(c) && this.canShip(c, to).length).map(c => c.id); }
+  cargoOpts() { return this.comp && this.to ? this.canShip(COMP[this.comp], this.to) : []; }
+  arrOpts() { return this.cargo && this.to ? this.at(this.to).filter(c => this.acc(c).includes(this.cargo)).map(c => c.id) : []; }
+  cities() {
+    const out = [];
+    const ids = [...new Set(COMPANIES.map(c => c.city))];
+    ids.forEach(id => {
+      const cs = this.at(id), free = cs.reduce((n, c) => n + this.free(c), 0), offers = cs.reduce((n, c) => n + this.offersOf(c).length, 0), pend = this.pendIn(id).length;
+      if (free > 0 || offers > 0 || pend > 0) out.push({ id, companies: cs.filter(c => this.usable(c)).length, free, offers, pend });
+    });
+    return out;
+  }
+  /* distância: conhecida (tabela do app) ou estimada; nunca digitada pelo usuário */
+  distInfo(a, b) {
+    if (!a || !b) return null;
+    const k = DIST[a + '|' + b] ?? DIST[b + '|' + a];
+    return k != null ? { km: k, est: false } : { km: estimateKm(a, b), est: true };
+  }
+  missing() {
+    const m = [];
+    if (!this.from) m.push('from'); if (!this.to) m.push('to');
+    if (this.from && this.to) {
+      if (!this.comp) m.push('comp');
+      if (this.comp && this.mode === 'replace' && !this.offer) m.push('offer');
+      if (!this.cargo) m.push('cargo'); if (!this.arr) m.push('arr');
+    }
+    return m;
+  }
+  cascade(before) {
+    if (this.to && this.to === this.from) { this.to = null; this.notes.push({ k:'same' }); }
+    if (!this.from || !this.to) { this.comp = this.cargo = this.arr = null; }
+    else {
+      if (this.comp && !this.compOpts().includes(this.comp)) this.comp = null;
+      if (!this.comp) this.cargo = null; else if (this.cargo && !this.cargoOpts().includes(this.cargo)) this.cargo = null;
+      if (!this.cargo) this.arr = null; else if (this.arr && !this.arrOpts().includes(this.arr)) this.arr = null;
+      if (!this.comp) { const o = this.compOpts(); if (o.length === 1) { this.comp = o[0]; this.auto.comp = true; } }
+      if (this.comp && !this.cargo) { const o = this.cargoOpts(); if (o.length === 1) { this.cargo = o[0]; this.auto.cargo = true; } }
+      if (this.cargo && !this.arr) { const o = this.arrOpts(); if (o.length === 1) { this.arr = o[0]; this.auto.arr = true; } }
+    }
+    this.fixMode();
+    const cleared = [], replaced = [];
+    ['comp', 'cargo', 'arr'].forEach(f => { if (before[f] && before[f] !== this[f]) (this[f] ? replaced : cleared).push(f); });
+    if (cleared.length) this.notes.push({ k:'cleared', f:cleared });
+    if (replaced.length) this.notes.push({ k:'replaced', f:replaced });
+    ['comp', 'cargo', 'arr'].forEach(f => { if (!this[f]) this.auto[f] = false; });
+  }
+  /* modo da empresa de saída: vaga livre por padrão; sem vaga livre sugere substituir; sem ofertas só vaga livre */
+  fixMode() {
+    if (!this.comp) { this.mode = null; this.offer = null; return; }
+    const c = COMP[this.comp], fr = this.free(c) > 0, of = this.offersOf(c);
+    if (!this.mode || (this.mode === 'free' && !fr) || (this.mode === 'replace' && !of.length)) this.mode = fr ? 'free' : 'replace';
+    if (this.mode === 'free') this.offer = null;
+    else {
+      if (this.offer && !of.some(o => o.id === this.offer)) this.offer = null;
+      if (!this.offer && of.length === 1) { this.offer = of[0].id; this.auto.offer = true; }
+    }
+  }
+  setFrom(c) { const b = this.snap(); this.notes = []; this.err = null; this.from = c; this.picker = null; this.cascade(b); return this; }
+  setTo(c) { const b = this.snap(); this.notes = []; this.err = null; this.to = c; this.picker = null; this.cascade(b); return this; }
+  setComp(c) { const b = this.snap(); this.notes = []; this.err = null; this.comp = c; this.mode = null; this.offer = null; this.auto.comp = false; this.auto.offer = false; this.picker = null; this.cascade(b); return this; }
+  setMode(mo) { this.mode = mo; this.offer = null; this.auto.offer = false; this.err = null; this.picker = null; this.fixMode(); return this; }
+  setOffer(id) { this.offer = id; this.auto.offer = false; this.err = null; this.picker = null; return this; }
+  setCargo(c) { const b = this.snap(); this.notes = []; this.err = null; this.cargo = c; this.auto.cargo = false; this.picker = null; this.cascade(b); return this; }
+  setArr(c) { this.notes = []; this.err = null; this.arr = c; this.auto.arr = false; this.picker = null; return this; }
+  swap() { const a = this.from, b = this.to; this.notes = []; this.err = null; this.from = b; this.to = a; this.comp = this.cargo = this.arr = null; this.mode = this.offer = null; this.auto = {}; this.picker = null; return this; }
+  open(p) { this.picker = this.picker === p ? null : p; return this; }
+  /* editar = reenfileirar com a mesma Key: empresa, vaga/oferta e saída ficam fixas */
+  startEdit(i) {
+    const p = this.pending[i]; this.editing = i; this.notes = []; this.err = null; this.picker = null;
+    this.from = COMP[p.comp].city; this.to = COMP[p.arr].city; this.comp = p.comp; this.cargo = p.cargo; this.arr = p.arr; this.exp = p.exp;
+    this.mode = p.mode; this.offer = p.offer || null; this.auto = {};
+    return this;
+  }
+  cancelEdit() { this.editing = null; this.comp = this.cargo = this.arr = null; this.mode = this.offer = null; this.notes = []; return this; }
+  discard(i) { const r = this.pending.splice(i, 1)[0]; this.toast = { k:'discarded', undo:r }; this.editing = null; return this; }
+  add() {
+    if (this.missing().length) return this;
+    const d = this.distInfo(this.from, this.to);
+    const item = { comp:this.comp, cargo:this.cargo, arr:this.arr, mode:this.mode, offer:this.offer, km:d.km, est:d.est, exp:this.exp };
+    if (this.editing != null) { this.pending[this.editing] = item; this.toast = { k:'updated' }; } else { this.pending.push(item); this.toast = { k:'added' }; }
+    this.editing = null; this.comp = this.cargo = this.arr = null; this.mode = this.offer = null; this.auto = {}; this.notes = []; this.err = null;
+    return this;
+  }
+}
+const ERR_CODES = ['NoFreeSlot', 'OfferMissing', 'CargoNotShipped', 'CargoNotAccepted', 'NoTrailer', 'OriginMissing', 'TargetMissing', 'SameCity', 'ExpirationInvalid', 'NoGameTime'];
+
+/* ---------- Cena (preenchida por arquivo) ---------- */
+const SCENE = { flags:{"catalog": true, "cloud": false}, initial:0, errorCycle:false, presets:[
+  { id:"destino", pt:"Cidade de destino", en:"Destination city", go:(m)=>{ m.setFrom('sofia'); m.picker='to'; } },
+  { id:"iguais", pt:"Cidades iguais", en:"Same city", go:(m)=>{ m.setFrom('sofia').setTo('beograd'); m.setFrom('beograd'); } },
+  { id:"semcomb", pt:"Sem combinação", en:"No match", go:(m)=>{ m.setFrom('sofia').setTo('calais'); } },
+  { id:"soposs", pt:"Só possíveis", en:"Only possible", go:(m)=>{ m.setFrom('sofia'); m.picker='to'; m.only=true; } },
+  { id:"trocasaida", pt:"Trocar cidade de saída", en:"Change departure city", go:(m)=>{ m.setFrom('sofia').setTo('beograd').setComp('radus@sofia').setCargo('machinery').setArr('tradeaux@beograd'); m.setFrom('praha'); } },
+  { id:"trocaempresa", pt:"Trocar empresa de saída", en:"Change departure company", go:(m)=>{ m.setFrom('sofia').setTo('beograd').setComp('radus@sofia').setCargo('machinery').setArr('tradeaux@beograd'); m.setComp('rock@sofia'); } },
+  { id:"trocadestino", pt:"Trocar cidade de destino", en:"Change destination city", go:(m)=>{ m.setFrom('sofia').setTo('beograd').setComp('radus@sofia').setCargo('machinery').setArr('tradeaux@beograd'); m.setTo('wien'); } }
+] };
+
+function resolveTheme(c) {
+  const pref = c.state.pref || (c.props.dark === false ? 'light' : 'dark');
+  const sys = (typeof window !== 'undefined' && window.matchMedia) ? window.matchMedia('(prefers-color-scheme: dark)').matches : true;
+  const dark = pref === 'system' ? sys : pref === 'dark';
+  return { pref, dark, t: dark ? TH.dark : TH.light };
+}
+
+class Component extends DCLogic {
+  constructor(p) {
+    super(p);
+    const first = SCENE.presets[SCENE.initial || 0];
+    this.state = { pref: null, lang: 'pt', m: this.buildModel(first), active: first.id };
+  }
+  buildModel(preset) { const m = new Model({ ...SCENE.flags, ...(preset.flags || {}) }); preset.go(m); return m; }
+  renderVals() {
+    const { dark, t } = resolveTheme(this);
+    const lang = this.state.lang, tx = STR[lang], m = this.state.m, cul = lang === 'pt' ? 'pt-BR' : 'en-US';
+    const num = n => Number(n).toLocaleString(cul);
+    const set = (fn) => () => { const n = this.state.m.clone(); fn(n); this.setState({ m: n }); };
+    const cat = m.f.catalog !== false;
+    const nm = (kind, id) => { // nome do jogo: traduzido com catálogo, id legível sem ele
+      if (kind === 'city') return cat ? CITIES[id][lang] : CITIES[id].h;
+      if (kind === 'co') return cat ? CO[id].n : CO[id].h;
+      if (kind === 'cargo') return cat ? CARGOS[id][lang] : CARGOS[id].h;
+      if (kind === 'trailer') return cat ? CARGOS[id].tr[lang] : CARGOS[id].tr.h;
+    };
+    const coName = cid => nm('co', COMP[cid].co) + ' · ' + nm('city', COMP[cid].city);
+    const plural = (base, n) => (n === 0 && tx[base + '_Zero']) ? tx[base + '_Zero'] : (n === 1 ? tx[base + '_One'] : fmt(tx[base + '_Other'], num(n)));
+
+    /* --- shell --- */
+    const pend = m.pending.length;
+    const modIds = ['jobs', 'fleet', 'profile', 'company', 'map'];
+    const itemStyle = (active) => `width:60px;min-height:60px;border-radius:10px;border:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;background:${active ? t.panel : 'transparent'};color:${active ? t.text : t.muted};`;
+    const nav = modIds.map(id => ({ label: tx['Module_' + id], short: tx['Module_' + id].toUpperCase(), icon: ICONS[id], current: id === 'jobs' ? 'page' : 'false',
+      tip: tx['Module_' + id], bar: id === 'jobs' ? t.accent : 'transparent', style: itemStyle(id === 'jobs') }));
+    const navSet = { style: itemStyle(false), icon: ICONS.settings, short: tx.Nav_Settings_Short.toUpperCase() };
+    const pendText = pend === 1 ? tx.Shell_Pending_One : fmt(tx.Shell_Pending_Other, pend);
+    const bar = {
+      chip: `min-height:44px;padding:2px 10px 2px 12px;border-radius:10px;border:1px solid ${t.line};background:transparent;color:${t.text};display:flex;align-items:center;gap:8px;text-align:left;min-width:0;`,
+      profileAria: fmt(tx.SessionBar_ProfileAutomation, 'Demo A'), saveAria: fmt(tx.SessionBar_SaveAutomation, 'Save 4'),
+      cloudD: m.f.cloud ? 'inline-flex' : 'none',
+      reviewLabel: pend > 0 ? fmt(tx.SessionBar_Review, pend) : tx.SessionBar_ReviewNone,
+      reviewAria: pend > 0 ? fmt(tx.SessionBar_ReviewAutomation, pendText) : tx.SessionBar_ReviewAutomationNone,
+      reviewDisabled: pend > 0 ? 'false' : 'true',
+      reviewStyle: `display:inline-flex;align-items:center;min-height:44px;padding:0 20px;border-radius:10px;font-weight:700;letter-spacing:0.03em;white-space:nowrap;font-variant-numeric:tabular-nums;` +
+        (pend > 0 ? `border:none;background:${t.accent};color:${t.onAccent};` : `border:1px solid ${t.line};background:transparent;color:${t.muted};`)
+    };
+
+    const lock = m.editing != null;   // editando: empresa, vaga/oferta e cidade de saída ficam fixas (mesma Key)
+    /* --- lista de cidades de saída --- */
+    const q = m.f.query || '';
+    let cl = m.cities();
+    const total = cl.length;
+    const norm = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+    if (q) cl = cl.filter(c => norm(nm('city', c.id)).includes(norm(q)));
+    const cities = cl.map(c => {
+      const sel = m.from === c.id;
+      const parts = c.free === 0 ? [plural('Jobs_Slots', 0)] : [plural('Jobs_Companies', c.companies), plural('Jobs_Slots', c.free)];
+      if (c.offers > 0) parts.push(plural('Jobs_Offers', c.offers));
+      return { name: nm('city', c.id), meta: parts.join(' · '), sel: sel ? 'true' : 'false', pick: lock ? () => {} : set(n => n.setFrom(c.id)),
+        pendD: c.pend ? 'inline-flex' : 'none', pend: plural('Jobs_Pending', c.pend), nameColor: sel ? t.accentText : t.text,
+        style: `display:flex;flex-direction:column;align-items:flex-start;gap:3px;width:100%;min-height:64px;box-sizing:border-box;padding:10px 14px;border-radius:12px;border:1px solid ${sel ? t.accent : t.line};background:${sel ? t.sel : t.panel};color:${t.text};text-align:left;opacity:${lock ? 0.5 : (c.free === 0 ? 0.85 : 1)};` };
+    });
+    const emptyKind = cl.length === 0 && total > 0 ? 'query' : null;
+    const lay = { listPaneD: total === 0 ? 'none' : 'flex', formD: total === 0 ? 'none' : 'flex', emptyD: total === 0 ? 'flex' : 'none', emptyIcon: ICONS.search };
+    const list = { count: num(total), countAria: plural('Jobs_List_Count', total), q, listD: emptyKind ? 'none' : 'flex', emptyD: emptyKind ? 'flex' : 'none',
+      emptyTitle: emptyKind === 'query' ? tx.Jobs_Search_NoResult_Title : tx.Jobs_Empty_Title,
+      emptyBody: emptyKind === 'query' ? fmt(tx.Jobs_Search_NoResult_Body, q) : tx.Jobs_Empty_Body,
+      emptyTip: emptyKind === 'query' ? '' : tx.Jobs_Empty_Tip,
+      emptyAction: emptyKind === 'query' ? tx.Jobs_Search_Clear : tx.Action_ChooseSave,
+      emptyIcon: ICONS.search,
+      emptyBtn: `min-height:44px;padding:0 18px;border-radius:10px;border:1px solid ${t.border2};background:transparent;color:${t.text};font-weight:600;` };
+
+    /* --- linha das cidades --- */
+    const bothCities = m.from && m.to;
+    const row = {
+      from: m.from ? nm('city', m.from) : tx.Jobs_FromCity_Placeholder, fromColor: m.from ? t.text : t.muted,
+      fromAria: m.from ? fmt(tx.Jobs_Chip_FromAria, nm('city', m.from)) : tx.Jobs_FromCity_Placeholder,
+      fromStyle: `display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:1px;min-height:56px;padding:6px 14px;border-radius:10px;border:1px solid ${t.line};background:${t.panel};color:${t.text};text-align:left;min-width:0;opacity:${lock ? 0.6 : 1};`,
+      to: m.to ? nm('city', m.to) : tx.Jobs_ToCity_Placeholder, toColor: m.to ? t.text : t.muted,
+      toAria: m.to ? fmt(tx.Jobs_Chip_ToAria, nm('city', m.to)) : tx.Jobs_ToCity_Placeholder, toOpen: m.picker === 'to' ? 'true' : 'false',
+      toStyle: `display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:1px;min-height:56px;padding:6px 14px;border-radius:10px;border:1px solid ${m.picker === 'to' || m.to ? t.accentText : t.border2};background:${t.panel};color:${t.text};text-align:left;min-width:0;opacity:${m.from ? 1 : 0.5};`,
+      openTo: m.from ? set(n => n.open('to')) : () => {},
+      n1Style: numCircle(!!m.from), n2Style: numCircle(!!m.to),
+      swap: bothCities && !lock ? set(n => n.swap()) : () => {}, swapDis: bothCities && !lock ? 'false' : 'true',
+      swapStyle: `width:44px;height:44px;border-radius:10px;border:1px solid ${t.border2};background:transparent;color:${t.text};display:flex;align-items:center;justify-content:center;opacity:${bothCities && !lock ? 1 : 0.4};`
+    };
+
+    /* --- mapa --- */
+    const extras = (m.f.catalog === false ? 1 : 0) + (m.f.cloud && !m.cloudOk ? 1 : 0) + (m.editing != null ? 1 : 0) + (m.comp ? 1 : 0) + (!lock && m.from && m.pendIn(m.from).length ? 1 : 0) + (m.notes.length ? 1 : 0) + (m.err ? 1 : 0);
+    const H = extras >= 2 ? 128 : extras === 1 ? 150 : 184;
+    const ax = 150, bx = 620, ay = Math.round(H * 0.62), by = Math.round(H * 0.4);
+    const di = bothCities ? m.distInfo(m.from, m.to) : null;
+    let hint = '';
+    if (!m.from) hint = tx.Jobs_Map_PickFrom; else if (!m.to) hint = tx.Jobs_Map_PickTo;
+    const grid = []; for (let y = 40; y < H; y += 40) grid.push(`M0 ${y}H836`); for (let x = 60; x < 836; x += 100) grid.push(`M${x} 0V${H}`);
+    const chip = !bothCities ? '' : (m.arr && m.comp ? `${coName(m.comp)} → ${coName(m.arr)}` : `${nm('city', m.from)} → ${nm('city', m.to)}`);
+    const map = { h: H, grid: grid.join(''), ax, ay, bx, by, aly: ay + 30, bly: by + 30,
+      d: `M${ax} ${ay} Q${(ax + bx) / 2} ${Math.round(H * 0.05)} ${bx} ${by}`, dd: `M${ax} ${ay} Q${(ax + bx) / 2} ${Math.round(H * 0.05)} ${bx} ${by}`,
+      routeD: bothCities ? 'inline' : 'none', dashD: m.from && !m.to ? 'inline' : 'none', aD: m.from ? 'inline' : 'none',
+      aName: m.from ? nm('city', m.from) : '', bName: m.to ? nm('city', m.to) : '',
+      aria: bothCities ? fmt(tx.Jobs_Map_Label, nm('city', m.from), nm('city', m.to)) : tx.Jobs_Map_Empty_Aria,
+      chip, chipD: bothCities && H >= 184 ? 'flex' : 'none', hint, hintD: hint ? 'flex' : 'none',
+      kmD: bothCities ? 'flex' : 'none', km: di ? (di.est ? '≈ ' : '') + num(di.km) : '—', unit: di && di.est ? 'km · ' + tx.Jobs_Distance_EstimatedShort : 'km', kmColor: t.accentText };
+
+    /* --- pendentes da cidade --- */
+    const pc = m.from && !lock ? m.pendIn(m.from) : [];
+    const pendRows = pc.slice(0, 2).map(p => {
+      const title = `${coName(p.comp)} → ${coName(p.arr)}`;
+      const sub = `${nm('cargo', p.cargo)} · ${fmt(p.est ? tx.Format_KmApprox : tx.Format_Km, num(p.km))} · ${fmt(tx.Format_Hours, p.exp)} · ${p.mode === 'replace' ? tx.Jobs_Pending_Mode_Replace : tx.Jobs_Pending_Mode_Free}`;
+      const editing = m.editing === p.i;
+      return { title, sub, edit: set(n => n.startEdit(p.i)), discard: set(n => n.discard(p.i)), editAria: fmt(tx.Jobs_Pending_EditAria, title), discardAria: fmt(tx.Review_DiscardItem_Aria, title),
+        rowStyle: editing ? `background:${t.sel};` : '',
+        btn: `min-height:40px;padding:0 14px;border-radius:10px;border:1px solid ${t.border2};background:transparent;color:${t.text};font-weight:600;`,
+        btnDanger: `min-height:40px;padding:0 14px;border-radius:10px;border:1px solid transparent;background:transparent;color:${t.danger};font-weight:600;` };
+    });
+    const pendBox = { d: pc.length ? 'flex' : 'none' };
+
+    /* --- indicadores --- */
+    const trailerOf = m.cargo ? nm('trailer', m.cargo) : null;
+    const tileBox = `display:flex;flex-direction:column;gap:4px;box-sizing:border-box;min-height:110px;padding:10px 14px;border-radius:12px;background:${t.panel};border:1px solid ${t.line};`;
+    const noSlots = !!m.from && m.at(m.from).every(c => !m.usable(c)) && !m.editing;
+    const tile = { box: tileBox, rowD: noSlots ? 'none' : 'grid',
+      km: di ? fmt(di.est ? tx.Format_KmApprox : tx.Format_Km, num(di.km)) : '—', kmColor: di ? t.text : t.muted,
+      estD: di && di.est ? 'inline-flex' : 'none',
+      kmHelp: !di ? tx.Jobs_Distance_Pending : di.est ? tx.Jobs_Distance_Estimated_Help : tx.Jobs_Distance_FromSave,
+      units: m.cargo ? num(CARGOS[m.cargo].units) : '—', unitsColor: m.cargo ? t.text : t.muted,
+      trailer: trailerOf || '—', trailerColor: trailerOf ? t.text : t.muted };
+    const expOpts = [24, 48, 72, 168].map(h => ({ label: h === 168 ? fmt(tx.Format_Days, 7) : fmt(tx.Format_Hours, h), on: m.exp === h ? 'true' : 'false', pick: set(n => { n.exp = h; }),
+      style: `min-height:36px;padding:0 8px;border-radius:8px;border:1px solid ${m.exp === h ? t.accent : t.border2};background:${m.exp === h ? t.accent : 'transparent'};color:${m.exp === h ? t.onAccent : t.text};font-weight:600;font-variant-numeric:tabular-nums;flex:1 1 0;white-space:nowrap;` }));
+
+    /* --- campos 3..5 --- */
+    const compOpts = m.compOpts(), cargoOpts = m.cargoOpts(), arrOpts = m.arrOpts();
+    const noMatch = bothCities && compOpts.length === 0 && !m.editing && (m.at(m.from).some(c => m.usable(c)));
+    const mkField = (key, num_, label, value, enabled, hint, count, openKey) => {
+      const open = m.picker === key;
+      return { num: num_, label, val: value || tx.Jobs_Step_Choose, valColor: value ? t.text : t.muted, hint, isOpen: open ? 'true' : 'false', dis: enabled ? 'false' : 'true',
+        aria: `${label}: ${value || tx.Jobs_Step_Choose}`, open: enabled ? set(n => n.open(key)) : () => {},
+        numStyle: `display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;border:1px solid ${value ? t.accentText : t.border2};color:${value ? t.accentText : t.muted};font-size:10px;font-weight:700;letter-spacing:0;`,
+        style: `display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:1px;min-height:56px;width:100%;box-sizing:border-box;padding:6px 14px;border-radius:10px;border:1px solid ${open ? t.accent : (value ? t.accentText : t.border2)};background:${t.panel};color:${t.text};text-align:left;min-width:0;opacity:${enabled ? 1 : 0.5};` };
+    };
+    const hintFor = (autoKey, n, base) => m.auto[autoKey] ? tx.Jobs_Hint_OnlyOption : (n != null ? plural('Jobs_Hint_Options', n) : base);
+    const fields = [
+      mkField('comp', 3, tx.Jobs_Step_FromCompany, m.comp ? coName(m.comp) : '', bothCities && !noMatch && !lock, lock ? tx.Jobs_Hint_Locked : bothCities ? hintFor('comp', m.comp ? null : compOpts.length, m.comp ? (m.mode === 'free' ? plural('Jobs_Slots', m.free(COMP[m.comp])) : plural('Jobs_Offers', m.offersOf(COMP[m.comp]).length)) : '') : tx.Jobs_Hint_NeedCities),
+      mkField('cargo', 4, tx.Jobs_Step_Cargo, m.cargo ? nm('cargo', m.cargo) : '', !!m.comp, m.comp ? hintFor('cargo', m.cargo ? null : cargoOpts.length, '') : tx.Jobs_Hint_NeedFromCompany),
+      mkField('arr', 5, tx.Jobs_Step_ToCompany, m.arr ? coName(m.arr) : '', !!m.cargo, m.cargo ? hintFor('arr', m.arr ? null : arrOpts.length, '') : tx.Jobs_Hint_NeedCargo)
+    ];
+    const fld = { d: noMatch || noSlots ? 'none' : 'grid' };
+    /* --- onde entra o frete (modo) --- */
+    const cc = m.comp ? COMP[m.comp] : null, nFree = cc ? m.free(cc) : 0, offs = cc ? m.offersOf(cc) : [];
+    const segStyle = (on, dis) => `min-height:44px;padding:0 12px;border-radius:10px;border:1px solid ${on ? t.accent : t.border2};background:${on ? t.accent : 'transparent'};color:${on ? t.onAccent : t.text};font-weight:600;flex:1 1 0;white-space:nowrap;opacity:${dis ? 0.5 : 1};`;
+    const modeOpts = cc ? [
+      { label: tx.Jobs_Mode_Free + ' · ' + num(nFree), on: m.mode === 'free' ? 'true' : 'false', dis: nFree === 0 || lock ? 'true' : 'false', pick: nFree === 0 || lock ? () => {} : set(n => n.setMode('free')), style: segStyle(m.mode === 'free', nFree === 0 || lock) },
+      { label: tx.Jobs_Mode_Replace + ' · ' + num(offs.length), on: m.mode === 'replace' ? 'true' : 'false', dis: offs.length === 0 || lock ? 'true' : 'false', pick: offs.length === 0 || lock ? () => {} : set(n => n.setMode('replace')), style: segStyle(m.mode === 'replace', offs.length === 0 || lock) }
+    ] : [];
+    const offerObj = m.offer ? OFFER[m.offer] : null;
+    const offerTitle = o => '→ ' + coName(o.dest) + ' · ' + nm('cargo', o.cargo);
+    const mode = { d: cc && !noMatch && !noSlots ? 'grid' : 'none',
+      hint: lock ? tx.Jobs_Mode_Locked : nFree === 0 ? tx.Jobs_Mode_NoFree : offs.length === 0 ? tx.Jobs_Mode_NoOffers : tx.Jobs_Mode_Help,
+      offerD: m.mode === 'replace' ? 'flex' : 'none',
+      offerHint: m.auto.offer ? tx.Jobs_Hint_OnlyOption : (offerObj ? fmt(tx.Format_Km, num(offerObj.km)) + ' · ' + fmt(tx.Jobs_Offer_Expires, fmt(tx.Format_Hours, offerObj.exp)) : plural('Jobs_Offers', offs.length)),
+      offer: mkField('offer', 3, tx.Jobs_Step_Offer, offerObj ? offerTitle(offerObj) : '', !lock, '', 0), numStyle: numCircle(!!cc) };
+    const fromN = m.from ? nm('city', m.from) : '', toN = m.to ? nm('city', m.to) : '';
+    const btnBase = `min-height:44px;padding:0 18px;border-radius:10px;font-weight:600;`;
+    const nmBox = { d: noMatch ? 'flex' : 'none', title: tx.Jobs_NoMatch_Title, body: fmt(tx.Jobs_NoMatch_Body, fromN, toN), noteD: noMatch && !cat ? 'block' : 'none',
+      openTo: set(n => { n.picker = 'to'; n.only = true; }),
+      btnPrimary: btnBase + `border:none;background:${t.accent};color:${t.onAccent};`, btn: btnBase + `border:1px solid ${t.border2};background:transparent;color:${t.text};` };
+    const ns = { d: noSlots && !noMatch ? 'flex' : 'none', title: fmt(tx.Jobs_NoSlots_Title, fromN), body: fmt(tx.Jobs_NoSlots_Body, fromN) };
+
+    /* --- popup --- */
+    const L = { pad: 18, banH: 72 + 12, rowH: 56 + 12 };
+    const nBan = (m.f.catalog === false ? 1 : 0) + (m.f.cloud && !m.cloudOk ? 1 : 0);
+    const yRow = L.pad + nBan * L.banH + (m.editing != null ? 56 + 12 : 0);
+    const yMap = yRow + L.rowH;
+    const yPend = yMap + H + 12;
+    const yModeDummy = 0;
+    const pendH = pc.length ? (10 + 18 + Math.min(pc.length, 2) * 45 + 10 + 12) : 0;
+    const yTiles = yPend + pendH;
+    const yFields = yTiles + 110 + 12;
+    const yMode = yFields + 74 + 12;
+    let popRows = [], pop = { d: 'none', x: 0, y: 0, w: 360, label: '', search: '', count: '', onlyOn: 'false', onlyStyle: '', toggleOnly: set(n => { n.only = !n.only; }), emptyD: 'none', empty: '' };
+    const optStyle = (sel, dis) => `display:flex;align-items:center;gap:10px;width:100%;min-height:44px;box-sizing:border-box;padding:4px 12px;border-radius:8px;border:1px solid ${sel ? t.accentText : 'transparent'};background:${sel ? t.sel : 'transparent'};color:${t.text};text-align:left;opacity:${dis ? 0.5 : 1};`;
+    if (m.picker) {
+      let items = [];
+      if (m.picker === 'to') {
+        pop.label = tx.Jobs_Step_ToCity; pop.search = tx.Jobs_Picker_SearchCity;
+        items = Object.keys(CITIES).map(id => {
+          const same = id === m.from;
+          const feasible = !same && (lock ? m.canShip(COMP[m.comp], id).length > 0 : m.compOpts(m.from, id).length > 0);
+          const d = same ? null : m.distInfo(m.from, id);
+          return { id, primary: nm('city', id), secondary: same ? tx.Jobs_Picker_SameCity : '', est: !!(d && d.est),
+            tag: !same && !feasible ? tx.Jobs_Picker_NoMatch : (d && d.est ? tx.Jobs_Distance_Estimated : ''), km: d ? fmt(d.est ? tx.Format_KmApprox : tx.Format_Km, num(d.km)) : '',
+            dis: same, sel: id === m.to, hide: (m.only || lock) && !feasible && !same, pick: same ? () => {} : set(n => n.setTo(id)) };
+        }).filter(o => !o.hide).sort((a, b) => (b.dis - a.dis) || (a.est - b.est) || a.primary.localeCompare(b.primary, cul));
+        pop.x = 320 + 24 + 384 + 12 + 44 + 12; pop.y = yRow + 56 + 4; pop.w = 384;
+      } else if (m.picker === 'comp') {
+        pop.label = tx.Jobs_Step_FromCompany; pop.search = tx.Jobs_Picker_SearchCompany;
+        items = compOpts.map(id => ({ id, primary: nm('co', COMP[id].co), secondary: nm('city', COMP[id].city) + ' · ' + [m.free(COMP[id]) > 0 ? plural('Jobs_Slots', m.free(COMP[id])) : plural('Jobs_Slots', 0), m.offersOf(COMP[id]).length ? plural('Jobs_Offers', m.offersOf(COMP[id]).length) : ''].filter(Boolean).join(' · '), tag: '', km: '', dis: false, sel: id === m.comp, pick: set(n => n.setComp(id)) }));
+        pop.x = 344; pop.w = 360;
+      } else if (m.picker === 'cargo') {
+        pop.label = tx.Jobs_Step_Cargo; pop.search = tx.Jobs_Picker_SearchCargo;
+        items = cargoOpts.map(id => ({ id, primary: nm('cargo', id), secondary: nm('trailer', id), tag: '', km: '', dis: false, sel: id === m.cargo, pick: set(n => n.setCargo(id)) }));
+        pop.x = 344 + 270 + 12; pop.w = 360;
+      } else if (m.picker === 'offer') {
+        pop.label = tx.Jobs_Step_Offer; pop.search = tx.Jobs_Picker_SearchOffer;
+        items = offs.map(o => ({ id: o.id, primary: offerTitle(o), secondary: fmt(tx.Jobs_Offer_Meta, nm('cargo', o.cargo), fmt(tx.Format_Km, num(o.km)), fmt(tx.Format_Hours, o.exp)), tag: '', km: '', dis: false, sel: o.id === m.offer, pick: set(n => n.setOffer(o.id)) }));
+        pop.x = 320 + 24 + 412 + 12; pop.w = 360;
+      } else {
+        pop.label = tx.Jobs_Step_ToCompany; pop.search = tx.Jobs_Picker_SearchCompany;
+        items = arrOpts.map(id => ({ id, primary: nm('co', COMP[id].co), secondary: nm('city', COMP[id].city), tag: '', km: '', dis: false, sel: id === m.arr, pick: set(n => n.setArr(id)) }));
+        pop.x = 1204 - 24 - 360; pop.w = 360;
+      }
+      const rowsN = Math.min(items.length, 6);
+      const ph = 6 + 40 + 4 + 24 + 4 + rowsN * 48 + 6;
+      if (m.picker !== 'to') pop.y = Math.max(8, (m.picker === 'offer' ? yMode : yFields) - ph - 4);
+      pop.d = 'flex'; pop.onlyOn = m.only ? 'true' : 'false';
+      pop.count = plural('Jobs_Picker_Count', items.length);
+      pop.onlyStyle = m.picker === 'to' && !lock ? `min-height:28px;padding:0 10px;border-radius:999px;border:1px solid ${m.only ? t.accent : t.border2};background:${m.only ? t.sel : 'transparent'};color:${t.text};font-size:12px;` : 'display:none;';
+      popRows = items.slice(0, 6).map(o => ({ primary: o.primary, secondary: o.secondary, tag: o.tag, tagD: o.tag ? 'inline-flex' : 'none', km: o.km, kmD: o.km ? 'inline' : 'none',
+        sel: o.sel ? 'true' : 'false', dis: o.dis ? 'true' : 'false', color: o.sel ? t.accentText : t.text, checkD: o.sel ? 'inline' : 'none', pick: o.pick, style: optStyle(o.sel, o.dis) }));
+      if (!items.length) { pop.emptyD = 'block'; pop.empty = tx.Jobs_Picker_NoItems; }
+    }
+
+    /* --- banners --- */
+    const btnS = `min-height:40px;padding:0 14px;border-radius:10px;border:1px solid ${t.border2};background:transparent;color:${t.text};font-weight:600;white-space:nowrap;`;
+    const ban = { catD: !cat ? 'flex' : 'none', catTitle: fmt(tx.Jobs_NoCatalog_Title, tx.Game_Ets2), catBody: tx.Jobs_NoCatalog_Body, btn: btnS,
+      cloudD: m.f.cloud && !m.cloudOk ? 'flex' : 'none', cloudClose: set(n => { n.cloudOk = true; }),
+      editD: m.editing != null ? 'flex' : 'none', editCancel: set(n => n.cancelEdit()) };
+
+    /* --- notas, erro, ação --- */
+    const missNames = { from: tx.Jobs_Missing_FromCity, to: tx.Jobs_Missing_ToCity, comp: tx.Jobs_Missing_FromCompany, cargo: tx.Jobs_Missing_Cargo, arr: tx.Jobs_Missing_ToCompany, offer: tx.Jobs_Missing_Offer };
+    const fname = f => ({ comp: tx.Jobs_Step_FromCompany, cargo: tx.Jobs_Step_Cargo, arr: tx.Jobs_Step_ToCompany })[f];
+    const notes = m.notes.map(n => ({ text: n.k === 'same' ? tx.Jobs_Notice_SameCity : n.k === 'cleared' ? fmt(tx.Jobs_Notice_Cleared, n.f.map(f => missNames[f]).join(', ')) : fmt(tx.Jobs_Notice_Replaced, n.f.map(fname).join(', ')) }));
+    const nt = { d: notes.length ? 'flex' : 'none' };
+    const er = { d: m.err ? 'flex' : 'none', msg: m.err ? tx['Jobs_Error_' + m.err] : '', code: m.err ? 'InvalidEdit · Jobs_Error_' + m.err : '', btn: btnS,
+      close: set(n => { n.err = null; }) };
+    const miss = m.missing();
+    const ready = miss.length === 0;
+    const act = { dis: ready ? 'false' : 'true', label: m.editing != null ? tx.Jobs_Update : tx.Jobs_Add,
+      help: ready ? tx.Jobs_Ready : (noMatch || noSlots ? '' : fmt(tx.Jobs_Missing, miss.map(k => missNames[k]).join(', '))),
+      go: ready ? set(n => n.add()) : () => {},
+      style: `min-height:48px;padding:0 22px;border-radius:10px;border:none;font-weight:700;letter-spacing:0.03em;white-space:nowrap;background:${ready ? t.accent : t.line};color:${ready ? t.onAccent : t.muted};` };
+    const toast = { d: m.toast ? 'flex' : 'none',
+      text: !m.toast ? '' : m.toast.k === 'added' ? tx.Jobs_Added_Toast : m.toast.k === 'updated' ? tx.Jobs_Updated_Toast : tx.Toast_Discarded,
+      action: !m.toast ? '' : m.toast.k === 'added' ? tx.Jobs_Added_View : m.toast.k === 'discarded' ? tx.Toast_Undo : '',
+      btn: `display:${m.toast && m.toast.k === 'updated' ? 'none' : 'inline-flex'};min-height:40px;padding:0 14px;border-radius:10px;border:1px solid ${t.border2};background:transparent;color:${t.text};font-weight:600;` };
+
+    /* --- barra de prévia --- */
+    const cv = lang === 'pt'
+      ? { label: 'Prévia (fora do app)', themeBtn: dark ? 'Tema claro' : 'Tema escuro', langBtn: 'English' }
+      : { label: 'Preview (not in the app)', themeBtn: dark ? 'Light theme' : 'Dark theme', langBtn: 'Português' };
+    const tbBtn = `min-height:24px;padding:0 10px;border-radius:6px;border:1px solid ${t.line};background:transparent;color:${t.text};font-size:12px;white-space:nowrap;`;
+    const variants = SCENE.presets.map(p => ({ label: p[lang], pressed: this.state.active === p.id ? 'true' : 'false',
+      pick: () => this.setState({ m: this.buildModel(p), active: p.id }),
+      style: `min-height:24px;padding:0 10px;border-radius:6px;border:1px solid ${this.state.active === p.id ? t.accent : t.line};background:${this.state.active === p.id ? t.sel : 'transparent'};color:${t.text};font-size:12px;white-space:nowrap;` }));
+    if (SCENE.errorCycle) variants.push({ label: (lang === 'pt' ? 'Erro ▸ ' : 'Error ▸ ') + ERR_CODES[(m.errIdx || 0) % ERR_CODES.length], pressed: 'false',
+      pick: () => { const n = this.state.m.clone(); n.errIdx = ((n.errIdx || 0) + 1) % ERR_CODES.length; n.err = ERR_CODES[n.errIdx]; this.setState({ m: n }); }, style: tbBtn });
+
+    return { t, tx, nav, navSet, bar, lay, mode, modeOpts, list, cities, row, map, pend: pendBox, pendRows, tile, expOpts, fld, fields, nm: nmBox, ns, ban, nt, notes, er, act, toast,
+      pop, popRows, variants, tb: { label: cv.label, themeBtn: cv.themeBtn, langBtn: cv.langBtn, btn: tbBtn },
+      kbd: `padding:1px 6px;border-radius:6px;border:1px solid ${t.line};font-family:ui-monospace,Consolas,monospace;font-size:11px;color:${t.text};`,
+      toggleTheme: () => this.setState({ pref: dark ? 'light' : 'dark' }),
+      toggleLang: () => this.setState({ lang: lang === 'pt' ? 'en' : 'pt' }) };
+  }
+}
+</script>
+</body>
+</html>

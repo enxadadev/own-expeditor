@@ -44,7 +44,7 @@ Página do shell (não de módulo). Aberta pelo selo "Revisar (n)" ou `Ctrl+R`.
 
 **Regras de conteúdo**
 - Antes: `TextMutedColor` + riscado (`TextDecoration.Strikethrough`). Depois: peso 600. Não depender de cor: seta e riscado já distinguem.
-- `DiffValue.Empty` aparece como "—" (nome acessível `Diff_Empty`) e sem riscado.
+- `DiffValue.Empty` aparece como "—" (nome acessível `Diff_Empty`) e sem riscado. Isso acontece nos fretes em **vaga livre** (o slot estava vazio); em **substituir uma oferta** o antes traz os valores da oferta atual. Distância estimada pelo app aparece com "≈" (`Format_KmApprox`), antes e depois.
 - Números (km, dinheiro) em `FontDisplay`, `+tnum`, formatados pela cultura (`1.250.000 €` pt-BR, `€1,250,000` en). Texto longo (mods): uma linha com reticências e `ToolTip` com o valor inteiro.
 - Módulos na ordem de `ModuleDescriptor.Order`; cartões na ordem de `Stage`.
 - O total do cabeçalho é a **quantidade de `ChangeSet`s** (o que o usuário consegue descartar), não `PatchCount` (termo interno).
@@ -66,57 +66,73 @@ Página do shell (não de módulo). Aberta pelo selo "Revisar (n)" ou `Ctrl+R`.
 **Tema/idioma:** conferido nos dois; inglês ~30% mais curto nos rótulos, mensagens mais longas em pt-BR.
 
 ## 2. Confirmação destrutiva (`Confirmar.dc.html`)
-Modal sobre a tela Revisar (`ConfirmApplyDialog`, `IDialogService.ConfirmAsync(..., destructive: true)`), largura 560.
+Modal sobre a tela Revisar (`ConfirmApplyDialog`, `IDialogService.ConfirmAsync(..., destructive: true)`), largura 620, altura máx. 724 (o corpo rola; **os botões ficam fixos embaixo**). O usuário **escolhe como gravar** (ADR 0006, decisão 5).
 
 ```
 ┌ GRAVAR MUDANÇAS NO SAVE? ───────────────────────────────┐
 │ 3 mudanças serão gravadas em Perfil 1 · Save 4.         │
+│ (!) Feche o jogo antes de continuar                     │   <- avisos no topo
+│ (▲) Este perfil usa Steam Cloud (só com Steam Cloud)    │
 │ O QUE SERÁ GRAVADO                                      │
 │ ┌ FRETES                                   2 mudanças ┐ │
-│ │   Frete Sofia → Beograd                             │ │
-│ │   Frete Wien → Praha                                │ │
+│ │ Frete Sófia → Belgrado · Frete Viena → Praga        │ │
 │ │ PERFIL                                   1 mudança  │ │
-│ │   Dinheiro do perfil                                │ │
-│ ONDE FICA O BACKUP                                      │
-│ [C:\...\profiles\profile_1\save\4\game.sii.bak-AAAAMMDD-HHMMSS]│
-│ (!) Feche o jogo antes de continuar                     │
-│     Com o jogo aberto, ele pode sobrescrever o save...  │
+│ │ Dinheiro do perfil                                  │ │
+│ COMO GRAVAR                                             │
+│ (●) Sobrescrever este save  [Padrão]                    │
+│     Grava no save aberto (Save 4). Um backup é criado.  │
+│ ( ) Criar um novo save                                  │
+│     Cria um save novo com as mudanças. O original não   │
+│     é tocado.                                           │
+│ ── detalhe do destino escolhido (ver abaixo) ──         │
 │ Para desfazer depois, basta restaurar o backup.         │
+├─────────────────────────────────────────────────────────┤
 │                           [Cancelar]  [Gravar no save]  │
 └─────────────────────────────────────────────────────────┘
 ```
-- Só títulos dos `ChangeSet`s agrupados por módulo (o diff completo já foi visto na tela anterior).
-- Caminho do backup: pasta real do save (`SaveSlotInfo.GameSiiPath`) + padrão do nome em destaque âmbar; o nome final usa a hora da gravação. Mono, quebra em qualquer ponto, `ToolTip` com o inteiro.
-- Aviso do jogo: caixa `DangerColor` (borda + fundo 12%) com ícone. Se `IGameProcessMonitor.IsRunning` já for verdadeiro ao abrir, o título vira "O jogo está aberto" (`Confirm_Warn_*_Running`); o botão continua habilitado, porque a checagem que vale é a do `ApplyAsync`.
-- **Foco inicial em Cancelar**; `Esc` cancela; foco preso no diálogo. Gravar é `Button.danger`. Não há `Ctrl+Enter` aqui.
-- **Gravando…**: os botões dão lugar a spinner + "Gravando…" + "Criando o backup e gravando o save. Não feche o app." (`role=status`, `aria-live=polite`). Sem cancelar (backup e substituição não podem ser interrompidos no meio). Animação do spinner respeita "reduzir movimento".
-- `aria-labelledby` = título, `aria-describedby` = intro.
-- Estados: pergunta → gravando → (sucesso: tela 3 | erro: tela 4).
+- **O que será gravado**: um bloco por módulo (nome em caixa alta, contagem) com os títulos dos `ChangeSet`s numa linha (reticências + `ToolTip`). O diff completo já foi visto na tela anterior. (Compactado em relação à versão anterior para dar lugar à escolha.)
+- **Como gravar**: `radiogroup` com dois **cartões de rádio** (NOVO `ChoiceCard`, abaixo). O padrão é **Sobrescrever este save** (etiqueta "Padrão"). Setas ↑/↓ movem e escolhem; Espaço também escolhe.
+- **Detalhe do destino**, abaixo dos cartões:
+  | Destino | O que aparece |
+  | --- | --- |
+  | Sobrescrever este save | "Onde fica o backup": caminho da pasta do save + padrão `game.sii.bak-AAAAMMDD-HHMMSS` em âmbar (`PathBox`), nota "A cópia do save original é criada nesta pasta antes de gravar…" |
+  | Criar um novo save | **Nome do novo save** (`TextBox` 44 px, valor inicial `{save} (editado)`, 1 a 40 caracteres, `maxlength=40`, dica "É o nome que aparece na lista de saves do jogo.", erro inline `Confirm_NewName_Invalid` com `aria-invalid`); "Onde fica o novo save": pasta `…\save\` + "(próximo slot livre)" em âmbar e a nota "O app cria uma pasta nova no próximo slot livre do perfil {perfil}. O save original continua como está." Não há backup (o original não muda) |
+- Texto de apoio abaixo: sobrescrever → "Para desfazer depois, basta restaurar o backup…"; novo save → "O save original não muda. Para descartar o novo save, basta apagá-lo…". Intro e botão mudam com o destino: `Confirm_Intro_*` / `Confirm_IntroNew_*`; **Gravar no save** / **Criar novo save**.
+- **Avisos** (no topo do corpo, 8 px de padding, sempre visíveis ao abrir):
+  - Jogo: caixa `Danger` com ícone ▲. Se `IGameStatusMonitor.IsRunning` já for verdadeiro ao abrir, o título vira "O jogo está aberto" (`Confirm_Warn_*_Running`); o botão continua habilitado, porque a checagem que vale é a do `ApplyAsync`.
+  - **Steam Cloud** (só se `ProfileInfo.IsSteamCloud`): caixa `Warning` (`Selection` + borda `AccentText`, ícone ▲) com `Confirm_Cloud_Title` e o texto do destino escolhido (`Confirm_Cloud_Overwrite` / `Confirm_Cloud_New`). Informa; não bloqueia nenhuma opção.
+- **Foco inicial em Cancelar**; `Esc` cancela; foco preso no diálogo; o campo de nome só recebe foco por Tab ou ao escolher "Criar um novo save" (o foco vai para o cartão escolhido, não para o campo). Gravar é `Button.danger`; com nome inválido fica `aria-disabled` (opacidade 0,4) e o motivo está no texto do campo. Não há `Ctrl+Enter` aqui.
+- **Gravando…**: os botões dão lugar a spinner + "Gravando…" + dica do destino (`Confirm_Applying_Hint` / `_New`) (`role=status`, `aria-live=polite`). Sem cancelar. Animação do spinner respeita "reduzir movimento".
+- `aria-labelledby` = título, `aria-describedby` = intro; `radiogroup` com nome "Como gravar".
+- Estados: pergunta (dois destinos × nuvem × jogo aberto × nome inválido) → gravando → (sucesso: tela 3 | erro: tela 4).
 
 ## 3. Resultado (`Resultado.dc.html`)
-Página do shell mostrada após `ApplyResult`.
+Página do shell mostrada após `ApplyResult` (agora `ApplyResult(WrittenSlot, BackupPath?, ChangeSetCount, PatchCount)`).
 
 ```
-(✓) MUDANÇAS GRAVADAS
-    3 mudanças gravadas no save.
-┌ BACKUP DO SAVE ORIGINAL ────────────────────────────────┐
-│ Guardamos uma cópia do save como ele estava antes...    │
+(✓) MUDANÇAS GRAVADAS            |   (✓) NOVO SAVE CRIADO
+    3 mudanças gravadas no save. |       3 mudanças gravadas no novo save “Save 4 (editado)”.
+┌ SAVE GRAVADO  Save 4 · slot 4        O save aberto foi atualizado. ┐
+│ [C:\...\profile_1\save\4\]                                      │
+┌ BACKUP DO SAVE ORIGINAL  (só ao sobrescrever) ──────────┐
 │ [C:\...\save\4\game.sii.bak-20261117-143022]            │
 │ [Abrir pasta] [Copiar caminho]                          │
+(▲) Se o jogo trouxer o save antigo de volta (Steam Cloud)…   (só com Steam Cloud)
 ┌ AGORA NO JOGO ────────────────┐ ┌ COMO RESTAURAR O BACKUP ┐
 │ Abra o jogo e carregue...     │ │ 1. Feche o jogo.        │
-│ O app grava em texto simples..│ │ 2. renomeie game.sii... │
+│ A edição continua no novo save│ │ 2. renomeie game.sii... │
 │                                                [Continuar editando]
 ```
-- `ApplyResult.BackupPath` completo (pasta + nome real). **Abrir pasta**: abre o explorador com o arquivo selecionado; falhou → Toast `Result_OpenFolder_Failed` com o caminho. **Copiar caminho**: copia o texto e mostra Toast "Caminho copiado" (`role=status`).
-- "Continuar editando" é a ação principal (âmbar) e volta ao último módulo. Foco inicial no título (`tabindex=-1`) para leitores de tela anunciarem o resultado; Tab segue para Abrir pasta.
-- A nota "grava em texto simples" cobre o risco aberto da ADR 0002 (jogo carregar texto puro); remover quando validado no jogo.
-- Os passos de restauração repetem a seção "Recuperação" da skill `save-safety`.
-- Componentes: `PageHeader`-like com ícone de sucesso (`SuccessColor`), cartões do catálogo, `Button` primário/secundário. **NOVO** `PathBox` (caixa mono com caminho que quebra, `ToolTip` e destaque do nome do arquivo; usado aqui e na confirmação).
-- Estados: só conteúdo. Se `ApplyResult.ChangeSetCount == 1` usa `Result_Written_One`.
+- **Sobrescreveu**: título "Mudanças gravadas"; cartão **Save gravado** com nome e slot ("Save 4 · slot 4") e a pasta; cartão **Backup do save original** com `BackupPath` completo (pasta + nome real), **Abrir pasta** (explorador com o arquivo selecionado; falhou → Toast `Result_OpenFolder_Failed` com o caminho) e **Copiar caminho** (Toast "Caminho copiado"). "Como restaurar o backup" (3 passos, da skill `save-safety`).
+- **Criou um novo save**: título "Novo save criado"; cartão **Novo save** com o nome, o slot ("Save 4 (editado) · slot 7"), a pasta (`WrittenSlot`) e os botões **Abrir pasta** / **Copiar caminho** no próprio cartão; **sem** cartão de backup (não há); "Agora no jogo" cita o nome do save novo e diz "A edição continua no novo save." (a sessão aponta para o slot novo; "Continuar editando" edita o novo save); o segundo cartão vira **Como descartar o novo save** (2 passos: fechar o jogo; apagar a pasta do novo save). A nota "grava em texto simples" muda para "…se o jogo não carregar o novo save, apague-o: o original continua intacto."
+- **Steam Cloud**: uma linha `Warning` entre os cartões, por destino (`Result_Cloud_Overwrite` / `Result_Cloud_New`).
+- "Continuar editando" é a ação principal (âmbar) e volta ao último módulo. Foco inicial no título (`tabindex=-1`); Tab segue para Abrir pasta.
+- A nota "grava em texto simples" cobre o risco aberto da ADR 0002; remover quando validado no jogo.
+- Componentes: `PageHeader`-like com ícone de sucesso (`SuccessColor`), cartões do catálogo, `Button` primário/secundário, `PathBox` (NOVO, ver abaixo).
+- Estados: só conteúdo. `ChangeSetCount == 1` usa `Result_Written_One` / `Result_WrittenNew_One`.
 
 ## 4. Erros ao aplicar (`ErroJogoAberto.dc.html`)
-O artboard mostra `GameRunning`; a faixa inferior (fora do app, só no desenho) alterna entre os 18 `CoreError` e os dois idiomas.
+O artboard mostra `GameRunning`; a faixa inferior (fora do app, só no desenho) alterna entre os **20** `CoreError` e os dois idiomas.
 
 ```
 ┌ (!) NÃO FOI POSSÍVEL GRAVAR ────────────────────────────┐
@@ -135,12 +151,13 @@ Ação primária em âmbar, secundária em contorno. "Pend." = o que acontece co
 | Código | Onde aparece | Primária | Secundária | Pend. |
 | --- | --- | --- | --- | --- |
 | SaveNotFound | abrir save; aplicar (arquivo sumiu) | Escolher outro save | — | n/a |
-| SaveFormatUnsupported | abrir save | Escolher outro save | — | n/a |
+| SaveParseFailed | abrir save (renomeado de `SaveFormatUnsupported`) | Escolher outro save | — | n/a |
 | SaveCorrupt | abrir save | Escolher outro save | — | n/a |
 | NoSession | qualquer ação sem save (shell) | Escolher outro save | — | n/a |
 | SessionBusy | aplicar | Tentar de novo | Voltar à revisão | mantidas |
 | ReadOnlySession | aplicar | Fechar | — | mantidas |
 | Conflict | módulo ao enfileirar (InfoBar no módulo) | Abrir revisão | Fechar | mantidas |
+| InvalidEdit | módulo ao enfileirar (regra do módulo; `ErrorBanner` no módulo, ver `design/fretes/`) | Fechar | Abrir revisão | mantidas |
 | StalePatch | aplicar | Voltar à revisão | Abrir o save de novo | mantidas |
 | UnknownUnit | aplicar | Voltar à revisão | Abrir o save de novo | mantidas |
 | UnknownAttribute | aplicar | Voltar à revisão | Abrir o save de novo | mantidas |
@@ -152,10 +169,12 @@ Ação primária em âmbar, secundária em contorno. "Pend." = o que acontece co
 | WriteFailed | aplicar | Tentar de novo | Voltar à revisão | mantidas |
 | VerifyFailed | aplicar | Tentar de novo | Voltar à revisão | mantidas |
 | AccessDenied | aplicar | Tentar de novo | Abrir pasta | mantidas |
+| SlotUnavailable | aplicar com **Criar um novo save** (sem slot livre ou pasta não criada) | Tentar de novo | Voltar à revisão | mantidas |
 
 Notas:
 - Os erros de abrir o save pertencem ao UX-1 (estados sem sessão/erro); estão aqui para ter **todas** as mensagens `Error_<Code>` num lugar só, com o mesmo vocabulário.
-- `Conflict` acontece no `Stage`, fora do fluxo de aplicar: o módulo mostra a mensagem em `InfoBar` (não é modal) com a ação "Abrir revisão".
+- `Conflict` e `InvalidEdit` acontecem no `Stage`, fora do fluxo de aplicar: o módulo mostra a mensagem no `ErrorBanner` (não é modal). `InvalidEdit` traz um motivo do módulo (`CoreException.Reason`, ex.: `Jobs_Error_NoFreeSlot`); **se houver `Reason`, a tela mostra o texto dele no lugar de `Error_InvalidEdit`** (que é o texto genérico de reserva). Título `Error_Title_Edit`.
+- `SlotUnavailable`: nada foi gravado e a pasta nova, se chegou a ser criada, é apagada; a mensagem sugere voltar à revisão e escolher "Sobrescrever este save" (ou liberar um slot no jogo). A ação "Tentar de novo" repete a gravação com o mesmo destino.
 - `Error_Details` mostra o código e o `CoreException.Message` em mono para o usuário colar num relato. Sem termos do SII na mensagem principal.
 - Texto completo pt-BR/en de cada código: `strings.md`.
 
@@ -169,6 +188,8 @@ Notas:
 | `Button.ghost` | descartar item/módulo/tudo | idem; variante `danger` |
 | `OnDangerColor` (token) | texto sobre `DangerColor` | Light/Dark |
 | `PathBox` | caminho mono com quebra, destaque do arquivo, ToolTip | normal |
+| `ChoiceCard` (grupo `radiogroup`) | escolher o destino da gravação: ponto de rádio, rótulo, etiqueta opcional ("Padrão"), ajuda de uma linha | normal, hover, selecionado (`Selection` + borda `AccentText`), `:focus-visible`, desabilitado (opacidade 0,4) |
+| `TextBox` com erro inline (nome do novo save) | nome do save novo | normal, foco, inválido (borda `Danger` + texto de erro, `aria-invalid`) |
 
 Pedido ao UX-3 (`design/controles/`): incluir esses itens e o `ConfirmApplyDialog`
-em modo pergunta / gravando / erro.
+em modo pergunta (com os dois destinos) / gravando / erro. A `ChoiceCard` e o campo de nome com erro entram no catálogo na implementação.

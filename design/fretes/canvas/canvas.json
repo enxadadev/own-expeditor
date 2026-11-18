@@ -1,0 +1,119 @@
+{
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "Escolher.dc.html": {
+      "expand": "fill",
+      "h": 800,
+      "is_interactive": true,
+      "title": "1 · Escolher frete (cidades → empresa → carga)",
+      "w": 1280,
+      "x": 0,
+      "y": 0
+    },
+    "ModoFrete.dc.html": {
+      "expand": "fill",
+      "h": 800,
+      "is_interactive": true,
+      "title": "2 · Onde entra o frete (vaga livre ou substituir oferta)",
+      "w": 1280,
+      "x": 1360,
+      "y": 0
+    },
+    "Cidades.dc.html": {
+      "expand": "fill",
+      "h": 800,
+      "is_interactive": true,
+      "title": "3 · Cidades e dependências (iguais, sem combinação, trocas)",
+      "w": 1280,
+      "x": 2720,
+      "y": 0
+    },
+    "DistanciaEstimada.dc.html": {
+      "expand": "fill",
+      "h": 800,
+      "is_interactive": true,
+      "title": "4 · Distância conhecida e estimada (vem do app)",
+      "w": 1280,
+      "x": 0,
+      "y": 900
+    },
+    "SemCatalogo.dc.html": {
+      "expand": "fill",
+      "h": 800,
+      "is_interactive": true,
+      "title": "5 · Sem a pasta do jogo (nomes por id)",
+      "w": 1280,
+      "x": 1360,
+      "y": 900
+    },
+    "SemOrigem.dc.html": {
+      "expand": "fill",
+      "h": 800,
+      "is_interactive": true,
+      "title": "6 · Nenhuma cidade com vaga ou oferta / busca sem resultado",
+      "w": 1280,
+      "x": 2720,
+      "y": 900
+    },
+    "MudancaPendente.dc.html": {
+      "expand": "fill",
+      "h": 800,
+      "is_interactive": true,
+      "title": "7 · Mudança pendente (editar / descartar)",
+      "w": 1280,
+      "x": 0,
+      "y": 1800
+    },
+    "SteamCloud.dc.html": {
+      "expand": "fill",
+      "h": 800,
+      "is_interactive": true,
+      "title": "8 · Perfil com Steam Cloud",
+      "w": 1280,
+      "x": 1360,
+      "y": 1800
+    }
+  },
+  "createdOnFiles": {
+    "at": "2026-11-17T22:00:00Z",
+    "v": 1
+  },
+  "designSystems": [],
+  "launch": {
+    "view": "canvas"
+  },
+  "noteOrder": [
+    "t",
+    "s"
+  ],
+  "notes": {
+    "s": {
+      "size": 24,
+      "text": "Rascunho do módulo Fretes dentro do shell. Fluxo: cidade de saída, cidade de destino, empresa de saída (vaga livre ou substituir oferta), carga, empresa de chegada. A distância vem do app (conhecida ou estimada). Cada tela tem a barra de prévia embaixo (variações, tema, idioma; fora do app) e funciona clicando. Dados anonimizados.",
+      "w": 1500,
+      "x": 0,
+      "y": -150
+    },
+    "t": {
+      "kind": "title1",
+      "maxW": 4000,
+      "text": "Own Expeditor — Fretes",
+      "w": 240,
+      "x": 0,
+      "y": -260
+    }
+  },
+  "order": [
+    "Escolher.dc.html",
+    "ModoFrete.dc.html",
+    "Cidades.dc.html",
+    "DistanciaEstimada.dc.html",
+    "SemCatalogo.dc.html",
+    "SemOrigem.dc.html",
+    "MudancaPendente.dc.html",
+    "SteamCloud.dc.html"
+  ],
+  "pages": [],
+  "title": "Own Expeditor — Fretes"
+}

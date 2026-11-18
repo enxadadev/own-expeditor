@@ -42,7 +42,7 @@ flowchart TD
     E --> F{Resultado}
     F -- cancelado --> G[Volta para SEM SESSÃO]
     F -- ok --> H[Estado SESSÃO ABERTA<br/>módulo Fretes, foco no módulo]
-    F -- SaveFormatUnsupported --> I[ERRO: não foi possível entender o save<br/>arquivo lido, conteúdo não entendido]
+    F -- SaveParseFailed --> I[ERRO: não foi possível entender o save<br/>arquivo lido, conteúdo não entendido]
     F -- SaveCorrupt --> J[ERRO: não foi possível ler o save<br/>incompleto ou ilegível, sugestões + detalhes]
     F -- SaveNotFound --> J2[ERRO: save não encontrado<br/>mesmo layout do corrompido]
     F -- AccessDenied --> J3[ERRO: sem permissão<br/>mesmo layout do corrompido]

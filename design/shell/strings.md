@@ -89,7 +89,7 @@ Números/datas pela cultura (`{0:N1}`, `{1:N0}`); `Module_*` é exibido em caixa
 
 | Chave | pt-BR | en | Nota |
 | --- | --- | --- | --- |
-| `OpenError_Parse_Title` | Não foi possível entender o save | Couldn't understand the save | CoreError.SaveFormatUnsupported: o arquivo foi lido, mas o conteúdo não foi entendido |
+| `OpenError_Parse_Title` | Não foi possível entender o save | Couldn't understand the save | CoreError.SaveParseFailed: o arquivo foi lido, mas o conteúdo não foi entendido |
 | `OpenError_Parse_Body` | O arquivo foi lido, mas o Own Expeditor não entendeu o que está dentro dele. Seu save não foi alterado. | The file was read, but Own Expeditor couldn't make sense of what's inside. Your save was not changed. |  |
 | `OpenError_Parse_CausesTitle` | O que pode ter causado isso | What may have caused this |  |
 | `OpenError_Parse_Cause1` | Uma versão do jogo mais nova do que a que o app conhece. | A game version newer than the one the app knows. |  |
@@ -128,7 +128,7 @@ App: {6} | Texto copiado por Copiar detalhes; {0} código, {1} jogo, {2} perfil,
 | `OpenError_AccessDenied_Body` | Verifique se outro programa está usando o arquivo ou se a pasta está protegida e tente de novo. | Check whether another program is using the file or the folder is protected, then try again. |  |
 | `OpenError_Unknown_Title` | Não foi possível abrir o save | Couldn't open the save | Qualquer outro CoreError |
 | `OpenError_Unknown_Body` | Algo inesperado aconteceu. Seu save não foi alterado. Tente de novo ou escolha outro save. | Something unexpected happened. Your save was not changed. Try again or choose another save. |  |
-| `Error_SaveFormatUnsupported` | Não foi possível entender este save: o formato não foi reconhecido. Tente outro save do mesmo perfil ou, se continuar, relate o problema. | Couldn't understand this save: the format wasn't recognized. Try another save from the same profile or, if it keeps happening, report the problem. | Mensagem curta por ILocalizer.FormatError (toast/diálogo); mesma da tela Não foi possível entender o save |
+| `Error_SaveParseFailed` | Não foi possível entender este save: o conteúdo não foi reconhecido. Tente outro save do mesmo perfil ou, se continuar, relate o problema. | Couldn't understand this save: its content wasn't recognized. Try another save from the same profile or, if it keeps happening, report the problem. | Mensagem curta por ILocalizer.FormatError (toast/diálogo); mesma da tela Não foi possível entender o save |
 | `Error_SaveCorrupt` | Não foi possível ler este save: o arquivo parece incompleto ou ilegível. | Couldn't read this save: the file looks incomplete or unreadable. | Idem |
 | `Error_SaveNotFound` | Não foi possível abrir o save: o arquivo não existe mais. | Couldn't open the save: the file no longer exists. | Idem |
 | `Error_AccessDenied` | Não foi possível acessar o arquivo. Verifique as permissões da pasta e tente de novo. | Couldn't access the file. Check the folder permissions and try again. | Compartilhada com UX-2 (gravação) |

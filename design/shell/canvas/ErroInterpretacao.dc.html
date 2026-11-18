@@ -217,7 +217,7 @@ const STR = {
   "OpenError_AccessDenied_Body": "Verifique se outro programa está usando o arquivo ou se a pasta está protegida e tente de novo.",
   "OpenError_Unknown_Title": "Não foi possível abrir o save",
   "OpenError_Unknown_Body": "Algo inesperado aconteceu. Seu save não foi alterado. Tente de novo ou escolha outro save.",
-  "Error_SaveFormatUnsupported": "Não foi possível entender este save: o formato não foi reconhecido. Tente outro save do mesmo perfil ou, se continuar, relate o problema.",
+  "Error_SaveParseFailed": "Não foi possível entender este save: o conteúdo não foi reconhecido. Tente outro save do mesmo perfil ou, se continuar, relate o problema.",
   "Error_SaveCorrupt": "Não foi possível ler este save: o arquivo parece incompleto ou ilegível.",
   "Error_SaveNotFound": "Não foi possível abrir o save: o arquivo não existe mais.",
   "Error_AccessDenied": "Não foi possível acessar o arquivo. Verifique as permissões da pasta e tente de novo.",
@@ -354,7 +354,7 @@ const STR = {
   "OpenError_AccessDenied_Body": "Check whether another program is using the file or the folder is protected, then try again.",
   "OpenError_Unknown_Title": "Couldn't open the save",
   "OpenError_Unknown_Body": "Something unexpected happened. Your save was not changed. Try again or choose another save.",
-  "Error_SaveFormatUnsupported": "Couldn't understand this save: the format wasn't recognized. Try another save from the same profile or, if it keeps happening, report the problem.",
+  "Error_SaveParseFailed": "Couldn't understand this save: its content wasn't recognized. Try another save from the same profile or, if it keeps happening, report the problem.",
   "Error_SaveCorrupt": "Couldn't read this save: the file looks incomplete or unreadable.",
   "Error_SaveNotFound": "Couldn't open the save: the file no longer exists.",
   "Error_AccessDenied": "Couldn't access the file. Check the folder permissions and try again.",
@@ -488,7 +488,7 @@ class Component extends DCLogic {
     const sv = shellVals(this, { active: '', session: false, chips: true, error: true, mainLabel: STR[this.state.lang].OpenError_Parse_Title, game: 'ETS2', profile: 'Demo A', save: 'Save 4' });
     const { t, tx, lang } = sv;
     const size = (86.4).toLocaleString(lang === 'pt' ? 'pt-BR' : 'en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
-    const details = fmt(tx.OpenError_Parse_DetailsText, 'SaveFormatUnsupported', 'ETS2', 'Demo A', 'Save 4', fmt(tx.Loading_Size, size), tx.Loading_Stage_Parse, '0.1.0');
+    const details = fmt(tx.OpenError_Parse_DetailsText, 'SaveParseFailed', 'ETS2', 'Demo A', 'Save 4', fmt(tx.Loading_Size, size), tx.Loading_Stage_Parse, '0.1.0');
     const v = { primary: btnPrimary(t, false), secondary: btnSecondary(t),
       ghost: `min-height:48px;padding:0 14px;border-radius:10px;border:none;background:transparent;color:${t.muted};font-weight:600;text-decoration:underline;`,
       copyStyle: `min-height:48px;padding:0 16px;border-radius:10px;border:1px solid ${st.copied ? t.success : t.line};background:transparent;color:${st.copied ? t.success : t.text};font-weight:600;`,
