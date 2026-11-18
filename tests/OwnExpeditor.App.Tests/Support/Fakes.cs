@@ -296,6 +296,7 @@ public sealed class ShellFixture
             s.AddSingleton<IClipboardService>(Clipboard);
             s.AddSingleton<IFolderPicker>(Picker);
             s.AddSingleton<IThemeService>(Theme);
+            s.AddSingleton<OwnExpeditor.Core.Modules.Jobs.IJobBoardFactory>(BoardFactory); // sem disco: nada de cache de distâncias real
         });
         Shell = Provider.GetRequiredService<ShellViewModel>();
     }
@@ -321,6 +322,8 @@ public sealed class ShellFixture
     public FakePicker Picker { get; } = new();
 
     public FakeTheme Theme { get; } = new();
+
+    public FakeBoardFactory BoardFactory { get; } = new();
 
     public IServiceProvider Provider { get; }
 

@@ -281,3 +281,60 @@ As DLCs só trazem os arquivos delas; o catálogo junta todos os pacotes.
 Ainda não lido: mods (`.scs`/`.zip` na pasta `mod`), HashFS v1 e o vínculo
 reboque ↔ `body_types`.
 
+
+## 10. Distância entre cidades (descoberta de 18/11/2026)
+
+Medições com o dataset real (`dataset/scs`: `def.scs` + 10 DLCs; **sem `base.scs`**)
+e os 30+ saves do perfil de exemplo (`save/1..4`, `autosave*`).
+
+**Coordenadas de cidades nos `.scs`: não existem em `def/`.**
+- `def/city/<cidade>.sui` (80 cidades no `def.scs`) só traz `city_name`,
+  `city_name_localized`, `country`, `population`, `map_x_offsets[]`/`map_y_offsets[]`
+  (deslocamentos de **rótulo** por nível de zoom, não posição) e placas.
+- `def/company/<empresa>/editor/<cidade>.sii` (`company_def`) só traz `city` e
+  `prefab` (nome do prefab, sem posição).
+- As posições existem apenas no mapa: `map/europe/sec±XXXX±YYYY.{base,desc,aux,data,snd}`
+  (setores binários em grade; só as DLCs trazem os seus aqui, o mapa base está
+  em `base.scs`, ausente no dataset). Extrair a posição de uma cidade exige ler
+  itens `city` e nós dos `.base` de todos os setores: engenharia reversa do formato
+  do mapa, fora do escopo desta etapa. **Decisão: não usar coordenadas; estimar a partir dos pares conhecidos.**
+
+**Tabela conhecida.** `shortest_distance_km` de cada oferta com `target` e
+distância > 0 dá o par (cidade da empresa dona, cidade do `target`). Os pares são
+tratados como não direcionais (chave ordenada); o primeiro valor visto vence. No
+perfil de exemplo: `save/3` sozinho → 386 cidades e 4.122 pares únicos
+(5,6% dos pares possíveis); todos os saves do perfil juntos → 12.072 pares
+(16,2%, grafo conexo). Agregar todos os saves do usuário triplica a cobertura.
+
+**Estimativa (grafo).** Para um par ausente: menor caminho (Dijkstra) pelo
+grafo de pares conhecidos × fator de calibração. Validação *leave-one-out*
+(remove a aresta e estima, para todos os pares conhecidos), razão real/caminho:
+
+| Base conhecida | Mediana real/caminho | Erro médio absoluto (fator = mediana) |
+|----------------|----------------------|----------------------------------------|
+| todos os saves (12.072 pares) | 1,00 a 1,04 | ≈ 16% (≤ 2 saltos) a ≈ 22% (qualquer) |
+| só `save/3` (4.122 pares) | 0,83 a 0,91 | ≈ 26% a 28% |
+| só `save/1` (580 pares) | 0,54 a 0,56 | ≈ 25% a 28% |
+
+Validação *holdout* (20% dos pares conhecidos escondidos e estimados; fator calibrado
+sem eles), todos os saves: erro médio absoluto 24%, viés +8%; por faixa do valor real:
+< 300 km superestima ≈ +90% (vizinhos não têm caminho curto sem a aresta direta),
+300–600 km ±15%, 600–1000 km ±11%, ≥ 1000 km subestima ≈ −15% a −24%. Só `save/3`:
+erro médio 52% (as faixas curtas pesam). Alternativa testada (limites de desigualdade
+triangular por vizinhos comuns) ficou na mesma faixa (22–25%) e foi descartada.
+Os pares conhecidos não são amostra aleatória dos pares do mapa; o erro real dos
+pares ausentes (em geral mais longos) pode diferir.
+
+O fator depende da densidade do grafo (quanto mais esparso, mais o caminho
+passa por cidades-polo e excede a rota direta), por isso o app **calibra em
+tempo de execução**: mediana de real/caminho (leave-one-out) numa amostra
+determinística (até 300 pares) da própria tabela, limitada a [0,3; 1,2].
+Sem caminho (cidade sem nenhum par conhecido) → mediana dos pares conhecidos;
+sem nenhum par → 500 km. Sempre marcada `Estimated`. Erro típico ≈ 25%: serve
+para exibição; o jogo recalcula a rota ao dirigir (se recalcula
+`shortest_distance_km`/pagamento ao carregar ou aceitar: **a validar no jogo**).
+
+**Cache (Data).** `IDistanceCache` guarda a tabela agregada por jogo em
+`<SettingsDirectory>/distances-<ets2|ats>.json` e as impressões digitais
+(caminho, tamanho, data) dos saves já lidos, para só reler o que mudou. Cresce a
+cada save aberto e por varredura dos saves de todos os perfis.

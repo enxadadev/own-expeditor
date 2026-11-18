@@ -1,150 +1,187 @@
 # Fluxo de dados: leitura, escrita e backup
 
 Este documento descreve o que o código faz **hoje**, com os métodos reais de
-`src/`. O que ainda não existe está marcado como planejado (ver
-[overview.md](overview.md) e a [ADR 0006](../decisions/0006-integracao-do-codigo-de-injecao-ao-shell.md)).
+`src/`. A visão geral está em [overview.md](overview.md).
 
 ## Localizar perfil e save
 
-`SaveLocator` (`Data`) lista os perfis da pasta de documentos do jogo e os
-slots de cada perfil. Só lê pastas e arquivos; não altera nada.
+`ProfileLocator` (`Data`, interface `IProfileLocator`) procura perfis em
+Documentos, em `~/.local/share` (Linux nativo) e no prefixo Proton da Steam.
+Lê `profiles/` e `steam_profiles/` (este último com Steam Cloud). Só lê pastas e
+arquivos; não altera nada.
 
-- `Profiles(documentsDir)`: devolve os perfis com `Path`, `Id` e `IsSteamCloud`.
-- `Saves(profile)`: devolve os slots com `Folder`, `Slot` e `Name` (lido de `info.sii`).
-- `NextSlot(profile)`: próxima pasta de slot livre, usada pela gravação em slot novo.
+`ProfileService` (`Core`, `IProfileService`) expõe o resultado à App:
 
-## Leitura
+- `GetProfilesAsync()` devolve os perfis (`ProfileInfo`).
+- `GetSavesAsync(profile)` devolve os slots (`SaveSlotInfo`), lendo o nome de
+  `info.sii`.
 
-`SiiDocument.Load(path)` lê o arquivo inteiro e entrega o conteúdo em camadas:
+## Leitura e abertura da sessão
+
+`IEditSessionHost.OpenAsync(save, progress, ct)` (`Core`) abre o save. Só uma
+sessão existe por vez; abrir outro save fecha a anterior.
 
 ```mermaid
 sequenceDiagram
-    participant C as Chamador
-    participant D as SiiDocument
-    participant S as SiiDecoder
-    participant B as BsiiDecoder
-    C->>D: Load(path)
-    D->>D: File.ReadAllBytes(path)
-    D->>S: DecodeToText(bytes)
-    S->>S: DetectFormat(bytes)
+    participant A as App (SavePicker / Loading)
+    participant H as EditSessionHost
+    participant F as ISaveFileStore
+    participant D as SiiDecoder / BsiiDecoder
+    participant P as SiiDocument
+    A->>H: OpenAsync(save, progresso, ct)
+    H->>F: ReadAsync(game.sii)
+    F-->>H: SaveFile (bytes + impressão digital)
+    H->>D: DecodeToText(bytes)
     alt ScsC (criptografado)
-        S->>S: Decrypt: AES-256-CBC (IV no offset 36)
-        S->>S: zlib descompacta; confere tamanho do cabeçalho (offset 52)
-        S->>S: DecodeToText(conteúdo interno)
-    else SiiNunit (texto)
-        S->>S: UTF-8, aceita BOM
+        D->>D: AES-256-CBC (IV no offset 36), zlib, confere tamanho (offset 52)
     else BSII (binário)
-        S->>B: ToText(bytes)
-        B-->>S: texto SiiNunit
+        D->>D: BsiiDecoder.ToText
     else 3nK
-        S->>S: Decode3nK (XOR), depois DecodeToText
-    else outro
-        S-->>C: InvalidDataException
+        D->>D: XOR (Decode3nK)
+    else SiiNunit (texto)
+        D->>D: UTF-8, aceita BOM
     end
-    S-->>D: texto SiiNunit
-    D->>D: Parse(texto)
-    D-->>C: SiiDocument com Units
+    D-->>H: texto SiiNunit
+    H->>P: Parse(texto, progresso)
+    P-->>H: SiiDocument (Units, índice por tipo e ID)
+    H-->>A: IEditSession (ISaveView somente leitura de base)
 ```
 
-Pontos relevantes de `Parse`:
+Estágios de progresso (`LoadStages`, chaves `Loading_Stage_*`): leitura do
+arquivo, interpretação do save e organização dos fretes e empresas. A tela de
+carregamento aceita cancelamento.
 
-- Linhas em branco são ignoradas. O cabeçalho precisa ser `SiiNunit`, senão
-  lança `InvalidDataException` com número da linha.
-- Cada bloco é `tipo : id {`. Um bloco sem `}` gera erro no fim do arquivo.
-- Atributos são divididos no **primeiro** `": "`, então valores com `: ` dentro
-  (ex.: `name: "a: b"`) ficam inteiros.
-- `Find(id)` usa um índice por ID. Se houver IDs repetidos, vale o primeiro.
-  `Units` mantém todos. `OfType(tipo)` filtra por tipo.
+Erros de leitura viram `CoreError` por `CoreErrors.FromRead`:
 
-Leitura de BSII: `BsiiDecoder.ToText` devolve texto `SiiNunit`, com os nomes
-dos campos e a forma dos valores iguais aos de um save que o jogo gravou em
-texto. Formato em [../sii-format.md](../sii-format.md), seção 8.
+- `SaveCorrupt`: arquivo danificado ou truncado (`SiiErrorKind` `Empty`,
+  `Truncated`, `DecryptFailed`, `DecompressFailed`, `SizeMismatch`).
+- `SaveParseFailed`: conteúdo não reconhecido ou fora do formato
+  (`UnknownFormat`, `UnsupportedVersion`, `UnknownValueType`, `Syntax`).
+- `SaveNotFound` e `AccessDenied`: erro de arquivo ou permissão.
 
-### Definições do jogo e nomes
+Detalhes do parser: `SiiDocument.Parse` lança `SiiFormatException` com
+`Line` ou `Offset` quando houver. Caveats estão no fim deste documento.
 
-`GameCatalog.LoadFromGameDir(gameDir, language)` (`Data`) lê `def.scs`,
-`dlc_*.scs` e `locale.scs` da instalação do jogo, pelo leitor `HashFsArchive`.
-Ele monta empresas, cidades, cargas e reboques e as regras de carga. Os nomes
-passam por `Localization`, que resolve `@@chave@@` no idioma escolhido.
-O idioma vem de `Localization.GameLanguage(documentsDir)` (`g_lang_init` do
-`config.cfg`) ou, sem isso, da cultura da UI.
+### Opções de frete
 
-Pelo `SaveSession` (`Core`), a sessão recebe o `SiiDocument` e o `GameCatalog`
-e monta as opções a partir do save. Detalhes em
-[../sii-format.md](../sii-format.md), seções 4 e 9.
+`JobBoard` (`Core/Modules/Jobs`) é um índice só de leitura sobre a `ISaveView`
+(que já inclui as pendências) e o `IGameData` do jogo. Ele responde na ordem do
+fluxo da tela: cidade de saída, cidade de destino, empresa de saída, carga e
+empresa de chegada. As regras de carga são o catálogo do jogo mais as regras
+reveladas pelas ofertas do save (para mods, sem catálogo, só as do save).
 
-## Escrita
+A distância vem de `DistanceTable`: primeiro o par conhecido (das ofertas de
+todos os saves do usuário, via `IDistanceCache`), depois a estimativa pelo grafo
+de pares conhecidos. Ver [../sii-format.md](../sii-format.md), seção 10.
 
-Hoje, a única escrita da UI é criar um save novo com
-`SaveLocator.WriteAsNewSave(profile, source, document, name)`:
+### Cache de distâncias
+
+`JsonDistanceCache` (`Data/Distances`, `IDistanceCache`) guarda, por jogo, a tabela
+agregada em `distances-ets2.json` ou `distances-ats.json`, na pasta de ajustes
+(`SettingsDirectory`, padrão `%AppData%\OwnExpeditor` no Windows). Ele também
+guarda a impressão digital (tamanho e data) de cada save já lido, para reler só o
+que mudou. `ScanAsync` lê os saves informados em segundo plano; saves ilegíveis
+são pulados. A gravação do cache é feita por `.tmp` e troca. Falha de disco não
+derruba o app.
+
+## Planejar e revisar
+
+Cada ação de módulo (por exemplo, adicionar um frete) monta um `ChangeSet`:
+
+- `JobPlanner.Plan(original, board, request)` valida o pedido (cidades
+  diferentes, prazo válido, empresa e carga compatíveis, vaga livre ou oferta
+  existente) e devolve um `ChangeSet` de `SetAttribute`. A `Key` é
+  `jobs:slot:<id>`, então editar uma pendência substitui a anterior.
+- Violação vira `CoreException(InvalidEdit)` com `Reason = Jobs_Error_*`. Nada é
+  gravado.
+- `IEditSession.Stage(change)` confere os valores antigos (`OldValue`) contra o
+  save base. Se não baterem, `StalePatch`.
+
+Pendências ficam na sessão. `Discard(id)`, `DiscardModule(id)` e `DiscardAll()`
+desfazem sem tocar no arquivo. O shell mostra as pendências de todos os módulos
+na revisão.
+
+## Gravação
+
+`IEditSession.ApplyAsync(ApplyTarget, ct)` grava todas as pendências de uma vez.
+`ApplyTarget` é `Overwrite` ou `NewSlot(nome)`. Só uma gravação por vez
+(`SessionBusy`).
 
 ```mermaid
 sequenceDiagram
-    participant C as MainViewModel
-    participant L as SaveLocator
-    participant D as SiiDocument
-    participant FS as Sistema de arquivos
-    C->>L: WriteAsNewSave(profile, source, document, nome)
-    L->>L: NextSlot(profile)
-    L->>FS: CreateDirectory(pasta do slot novo)
-    L->>D: Save(<slot novo>/game.sii)
-    D->>FS: sem arquivo de destino: nenhum backup
-    D->>FS: WriteAllText(ToText(), UTF-8 sem BOM)
-    alt info.sii do slot de origem existe
-        L->>L: Load(info.sii), troca o campo name
-        L->>FS: info.sii no slot novo
+    participant U as Confirmação (App)
+    participant S as EditSession
+    participant G as Monitor de processo
+    participant F as ISaveFileStore (SaveFileStore)
+    U->>S: ApplyAsync(Overwrite | NewSlot)
+    S->>S: monta o texto novo (SiiDocument.ToText) e a função de verificação
+    S->>G: jogo aberto?
+    alt jogo aberto
+        S-->>U: GameRunning (nada gravado)
     end
-    L-->>C: caminho do slot novo
+    S->>F: ReadAsync (relê o arquivo)
+    alt Overwrite
+        S->>F: WriteAtomicAsync(path, impressão digital, texto)
+    else NewSlot
+        S->>F: WriteNewSlotAsync(origem, impressão digital, texto, nome)
+    end
+    F-->>S: recibo (backup e nova impressão digital, ou novo slot)
+    S-->>U: ApplyResult
 ```
 
-`SiiDocument.Save(path)` grava o texto e, **só se o arquivo já existe**, copia
-antes o original para `path.bak-yyyyMMdd-HHmmss` (`File.Copy` com
-`overwrite: false`). Como o slot novo não tem `game.sii`, não há backup. O
-save original não é tocado.
+### Sobrescrever (`WriteAtomicAsync`)
 
-Detalhes importantes:
+1. **Confere** que o arquivo ainda é o que foi lido (tamanho e SHA-256). Se mudou,
+   `SaveChangedOnDisk`, e nada é gravado.
+2. **Backup**: copia `game.sii` para `game.sii.bak-yyyyMMdd-HHmmss` ao lado, com
+   `overwrite: false`, e confere o tamanho. Se o nome já existe, `BackupExists`;
+   se a cópia falhar, a cópia parcial é apagada e a gravação não acontece.
+3. **Grava em `game.sii.tmp`**: texto UTF-8 sem BOM, com `Flush(true)`.
+4. **Relê e verifica**: o conteúdo relido tem de ser igual aos bytes gravados e
+   passar pela verificação da sessão (mesma contagem de blocos e os valores novos
+   presentes). Se falhar, `VerifyFailed`.
+5. **Troca**: `File.Move(tmp, game.sii, overwrite: true)`.
 
-- O nome do backup usa a hora local com precisão de segundo. Se já existir um
-  backup com o mesmo nome (duas gravações no mesmo segundo), `File.Copy` lança
-  exceção e **nada é gravado**. Isso protege o save, mas a operação falha.
-- O backup é cópia byte a byte do arquivo original, então restaurar é copiá-lo
-  de volta por cima de `game.sii`. O app não tem comando de restauração.
-- A escrita não usa `game.sii.tmp` nem verificação. Isso é o que a ADR 0006
-  (item 5) muda.
-- Ao gravar, o arquivo passa a ser texto `SiiNunit`, mesmo que o original fosse
-  ScsC ou BSII. Ver [ADR 0002](../decisions/0002-gravar-save-em-texto.md).
-- Com `ToText()` sem alterações, o resultado deve ser idêntico ao texto lido.
-  Testado com `RealSaveTests` contra os saves de `samples/`. Ver
-  [../development.md](../development.md).
+Se qualquer etapa falhar depois do backup, o `.tmp` é apagado e o original
+continua como estava. O backup fica na pasta, com o nome acima.
 
-### Escrita planejada (ADR 0006, item 5)
+### Novo save (`WriteNewSlotAsync`)
 
-Na confirmação, o usuário escolhe o destino. Os dois caminhos passam por um
-único `ApplyAsync(ApplyTarget)` e pela Data (`ISaveFileStore`):
+1. **Confere** o save de origem, como acima.
+2. **Aloca** a próxima pasta de slot livre do perfil (`SlotUnavailable` se não
+   houver ou se a pasta não puder ser criada).
+3. **Copia** a pasta de origem inteira para o slot novo.
+4. **Grava** o `game.sii` alterado no slot novo, com as mesmas etapas `.tmp` e
+   verificação.
+5. **Renomeia** o nome em `info.sii` para o nome escolhido (até 40 caracteres).
 
-- **Sobrescrever este save** (padrão): cria backup `game.sii.bak-<timestamp>`,
-  grava `game.sii.tmp`, verifica e substitui o original.
-- **Criar um novo save**: copia a pasta do slot para o próximo slot livre, grava
-  o `game.sii` alterado ali (mesmas etapas `.tmp` e verificação) e ajusta o nome
-  em `info.sii`. O original não é tocado. Com Steam Cloud, o jogo pode não
-  mostrar o slot.
+O save original não é tocado e não há `.bak`, porque a cópia nunca altera a
+origem. Se uma etapa falhar, a pasta do slot novo é apagada. Ver a nota sobre o
+`CLAUDE.md` abaixo.
 
-> TODO: confirmar cada etapa quando `ApplyAsync` e `ISaveFileStore` forem
-> implementados (plano 0006, fases F3 e F4).
+### Formato gravado
 
-## Ordem exigida pelo `CLAUDE.md`
+Ao gravar, o arquivo passa a ser texto `SiiNunit`, mesmo que o original fosse
+ScsC ou BSII ([ADR 0002](../decisions/0002-gravar-save-em-texto.md)). Com
+`ToText()` sem alterações, o resultado é idêntico ao texto lido: coberto pelo
+teste de round-trip (`RealSaveTests`, `JobsRealSaveTests`) contra os saves de
+`samples/`.
 
-1. Nunca gravar sem backup ao lado (`game.sii.bak-<timestamp>`). Hoje está em
-   `SiiDocument.Save`, mas só quando o arquivo de destino existe. O slot novo não
-   tem original, então esta regra não se aplica a ele como está escrito.
-   TODO: confirmar como a regra vale para "criar um novo save" (ADR 0006 não
-   diz explicitamente; o plano diz que o original não é tocado).
-2. Round-trip sem mudanças gera arquivo equivalente. Coberto por teste
-   (`RealSaveTests`).
+Erros de gravação viram `CoreError` por `SaveWriteException`
+(`SaveWriteFailure`): `ChangedOnDisk`, `BackupExists`, `BackupFailed`,
+`WriteFailed`, `VerifyFailed`, `AccessDenied`, `NotFound`, `SlotUnavailable`.
 
-Quando a escrita passar por `ApplyAsync`, a regra deve ser garantida pelo
-`Core`, para que a UI nunca chame `Save` sem o backup. Hoje a UI chama
-`SaveLocator.WriteAsNewSave` direto.
+## Regras do `CLAUDE.md` e como o código as cumpre
+
+1. **Nunca gravar sem backup ao lado.** `SaveFileStore.WriteAtomicAsync` cria o
+   backup antes de qualquer escrita. O novo save não tem backup porque não altera
+   o original; a regra não está escrita para esse caso.
+   > TODO: confirmar com o `chief-architect` se "criar um novo save" dispensa o
+   > `.bak` ou se ele também deve gerar um backup do `game.sii` de origem.
+2. **Round-trip sem mudanças gera arquivo equivalente.** Coberto por teste.
+
+Toda gravação passa por `ISaveFileStore`, chamado só por `EditSession.ApplyAsync`.
+A UI não tem caminho próprio de escrita.
 
 ## Caveats do parser e do writer
 
@@ -153,12 +190,12 @@ linha é marcada.
 
 - Linhas são `Trim()`-adas. Espaços no início ou no fim de um valor se perdem.
 - Atributo com valor vazio escrito como `nome:` (sem espaço) é gravado como
-  `nome: ` (com espaço). O texto muda, mas o valor não. TODO: confirmar se o
-  jogo gera esse formato.
+  `nome: ` (com espaço). O texto muda, mas o valor não.
+  > TODO: confirmar se o jogo gera esse formato.
 - Cabeçalho de bloco sem espaços ao redor do `:` (ex.: `tipo:id {`) é rejeitado
-  com erro de cabeçalho inválido. TODO: confirmar se o jogo gera esse formato.
-- Um arquivo ScsC truncado, com tamanho que não é múltiplo de 16, pode lançar
-  `CryptographicException` em vez de `InvalidDataException`, porque a
-  descriptografia usa `PaddingMode.None`.
-- Erros de leitura ainda são `InvalidDataException`, sem o tipo
-  `SiiFormatException`/`SiiErrorKind` da ADR 0006 (planejado).
+  com erro de sintaxe.
+  > TODO: confirmar se o jogo gera esse formato.
+- Um arquivo ScsC truncado, com tamanho que não é múltiplo de 16, é classificado
+  como `DecryptFailed` (`SaveCorrupt`), e não mais como exceção de criptografia.
+- Blocos e atributos duplicados: `Find(id)` devolve o primeiro. `Units` mantém
+  todos.

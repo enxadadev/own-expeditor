@@ -156,6 +156,18 @@
       </WrapPanel>
     </g:GallerySection>
 
+    <!-- StepBadge, InfoTag, CityListItem (módulo Fretes) -->
+    <g:GallerySection Title="StepBadge · InfoTag · CityListItem">
+      <WrapPanel Classes="cells">
+        <g:GalleryCell Caption="StepBadge"><StackPanel Orientation="Horizontal" Spacing="8"><c:StepBadge Number="3" /><c:StepBadge Number="1" IsDone="True" /></StackPanel></g:GalleryCell>
+        <g:GalleryCell Caption="InfoTag"><StackPanel Orientation="Horizontal" Spacing="8"><c:InfoTag Text="Estimated" /><c:InfoTag Text="No match" /></StackPanel></g:GalleryCell>
+        <g:GalleryCell Caption="{loc:Tr Gallery_State_Normal}"><c:CityListItem Width="280" Title="{Binding CityA}" Meta="2 companies · 4 free slots · 3 offers" /></g:GalleryCell>
+        <g:GalleryCell Caption="{loc:Tr Offer_Modified}"><c:CityListItem Width="280" Title="{Binding CityA}" Meta="2 companies · 4 free slots" PendingText="1 pending" /></g:GalleryCell>
+        <g:GalleryCell Caption="{loc:Tr Gallery_State_Disabled}"><c:CityListItem Width="280" Title="{Binding CityB}" Meta="No free slots · 2 offers" IsDimmed="True" /></g:GalleryCell>
+        <g:GalleryCell Caption="{loc:Tr Gallery_State_LongText}"><c:CityListItem Width="280" Title="{Binding PageTitle}" Meta="2 companies · 4 free slots · 3 offers" PendingText="12 pending" /></g:GalleryCell>
+      </WrapPanel>
+    </g:GallerySection>
+
     <!-- SectionCard -->
     <g:GallerySection Title="SectionCard">
       <WrapPanel Classes="cells">

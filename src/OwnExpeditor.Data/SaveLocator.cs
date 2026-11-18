@@ -4,13 +4,6 @@ using OwnExpeditor.Sii;
 
 namespace OwnExpeditor.Data;
 
-/// <summary>Save de um perfil no formato legado (pasta/slot/nome). Substituído por <see cref="SaveSlotInfo"/> em F3.</summary>
-public sealed record SaveInfo(string Folder, string Slot, string Name)
-{
-    public string GameSii => System.IO.Path.Combine(Folder, "game.sii");
-    public override string ToString() => $"{Name}  [{Slot}]";
-}
-
 /// <summary>Encontra pastas do jogo, perfis e saves no disco.</summary>
 public static class SaveLocator
 {
@@ -37,23 +30,22 @@ public static class SaveLocator
         return result;
     }
 
-    public static IReadOnlyList<SaveInfo> Saves(ProfileInfo profile)
+    /// <summary>Saves do perfil como <see cref="SaveSlotInfo"/>, do mais recente ao mais antigo.</summary>
+    public static IReadOnlyList<SaveSlotInfo> Slots(ProfileInfo profile)
     {
         var saveDir = Path.Combine(profile.DirectoryPath, "save");
         return Directory.EnumerateDirectories(saveDir)
-            .Where(d => File.Exists(Path.Combine(d, "game.sii")))
-            .Select(d => new SaveInfo(d, Path.GetFileName(d), ReadName(d) ?? Path.GetFileName(d)))
-            .OrderByDescending(s => File.GetLastWriteTimeUtc(s.GameSii))
+            .Select(d => (Dir: d, Game: Path.Combine(d, "game.sii")))
+            .Where(x => File.Exists(x.Game))
+            .Select(x =>
+            {
+                var slot = Path.GetFileName(x.Dir);
+                var file = new FileInfo(x.Game);
+                return new SaveSlotInfo(profile, slot, ReadName(x.Dir) ?? slot, x.Game, file.LastWriteTimeUtc, file.Length);
+            })
+            .OrderByDescending(s => s.LastWriteUtc)
             .ToList();
     }
-
-    /// <summary>Saves do perfil como <see cref="SaveSlotInfo"/>, do mais recente ao mais antigo.</summary>
-    public static IReadOnlyList<SaveSlotInfo> Slots(ProfileInfo profile) =>
-        Saves(profile).Select(s =>
-        {
-            var file = new FileInfo(s.GameSii);
-            return new SaveSlotInfo(profile, s.Slot, s.Name, s.GameSii, file.LastWriteTimeUtc, file.Length);
-        }).ToList();
 
     /// <summary>Próxima pasta numérica livre em save/ (ex.: "8").</summary>
     public static string NextSlot(ProfileInfo profile)
@@ -78,23 +70,5 @@ public static class SaveLocator
         {
             return null;
         }
-    }
-
-    /// <summary>Grava o save editado numa pasta nova, com info.sii renomeado. Não toca no original.</summary>
-    public static string WriteAsNewSave(ProfileInfo profile, SaveInfo source, SiiDocument game, string name)
-    {
-        var target = NextSlot(profile);
-        Directory.CreateDirectory(target);
-        game.Save(Path.Combine(target, "game.sii"));
-
-        var infoPath = Path.Combine(source.Folder, "info.sii");
-        if (File.Exists(infoPath))
-        {
-            var info = SiiDocument.Load(infoPath);
-            var unit = info.Units.FirstOrDefault();
-            if (unit?.Get("name") is not null) unit.Set("name", $"\"{name.Replace("\"", "")}\"");
-            info.Save(Path.Combine(target, "info.sii"));
-        }
-        return target;
     }
 }

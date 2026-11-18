@@ -18,7 +18,8 @@
               IsVisible="{Binding #Root.ShowDistance}">
         <TextBlock Classes="hero" Text="{Binding #Root.DistanceText}" />
       </Border>
-      <c:EmptyState Title="{loc:Tr Route_Empty_Title}" Message="{loc:Tr Route_Empty_Message}" IsVisible="{Binding #Root.IsEmpty}" />
+      <c:EmptyState Title="{loc:Tr Route_Empty_Title}" Message="{loc:Tr Route_Empty_Message}" IsVisible="{Binding #Root.ShowDefaultEmpty}" />
+      <c:EmptyState Title="{Binding #Root.EmptyTitle}" Message="{Binding #Root.EmptyMessage}" IsVisible="{Binding #Root.ShowCustomEmpty}" />
       <c:LoadingPanel Text="{loc:Tr Loading_Map}" ShowDelay="0:0:0" IsVisible="{Binding #Root.IsLoading}" />
     </Panel>
   </Border>

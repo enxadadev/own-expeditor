@@ -28,6 +28,12 @@ public partial class SearchablePicker : UserControl
     public static readonly StyledProperty<string?> EmptyTextProperty = AvaloniaProperty.Register<SearchablePicker, string?>(nameof(EmptyText));
     public static readonly StyledProperty<bool> IsDropDownOpenProperty = AvaloniaProperty.Register<SearchablePicker, bool>(nameof(IsDropDownOpen), defaultBindingMode: Avalonia.Data.BindingMode.TwoWay);
 
+    public static readonly StyledProperty<int> StepNumberProperty = AvaloniaProperty.Register<SearchablePicker, int>(nameof(StepNumber));
+    public static readonly StyledProperty<bool> IsStepDoneProperty = AvaloniaProperty.Register<SearchablePicker, bool>(nameof(IsStepDone));
+    public static readonly StyledProperty<string?> SearchWatermarkProperty = AvaloniaProperty.Register<SearchablePicker, string?>(nameof(SearchWatermark));
+    public static readonly StyledProperty<string?> ToggleTextProperty = AvaloniaProperty.Register<SearchablePicker, string?>(nameof(ToggleText));
+    public static readonly StyledProperty<bool> ToggleCheckedProperty = AvaloniaProperty.Register<SearchablePicker, bool>(nameof(ToggleChecked), defaultBindingMode: Avalonia.Data.BindingMode.TwoWay);
+
     public static readonly DirectProperty<SearchablePicker, string> LabelUpperProperty = AvaloniaProperty.RegisterDirect<SearchablePicker, string>(nameof(LabelUpper), o => o.LabelUpper);
     public static readonly DirectProperty<SearchablePicker, string> DisplayTextProperty = AvaloniaProperty.RegisterDirect<SearchablePicker, string>(nameof(DisplayText), o => o.DisplayText);
     public static readonly DirectProperty<SearchablePicker, string> AccessibleNameProperty = AvaloniaProperty.RegisterDirect<SearchablePicker, string>(nameof(AccessibleName), o => o.AccessibleName);
@@ -59,6 +65,14 @@ public partial class SearchablePicker : UserControl
     public bool IsRequired { get => GetValue(IsRequiredProperty); set => SetValue(IsRequiredProperty, value); }
     public string? ErrorText { get => GetValue(ErrorTextProperty); set => SetValue(ErrorTextProperty, value); }
     public string? EmptyText { get => GetValue(EmptyTextProperty); set => SetValue(EmptyTextProperty, value); }
+    /// <summary>Chave opcional no alto do popup (ex.: "Só combinações possíveis"); o filtro em si é do ViewModel.</summary>
+    /// <summary>Número do passo ao lado do rótulo (0 = sem número); <see cref="IsStepDone"/> pinta de âmbar.</summary>
+    public int StepNumber { get => GetValue(StepNumberProperty); set => SetValue(StepNumberProperty, value); }
+    public bool IsStepDone { get => GetValue(IsStepDoneProperty); set => SetValue(IsStepDoneProperty, value); }
+    /// <summary>Texto da busca no popup; sem valor, o padrão do app.</summary>
+    public string? SearchWatermark { get => GetValue(SearchWatermarkProperty); set => SetValue(SearchWatermarkProperty, value); }
+    public string? ToggleText { get => GetValue(ToggleTextProperty); set => SetValue(ToggleTextProperty, value); }
+    public bool ToggleChecked { get => GetValue(ToggleCheckedProperty); set => SetValue(ToggleCheckedProperty, value); }
     public bool IsDropDownOpen { get => GetValue(IsDropDownOpenProperty); set => SetValue(IsDropDownOpenProperty, value); }
 
     public string LabelUpper => Label.ToUpper(System.Globalization.CultureInfo.CurrentCulture);
@@ -85,6 +99,7 @@ public partial class SearchablePicker : UserControl
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
+        if (change.Property == SearchWatermarkProperty && SearchWatermark is { } watermark) Search.Watermark = watermark;
         if (change.Property == SelectedItemProperty || change.Property == LabelProperty || change.Property == PlaceholderProperty
             || change.Property == TotalCountProperty || change.Property == ItemsProperty || change.Property == IsLoadingProperty
             || change.Property == AllowClearProperty || change.Property == QueryProperty || change.Property == EmptyTextProperty
@@ -116,6 +131,7 @@ public partial class SearchablePicker : UserControl
     {
         _popupWidth = System.Math.Clamp(System.Math.Max(Bounds.Width, 360), 360, 480);
         RaisePropertyChanged(PopupWidthProperty, 0, _popupWidth);
+        OptionList.SelectedItem = SelectedItem is not null && Items?.Cast<object>().Contains(SelectedItem) == true ? SelectedItem : null;
         Search.Focus();
     }
 
@@ -126,8 +142,19 @@ public partial class SearchablePicker : UserControl
 
     private void OnListPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
-        if ((e.Source as Visual)?.GetSelfAndVisualAncestors().OfType<ListBoxItem>().FirstOrDefault() is not null) Close();
+        if ((e.Source as Visual)?.GetSelfAndVisualAncestors().OfType<ListBoxItem>().FirstOrDefault() is { } item
+            && OptionList.ItemFromContainer(item) is PickerOption { IsEnabled: true } option)
+            Commit(option);
     }
+
+    /// <summary>A escolha só vale com Enter ou clique: as setas apenas movem o realce.</summary>
+    private void Commit(PickerOption option)
+    {
+        SelectedItem = option;
+        Close();
+    }
+
+    private bool IsEnabledAt(int index) => Items?.Cast<object>().ElementAtOrDefault(index) is PickerOption { IsEnabled: true };
 
     /// <summary>↑/↓/PageUp/PageDown/Home/End movem o realce mesmo com o foco na busca; Enter fecha; Esc devolve o foco ao campo.</summary>
     private void OnPopupKeyDown(object? sender, KeyEventArgs e)
@@ -146,14 +173,24 @@ public partial class SearchablePicker : UserControl
         };
         if (next is { } n && count > 0)
         {
-            OptionList.SelectedIndex = System.Math.Clamp(n, 0, count - 1);
-            OptionList.ScrollIntoView(OptionList.SelectedIndex);
+            // linhas desativadas ficam fora das setas
+            var step = n >= index ? 1 : -1;
+            var target = System.Math.Clamp(n, 0, count - 1);
+            while (target >= 0 && target < count && !IsEnabledAt(target)) target += step;
+            if (target >= 0 && target < count)
+            {
+                OptionList.SelectedIndex = target;
+                OptionList.ScrollIntoView(target);
+            }
             e.Handled = true;
         }
-        else if (e.Key == Key.Enter && OptionList.SelectedItem is not null) { Close(); e.Handled = true; }
+        else if (e.Key == Key.Enter && OptionList.SelectedItem is PickerOption { IsEnabled: true } chosen) { Commit(chosen); e.Handled = true; }
         else if (e.Key == Key.Escape) { Close(); e.Handled = true; }
         else if (e.Key == Key.Tab) { IsDropDownOpen = false; }
     }
+
+    /// <summary>Põe o foco no campo (próximo passo incompleto), sem abrir o popup.</summary>
+    public void FocusField() => FieldButton.Focus();
 
     private void Close()
     {

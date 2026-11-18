@@ -32,10 +32,17 @@ public sealed partial class SessionBarViewModel : LocalizedViewModel
     [ObservableProperty] private bool _isPickerOpen;
     [ObservableProperty] private bool _isGameRunning;
     [ObservableProperty] [NotifyPropertyChangedFor(nameof(ReviewEnabled), nameof(ReviewText), nameof(ReviewAutomation))] private int _pendingCount;
-    [ObservableProperty] [NotifyPropertyChangedFor(nameof(ShowReview))] private bool _isSessionOpen;
+    [ObservableProperty] [NotifyPropertyChangedFor(nameof(ShowReview), nameof(ShowCloud))] private bool _isSessionOpen;
     [ObservableProperty] private bool _isReviewActive;
 
     public bool HasSave => Save is not null;
+
+    /// <summary>Chip "Steam Cloud" (design/fretes §4.7): sempre visível com a sessão aberta num perfil com Steam Cloud.</summary>
+    public bool ShowCloud => IsSessionOpen && Save?.Profile.IsSteamCloud == true;
+
+    public string CloudChip => Loc["Jobs_Cloud_Chip"];
+
+    public string CloudAutomation => Loc["Jobs_Cloud_Title"];
 
     public bool NoSession => Save is null;
 

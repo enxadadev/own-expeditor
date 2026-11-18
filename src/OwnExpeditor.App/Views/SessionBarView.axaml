@@ -46,6 +46,14 @@
           </Panel>
           <TextBlock Classes="bodysm" Text="{Binding GameStatusText}" VerticalAlignment="Center" />
         </StackPanel>
+        <Border Classes="kbd" VerticalAlignment="Center" IsVisible="{Binding ShowCloud}" ToolTip.Tip="{Binding CloudAutomation}"
+                AutomationProperties.Name="{Binding CloudAutomation}">
+          <StackPanel Orientation="Horizontal" Spacing="6">
+            <Path Data="{StaticResource IconCloud}" Fill="{DynamicResource AccentTextBrush}" Width="14" Height="14" Stretch="Uniform"
+                  VerticalAlignment="Center" AutomationProperties.AccessibilityView="Raw" />
+            <TextBlock Classes="caption" Text="{Binding CloudChip}" Foreground="{DynamicResource TextBrush}" />
+          </StackPanel>
+        </Border>
       </StackPanel>
 
       <Button Grid.Column="1" x:Name="ReviewButton" Classes="accent" Classes.review-none="{Binding !ReviewEnabled}"

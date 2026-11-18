@@ -1,13 +1,11 @@
-﻿using OwnExpeditor.Core;
-using OwnExpeditor.Sii;
+﻿using OwnExpeditor.Sii;
 
 // Ferramenta de desenvolvimento.
 //   decode <entrada.sii> <saida.sii>
-//   inject <game.sii> <saida.sii> <empresa_origem> <destino> <cargo> <trailer_variant> <trailer_def> <company_truck> <km>
 
 if (args.Length == 0)
 {
-    Console.Error.WriteLine("uso: decode <in> <out> | inject <in> <out> <origem> <destino> <cargo> <trailer_variant> <trailer_def> <truck> <km>");
+    Console.Error.WriteLine("uso: decode <in> <out> | scs-ls | scs-cat | catalog");
     return 1;
 }
 
@@ -53,23 +51,12 @@ try
             Console.WriteLine($"ok: {args[2]}");
             return 0;
 
-        case "inject" when args.Length is 10 or 11:
-        {
-            var doc = SiiDocument.Load(args[1]);
-            var spec = new JobSpec(args[4], args[5], args[6], args[7], args[8], int.Parse(args[9]),
-                UnitsCount: args.Length == 11 ? int.Parse(args[10]) : 1);
-            var id = JobInjector.Inject(doc, args[3], spec);
-            var backup = doc.Save(args[2]);
-            Console.WriteLine($"ok: job {id} gravado em {args[2]}" + (backup is null ? "" : $" (backup: {backup})"));
-            return 0;
-        }
-
         default:
             Console.Error.WriteLine("argumentos inválidos");
             return 1;
     }
 }
-catch (Exception e) when (e is JobInjectionException or InvalidDataException or NotSupportedException or IOException)
+catch (Exception e) when (e is InvalidDataException or NotSupportedException or IOException)
 {
     Console.Error.WriteLine($"erro: {e.Message}");
     return 2;

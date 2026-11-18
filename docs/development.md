@@ -15,23 +15,30 @@ Rodar a partir da raiz do repositório:
 
 ```bash
 dotnet build                                   # compila a solução inteira
-dotnet test                                    # roda os testes de Core e Sii
-dotnet run --project src/OwnExpeditor.App      # abre a aplicação
+dotnet test                                    # roda os quatro projetos de teste
+dotnet run --project src/OwnExpeditor.App      # abre a aplicação (sempre o shell modular)
 ```
 
-Resultado verificado com `dotnet build`: 0 avisos, 0 erros.
+Resultado verificado com `toolkit/check.sh` (build e testes): 0 avisos, 0 erros,
+764 testes passando, 0 falhas.
 
-Resultado verificado com `dotnet test`: 17 testes passando. Desses, 1 é o
-placeholder `UnitTest1` de `Core.Tests`, e 16 são de `Sii.Tests`
-(7 em `SiiDocumentTests` e 9 casos de `RealSaveTests`).
+### Projetos de teste
 
-### Sobre `RealSaveTests`
+| Projeto | Cobre |
+|---------|-------|
+| `tests/OwnExpeditor.Sii.Tests` | Decodificação, parser, round-trip, erros tipados e saves reais |
+| `tests/OwnExpeditor.Data.Tests` | Gravação segura (`SaveFileStore`), perfis, instalação do jogo, monitor de processo, ajustes JSON, catálogo |
+| `tests/OwnExpeditor.Core.Tests` | Sessão de edição, `ApplyAsync` nos dois destinos, Jobs (`JobBoard`, `JobPlanner`, distâncias), fim a fim |
+| `tests/OwnExpeditor.App.Tests` | Paridade `.resx`, textos `_One`/`_Other`, erros, atalhos do shell, tema, página de Fretes |
 
-Esses 9 casos rodam contra saves reais. O teste procura uma pasta `samples/`
-subindo a partir do diretório de saída do teste, então ele encontra a pasta
-mesmo estando num worktree, desde que ela exista em algum diretório pai. A
-pasta `samples/` está no `.gitignore` e não vem com o repositório. Sem ela,
-`RealSaveTests` não executa nenhum caso e o resto da suíte passa.
+### Sobre os testes com saves reais
+
+`RealSaveTests` (em `Sii.Tests`) e `RealSaveTests`/`JobsRealSaveTests` (em
+`App.Tests`) rodam contra saves reais. Eles procuram uma pasta `samples/` subindo
+a partir do diretório de saída do teste, então encontram a pasta mesmo estando
+num worktree, desde que ela exista em algum diretório pai. A pasta `samples/`
+está no `.gitignore` e não vem com o repositório. Sem ela, esses casos não
+executam e o resto da suíte passa.
 
 Não coloque saves pessoais no repositório. Use `samples/` para isso.
 
@@ -101,6 +108,19 @@ toolkit/check-docs.sh      # DOCS: ok, ou LINK QUEBRADO / FORA DO INDICE
 ```
 
 `check-docs.sh` também conta os `TODO: confirmar` espalhados em `docs/`.
+
+### Textos e recursos (`.resx`)
+
+Os textos visíveis ficam em `src/OwnExpeditor.App/Resources/*.resx`. Eles são
+gerados a partir das tabelas `Chave | pt-BR | en` de `design/*/strings.md`:
+
+```bash
+toolkit/gen-resx.py           # regenera Strings*.resx e Gallery*.resx
+toolkit/gen-resx.py --check   # não grava; sai com 1 se os arquivos estariam diferentes
+```
+
+Não edite os `.resx` à mão. Depois de gerar, `App.Tests` confere a paridade
+pt-BR/en e as chaves `_One`/`_Other`.
 
 ### Diff para revisão
 
@@ -223,10 +243,12 @@ CLAUDE.md                 instruções do projeto para o Claude Code
 Directory.Build.props     versão do produto
 OwnExpeditor.sln          solução
 src/                      código de produção (ver architecture/layers.md)
-tests/                    testes xUnit
+tests/                    testes xUnit (Sii, Data, Core e App)
+tools/OwnExpeditor.Cli    ferramenta de desenvolvimento (decode, scs-ls, scs-cat, catalog)
 docs/                     esta documentação
+design/                   desenhos aprovados das telas (antes do código)
 ia/                       agentes e skills de apoio ao desenvolvimento
-toolkit/                  scripts de build, checagem, commit e inspeção de saves
+toolkit/                  scripts de build, checagem, commit, .resx e inspeção de saves
 ```
 
 Os arquivos de `.claude/` são configuração do assistente. Ver

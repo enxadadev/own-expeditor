@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:OwnExpeditor.App.Controls"
+             x:Class="OwnExpeditor.App.Controls.InfoTag"
+             x:Name="Root" x:DataType="c:InfoTag" HorizontalAlignment="Left" VerticalAlignment="Center">
+  <Border BorderBrush="{DynamicResource BorderStrongBrush}" BorderThickness="1" CornerRadius="{StaticResource RadiusPill}" Padding="8,1"
+          IsVisible="{Binding #Root.Text, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+    <TextBlock FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource TextBrush}" Text="{Binding #Root.Text}" />
+  </Border>
+</UserControl>

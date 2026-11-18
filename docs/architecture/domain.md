@@ -1,39 +1,50 @@
 # Domínio
 
-> TODO: confirmar. O projeto `src/OwnExpeditor.Domain` ainda não tem nenhum
-> arquivo `.cs`. Este documento descreve o modelo **planejado**, derivado do
-> `CLAUDE.md` e da análise do save em [../sii-format.md](../sii-format.md). Os
-> nomes e campos podem mudar quando forem codificados.
+O projeto `src/OwnExpeditor.Domain` tem só records e enums puros, sem I/O e sem
+dependências. Ele guarda os conceitos que mais de uma camada usa: jogo, perfil,
+save e ajustes.
 
-O `Domain` deve conter entidades puras, sem dependências de outros projetos
-(ver [layers.md](layers.md)).
+## Tipos atuais
 
-## Entidades planejadas
+| Pasta | Tipo | Papel |
+|-------|------|-------|
+| `Games` | `GameKind` | `Ets2` ou `Ats` |
+| `Games` | `GameIds` | Converte um identificador do jogo (ex.: `cargo.concr_beams2`) em nome legível (`Humanize`) |
+| `Games` | `GameNameKind` | Categoria de nome do jogo (empresa, cidade, carga, reboque) |
+| `Games` | `GameFolderCheck` | Resultado da validação de uma pasta de instalação |
+| `Games` | `CityPair` | Par de cidades não direcionado, usado pelo cache de distâncias |
+| `Saves` | `ProfileInfo` | Perfil: jogo, id, nome, pasta e se usa Steam Cloud |
+| `Saves` | `SaveSlotInfo` | Slot de save: perfil, id da pasta, nome, caminho do `game.sii`, data e tamanho |
+| `Saves` | `ProfileNames` | Converte o nome da pasta do perfil (hex) em nome legível |
+| `Settings` | `AppSettings` | Tema, idioma, último save aberto e pastas do jogo |
+| `Settings` | `GameFolders` | Pastas de instalação escolhidas pelo usuário (`null` = detectar) |
+| `Settings` | `ThemePreference` | `System`, `Light` ou `Dark` |
+| `Settings` | `Language` | `PtBr` ou `En` |
 
-| Entidade | Papel | Origem no save (planejada) |
-|----------|-------|----------------------------|
-| `Company` | Empresa de origem de um job | Bloco `company : company.volatile.<empresa>.<cidade>`; a origem é o próprio ID |
-| `City` | Cidade de origem ou destino | Parte `<cidade>` do ID e do campo `target` (`"<empresa>.<cidade>"`) |
-| `Cargo` | Carga do job | Valor `cargo:` (ex.: `cargo.concr_beams2`) |
-| `Trailer` | Reboque: variante e definição | Pares `trailer_variant` e `trailer_definition` |
-| `JobOffer` | Oferta de job editável | Bloco `job_offer_data`, referenciado por `job_offer[n]` da empresa |
+## Entidades do jogo (fora do Domain)
 
-Campos de `JobOffer` que a análise do save identificou como relevantes: `target`,
-`expiration_time`, `urgency`, `shortest_distance_km`, `cargo`,
-`company_truck`, `trailer_variant`, `trailer_definition`, `units_count`,
-`fill_ratio` e `trailer_place`.
+Empresas, cidades, cargas e reboques são lidos do jogo e do save, e não têm
+records próprios no `Domain`:
 
-## Regras já definidas
+- `GameCatalog` (`Data`): definições lidas dos pacotes `.scs` (empresas, cidades,
+  cargas que cada empresa envia e recebe, nomes).
+- `JobBoard` e `CompanyLocation`, `JobTemplate`, `RouteDistance` (`Core/Modules/Jobs`):
+  o índice de leitura que a tela usa e a distância conhecida ou estimada.
+- `JobRequest`, `ChangeSet` e `SavePatch` (`Core`): o pedido de frete e a mudança
+  que vai para a revisão.
 
-- Nenhuma lista de cidades, cargas ou reboques é fixa. Tudo vem do save, para
-  funcionar com mods ([ADR 0003](../decisions/0003-sem-listas-fixas.md)).
-- Slot vazio de oferta é `target: ""` e `cargo: null`. Esses slots são onde a
-  injeção pode acontecer sem apagar ofertas existentes (ver
-  [sii-format.md](../sii-format.md), seção 3).
+A oferta de frete (`job_offer_data`) continua sendo um bloco do save, lido e
+alterado por `SiiUnit` (`Sii`). Os campos relevantes para o frete estão em
+[../sii-format.md](../sii-format.md), seção 3.
 
-## Em aberto
+## Regras
 
-- Se o modelo é imutável ou se `JobOffer` é mutável como `SiiUnit` hoje.
-- Se `Company` e `City` são entidades separadas ou só valores derivados do ID.
-- Como representar a distância quando o par origem/destino não existe no save
-  (já listado em `sii-format.md`, seção 5).
+- Nenhuma lista de cidades, cargas ou reboques é fixa. Tudo vem do save e do
+  catálogo do jogo, para funcionar com mods
+  ([ADR 0003](../decisions/0003-sem-listas-fixas.md)).
+- Slot vazio de oferta é `target: ""` e `cargo: null`. Esses slots são onde um
+  frete novo entra sem apagar ofertas existentes (ver
+  [../sii-format.md](../sii-format.md), seção 3).
+- Distância entre cidades não vem do save de forma completa: usa-se a tabela
+  conhecida (`shortest_distance_km`) e, quando falta, uma estimativa marcada como
+  tal (ver [../sii-format.md](../sii-format.md), seção 10).

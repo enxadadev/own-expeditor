@@ -1,0 +1,276 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:OwnExpeditor.App.Modules.Jobs"
+             xmlns:c="using:OwnExpeditor.App.Controls"
+             xmlns:loc="using:OwnExpeditor.App.Markup"
+             x:Class="OwnExpeditor.App.Modules.Jobs.JobsView"
+             x:DataType="vm:JobsPageViewModel">
+  <UserControl.Styles>
+    <Style Selector="Border.tile">
+      <Setter Property="Background" Value="{DynamicResource SurfaceBrush}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource LineBrush}" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="CornerRadius" Value="{StaticResource RadiusLg}" />
+      <Setter Property="Padding" Value="14,12" />
+    </Style>
+    <Style Selector="ListBox.compactseg ListBoxItem">
+      <Setter Property="MinHeight" Value="32" />
+      <Setter Property="Padding" Value="8,0" />
+    </Style>
+    <Style Selector="ListBox.modeseg ListBoxItem" x:DataType="vm:JobModeChoice">
+      <Setter Property="IsEnabled" Value="{Binding IsEnabled}" />
+    </Style>
+    <Style Selector="ListBox.modeseg ListBoxItem:disabled /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Opacity" Value="0.5" />
+    </Style>
+    <Style Selector="ListBox.modeseg:disabled ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Opacity" Value="0.85" />
+    </Style>
+    <Style Selector="Rectangle.dashed">
+      <Setter Property="Stroke" Value="{DynamicResource BorderStrongBrush}" />
+      <Setter Property="StrokeThickness" Value="1" />
+      <Setter Property="StrokeDashArray" Value="4,3" />
+      <Setter Property="RadiusX" Value="12" />
+      <Setter Property="RadiusY" Value="12" />
+      <Setter Property="IsHitTestVisible" Value="False" />
+    </Style>
+  </UserControl.Styles>
+
+  <Panel>
+    <!-- cidades de saída (passo 1) + formulário -->
+    <Grid ColumnDefinitions="320,*" IsVisible="{Binding ShowForm}">
+      <Border Grid.Column="0" BorderBrush="{DynamicResource LineBrush}" BorderThickness="0,0,1,0">
+        <Grid RowDefinitions="Auto,Auto,Auto,*" Margin="20,12,16,12" RowSpacing="10">
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <c:StepBadge Number="1" IsDone="{Binding Step1Done}" />
+            <TextBlock Classes="caption" Text="{loc:Tr Jobs_Step_FromCity, Upper=True}" />
+          </StackPanel>
+          <c:PageHeader Grid.Row="1" Title="{Binding Title}" Count="{Binding CityCount}" CountLabel="{Binding CityCountLabel}" />
+          <c:SearchBox Grid.Row="2" Query="{Binding CityQuery, Mode=TwoWay}" Text="{Binding CityQuery, Mode=TwoWay}" Watermark="{loc:Tr Jobs_List_Search}"
+                       AutomationProperties.Name="{loc:Tr Jobs_List_SearchLabel}" />
+          <ListBox Grid.Row="3" x:Name="CityList" Classes="picker" ItemsSource="{Binding CityItems}" SelectedItem="{Binding SelectedCity, Mode=TwoWay}"
+                   IsEnabled="{Binding IsListEnabled}" IsVisible="{Binding ShowCityList}" AutomationProperties.Name="{loc:Tr Jobs_List_Title}">
+            <ListBox.ItemTemplate>
+              <DataTemplate x:DataType="vm:CityItemViewModel">
+                <c:CityListItem Title="{Binding Name}" Meta="{Binding Meta}" PendingText="{Binding PendingText}" IsDimmed="{Binding IsDimmed}" />
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+          <StackPanel Grid.Row="3" VerticalAlignment="Top" Margin="0,24,0,0" Spacing="6" IsVisible="{Binding NoCityResults}">
+            <c:EmptyState IsCompact="True" Title="{loc:Tr Jobs_Search_NoResult_Title}" Message="{Binding NoCityResultBody}"
+                          ActionText="{loc:Tr Jobs_Search_Clear}" ActionCommand="{Binding ClearCitySearchCommand}" />
+          </StackPanel>
+        </Grid>
+      </Border>
+
+      <Grid Grid.Column="1" RowDefinitions="*,Auto,Auto">
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled" AutomationProperties.Name="{loc:Tr Jobs_Form_Label}">
+          <StackPanel Margin="24,16,24,16" Spacing="12">
+            <c:ErrorBanner Severity="Info" Layout="Inline" Title="{Binding NoCatalogTitle}" Message="{loc:Tr Jobs_NoCatalog_Body}"
+                           ActionText="{loc:Tr Jobs_NoCatalog_Action}" ActionCommand="{Binding OpenSettingsCommand}" IsVisible="{Binding ShowNoCatalog}" />
+            <c:ErrorBanner Severity="Warning" Layout="Inline" Title="{loc:Tr Jobs_Cloud_Title}" Message="{loc:Tr Jobs_Cloud_Body}"
+                           DismissCommand="{Binding DismissCloudCommand}" IsVisible="{Binding ShowCloud}" />
+            <c:ErrorBanner Severity="Info" Layout="Inline" Title="{loc:Tr Jobs_Editing_Title}" Message="{loc:Tr Jobs_Editing_Body}"
+                           ActionText="{loc:Tr Jobs_CancelEdit}" ActionCommand="{Binding CancelEditCommand}" IsVisible="{Binding ShowEditing}" />
+
+            <!-- passos 1 e 2: as duas cidades -->
+            <Grid ColumnDefinitions="*,Auto,*" ColumnSpacing="8">
+              <Button x:Name="FromChip" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" MinHeight="56" Padding="14,6"
+                      CornerRadius="{StaticResource RadiusMd}" Command="{Binding ChangeFromCityCommand}" IsEnabled="{Binding IsListEnabled}"
+                      AutomationProperties.Name="{Binding FromChipAria}">
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Left" MinWidth="0">
+                  <StackPanel Orientation="Horizontal" Spacing="6">
+                    <c:StepBadge Number="1" IsDone="{Binding Step1Done}" />
+                    <TextBlock Classes="caption trim" Text="{loc:Tr Jobs_Step_FromCity, Upper=True}" />
+                  </StackPanel>
+                  <TextBlock Classes="body trim" FontWeight="SemiBold" Text="{Binding FromChipText}" ToolTip.Tip="{Binding FromChipText}" />
+                </StackPanel>
+              </Button>
+              <Button Grid.Column="1" Classes="icon" Width="44" Height="44" Command="{Binding SwapCommand}" AutomationProperties.Name="{loc:Tr Jobs_Swap}"
+                      ToolTip.Tip="{loc:Tr Jobs_Swap}">
+                <Path Data="{StaticResource IconSwap}" Fill="{DynamicResource TextMutedBrush}" Width="18" Height="18" Stretch="Uniform" AutomationProperties.AccessibilityView="Raw" />
+              </Button>
+              <StackPanel Grid.Column="2" Spacing="4">
+                <c:SearchablePicker x:Name="ToCityPicker" Label="{Binding ToCity.Label}" Placeholder="{Binding ToCity.Placeholder}" StepNumber="2"
+                                    IsStepDone="{Binding Step2Done}" Items="{Binding ToCity.Items}" SelectedItem="{Binding ToCity.Selected, Mode=TwoWay}"
+                                    Query="{Binding ToCity.Query, Mode=TwoWay}" IsDropDownOpen="{Binding ToCity.IsOpen, Mode=TwoWay}"
+                                    SearchWatermark="{Binding ToCity.SearchWatermark}" EmptyText="{Binding ToCity.EffectiveEmptyText}"
+                                    ToggleText="{Binding ToCity.ToggleText}" ToggleChecked="{Binding ToCity.ToggleChecked, Mode=TwoWay}" />
+              </StackPanel>
+            </Grid>
+
+            <!-- mapa da rota (esquemático) -->
+            <Grid RowDefinitions="Auto,Auto" RowSpacing="4">
+              <c:RouteMap Height="{Binding MapHeight}" MinHeight="{Binding MapHeight}" Mode="Schematic" EmptyTitle="{Binding MapEmptyTitle}" EmptyMessage="{Binding MapNote}" Origin="{Binding MapOrigin}" Destination="{Binding MapDestination}"
+                          RouteLabel="{Binding MapRouteLabel}" DistanceText="{Binding MapDistanceText}" />
+              <TextBlock Grid.Row="1" Classes="bodysm muted" Text="{Binding MapNote}" />
+            </Grid>
+
+            <!-- mudanças pendentes da cidade -->
+            <c:SectionCard Title="{loc:Tr Jobs_Pending_Title}" Padding="14,10" IsVisible="{Binding ShowPendingCard}">
+              <ItemsControl ItemsSource="{Binding PendingRows}">
+                <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Spacing="8" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="vm:PendingJobViewModel">
+                    <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+                      <StackPanel VerticalAlignment="Center" MinWidth="0">
+                        <TextBlock Classes="body trim" FontWeight="SemiBold" Text="{Binding Title}" ToolTip.Tip="{Binding Title}" />
+                        <TextBlock Classes="bodysm muted trim" Text="{Binding Detail}" />
+                      </StackPanel>
+                      <Button Grid.Column="1" Classes="compact" Content="{loc:Tr Jobs_Pending_Edit}" Command="{Binding EditCommand}"
+                              AutomationProperties.Name="{Binding EditAria}" />
+                      <Button Grid.Column="2" Classes="compact" Foreground="{DynamicResource DangerBrush}" Content="{loc:Tr Review_Discard}"
+                              Command="{Binding DiscardCommand}" AutomationProperties.Name="{Binding DiscardAria}" />
+                    </Grid>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </c:SectionCard>
+
+            <!-- indicadores -->
+            <Grid ColumnDefinitions="1.7*,1.4*,0.8*,1.1*" ColumnSpacing="12" IsVisible="{Binding ShowIndicators}">
+              <Border Classes="tile" AutomationProperties.Name="{Binding DistanceAutomation}">
+                <StackPanel Spacing="2">
+                  <Grid ColumnDefinitions="*,Auto">
+                    <TextBlock Classes="caption trim" Text="{loc:Tr Jobs_Field_Distance, Upper=True}" />
+                    <c:InfoTag Grid.Column="1" Text="{Binding DistanceTag}" />
+                  </Grid>
+                  <TextBlock Classes="metric trim" Text="{Binding DistanceValue}" />
+                  <TextBlock Classes="bodysm muted" TextWrapping="Wrap" MaxHeight="66" TextTrimming="CharacterEllipsis" Text="{Binding DistanceHint}" ToolTip.Tip="{Binding DistanceHint}" />
+                </StackPanel>
+              </Border>
+              <Border Grid.Column="1" Classes="tile">
+                <StackPanel Spacing="4">
+                  <TextBlock Classes="caption trim" Text="{loc:Tr Jobs_Field_Expiration, Upper=True}" />
+                  <ListBox Classes="segmented compactseg" ItemsSource="{Binding ExpirationChoices}" SelectedItem="{Binding SelectedExpiration, Mode=TwoWay}"
+                           AutomationProperties.Name="{loc:Tr Jobs_Field_Expiration}">
+                    <ListBox.ItemTemplate>
+                      <DataTemplate x:DataType="vm:JobExpirationChoice"><TextBlock Classes="num" Text="{Binding Label}" /></DataTemplate>
+                    </ListBox.ItemTemplate>
+                  </ListBox>
+                  <TextBlock Classes="bodysm muted" TextWrapping="Wrap" MaxHeight="36" TextTrimming="CharacterEllipsis" Text="{Binding ExpirationHelp}" />
+                </StackPanel>
+              </Border>
+              <Border Grid.Column="2" Classes="tile">
+                <StackPanel Spacing="2">
+                  <TextBlock Classes="caption trim" Text="{loc:Tr Jobs_Field_Units, Upper=True}" />
+                  <TextBlock Classes="metric trim" Text="{Binding UnitsValue}" />
+                  <TextBlock Classes="bodysm muted" TextWrapping="Wrap" Text="{loc:Tr Jobs_Units_Help}" />
+                </StackPanel>
+              </Border>
+              <Border Grid.Column="3" Classes="tile">
+                <StackPanel Spacing="2">
+                  <TextBlock Classes="caption trim" Text="{loc:Tr Jobs_Field_Trailer, Upper=True}" />
+                  <TextBlock Classes="metric trim" Text="{Binding TrailerValue}" ToolTip.Tip="{Binding TrailerValue}" />
+                  <TextBlock Classes="bodysm muted" TextWrapping="Wrap" MaxHeight="52" TextTrimming="CharacterEllipsis" Text="{Binding TrailerHint}" />
+                </StackPanel>
+              </Border>
+            </Grid>
+
+            <!-- passos 3 a 5 -->
+            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="12" IsVisible="{Binding ShowSteps}">
+              <StackPanel Spacing="4">
+                <c:SearchablePicker x:Name="FromCompanyPicker" Label="{Binding FromCompany.Label}" Placeholder="{Binding FromCompany.Placeholder}" StepNumber="3"
+                                    IsStepDone="{Binding Step3Done}" IsEnabled="{Binding FromCompany.IsEnabled}" Items="{Binding FromCompany.Items}"
+                                    SelectedItem="{Binding FromCompany.Selected, Mode=TwoWay}" Query="{Binding FromCompany.Query, Mode=TwoWay}"
+                                    IsDropDownOpen="{Binding FromCompany.IsOpen, Mode=TwoWay}" SearchWatermark="{Binding FromCompany.SearchWatermark}"
+                                    EmptyText="{Binding FromCompany.EffectiveEmptyText}" />
+                <TextBlock Classes="bodysm muted" TextWrapping="Wrap" Text="{Binding FromCompany.Hint}" />
+              </StackPanel>
+              <StackPanel Grid.Column="1" Spacing="4">
+                <c:SearchablePicker x:Name="CargoPicker" Label="{Binding Cargo.Label}" Placeholder="{Binding Cargo.Placeholder}" StepNumber="4"
+                                    IsStepDone="{Binding Step4Done}" IsEnabled="{Binding Cargo.IsEnabled}" Items="{Binding Cargo.Items}"
+                                    SelectedItem="{Binding Cargo.Selected, Mode=TwoWay}" Query="{Binding Cargo.Query, Mode=TwoWay}"
+                                    IsDropDownOpen="{Binding Cargo.IsOpen, Mode=TwoWay}" SearchWatermark="{Binding Cargo.SearchWatermark}"
+                                    EmptyText="{Binding Cargo.EffectiveEmptyText}" />
+                <TextBlock Classes="bodysm muted" TextWrapping="Wrap" Text="{Binding Cargo.Hint}" />
+              </StackPanel>
+              <StackPanel Grid.Column="2" Spacing="4">
+                <c:SearchablePicker x:Name="ToCompanyPicker" Label="{Binding ToCompany.Label}" Placeholder="{Binding ToCompany.Placeholder}" StepNumber="5"
+                                    IsStepDone="{Binding Step5Done}" IsEnabled="{Binding ToCompany.IsEnabled}" Items="{Binding ToCompany.Items}"
+                                    SelectedItem="{Binding ToCompany.Selected, Mode=TwoWay}" Query="{Binding ToCompany.Query, Mode=TwoWay}"
+                                    IsDropDownOpen="{Binding ToCompany.IsOpen, Mode=TwoWay}" SearchWatermark="{Binding ToCompany.SearchWatermark}"
+                                    EmptyText="{Binding ToCompany.EffectiveEmptyText}" />
+                <TextBlock Classes="bodysm muted" TextWrapping="Wrap" Text="{Binding ToCompany.Hint}" />
+              </StackPanel>
+            </Grid>
+
+            <!-- onde entra o frete (passo 3) -->
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="16" IsVisible="{Binding ShowMode}">
+              <StackPanel Spacing="6">
+                <TextBlock Classes="caption" Text="{loc:Tr Jobs_Mode_Title, Upper=True}" />
+                <ListBox x:Name="ModeList" Classes="segmented modeseg" ItemsSource="{Binding ModeChoices}" SelectedItem="{Binding SelectedMode, Mode=TwoWay}"
+                         IsEnabled="{Binding IsModeEnabled}" AutomationProperties.Name="{loc:Tr Jobs_Mode_Title}">
+                  <ListBox.ItemTemplate>
+                    <DataTemplate x:DataType="vm:JobModeChoice"><TextBlock Text="{Binding Label}" /></DataTemplate>
+                  </ListBox.ItemTemplate>
+                </ListBox>
+                <TextBlock Classes="bodysm muted" TextWrapping="Wrap" MaxWidth="420" Text="{Binding ModeHint}" />
+              </StackPanel>
+              <StackPanel Grid.Column="1" Spacing="4" MaxWidth="420" HorizontalAlignment="Left" IsVisible="{Binding ShowOffer}">
+                <c:SearchablePicker x:Name="OfferPicker" Label="{Binding Offer.Label}" Placeholder="{Binding Offer.Placeholder}" IsEnabled="{Binding Offer.IsEnabled}"
+                                    Items="{Binding Offer.Items}" SelectedItem="{Binding Offer.Selected, Mode=TwoWay}" Query="{Binding Offer.Query, Mode=TwoWay}"
+                                    IsDropDownOpen="{Binding Offer.IsOpen, Mode=TwoWay}" SearchWatermark="{Binding Offer.SearchWatermark}"
+                                    EmptyText="{Binding Offer.EffectiveEmptyText}" />
+                <TextBlock Classes="bodysm muted" TextWrapping="Wrap" Text="{Binding Offer.Hint}" />
+              </StackPanel>
+            </Grid>
+
+            <!-- sem combinação / sem vaga nem oferta -->
+            <Panel IsVisible="{Binding ShowNoMatch}">
+              <Rectangle Classes="dashed" />
+              <StackPanel Spacing="8" HorizontalAlignment="Center" MaxWidth="520" Margin="20,16">
+                <TextBlock Classes="subtitle" TextAlignment="Center" Text="{loc:Tr Jobs_NoMatch_Title}" />
+                <TextBlock Classes="body muted" TextAlignment="Center" TextWrapping="Wrap" Text="{Binding NoMatchBody}" />
+                <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center" Margin="0,6,0,0">
+                  <Button Content="{loc:Tr Jobs_NoMatch_ChangeTo}" Command="{Binding ChangeToCityCommand}" />
+                  <Button Content="{loc:Tr Jobs_NoMatch_ChangeFrom}" Command="{Binding ChangeFromCityCommand}" />
+                </StackPanel>
+              </StackPanel>
+            </Panel>
+            <Panel IsVisible="{Binding ShowNoSlots}">
+              <Rectangle Classes="dashed" />
+              <StackPanel Spacing="8" HorizontalAlignment="Center" MaxWidth="520" Margin="20,16">
+                <TextBlock Classes="subtitle" TextAlignment="Center" TextWrapping="Wrap" Text="{Binding NoSlotsTitle}" />
+                <TextBlock Classes="body muted" TextAlignment="Center" TextWrapping="Wrap" Text="{Binding NoSlotsBody}" />
+              </StackPanel>
+            </Panel>
+
+          </StackPanel>
+        </ScrollViewer>
+
+        <!-- avisos de limpeza (role=status) e erro ao adicionar: fora da rolagem, sempre à vista -->
+        <StackPanel Grid.Row="1" Margin="24,0,24,10" Spacing="8">
+        <Border Classes="panel" Padding="12,8" IsVisible="{Binding HasNotice}" AutomationProperties.LiveSetting="Polite">
+          <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+            <Path Data="{StaticResource IconInfo}" Fill="{DynamicResource TextMutedBrush}" Width="16" Height="16" Stretch="Uniform" VerticalAlignment="Top"
+                  Margin="0,2,0,0" AutomationProperties.AccessibilityView="Raw" />
+            <TextBlock Grid.Column="1" Classes="bodysm" TextWrapping="Wrap" Text="{Binding Notice}" VerticalAlignment="Center" />
+            <Button Grid.Column="2" Classes="compact icon" Command="{Binding DismissNoticeCommand}" AutomationProperties.Name="{loc:Tr Jobs_Notice_Close}">
+              <Path Data="{StaticResource IconClose}" Fill="{DynamicResource TextMutedBrush}" Width="14" Height="14" Stretch="Uniform" AutomationProperties.AccessibilityView="Raw" />
+            </Button>
+          </Grid>
+        </Border>
+        <c:ErrorBanner Severity="Error" Layout="Inline" Title="{loc:Tr Error_Title_Edit}" Message="{Binding ErrorMessage}"
+                       DismissCommand="{Binding DismissErrorCommand}" IsVisible="{Binding HasError}" />
+        </StackPanel>
+
+        <!-- barra de ação fixa -->
+        <Border Grid.Row="2" BorderBrush="{DynamicResource LineBrush}" BorderThickness="0,1,0,0" Padding="24,10">
+          <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
+            <TextBlock x:Name="MissingLabel" Classes="bodysm muted" VerticalAlignment="Center" TextWrapping="Wrap" Text="{Binding MissingText}" />
+            <Button x:Name="AddButton" Grid.Column="1" Classes="accent large" MinWidth="220" Content="{Binding AddText}" Command="{Binding AddCommand}"
+                    AutomationProperties.HelpText="{Binding MissingText}" />
+          </Grid>
+        </Border>
+      </Grid>
+    </Grid>
+
+    <!-- nenhuma cidade com vaga ou oferta -->
+    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10" IsVisible="{Binding IsEmptyModule}">
+      <c:EmptyState Icon="{StaticResource IconInbox}" Title="{loc:Tr Jobs_Empty_Title}" ActionText="{loc:Tr Action_ChooseSave}" ActionCommand="{Binding ChooseSaveCommand}" />
+      <TextBlock Classes="bodysm muted" TextWrapping="Wrap" TextAlignment="Center" MaxWidth="440" Text="{loc:Tr Jobs_Empty_Body}" />
+      <TextBlock Classes="bodysm muted" TextWrapping="Wrap" TextAlignment="Center" MaxWidth="440" Text="{loc:Tr Jobs_Empty_Tip}" />
+    </StackPanel>
+  </Panel>
+</UserControl>

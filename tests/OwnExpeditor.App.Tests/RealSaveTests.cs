@@ -46,6 +46,7 @@ public class RealSaveTests
             s.AddSingleton<ILocalizer>(loc);
             s.AddSingleton<IUiDispatcher, ImmediateUiDispatcher>();
             s.AddSingleton<IAppSettingsService>(settings); // nada grava o settings.json real
+            s.AddSingleton<OwnExpeditor.Core.Modules.Jobs.IJobBoardFactory>(new FakeBoardFactory()); // nem o cache de distâncias real
         });
         var shell = provider.GetRequiredService<ShellViewModel>();
 

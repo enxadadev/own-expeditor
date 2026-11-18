@@ -83,7 +83,7 @@ return failures == 0 ? 0 : 1;
 
 static object? CreateViewModel(Assembly asm, Type view)
 {
-    var baseName = view.Name.EndsWith("View") ? view.Name[..^4] : view.Name == "MainWindow" ? "Main" : view.Name;
+    var baseName = view.Name.EndsWith("View") ? view.Name[..^4] : view.Name;
     var vm = asm.GetTypes().FirstOrDefault(t => t.Name == baseName + "ViewModel" && t.GetConstructor(Type.EmptyTypes) is not null);
     return vm is null ? null : Activator.CreateInstance(vm);
 }

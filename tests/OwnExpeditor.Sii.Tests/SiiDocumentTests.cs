@@ -73,24 +73,6 @@ public class SiiDocumentTests
     }
 
     [Fact]
-    public void Save_creates_backup_of_existing_file()
-    {
-        var dir = Directory.CreateTempSubdirectory();
-        try
-        {
-            var path = Path.Combine(dir.FullName, "game.sii");
-            File.WriteAllText(path, "original");
-
-            var backup = SiiDocument.Parse(Sample).Save(path);
-
-            Assert.NotNull(backup);
-            Assert.Equal("original", File.ReadAllText(backup));
-            Assert.Equal(Sample, File.ReadAllText(path));
-        }
-        finally { dir.Delete(recursive: true); }
-    }
-
-    [Fact]
     public void Bsii_token_decodes_base38()
     {
         // "ab" = a(11) + b(12) * 38

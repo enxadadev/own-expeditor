@@ -45,7 +45,8 @@ internal static class ShellSamples
         new("Shell_SavePicker", SavePicker),
     ];
 
-    private static ShellViewModel Boot(DesignHost host, bool noProfiles = false, string? lastSavePath = null, bool running = false)
+    internal static ShellViewModel Boot(DesignHost host, bool noProfiles = false, string? lastSavePath = null, bool running = false,
+        Action<IServiceCollection>? extra = null)
     {
         var language = Localizer.Instance.Language;
         var profiles = noProfiles ? [] : new[] { DesignData.ProfileA(), DesignData.ProfileB, DesignData.ProfileAts };
@@ -60,6 +61,7 @@ internal static class ShellSamples
             s.AddSingleton<IShellLauncher>(new DesignLauncher());
             s.AddSingleton<IClipboardService>(new DesignClipboard());
             s.AddSingleton<IFolderPicker>(new DesignFolderPicker());
+            extra?.Invoke(s);
         });
         return provider.GetRequiredService<ShellViewModel>();
     }

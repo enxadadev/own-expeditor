@@ -19,6 +19,10 @@ public partial class RouteMap : UserControl
     public static readonly StyledProperty<string?> RouteLabelProperty = AvaloniaProperty.Register<RouteMap, string?>(nameof(RouteLabel));
     public static readonly StyledProperty<RouteMapMode> ModeProperty = AvaloniaProperty.Register<RouteMap, RouteMapMode>(nameof(Mode));
     public static readonly StyledProperty<bool> IsLoadingProperty = AvaloniaProperty.Register<RouteMap, bool>(nameof(IsLoading));
+    public static readonly StyledProperty<string?> EmptyTitleProperty = AvaloniaProperty.Register<RouteMap, string?>(nameof(EmptyTitle));
+    public static readonly StyledProperty<string?> EmptyMessageProperty = AvaloniaProperty.Register<RouteMap, string?>(nameof(EmptyMessage));
+    public static readonly DirectProperty<RouteMap, bool> ShowCustomEmptyProperty = AvaloniaProperty.RegisterDirect<RouteMap, bool>(nameof(ShowCustomEmpty), o => o.ShowCustomEmpty);
+    public static readonly DirectProperty<RouteMap, bool> ShowDefaultEmptyProperty = AvaloniaProperty.RegisterDirect<RouteMap, bool>(nameof(ShowDefaultEmpty), o => o.ShowDefaultEmpty);
     public static readonly DirectProperty<RouteMap, bool> IsEmptyProperty = AvaloniaProperty.RegisterDirect<RouteMap, bool>(nameof(IsEmpty), o => o.IsEmpty);
     public static readonly DirectProperty<RouteMap, bool> ShowChipProperty = AvaloniaProperty.RegisterDirect<RouteMap, bool>(nameof(ShowChip), o => o.ShowChip);
     public static readonly DirectProperty<RouteMap, bool> ShowDistanceProperty = AvaloniaProperty.RegisterDirect<RouteMap, bool>(nameof(ShowDistance), o => o.ShowDistance);
@@ -40,6 +44,12 @@ public partial class RouteMap : UserControl
     public RouteMapMode Mode { get => GetValue(ModeProperty); set => SetValue(ModeProperty, value); }
     public bool IsLoading { get => GetValue(IsLoadingProperty); set => SetValue(IsLoadingProperty, value); }
 
+    /// <summary>Texto do estado vazio do módulo que usa o mapa (ex.: "Escolha a cidade de saída"); sem valor, o texto padrão.</summary>
+    public string? EmptyTitle { get => GetValue(EmptyTitleProperty); set => SetValue(EmptyTitleProperty, value); }
+    public string? EmptyMessage { get => GetValue(EmptyMessageProperty); set => SetValue(EmptyMessageProperty, value); }
+    public bool ShowCustomEmpty => IsEmpty && !string.IsNullOrEmpty(EmptyTitle);
+    public bool ShowDefaultEmpty => IsEmpty && string.IsNullOrEmpty(EmptyTitle);
+
     public bool IsEmpty => !IsLoading && (Origin is null || Destination is null);
     public bool ShowChip => !string.IsNullOrEmpty(RouteLabel) && !IsEmpty;
     public bool ShowDistance => !string.IsNullOrEmpty(DistanceText) && !IsEmpty;
@@ -52,12 +62,19 @@ public partial class RouteMap : UserControl
         else if (change.Property == DestinationProperty) Canvas.Destination = Destination;
         else if (change.Property == CitiesProperty) Canvas.Cities = Cities;
         else if (change.Property == ModeProperty) Canvas.Mode = Mode;
+        else if (change.Property == EmptyTitleProperty)
+        {
+            RaisePropertyChanged(ShowCustomEmptyProperty, !ShowCustomEmpty, ShowCustomEmpty);
+            RaisePropertyChanged(ShowDefaultEmptyProperty, !ShowDefaultEmpty, ShowDefaultEmpty);
+        }
         else if (change.Property == BoundsProperty) RaisePropertyChanged(ChipMaxWidthProperty, 0, ChipMaxWidth);
 
         if (change.Property == OriginProperty || change.Property == DestinationProperty || change.Property == IsLoadingProperty
             || change.Property == RouteLabelProperty || change.Property == DistanceTextProperty)
         {
             RaisePropertyChanged(IsEmptyProperty, !IsEmpty, IsEmpty);
+            RaisePropertyChanged(ShowCustomEmptyProperty, !ShowCustomEmpty, ShowCustomEmpty);
+            RaisePropertyChanged(ShowDefaultEmptyProperty, !ShowDefaultEmpty, ShowDefaultEmpty);
             RaisePropertyChanged(ShowChipProperty, !ShowChip, ShowChip);
             RaisePropertyChanged(ShowDistanceProperty, !ShowDistance, ShowDistance);
         }

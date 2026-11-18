@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using OwnExpeditor.App.Modules.Jobs;
 using OwnExpeditor.App.Services;
 using OwnExpeditor.App.Shell;
 using OwnExpeditor.App.ViewModels;
@@ -21,6 +22,22 @@ public class CompositionTests
         Assert.Equal(5, shell.Modules.Count);
         Assert.NotNull(provider.GetRequiredService<IEditSessionHost>());
         Assert.NotNull(provider.GetRequiredService<IGameStatusMonitor>());
+    }
+
+    [Fact]
+    public void Build_RegistersTheJobsModuleFirst_AsTheRealPage_AndTheOthersAsPlaceholders()
+    {
+        using var provider = (ServiceProvider)AppComposition.Build(s =>
+        {
+            s.AddSingleton<ILocalizer>(new Localizer(Language.PtBr));
+            s.AddSingleton<OwnExpeditor.Core.Modules.Jobs.IJobBoardFactory>(new Support.FakeBoardFactory());
+        });
+
+        var pages = provider.GetServices<ModuleDescriptor>().OrderBy(d => d.Order).Select(d => (d.Id, Page: d.CreatePage(provider))).ToList();
+
+        Assert.Equal(["jobs", "fleet", "profile", "company", "map"], pages.Select(p => p.Id));
+        Assert.IsType<JobsPageViewModel>(pages[0].Page);
+        Assert.All(pages.Skip(1), p => Assert.IsType<ModulePlaceholderViewModel>(p.Page));
     }
 
     [Fact]
@@ -61,7 +78,7 @@ public class CompositionTests
         AppComposition.RegisterViews();
 
         foreach (var vm in new[] { typeof(ShellViewModel), typeof(WelcomeViewModel), typeof(LoadingViewModel), typeof(OpenErrorViewModel),
-                     typeof(ModulePlaceholderViewModel), typeof(ReviewViewModel), typeof(ResultViewModel), typeof(SettingsViewModel),
+                     typeof(ModulePlaceholderViewModel), typeof(JobsPageViewModel), typeof(ReviewViewModel), typeof(ResultViewModel), typeof(SettingsViewModel),
                      typeof(ConfirmApplyViewModel), typeof(ConfirmDialogViewModel), typeof(SessionBarViewModel), typeof(SavePickerViewModel) })
             Assert.True(ViewRegistry.IsRegistered(vm), vm.Name);
         Assert.True(ViewRegistry.IsViewRegistered(typeof(ShellView)));

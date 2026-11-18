@@ -26,6 +26,9 @@ public abstract class ModulePageViewModel(ILocalizer loc) : LocalizedViewModel(l
 
     protected IEditSession? Session { get; private set; }
 
+    /// <summary>Navegação do shell, ligada por ele ao criar a página (nula em testes que não montam o shell).</summary>
+    public IShellNavigation? Navigation { get; set; }
+
     public async Task AttachAsync(IEditSession session, CancellationToken ct)
     {
         Session = session;

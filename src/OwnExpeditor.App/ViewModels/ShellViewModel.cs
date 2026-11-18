@@ -24,7 +24,7 @@ public enum ShellPage { Welcome, Loading, OpenError, Module, Review, Result, Set
 /// O shell: navegação (módulos, Revisar, Resultado, Configurações), abertura do save (Carregando → módulo ou erro),
 /// barra de sessão, atalhos e o fluxo Revisar → Confirmar → Resultado. Só orquestra: regra de negócio fica no Core.
 /// </summary>
-public sealed partial class ShellViewModel : LocalizedViewModel
+public sealed partial class ShellViewModel : LocalizedViewModel, IShellNavigation
 {
     private readonly IEditSessionHost _host;
     private readonly IAppSettingsService _settings;
@@ -68,7 +68,9 @@ public sealed partial class ShellViewModel : LocalizedViewModel
         Modules = [.. _descriptors.Select(d => NavItemViewModel.For(loc, d))];
         foreach (var (d, item) in _descriptors.Zip(Modules))
         {
-            _pages[d.Id] = d.CreatePage(services);
+            var created = d.CreatePage(services);
+            created.Navigation = this;
+            _pages[d.Id] = created;
             var id = d.Id;
             item.Command = new RelayCommand(() => NavigateToModule(id), () => HasSession);
         }
@@ -157,6 +159,12 @@ public sealed partial class ShellViewModel : LocalizedViewModel
     public string SafetyNote => Loc["Shell_SafetyNote"];
 
     public string ModulesLabel => Loc["Nav_Label"];
+
+    void IShellNavigation.OpenReview() => OpenReview();
+
+    void IShellNavigation.OpenSettings() => OpenSettings();
+
+    void IShellNavigation.ChooseSave() => OpenSaveRequested();
 
     // ---- partida
 

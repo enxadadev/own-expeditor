@@ -155,19 +155,6 @@ public sealed class SiiDocument
         return sb.ToString();
     }
 
-    /// <summary>Grava em texto puro, criando antes um backup do arquivo existente.</summary>
-    public string? Save(string path)
-    {
-        string? backup = null;
-        if (File.Exists(path))
-        {
-            backup = $"{path}.bak-{DateTime.Now:yyyyMMdd-HHmmss}";
-            File.Copy(path, backup, overwrite: false);
-        }
-        File.WriteAllText(path, ToText(), new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
-        return backup;
-    }
-
     private static SiiUnit ParseUnitHeader(string line, int lineNo)
     {
         // "tipo : id {"

@@ -32,7 +32,10 @@
               AutomationProperties.Name="{Binding #Root.AccessibleName}">
         <Grid ColumnDefinitions="*,Auto" ColumnSpacing="6">
           <StackPanel VerticalAlignment="Center" HorizontalAlignment="Left" MinWidth="0" Margin="{Binding #Root.ClearGap}">
-            <TextBlock Classes="caption trim" Text="{Binding #Root.LabelUpper}" />
+            <StackPanel Orientation="Horizontal" Spacing="6">
+              <c:StepBadge Number="{Binding #Root.StepNumber}" IsDone="{Binding #Root.IsStepDone}" IsVisible="{Binding #Root.StepNumber, Converter={x:Static c:Converters.IsPositive}}" />
+              <TextBlock Classes="caption trim" Text="{Binding #Root.LabelUpper}" />
+            </StackPanel>
             <TextBlock x:Name="ValueText" Classes="body trim" FontWeight="SemiBold" Text="{Binding #Root.DisplayText}"
                        ToolTip.Tip="{Binding #Root.DisplayText}" />
           </StackPanel>
@@ -57,16 +60,18 @@
         <DockPanel LastChildFill="True">
           <c:SearchBox x:Name="Search" DockPanel.Dock="Top" Text="{Binding #Root.Query, Mode=TwoWay}" Query="{Binding #Root.Query, Mode=TwoWay}"
                        Watermark="{loc:Tr Search_Placeholder_Default}" IsBusy="{Binding #Root.IsLoading}" Margin="0,0,0,4" />
+          <CheckBox DockPanel.Dock="Top" Margin="8,0,8,4" Content="{Binding #Root.ToggleText}" IsChecked="{Binding #Root.ToggleChecked, Mode=TwoWay}"
+                    IsVisible="{Binding #Root.ToggleText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
           <TextBlock DockPanel.Dock="Top" Classes="bodysm muted" Margin="8,0,8,6" Text="{Binding #Root.CountText}"
                      IsVisible="{Binding #Root.CountText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
           <c:LoadingPanel Text="{loc:Tr Picker_Loading}" IsCompact="True" ShowDelay="0:0:0" IsVisible="{Binding #Root.IsLoading}" />
           <c:EmptyState IsCompact="True" Title="{Binding #Root.EmptyTitle}" IsVisible="{Binding #Root.ShowEmpty}" />
-          <ListBox x:Name="OptionList" ItemsSource="{Binding #Root.Items}" SelectedItem="{Binding #Root.SelectedItem, Mode=TwoWay}"
+          <ListBox x:Name="OptionList" ItemsSource="{Binding #Root.Items}" SelectedItem="{Binding #Root.SelectedItem, Mode=OneWay}"
                    IsVisible="{Binding #Root.ShowList}" Background="Transparent" Padding="0" MaxHeight="260"
                    PointerReleased="OnListPointerReleased" AutomationProperties.Name="{Binding #Root.Label}">
             <ListBox.ItemTemplate>
               <DataTemplate x:DataType="c:PickerOption">
-                <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8" ToolTip.Tip="{Binding Primary}"
+                <Grid ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="8" ToolTip.Tip="{Binding Primary}"
                       Opacity="{Binding IsEnabled, Converter={x:Static c:Converters.DisabledOpacity}}">
                   <StackPanel VerticalAlignment="Center" MinWidth="0">
                     <TextBlock Classes="body trim primary" FontWeight="SemiBold" Text="{Binding Primary}" />
@@ -77,6 +82,8 @@
                           Padding="8,1" VerticalAlignment="Center" IsVisible="{Binding Tag, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
                     <TextBlock FontSize="11" Text="{Binding Tag}" />
                   </Border>
+                  <TextBlock Grid.Column="3" Classes="body num" VerticalAlignment="Center" TextAlignment="Right" Text="{Binding Trailing}"
+                             IsVisible="{Binding Trailing, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
                 </Grid>
               </DataTemplate>
             </ListBox.ItemTemplate>

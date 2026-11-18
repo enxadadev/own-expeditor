@@ -1,3 +1,4 @@
+using OwnExpeditor.App.Modules.Jobs;
 using Avalonia.Input;
 using OwnExpeditor.App.Shell;
 using OwnExpeditor.App.Tests.Support;
@@ -52,7 +53,7 @@ public class ShellNavigationTests
 
         Assert.Equal(ShellPage.Module, fx.Shell.Page);
         Assert.Equal("jobs", fx.Shell.ActiveModuleId);
-        Assert.IsType<ModulePlaceholderViewModel>(fx.Shell.CurrentPage);
+        Assert.IsType<JobsPageViewModel>(fx.Shell.CurrentPage);
         Assert.True(fx.Shell.HasSession);
         Assert.All(fx.Shell.Modules, m => Assert.True(m.IsEnabled));
         Assert.True(fx.Shell.SessionBar.IsSessionOpen);

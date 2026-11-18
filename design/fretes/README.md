@@ -1,6 +1,6 @@
 # Fretes (módulo)
 
-- **Status:** rascunho
+- **Status:** aprovado (2026-11-18)
 - **Canvas:** https://claude.ai/artifact/DGcBW2CtBSZWnZXgzE7PhM; fonte em [`canvas/`](canvas/) (`canvas.json` + um `.dc.html` por tela, 1280×800).
 - **Origem:** [ADR 0006](../../docs/decisions/0006-integracao-do-codigo-de-injecao-ao-shell.md) e [plano 0006](../../docs/architecture/plan-0006-integracao.md) tarefa 0.1.
   Dentro do shell aprovado ([`../shell/`](../shell/README.md)), na direção A+C ([`../direcao-visual/`](../direcao-visual/README.md)), com os controles de [`../controles/`](../controles/README.md).

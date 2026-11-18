@@ -10,5 +10,5 @@ public sealed record DesignSample(string Name, Func<object> CreateViewModel, dou
 public static class DesignCatalog
 {
     /// <summary>Todas as amostras do shell (cada uma é um <c>ShellViewModel</c> já no estado desejado).</summary>
-    public static IReadOnlyList<DesignSample> Samples { get; } = ShellSamples.All();
+    public static IReadOnlyList<DesignSample> Samples { get; } = [.. ShellSamples.All(), .. JobsSamples.All()];
 }

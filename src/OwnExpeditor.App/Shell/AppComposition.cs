@@ -1,10 +1,12 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
+using OwnExpeditor.App.Modules.Jobs;
 using OwnExpeditor.App.Services;
 using OwnExpeditor.App.ViewModels;
 using OwnExpeditor.App.Views;
 using OwnExpeditor.Core;
 using OwnExpeditor.Core.Games;
+using OwnExpeditor.Core.Modules.Jobs;
 
 namespace OwnExpeditor.App.Shell;
 
@@ -43,16 +45,26 @@ public static class AppComposition
         services.AddSingleton<ReviewViewModel>();
         services.AddSingleton<ShellViewModel>();
 
-        AddModulePlaceholders(services);
+        services.AddJobsModule();
+        AddModules(services);
         overrides?.Invoke(services);
         return services.BuildServiceProvider();
     }
 
-    /// <summary>Módulos da navegação até existirem (Fretes entra na F7 trocando o "jobs"): só um espaço reservado.</summary>
+    /// <summary>Módulos da navegação: Fretes é real; os demais seguem como espaço reservado até existirem.</summary>
+    public static IServiceCollection AddModules(IServiceCollection services)
+    {
+        services.AddModule(JobsPageViewModel.Id, $"Module_{JobsPageViewModel.Id}", "IconNavJobs", 1,
+            sp => new JobsPageViewModel(sp.GetRequiredService<ILocalizer>(), sp.GetRequiredService<IJobBoardFactory>(),
+                sp.GetRequiredService<IToastService>(), sp.GetRequiredService<IUiDispatcher>()));
+        return AddModulePlaceholders(services);
+    }
+
+    /// <summary>Módulos da navegação até existirem: só um espaço reservado (Fretes já é real; ver <see cref="AddModules"/>).</summary>
     public static IServiceCollection AddModulePlaceholders(IServiceCollection services)
     {
         (string Id, int Order, string Icon)[] modules =
-            [("jobs", 1, "IconNavJobs"), ("fleet", 2, "IconNavFleet"), ("profile", 3, "IconNavProfile"),
+            [("fleet", 2, "IconNavFleet"), ("profile", 3, "IconNavProfile"),
              ("company", 4, "IconNavCompany"), ("map", 5, "IconNavMap")];
         foreach (var (id, order, icon) in modules)
             services.AddModule(id, $"Module_{id}", icon, order,
@@ -70,6 +82,7 @@ public static class AppComposition
         ViewRegistry.Register<LoadingViewModel, LoadingView>();
         ViewRegistry.Register<OpenErrorViewModel, OpenErrorView>();
         ViewRegistry.Register<ModulePlaceholderViewModel, ModulePlaceholderView>();
+        ViewRegistry.Register<JobsPageViewModel, JobsView>();
         ViewRegistry.Register<ReviewViewModel, ReviewView>();
         ViewRegistry.Register<ResultViewModel, ResultView>();
         ViewRegistry.Register<SettingsViewModel, SettingsView>();

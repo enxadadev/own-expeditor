@@ -5,6 +5,13 @@ Fonte: `chief-architect`, 2026-11-17, delta sobre
 [`../decisions/0006-integracao-do-codigo-de-injecao-ao-shell.md`](../decisions/0006-integracao-do-codigo-de-injecao-ao-shell.md).
 Vale o plano 0005 no que este não altera.
 
+**Estado:** fases F0 a F7 concluídas. O app abre sempre o shell modular; a tela
+única (`MainViewModel`), `Core/Legacy` (`LegacyJobs`), `SaveSession`, `JobInjector`,
+`WriteAsNewSave`, `SiiDocument.Save` e o comando `inject` da CLI foram removidos.
+Estado final: 764 testes verdes (`toolkit/check.sh`). Pendente: teste no jogo
+(item 7.5). As tabelas abaixo ficam como registro do plano; a coluna de situação
+diz o que aconteceu.
+
 ## Reaproveitamento
 
 | Hoje | Destino | O que muda |
@@ -16,10 +23,10 @@ Vale o plano 0005 no que este não altera.
 | `Data/SaveLocator` | `IProfileLocator` (interno) | tipos do Domain; `GameKind`, `IsSteamCloud`, nome do hex, raízes Linux/Proton; slot novo passa para `ISaveFileStore` |
 | `Core/SaveSession` | `Core/Modules/Jobs/JobBoard` (só leitura, `ISaveView` + `IGameData`) | sem `SiiDocument`; App ordena pelo nome traduzido |
 | `CompanyLocation`, `JobTemplate` | `Core/Modules/Jobs` | sem `Display` (nome via `IGameNames`) |
-| `Core/JobInjector` | `JobPlanner.Plan(...)` → `ChangeSet` (`Key = jobs:slot:<id>`) | violação → `CoreException(InvalidEdit, Reason=Jobs_Error_*)`; `JobInjector.Inject` vira adaptador (CLI/testes) |
-| `App/MainViewModel` | F1: só Core/Domain via `Core/Legacy/LegacyJobs`; F6 shell em `--shell`; F7 `JobsPageViewModel`, apaga legado | — |
-| `tools/OwnExpeditor.Cli` | fica (fora da regra de camadas) | `#pragma` para `Obsolete` |
-| 66 testes | F1 mantém; F7 porta para `JobBoardTests`, `JobPlannerTests`, `EndToEnd` via `ApplyAsync` | — |
+| `Core/JobInjector` | `JobPlanner.Plan(...)` → `ChangeSet` (`Key = jobs:slot:<id>`) | violação → `CoreException(InvalidEdit, Reason=Jobs_Error_*)`; feito: `JobInjector` removido na F7, testes portados para `JobPlanner` |
+| `App/MainViewModel` | F1: só Core/Domain via `Core/Legacy/LegacyJobs`; F6 shell em `--shell`; F7 `JobsPageViewModel`, apaga legado | Feito: F7 apagou `MainViewModel`, `MainWindow` e o legado; o shell é o padrão |
+| `tools/OwnExpeditor.Cli` | fica (fora da regra de camadas) | feito: comando `inject` removido; restam `decode`, `scs-ls`, `scs-cat` e `catalog` |
+| 66 testes | F1 mantém; F7 porta para `JobBoardTests`, `JobPlannerTests`, `EndToEnd` via `ApplyAsync` | feito: 764 testes ao fim da F7 |
 
 ## Decisões (ver ADR 0006)
 - **Erros:** `SaveCorrupt` ← `Empty, Truncated, DecryptFailed, DecompressFailed, SizeMismatch`;
@@ -157,13 +164,13 @@ public interface IClipboardService { Task SetTextAsync(string text); }
 Regras: contratos/stubs primeiro, testes antes da implementação; a cada fase
 `toolkit/check.sh` verde, `toolkit/check-layers.sh` ok e o app faz o fluxo atual.
 
-### F0 — sem código
+### F0 — sem código — concluída
 | # | Agente | Faz | Pronto quando |
 | --- | --- | --- | --- |
 | 0.1 | ux-designer | `design/fretes/` (distância desconhecida, catálogo indisponível, aviso Steam Cloud); em `design/review-apply`: escolha **Sobrescrever / Criar novo save** na confirmação e no resultado, `Error_SaveParseFailed`, `Error_InvalidEdit`, `Error_SlotUnavailable`, `Jobs_Error_*`, `_Zero` | usuário aprova |
 | 0.2 | docs-keeper | ADR 0002 (BSII suportado), skills `i18n-theming` (nomes do jogo) e `design-system`, `docs/architecture/*` | `check-docs` ok |
 
-### F1 — contratos e camadas (app idêntico, 66 testes verdes)
+### F1 — contratos e camadas (app idêntico, 66 testes verdes) — concluída
 | # | Agente | Faz | Pronto quando |
 | --- | --- | --- | --- |
 | 1.1 | core-dev | Domain (Games, Saves, Settings) | compila; `Localization.Humanize` delega |
@@ -173,41 +180,41 @@ Regras: contratos/stubs primeiro, testes antes da implementação; a cada fase
 | 1.5 | core-dev | `check-layers.sh` pega uso qualificado e `global using`; `tools/` fora | acusa violação plantada |
 | 1.6 | test-engineer | `DomainTests` (Humanize, nome hex, GameFolders) | verde |
 
-### F2 — Sii
+### F2 — Sii — concluída
 | 2.1 | sii-engine | `docs/sii-format.md` §7: classificação de erros e índice | doc antes do código |
 | 2.2 | test-engineer | `SiiErrorTests`: um caso por `SiiErrorKind` | vermelhos certos |
 | 2.3 | sii-engine | `SiiDecoder`, `BsiiDecoder`, `SiiDocument` (+ ajustes em SaveLocator, CLI, LegacyJobs) | 2.2 verde; round-trip ok |
 
-### F3 — Data (`tests/OwnExpeditor.Data.Tests` novo)
+### F3 — Data (`tests/OwnExpeditor.Data.Tests` novo) — concluída
 | 3.1 | test-engineer | save-safety (sobrescrever e slot novo), perfis (profiles, steam_profiles, Proton), `libraryfolders.vdf`, `Validate`, settings com `GameFolders` e JSON corrompido | vermelhos certos |
 | 3.2 | core-dev | `SaveFileStore` (`WriteAtomicAsync` + `WriteNewSlotAsync`) | save-safety verde |
 | 3.3 | core-dev | `ProfileLocator`, `GameProcessMonitor` | perfis verdes |
 | 3.4 | core-dev | `GameInstallLocator` | detecção/validação verdes |
 | 3.5 | core-dev | `JsonSettingsStore`, `GameCatalogSource` (cache), `AddOwnExpeditorData` | verde; app igual |
 
-### F4 — Core
+### F4 — Core — concluída
 | 4.1 | test-engineer | sessão (plano 0005 T2), `ApplyTarget` nos dois modos, mapeamento de erros, etapas, monitor com `FakeTimeProvider`, pasta manual inválida não grava, troca de idioma só relê textos | vermelhos certos |
 | 4.2 | core-dev | `SaveView`, `EditSession` (Stage/Discard/GetDiff), `EditSessionFactory` | parte verde |
 | 4.3 | core-dev | `ApplyAsync(ApplyTarget)` (verify: contagem de blocos + valores novos), `EditSessionHost.OpenAsync` (etapas, cancelamento, StageKey/Line) | verde |
 | 4.4 | core-dev | `GameDataService`, `GameStatusMonitor`, `ProfileService`, `AppSettingsService`, `AddOwnExpeditorCore` | 4.1 verde |
 
-### F5 — App base (paralelo a F3/F4)
+### F5 — App base (paralelo a F3/F4) — concluída
 | 5.1 | test-engineer | `tests/OwnExpeditor.App.Tests`: paridade `.resx`, `_One`/`_Other`, `Error_*` dos 20 códigos, `Format_Money_*` | vermelhos certos |
 | 5.2 | ui-dev | `Localizer`, `Resources/*.resx` (de `design/*/strings.md`), `ThemeService` | paridade verde |
 | 5.3 | ui-dev | `Styles/`, `Controls/`, `Gallery/` (Debug) | amostras Light/Dark × pt-BR/en |
 
-### F6 — Shell atrás de `--shell`
+### F6 — Shell atrás de `--shell` — concluída (o `--shell` foi removido na F7)
 | 6.1 | ui-dev | `AppComposition`, `ViewRegistry`, `Shell/*`, `SessionBar`, atalhos | abre; módulos desabilitados sem sessão |
 | 6.2 | ui-dev | `ProfileSavePicker`, Carregando, erros (ilegível/não entendido), `IClipboardService`, `IShellLauncher` | save BSII de `samples/` abre sem travar |
 | 6.3 | ui-dev | Configurações + `FolderField`, `IFolderPicker` | escolher/detectar; inválida recusada |
 | 6.4 | ui-dev | Revisar, Confirmar (com destino), Resultado, `DialogService`, Desfazer | fluxo completo com amostra; ux-reviewer ok |
 
-### F7 — módulo Fretes (última)
+### F7 — módulo Fretes (última) — concluída, falta o teste no jogo (7.5)
 | 7.1 | test-engineer | `JobBoardTests`, `JobPlannerTests`, EndToEnd via `ApplyAsync` (ambos destinos) | vermelhos certos |
 | 7.2 | core-dev | `Core/Modules/Jobs/*` | verde; `JobInjectorTests` ainda verdes |
 | 7.3 | ui-dev | `App/Modules/Jobs/*` a partir de `design/fretes` | screenshots ok |
 | 7.4 | ui-dev + core-dev | shell padrão; apaga MainViewModel, MainWindow, LegacyJobs, SaveSession, WriteAsNewSave, Converters | check-layers ok; sem `Obsolete` fora da CLI |
-| 7.5 | fechamento | test-runner → code-reviewer + ux-reviewer → docs-keeper → git-ops (minor) | **teste no jogo:** sobrescrever save BSII, criar slot novo, perfil com Steam Cloud |
+| 7.5 | fechamento | test-runner → code-reviewer + ux-reviewer → docs-keeper → git-ops (minor) | **teste no jogo:** sobrescrever save BSII, criar slot novo, perfil com Steam Cloud. **Pendente** |
 
 ## Distância (decisão 2026-11-17)
 O usuário nunca digita distância nem monta rota; o jogo recalcula a rota no GPS.
@@ -225,12 +232,12 @@ O usuário nunca digita distância nem monta rota; o jogo recalcula a rota no GP
 ## Riscos
 1. Sobrescrever com Steam Cloud: a nuvem pode restaurar ou pedir conflito — validar no jogo e avisar.
 2. Slot novo com Steam Cloud pode não aparecer no jogo — aviso na opção.
-3. Dois caminhos de gravação até F7 (legado em slot novo sem `.tmp`): não estender o legado.
+3. Dois caminhos de gravação até F7 (legado em slot novo sem `.tmp`): não estender o legado. Resolvido na F7: só `SaveFileStore` grava.
 4. BSII gravado como texto: só o slot 3 validado; `ApplyAsync` reparseia (custo 2×).
 5. Mods: `mod/` e HashFS v1 não lidos; regras tiradas do save são obrigatórias; catálogo nunca derruba a sessão.
 6. `locale.scs` real não testado (idiomas misturados).
 7. Frete descartado pelo jogo sem aviso (caso `plumb_suppl`).
-8. Unidade de `expiration_time` não confirmada; sem cache de distâncias.
+8. Unidade de `expiration_time` não confirmada no jogo. O cache de distâncias existe desde a F7 (`Data/Distances`).
 9. Detecção de processo em Proton/Wine e fora da Steam.
 10. Registro do Windows e trimming.
 11. Classificação de erro errada (baixo impacto).

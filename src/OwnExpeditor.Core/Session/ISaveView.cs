@@ -18,6 +18,16 @@ public sealed class SaveUnitView
 
     public string Id => _unit.Id;
 
+    /// <summary>Alguma mudança pendente altera esta unidade (só em <c>View</c>).</summary>
+    public bool IsPending => _overrides is not null;
+
+    /// <summary>Valor no save base (sem as mudanças pendentes).</summary>
+    public string? GetBase(string attribute)
+    {
+        ArgumentNullException.ThrowIfNull(attribute);
+        return _unit.Get(attribute);
+    }
+
     public string? Get(string attribute)
     {
         ArgumentNullException.ThrowIfNull(attribute);

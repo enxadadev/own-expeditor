@@ -13,7 +13,15 @@ public sealed class TrExtension(string key) : MarkupExtension
 {
     public string Key { get; set; } = key;
 
+    /// <summary>Caixa alta pela cultura atual (rótulos Caption).</summary>
+    public bool Upper { get; set; }
+
     public override object ProvideValue(IServiceProvider serviceProvider) =>
-        new ReflectionBindingExtension($"[{Key}]") { Mode = BindingMode.OneWay, Source = Localizer.Instance }
+        new ReflectionBindingExtension($"[{Key}]")
+        {
+            Mode = BindingMode.OneWay,
+            Source = Localizer.Instance,
+            Converter = Upper ? Controls.Converters.Upper : null,
+        }
             .ProvideValue(serviceProvider);
 }
