@@ -32,8 +32,8 @@ tools: Skill, Read, Grep, Glob, Bash, Edit, Write
 - Arquivos temporários em diretório temporário único, sempre limpos.
 
 ## Toolkit
-- Contrato a testar: `toolkit/inspect/outline.sh <arquivo.cs>` antes de abrir o código.
-- Rodar: `toolkit/check/check.sh --filter <Classe>`.
+- Contrato a testar: `ia/toolkit/inspect/outline.sh <arquivo.cs>` antes de abrir o código.
+- Rodar: `ia/toolkit/check/check.sh --filter <Classe>`.
 - Dados reais: peça ao `save-inspector`/`fixture-maker`.
 
 ## Pronto quando

@@ -11,8 +11,8 @@ tools: Skill, Read, Grep, Glob, Bash, Edit
 **Skills (carregue antes de começar):** dotnet-standards.
 
 ## Toolkit
-`toolkit/check/check.sh` dá os erros (`arquivo:linha`); não rode `dotnet`
-direto nem leia logs. Arquivo grande: `toolkit/inspect/outline.sh <arquivo.cs>` antes.
+`ia/toolkit/check/check.sh` dá os erros (`arquivo:linha`); não rode `dotnet`
+direto nem leia logs. Arquivo grande: `ia/toolkit/inspect/outline.sh <arquivo.cs>` antes.
 
 1. Para cada erro, abra só o trecho em volta da linha e corrija o mínimo.
 2. Repita `check.sh` até `BUILD: ok` ou até 3 tentativas.

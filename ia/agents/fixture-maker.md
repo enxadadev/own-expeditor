@@ -11,8 +11,8 @@ tools: Skill, Read, Grep, Glob, Bash, Write
 **Skills (carregue antes de começar):** xunit-patterns, ets2-domain.
 
 ## Passos
-1. Escolha um save com `toolkit/inspect/samples.sh --text` e localize os blocos
-   com `toolkit/inspect/sii.sh list/show` (nunca leia o arquivo inteiro).
+1. Escolha um save com `ia/toolkit/inspect/samples.sh --text` e localize os blocos
+   com `ia/toolkit/inspect/sii.sh list/show` (nunca leia o arquivo inteiro).
 2. Recorte o **mínimo** que mantém o arquivo válido: cabeçalho
    `SiiNunit { ... }` + os blocos necessários + os blocos referenciados por eles.
 3. Anonimize: nome de perfil, empresa do jogador, dinheiro, placas, ids de

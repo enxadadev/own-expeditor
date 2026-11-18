@@ -76,23 +76,23 @@ Mudança pequena (bug isolado, ajuste visual) pode pular 1–2 e começar no 5.
 | `wf-commit` | commit com aprovação (git-ops) |
 | `wf-release` | exe Windows + notas |
 
-## Toolkit (`toolkit/`) — trabalho repetitivo sem gastar tokens
+## Toolkit (`ia/toolkit/`) — trabalho repetitivo sem gastar tokens
 
-Fonte da verdade: `toolkit/help.sh` (lista todos os scripts; `--agents` agrupa por agente).
+Fonte da verdade: `ia/toolkit/help.sh` (lista todos os scripts; `--agents` agrupa por agente).
 Os scripts ficam em subpastas por assunto:
 
 | Pasta | Conteúdo |
 | --- | --- |
-| `toolkit/git/` | precommit, commit, lint-commit-msg, next-owne, bump-version, install-hooks, diff-summary |
-| `toolkit/check/` | check (build+testes), check-layers, check-docs, check-rules, check-i18n, check-agents |
-| `toolkit/inspect/` | samples, sii (SiiTool), outline |
-| `toolkit/gen/` | gen-resx.py, new-adr |
-| `toolkit/release/` | release, screenshots, codex-review |
+| `ia/toolkit/git/` | precommit, commit, lint-commit-msg, next-owne, bump-version, install-hooks, diff-summary |
+| `ia/toolkit/check/` | check (build+testes), check-layers, check-docs, check-rules, check-i18n, check-agents |
+| `ia/toolkit/inspect/` | samples, sii (SiiTool), outline |
+| `ia/toolkit/gen/` | gen-resx.py, new-adr |
+| `ia/toolkit/release/` | release, screenshots, codex-review |
 
 ### Economia de tokens
 
 - Rode o script antes de ler arquivos: a saída curta substitui a leitura.
-- Arquivo grande: `toolkit/inspect/outline.sh` antes de abrir; depois só o trecho.
+- Arquivo grande: `ia/toolkit/inspect/outline.sh` antes de abrir; depois só o trecho.
 - `check-*.sh` no lugar de inspeção manual (camadas, regras, i18n, docs, agentes).
 - Saída de script nunca é colada inteira no brief; passe só as linhas relevantes.
 - O subagente recebe o mínimo: caminhos + critério de pronto.

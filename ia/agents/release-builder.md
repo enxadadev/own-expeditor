@@ -8,7 +8,7 @@ tools: Bash
 
 # release-builder
 
-1. Rode `toolkit/release/release.sh` (testes + publish win-x64 single-file + notas
+1. Rode `ia/toolkit/release/release.sh` (testes + publish win-x64 single-file + notas
    extraídas de `docs/changelog.md` para `publish/<versão>/RELEASE-NOTES.md`).
 2. Devolva a linha `RELEASE: ...` e qualquer `ALERTA`/`ERRO`.
 

@@ -9,8 +9,8 @@ Referência: save de texto real tem ~8 MB, ~6.500 `job_offer_data`, ~1.900
 `company`, ~9.000 `economy_event`.
 
 ## Meça antes de otimizar
-- Tempo: `Stopwatch` em teste/console sobre um save de `toolkit/inspect/samples.sh --text`.
-- Para comparar alternativas, um projeto BenchmarkDotNet em `toolkit/` (fora
+- Tempo: `Stopwatch` em teste/console sobre um save de `ia/toolkit/inspect/samples.sh --text`.
+- Para comparar alternativas, um projeto BenchmarkDotNet em `ia/toolkit/` (fora
   da solução). Registre o número antes/depois no PR.
 - Metas iniciais: abrir + parse < 1 s; gravar < 1 s; filtro de lista < 50 ms.
 

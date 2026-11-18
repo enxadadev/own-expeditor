@@ -50,9 +50,9 @@ conta como documentação.
 2. Leia o código afetado (`src/**`, `*.csproj`, `Directory.Build.props`,
    `tests/**`) e confronte com o que `docs/` afirma.
 3. Atualize os documentos afetados — inclusive removendo o que ficou obsoleto.
-4. Verifique: `toolkit/check/check-docs.sh` (links e índice) e
-   `toolkit/check/check.sh` (comandos de build/test); caminhos e classes citados
-   existem (`Grep`/`Glob`). ADR novo: `toolkit/gen/new-adr.sh "<titulo>" < texto`.
+4. Verifique: `ia/toolkit/check/check-docs.sh` (links e índice) e
+   `ia/toolkit/check/check.sh` (comandos de build/test); caminhos e classes citados
+   existem (`Grep`/`Glob`). ADR novo: `ia/toolkit/gen/new-adr.sh "<titulo>" < texto`.
 5. Reporte: arquivos alterados, o que mudou em cada um, e TODOs deixados.
 
 ## Regras
