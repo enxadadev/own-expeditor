@@ -14,7 +14,9 @@
                 Background="{TemplateBinding Background}">
           <Grid>
             <Border x:Name="Bar" Height="3" VerticalAlignment="Top" Margin="10,0" CornerRadius="2" Background="Transparent" />
-            <ContentPresenter x:Name="PART_ContentPresenter" Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <!-- Sem x:Name="PART_ContentPresenter" de propósito: com esse nome os estilos do Fluent pintam um fundo/borda
+                 quadrado só atrás do conteúdo no hover/pressed/foco (caixa dentro do bloco arredondado). -->
+            <ContentPresenter Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center" />
           </Grid>
         </Border>
       </ControlTemplate>
@@ -31,7 +33,9 @@
   <Style Selector="Button.nav.home">
     <Setter Property="Height" Value="52" />
   </Style>
-  <Style Selector="Button.nav:pressed"><Setter Property="Background" Value="{DynamicResource SurfacePressedBrush}" /></Style>
+  <!-- Pressionado: mantém o fundo do hover (o token SurfacePressed é para superfícies brancas e some sobre a barra
+       lateral no tema claro) e encolhe levemente o bloco -->
+  <Style Selector="Button.nav:pressed /template/ Border#Ring"><Setter Property="RenderTransform" Value="scale(0.96)" /></Style>
   <Style Selector="Button.nav:disabled"><Setter Property="Opacity" Value="0.4" /><Setter Property="Cursor" Value="Arrow" /></Style>
 
   <!-- Chip de perfil/save e selo Revisar (botões de contorno 44 px) -->

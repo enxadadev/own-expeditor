@@ -45,6 +45,9 @@ por um shell com módulos. Ainda sem release publicado; a versão em
   à seleção de save de qualquer tela. A sessão aberta e as alterações pendentes
   são mantidas. Corrige: depois de sair da seleção de save não havia como voltar.
 - **Novo ícone.** A janela e o executável usam a cabeça do mascote.
+- **Hover limpo na barra lateral.** Ao passar o mouse, pressionar ou focar um
+  item, não aparece mais uma caixa quadrada atrás do ícone; pressionar encolhe
+  levemente o item, visível nos temas claro e escuro.
 
 ### Mudanças técnicas
 
