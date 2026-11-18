@@ -1,0 +1,78 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:OwnExpeditor.App.ViewModels"
+             xmlns:c="using:OwnExpeditor.App.Controls"
+             xmlns:loc="using:OwnExpeditor.App.Markup"
+             x:Class="OwnExpeditor.App.Views.ReviewView"
+             x:DataType="vm:ReviewViewModel">
+  <Grid ColumnDefinitions="*,300" ColumnSpacing="24" Margin="32,12,32,24">
+    <Grid Grid.Column="0" RowDefinitions="Auto,Auto,*" RowSpacing="8">
+      <c:PageHeader Title="{Binding Title}">
+        <c:PageHeader.Actions>
+          <Button Classes="compact" Foreground="{DynamicResource DangerBrush}" Content="{loc:Tr Review_DiscardAll}"
+                  Command="{Binding DiscardAllCommand}" IsVisible="{Binding HasChanges}" />
+        </c:PageHeader.Actions>
+      </c:PageHeader>
+      <TextBlock Grid.Row="1" Classes="body muted" Text="{Binding Subtitle}" />
+
+      <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Disabled" IsVisible="{Binding HasChanges}"
+                    AutomationProperties.Name="{loc:Tr Review_List_Label}">
+        <ItemsControl ItemsSource="{Binding Modules}" Margin="0,8,12,0">
+          <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Spacing="20" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:ReviewModuleViewModel">
+              <StackPanel Spacing="8">
+                <Grid ColumnDefinitions="*,Auto">
+                  <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                    <TextBlock Classes="title" Text="{Binding Name, Converter={x:Static c:Converters.Upper}}" />
+                    <TextBlock Classes="bodysm muted" Text="{Binding CountText}" VerticalAlignment="Center" />
+                  </StackPanel>
+                  <Button Grid.Column="1" Classes="compact" Content="{loc:Tr Review_DiscardModule}" Command="{Binding DiscardModuleCommand}"
+                          AutomationProperties.Name="{Binding DiscardAutomation}" />
+                </Grid>
+                <c:DiffList Groups="{Binding Changes}" />
+              </StackPanel>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </ScrollViewer>
+
+      <StackPanel Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10" IsVisible="{Binding IsEmpty}">
+        <c:EmptyState Icon="{StaticResource IconClipboard}" Title="{loc:Tr Empty_Title}" Message="{loc:Tr Empty_Message}"
+                      ActionText="{Binding GoToText}" ActionCommand="{Binding GoToModuleCommand}" />
+        <TextBlock Classes="bodysm muted" Text="{loc:Tr Empty_Tip}" HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" />
+      </StackPanel>
+    </Grid>
+
+    <!-- resumo e ações, fixos à direita -->
+    <Border Grid.Column="1" Classes="panel" VerticalAlignment="Top">
+      <StackPanel Spacing="14">
+        <TextBlock Classes="caption" Text="{Binding SummaryLabel}" />
+        <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+          <c:StatTile Label="{loc:Tr Review_Stat_Changes}" Value="{Binding TotalValue}" Emphasis="Accent" />
+          <c:StatTile Grid.Column="1" Label="{loc:Tr Review_Stat_Modules}" Value="{Binding ModuleValue}" />
+        </Grid>
+        <StackPanel Spacing="8">
+          <TextBlock Classes="subtitle" Text="{loc:Tr Review_Safety_Title}" />
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <Path Data="{StaticResource IconCheck}" Fill="{DynamicResource SuccessBrush}" Width="14" Height="14" Stretch="Uniform" VerticalAlignment="Top" Margin="0,3,0,0" AutomationProperties.AccessibilityView="Raw" />
+            <TextBlock Classes="bodysm" Text="{loc:Tr Review_Safety_Backup}" TextWrapping="Wrap" MaxWidth="230" />
+          </StackPanel>
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <Path Data="{StaticResource IconCheck}" Fill="{DynamicResource SuccessBrush}" Width="14" Height="14" Stretch="Uniform" VerticalAlignment="Top" Margin="0,3,0,0" AutomationProperties.AccessibilityView="Raw" />
+            <TextBlock Classes="bodysm" Text="{loc:Tr Review_Safety_Once}" TextWrapping="Wrap" MaxWidth="230" />
+          </StackPanel>
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <Path Data="{StaticResource IconWarning}" Fill="{DynamicResource AccentTextBrush}" Width="14" Height="14" Stretch="Uniform" VerticalAlignment="Top" Margin="0,3,0,0" AutomationProperties.AccessibilityView="Raw" />
+            <TextBlock Classes="bodysm" Text="{loc:Tr Review_Safety_CloseGame}" TextWrapping="Wrap" MaxWidth="230" />
+          </StackPanel>
+        </StackPanel>
+        <Button HorizontalAlignment="Stretch" Content="{loc:Tr Review_Back}" Command="{Binding BackCommand}" />
+        <Button x:Name="ApplyButton" Classes="danger large" HorizontalAlignment="Stretch" Content="{loc:Tr Review_Apply}"
+                Command="{Binding ApplyCommand}" />
+        <TextBlock Classes="bodysm muted" TextWrapping="Wrap"
+                   Text="{Binding ApplyHint}" />
+      </StackPanel>
+    </Border>
+  </Grid>
+</UserControl>

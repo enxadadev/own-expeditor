@@ -306,6 +306,13 @@
   <data name="OpenError_Parse_Cause2" xml:space="preserve"><value>A mod that changes how the save is written.</value></data>
   <data name="OpenError_Parse_Cause3" xml:space="preserve"><value>A damaged file.</value></data>
   <data name="OpenError_Parse_CausesTitle" xml:space="preserve"><value>What may have caused this</value></data>
+  <data name="OpenError_Parse_DetailsText" xml:space="preserve"><value>Code: {0}
+Game: {1}
+Profile: {2}
+Save: {3}
+Size: {4}
+Step: {5}
+App: {6}</value></data>
   <data name="OpenError_Parse_Tip1" xml:space="preserve"><value>Try another save from the same profile, such as the most recent autosave.</value></data>
   <data name="OpenError_Parse_Tip2" xml:space="preserve"><value>If it keeps happening, copy the technical details and send them when you report the problem.</value></data>
   <data name="OpenError_Parse_Title" xml:space="preserve"><value>Couldn't understand the save</value></data>

@@ -1,0 +1,84 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:OwnExpeditor.App.ViewModels"
+             xmlns:c="using:OwnExpeditor.App.Controls"
+             xmlns:loc="using:OwnExpeditor.App.Markup"
+             x:Class="OwnExpeditor.App.Views.ResultView"
+             x:DataType="vm:ResultViewModel">
+  <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+    <StackPanel MaxWidth="820" Margin="32,20,32,32" Spacing="16" HorizontalAlignment="Stretch">
+      <Grid ColumnDefinitions="Auto,*" ColumnSpacing="16">
+        <Border Width="48" Height="48" CornerRadius="24" Background="{DynamicResource SuccessBgBrush}" VerticalAlignment="Top">
+          <Path Data="{StaticResource IconCheck}" Fill="{DynamicResource SuccessBrush}" Width="26" Height="26" Stretch="Uniform"
+                HorizontalAlignment="Center" VerticalAlignment="Center" AutomationProperties.AccessibilityView="Raw" />
+        </Border>
+        <StackPanel Grid.Column="1" Spacing="4" VerticalAlignment="Center">
+          <TextBlock x:Name="TitleText" Classes="title" Focusable="True" Text="{Binding TitleUpper}" />
+          <TextBlock Classes="body muted" Text="{Binding Summary}" TextWrapping="Wrap" />
+        </StackPanel>
+      </Grid>
+
+      <!-- Save gravado -->
+      <Border Classes="panel">
+        <StackPanel Spacing="8">
+          <Grid ColumnDefinitions="*,Auto">
+            <StackPanel Spacing="2">
+              <TextBlock Classes="caption" Text="{Binding SlotTitleUpper}" />
+              <TextBlock Classes="subtitle" Text="{Binding SlotName}" />
+            </StackPanel>
+            <TextBlock Grid.Column="1" Classes="bodysm muted" Text="{Binding SlotHelp}" VerticalAlignment="Center" />
+          </Grid>
+          <Border Classes="pathbox"><SelectableTextBlock FontFamily="{StaticResource FontMono}" FontSize="12" Text="{Binding SlotFolder}" TextWrapping="Wrap" /></Border>
+          <StackPanel Orientation="Horizontal" Spacing="8" IsVisible="{Binding IsNewSave}">
+            <Button Classes="compact" Content="{loc:Tr Result_OpenFolder}" Command="{Binding OpenFolderCommand}" />
+            <Button Classes="compact" Content="{loc:Tr Result_CopyPath}" Command="{Binding CopyPathCommand}" />
+          </StackPanel>
+        </StackPanel>
+      </Border>
+
+      <!-- Backup do save original (só ao sobrescrever) -->
+      <Border Classes="panel" IsVisible="{Binding HasBackup}">
+        <StackPanel Spacing="8">
+          <TextBlock Classes="caption" Text="{Binding BackupTitleUpper}" />
+          <TextBlock Classes="bodysm muted" Text="{Binding BackupHelp}" TextWrapping="Wrap" />
+          <Border Classes="pathbox"><SelectableTextBlock FontFamily="{StaticResource FontMono}" FontSize="12" Text="{Binding BackupPath}" TextWrapping="Wrap" /></Border>
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <Button Classes="compact" Content="{loc:Tr Result_OpenFolder}" Command="{Binding OpenFolderCommand}" />
+            <Button Classes="compact" Content="{loc:Tr Result_CopyPath}" Command="{Binding CopyPathCommand}" />
+          </StackPanel>
+        </StackPanel>
+      </Border>
+
+      <Border Classes="warn-amber" IsVisible="{Binding ShowCloud}">
+        <StackPanel Orientation="Horizontal" Spacing="10">
+          <Path Data="{StaticResource IconWarning}" Fill="{DynamicResource AccentTextBrush}" Width="18" Height="18" Stretch="Uniform"
+                VerticalAlignment="Top" AutomationProperties.AccessibilityView="Raw" />
+          <TextBlock Classes="bodysm" Text="{Binding CloudText}" TextWrapping="Wrap" MaxWidth="700" />
+        </StackPanel>
+      </Border>
+
+      <Grid ColumnDefinitions="*,*" ColumnSpacing="16">
+        <Border Classes="panel">
+          <StackPanel Spacing="6">
+            <TextBlock Classes="caption" Text="{Binding NowTitleUpper}" />
+            <TextBlock Classes="body" Text="{Binding NowBody}" TextWrapping="Wrap" />
+            <TextBlock Classes="bodysm muted" Text="{Binding SessionNote}" TextWrapping="Wrap" IsVisible="{Binding IsNewSave}" />
+          </StackPanel>
+        </Border>
+        <Border Grid.Column="1" Classes="panel">
+          <StackPanel Spacing="6">
+            <TextBlock Classes="caption" Text="{Binding HelpTitleUpper}" />
+            <ItemsControl ItemsSource="{Binding HelpSteps}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="x:String"><TextBlock Classes="bodysm" Text="{Binding}" TextWrapping="Wrap" Margin="0,0,0,2" /></DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+        </Border>
+      </Grid>
+
+      <TextBlock Classes="bodysm muted" Text="{Binding TextNote}" TextWrapping="Wrap" />
+      <Button HorizontalAlignment="Right" Classes="accent large" Content="{loc:Tr Result_Keep}" Command="{Binding KeepEditingCommand}" />
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

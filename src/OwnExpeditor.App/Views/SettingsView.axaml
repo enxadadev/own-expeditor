@@ -1,0 +1,103 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:OwnExpeditor.App.ViewModels"
+             xmlns:c="using:OwnExpeditor.App.Controls"
+             xmlns:loc="using:OwnExpeditor.App.Markup"
+             x:Class="OwnExpeditor.App.Views.SettingsView"
+             x:DataType="vm:SettingsViewModel">
+  <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+    <StackPanel MaxWidth="820" Margin="32,12,32,32" Spacing="16" HorizontalAlignment="Stretch">
+      <c:PageHeader Title="{loc:Tr Settings_Title}" />
+
+      <!-- Aparência -->
+      <c:SectionCard Title="{loc:Tr Settings_Appearance}">
+        <StackPanel Spacing="14">
+          <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
+            <StackPanel VerticalAlignment="Center" Spacing="2">
+              <TextBlock Classes="subtitle" Text="{loc:Tr Settings_Theme}" />
+              <TextBlock Classes="bodysm muted" Text="{loc:Tr Settings_Theme_Help}" TextWrapping="Wrap" />
+            </StackPanel>
+            <ListBox Grid.Column="1" Classes="segmented" ItemsSource="{Binding ThemeOptions}" SelectedItem="{Binding SelectedTheme}"
+                     AutomationProperties.Name="{loc:Tr Settings_Theme}">
+              <ListBox.ItemTemplate>
+                <DataTemplate x:DataType="vm:ChoiceItemViewModel">
+                  <TextBlock Text="{Binding Label}" />
+                </DataTemplate>
+              </ListBox.ItemTemplate>
+            </ListBox>
+          </Grid>
+          <Border Height="1" Background="{DynamicResource LineBrush}" />
+          <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
+            <StackPanel VerticalAlignment="Center" Spacing="2">
+              <TextBlock Classes="subtitle" Text="{loc:Tr Settings_Language}" />
+              <TextBlock Classes="bodysm muted" Text="{loc:Tr Settings_Language_Help}" TextWrapping="Wrap" />
+            </StackPanel>
+            <ListBox Grid.Column="1" Classes="segmented" ItemsSource="{Binding LanguageOptions}" SelectedItem="{Binding SelectedLanguage}"
+                     AutomationProperties.Name="{loc:Tr Settings_Language}">
+              <ListBox.ItemTemplate>
+                <DataTemplate x:DataType="vm:ChoiceItemViewModel">
+                  <TextBlock Text="{Binding Label}" />
+                </DataTemplate>
+              </ListBox.ItemTemplate>
+            </ListBox>
+          </Grid>
+          <StackPanel Orientation="Horizontal" Spacing="8" IsVisible="{Binding ShowSaved}" AutomationProperties.LiveSetting="Polite">
+            <Path Data="{StaticResource IconCheck}" Fill="{DynamicResource SuccessBrush}" Width="16" Height="16" Stretch="Uniform"
+                  AutomationProperties.AccessibilityView="Raw" />
+            <TextBlock Classes="bodysm" Text="{loc:Tr Settings_Saved}" />
+          </StackPanel>
+          <TextBlock Classes="bodysm" Foreground="{DynamicResource DangerBrush}" Text="{loc:Tr Settings_SaveFailed}" TextWrapping="Wrap"
+                     IsVisible="{Binding ShowFailed}" AutomationProperties.LiveSetting="Assertive" />
+        </StackPanel>
+      </c:SectionCard>
+      <TextBlock Classes="bodysm muted" Text="{loc:Tr Settings_Note}" IsVisible="{Binding ShowPendingNote}" />
+
+      <!-- Jogos: pasta de instalação -->
+      <c:SectionCard Title="{loc:Tr Settings_GameFolder}" Description="{loc:Tr Settings_GameFolder_Help}">
+        <ItemsControl ItemsSource="{Binding Folders}">
+          <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Spacing="20" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:GameFolderRowViewModel">
+              <StackPanel Spacing="8" AutomationProperties.Name="{Binding AutomationName}">
+                <Grid ColumnDefinitions="*,Auto">
+                  <TextBlock Classes="subtitle" Text="{Binding GameName}" />
+                  <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                    <Panel Width="10" Height="10" VerticalAlignment="Center" AutomationProperties.AccessibilityView="Raw">
+                      <Ellipse Fill="{DynamicResource SuccessBrush}" IsVisible="{Binding IsFound}" />
+                      <Ellipse Fill="{DynamicResource DangerBrush}" IsVisible="{Binding !IsFound}" />
+                    </Panel>
+                    <TextBlock Classes="bodysm" Text="{Binding StatusText}" />
+                  </StackPanel>
+                </Grid>
+                <Grid ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="8">
+                  <Border Classes="pathbox" MinHeight="44" ToolTip.Tip="{Binding Path}">
+                    <TextBlock Classes="mono trim" Text="{Binding PathText}" VerticalAlignment="Center" />
+                  </Border>
+                  <Button Grid.Column="1" Classes="compact" Content="{loc:Tr Settings_GameFolder_Choose}" Command="{Binding ChooseCommand}" />
+                  <Button Grid.Column="2" Classes="compact" Content="{loc:Tr Settings_GameFolder_Reset}" Command="{Binding ResetCommand}"
+                          IsVisible="{Binding IsManual}" />
+                  <Button Grid.Column="3" Classes="compact" Content="{loc:Tr Settings_GameFolder_Open}" Command="{Binding OpenFolderCommand}"
+                          IsVisible="{Binding CanOpen}" />
+                </Grid>
+                <TextBlock Classes="bodysm muted" Text="{Binding NotFoundHelp}" TextWrapping="Wrap" IsVisible="{Binding !IsFound}" />
+                <TextBlock Classes="bodysm" Foreground="{DynamicResource DangerBrush}" Text="{Binding InvalidText}" TextWrapping="Wrap"
+                           IsVisible="{Binding ShowInvalid}" AutomationProperties.LiveSetting="Assertive" />
+              </StackPanel>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </c:SectionCard>
+
+      <!-- Sobre -->
+      <c:SectionCard Title="{loc:Tr Settings_About}">
+        <StackPanel Spacing="4">
+          <StackPanel Orientation="Horizontal" Spacing="12">
+            <TextBlock Classes="title" Text="OWN EXPEDITOR" />
+            <TextBlock Classes="bodysm muted num" Text="{Binding Version}" VerticalAlignment="Center" />
+          </StackPanel>
+          <TextBlock Classes="bodysm muted" Text="{loc:Tr Settings_Disclaimer}" TextWrapping="Wrap" />
+        </StackPanel>
+      </c:SectionCard>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

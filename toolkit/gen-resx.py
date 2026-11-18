@@ -41,7 +41,7 @@ def parse():
             key = cells[0].strip("`")
             if not KEY.fullmatch(key) or key.startswith("Canvas_") or key == "Chave":
                 continue
-            pt, en = (c.replace("\\|", "|") for c in cells[1:3])
+            pt, en = (c.replace("\\|", "|").replace("\\n", "\n") for c in cells[1:3])
             if key in table:
                 if table[key][1:] != (pt, en):
                     prev = table[key][0]

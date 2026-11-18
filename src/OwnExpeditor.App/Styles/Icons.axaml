@@ -11,4 +11,13 @@
   <StreamGeometry x:Key="IconArrowRight">M4 11h12.2l-4.6-4.6L13 5l7 7-7 7-1.4-1.4 4.6-4.6H4z</StreamGeometry>
   <StreamGeometry x:Key="IconInbox">F0 M19 3H5L2 12v9h20v-9zM5.9 5h12.2l2.1 6H16l-1 2H9l-1-2H3.8zM4 19v-6h3.5l1 2h7l1-2H20v6z</StreamGeometry>
   <StreamGeometry x:Key="IconRefresh">M17.7 6.3A8 8 0 1 0 20 12h-2a6 6 0 1 1-1.8-4.3L13 11h8V3z</StreamGeometry>
+  <!-- Ícones da navegação (24 x 24, de contorno: use Stroke 1,8, sem Fill). Fonte: design/shell/canvas (ICONS). -->
+  <StreamGeometry x:Key="IconNavJobs">M4 7.5 12 3l8 4.5v9L12 21l-8-4.5z M4 7.5l8 4.5 8-4.5 M12 12v9</StreamGeometry>
+  <StreamGeometry x:Key="IconNavFleet">M3 7h11v9H3z M14 10h4l3 3v3h-7 M5 17a2 2 0 1 0 4 0 2 2 0 1 0-4 0 M15 17a2 2 0 1 0 4 0 2 2 0 1 0-4 0</StreamGeometry>
+  <StreamGeometry x:Key="IconNavProfile">M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8z M4 21c0-4 3.5-6 8-6s8 2 8 6</StreamGeometry>
+  <StreamGeometry x:Key="IconNavCompany">M4 21V5l8-2v18 M12 8h8v13 M4 21h16 M7 9h2 M7 13h2 M7 17h2 M15 12h2 M15 16h2</StreamGeometry>
+  <StreamGeometry x:Key="IconNavMap">M9 4 3 6v14l6-2 6 2 6-2V4l-6 2z M9 4v14 M15 6v14</StreamGeometry>
+  <StreamGeometry x:Key="IconNavSettings">M4 7h10 M18 7h2 M4 17h2 M10 17h10 M16 5v4 M8 15v4</StreamGeometry>
+  <StreamGeometry x:Key="IconClipboard">M9 3h6v3H9z M7 5H5v16h14V5h-2 M8 11h8 M8 15h8</StreamGeometry>
+  <StreamGeometry x:Key="IconBadgeCheck">M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z M7.5 12.5l3 3 6-6.5</StreamGeometry>
 </ResourceDictionary>

@@ -97,19 +97,7 @@ Números/datas pela cultura (`{0:N1}`, `{1:N0}`); `Module_*` é exibido em caixa
 | `OpenError_Parse_Cause3` | Um arquivo danificado. | A damaged file. |  |
 | `OpenError_Parse_Tip1` | Tente outro save do mesmo perfil, como o salvamento automático mais recente. | Try another save from the same profile, such as the most recent autosave. |  |
 | `OpenError_Parse_Tip2` | Se continuar acontecendo, copie os detalhes técnicos e envie ao relatar o problema. | If it keeps happening, copy the technical details and send them when you report the problem. |  |
-| `OpenError_Parse_DetailsText` | Código: {0}
-Jogo: {1}
-Perfil: {2}
-Save: {3}
-Tamanho: {4}
-Etapa: {5}
-App: {6} | Code: {0}
-Game: {1}
-Profile: {2}
-Save: {3}
-Size: {4}
-Step: {5}
-App: {6} | Texto copiado por Copiar detalhes; {0} código, {1} jogo, {2} perfil, {3} save, {4} tamanho, {5} etapa em que falhou, {6} versão do app. Nunca inclui conteúdo do save |
+| `OpenError_Parse_DetailsText` | Código: {0}\nJogo: {1}\nPerfil: {2}\nSave: {3}\nTamanho: {4}\nEtapa: {5}\nApp: {6} | Code: {0}\nGame: {1}\nProfile: {2}\nSave: {3}\nSize: {4}\nStep: {5}\nApp: {6} | Texto copiado por Copiar detalhes (`\n` = quebra de linha); {0} código, {1} jogo, {2} perfil, {3} save, {4} tamanho, {5} etapa em que falhou, {6} versão do app. Nunca inclui conteúdo do save |
 | `OpenError_CopyDetails` | Copiar detalhes | Copy details | Copia os detalhes técnicos mesmo com o disclosure recolhido |
 | `OpenError_Copied` | Copiado | Copied | Mesmo botão, depois de copiar (~2 s) |
 | `OpenError_OpenSaveFolder` | Abrir pasta do save | Open save folder | Exige IShellLauncher (ver README, perguntas) |

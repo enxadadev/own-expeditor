@@ -21,11 +21,13 @@
     <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.0" />
     <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.0" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
   </ItemGroup>
 
-  <!-- Galeria e seus textos só existem em Debug (ADR 0005, decisão 6). -->
+  <!-- Galeria, amostras de design e seus textos só existem em Debug (ADR 0005, decisão 6). -->
   <ItemGroup Condition="'$(Configuration)' == 'Release'">
     <Compile Remove="Gallery\**" />
+    <Compile Remove="Design\**" />
     <AvaloniaXaml Remove="Gallery\**" />
     <EmbeddedResource Remove="Resources\Gallery*.resx" />
   </ItemGroup>

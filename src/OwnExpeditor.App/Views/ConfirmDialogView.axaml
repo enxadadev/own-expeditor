@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:OwnExpeditor.App.ViewModels"
+             x:Class="OwnExpeditor.App.Views.ConfirmDialogView"
+             x:DataType="vm:ConfirmDialogViewModel">
+  <Border Classes="panel" Width="440" Padding="24" BoxShadow="{StaticResource ShadowPopup}"
+          AutomationProperties.Name="{Binding Title}" KeyboardNavigation.TabNavigation="Cycle">
+    <StackPanel Spacing="16">
+      <TextBlock Classes="title" Text="{Binding TitleUpper}" TextWrapping="Wrap" />
+      <TextBlock Classes="body" Text="{Binding Message}" TextWrapping="Wrap" />
+      <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Right">
+        <Button x:Name="CancelButton" Classes="large" Content="{Binding CancelLabel}" Command="{Binding CancelCommand}" IsVisible="{Binding ShowCancel}" />
+        <Button x:Name="ConfirmButton" Classes="large" Classes.danger="{Binding IsDestructive}" Classes.accent="{Binding !IsDestructive}"
+                Content="{Binding ConfirmLabel}" Command="{Binding ConfirmCommand}" />
+      </StackPanel>
+    </StackPanel>
+  </Border>
+</UserControl>

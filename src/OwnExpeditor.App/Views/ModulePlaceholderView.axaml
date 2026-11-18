@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:OwnExpeditor.App.ViewModels"
+             xmlns:c="using:OwnExpeditor.App.Controls"
+             x:Class="OwnExpeditor.App.Views.ModulePlaceholderView"
+             x:DataType="vm:ModulePlaceholderViewModel">
+  <Grid RowDefinitions="Auto,*" Margin="32,12">
+    <c:PageHeader Title="{Binding Title}" />
+    <c:EmptyState Grid.Row="1" Icon="{StaticResource IconInbox}" Title="{Binding Title}" />
+  </Grid>
+</UserControl>

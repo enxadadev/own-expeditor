@@ -306,6 +306,13 @@
   <data name="OpenError_Parse_Cause2" xml:space="preserve"><value>Um mod que muda o jeito como o save é gravado.</value></data>
   <data name="OpenError_Parse_Cause3" xml:space="preserve"><value>Um arquivo danificado.</value></data>
   <data name="OpenError_Parse_CausesTitle" xml:space="preserve"><value>O que pode ter causado isso</value></data>
+  <data name="OpenError_Parse_DetailsText" xml:space="preserve"><value>Código: {0}
+Jogo: {1}
+Perfil: {2}
+Save: {3}
+Tamanho: {4}
+Etapa: {5}
+App: {6}</value></data>
   <data name="OpenError_Parse_Tip1" xml:space="preserve"><value>Tente outro save do mesmo perfil, como o salvamento automático mais recente.</value></data>
   <data name="OpenError_Parse_Tip2" xml:space="preserve"><value>Se continuar acontecendo, copie os detalhes técnicos e envie ao relatar o problema.</value></data>
   <data name="OpenError_Parse_Title" xml:space="preserve"><value>Não foi possível entender o save</value></data>
