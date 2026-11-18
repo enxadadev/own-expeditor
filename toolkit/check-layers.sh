@@ -1,17 +1,24 @@
 #!/usr/bin/env bash
-# Verifica a regra de camadas pelos ProjectReference (App → Core → Data/Sii → Domain).
+# Verifica a regra de camadas (App → Core → Data/Sii → Domain) em três níveis:
+#   1. ProjectReference nos .csproj de src/;
+#   2. `using`/`global using` de namespaces de camada proibida;
+#   3. uso qualificado (OwnExpeditor.Sii.Foo) em código e .axaml.
+# tools/, toolkit/ e tests/ ficam fora da regra (só src/ é verificado).
 source "$(dirname "$0")/_lib.sh"
 declare -A ALLOW=([App]="Core Domain" [Core]="Data Sii Domain" [Data]="Sii Domain" [Sii]="Domain" [Domain]="")
+LAYERS="App Core Data Sii Domain"
 err=0
-for p in "${!ALLOW[@]}"; do
-  csproj=src/OwnExpeditor.$p/OwnExpeditor.$p.csproj; [[ -f $csproj ]] || continue
+for p in $LAYERS; do
+  dir=src/OwnExpeditor.$p; csproj=$dir/OwnExpeditor.$p.csproj; [[ -f $csproj ]] || continue
   for ref in $(grep -oE 'OwnExpeditor\.[A-Za-z]+\.csproj' "$csproj" | sed 's/OwnExpeditor\.\(.*\)\.csproj/\1/'); do
-    [[ " ${ALLOW[$p]} " == *" $ref "* ]] || { echo "VIOLACAO: $p -> $ref"; err=1; }
+    [[ " ${ALLOW[$p]} " == *" $ref "* ]] || { echo "VIOLACAO (referencia): $p -> $ref"; err=1; }
+  done
+  for other in $LAYERS; do
+    [[ $other == "$p" || " ${ALLOW[$p]} " == *" $other "* ]] && continue
+    # pega `using`, `global using` e uso qualificado; ignora linhas de comentário
+    hits=$(grep -rnE "OwnExpeditor\.$other\b" "$dir" --include=*.cs --include=*.axaml --include=*.xaml \
+           --exclude-dir=bin --exclude-dir=obj 2>/dev/null | grep -vE '^[^:]+:[0-9]+:\s*(//|\*|/\*|<!--)' || true)
+    [[ -n $hits ]] && { echo "$hits" | sed "s/^/VIOLACAO ($p usa $other): /"; err=1; }
   done
 done
-# usings que atravessam camadas sem ProjectReference também contam
-for p in Domain Sii Data; do
-  grep -rlE 'using OwnExpeditor\.(App|Core)\b' src/OwnExpeditor.$p --include=*.cs 2>/dev/null | sed "s/^/VIOLACAO (using): /" && err=1
-done
-grep -rlE 'using OwnExpeditor\.(Sii|Data)\b' src/OwnExpeditor.App --include=*.cs 2>/dev/null | sed 's/^/VIOLACAO (App usa Sii\/Data): /' | grep . && err=1
 (( err )) || echo "CAMADAS: ok"; exit $err

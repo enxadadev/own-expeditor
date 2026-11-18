@@ -5,8 +5,11 @@ using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using OwnExpeditor.Core;
-using OwnExpeditor.Data;
-using OwnExpeditor.Sii;
+using OwnExpeditor.Core.Legacy;
+using OwnExpeditor.Domain.Saves;
+
+// LegacyJobs é a fachada transitória do shell antigo (ADR 0006); some junto com este ViewModel na F7.
+#pragma warning disable CS0618
 
 namespace OwnExpeditor.App.ViewModels;
 
@@ -15,25 +18,36 @@ public sealed record CargoOption(string Id, string Name)
     public override string ToString() => Name;
 }
 
+/// <summary>Perfil na lista; o texto exibido é o mesmo de antes (nome + Steam Cloud).</summary>
+public sealed record ProfileOption(ProfileInfo Info)
+{
+    public override string ToString() => Info.IsSteamCloud ? $"{Info.Id} (Steam Cloud)" : Info.Id;
+}
+
+public sealed record SaveOption(SaveSlotInfo Info)
+{
+    public override string ToString() => $"{Info.DisplayName}  [{Info.Id}]";
+}
+
 public partial class MainViewModel : ViewModelBase
 {
-    private GameCatalog? _catalog;
+    private LegacyGameData? _gameData;
     private SaveSession? _session;
     private int _injected;
 
-    [ObservableProperty] private string _gameDir = SaveLocator.DefaultGameDir();
-    [ObservableProperty] private string _documentsDir = SaveLocator.DefaultDocumentsDir();
+    [ObservableProperty] private string _gameDir = LegacyJobs.DefaultGameDir();
+    [ObservableProperty] private string _documentsDir = LegacyJobs.DefaultDocumentsDir();
     [ObservableProperty] private string _status = "Confira as pastas e clique em Carregar.";
     [ObservableProperty] private bool _isError;
 
-    public ObservableCollection<ProfileInfo> Profiles { get; } = [];
-    public ObservableCollection<SaveInfo> Saves { get; } = [];
+    public ObservableCollection<ProfileOption> Profiles { get; } = [];
+    public ObservableCollection<SaveOption> Saves { get; } = [];
     public ObservableCollection<CompanyLocation> Origins { get; } = [];
     public ObservableCollection<CargoOption> Cargos { get; } = [];
     public ObservableCollection<CompanyLocation> Destinations { get; } = [];
 
-    [ObservableProperty] private ProfileInfo? _selectedProfile;
-    [ObservableProperty] private SaveInfo? _selectedSave;
+    [ObservableProperty] private ProfileOption? _selectedProfile;
+    [ObservableProperty] private SaveOption? _selectedSave;
     [ObservableProperty] private CompanyLocation? _selectedOrigin;
     [ObservableProperty] private CargoOption? _selectedCargo;
     [ObservableProperty] private CompanyLocation? _selectedDestination;
@@ -50,44 +64,42 @@ public partial class MainViewModel : ViewModelBase
     {
         Run(() =>
         {
-            var language = Localization.GameLanguage(DocumentsDir)
-                ?? System.Globalization.CultureInfo.CurrentUICulture.Name.Replace('-', '_').ToLowerInvariant();
-            _catalog = GameCatalog.LoadFromGameDir(GameDir, language);
+            _gameData = LegacyJobs.LoadGameData(GameDir, DocumentsDir);
             Profiles.Clear();
-            foreach (var p in SaveLocator.Profiles(DocumentsDir)) Profiles.Add(p);
+            foreach (var p in LegacyJobs.Profiles(DocumentsDir)) Profiles.Add(new ProfileOption(p));
             SelectedProfile = Profiles.FirstOrDefault();
             return Profiles.Count == 0
                 ? throw new IOException($"Nenhum perfil encontrado em '{DocumentsDir}'.")
-                : $"{_catalog.Companies.Count} empresas e {_catalog.Cargos.Count} cargas lidas do jogo. " +
-                  (_catalog.Texts.Count > 0
-                      ? $"Textos no idioma {_catalog.Texts.Language}."
+                : $"{_gameData.CompanyCount} empresas e {_gameData.CargoCount} cargas lidas do jogo. " +
+                  (_gameData.TextCount > 0
+                      ? $"Textos no idioma {_gameData.TextLanguage}."
                       : "locale.scs não encontrado: nomes de cargas sem tradução.");
         });
     }
 
-    partial void OnSelectedProfileChanged(ProfileInfo? value)
+    partial void OnSelectedProfileChanged(ProfileOption? value)
     {
         Saves.Clear();
         if (value is null) return;
-        if (value.IsSteamCloud)
+        if (value.Info.IsSteamCloud)
             Warn("Perfil no Steam Cloud: o jogo não vai mostrar saves novos. Desative o Steam Cloud no perfil (Editar perfil) e use a cópia em 'profiles'.");
-        foreach (var s in SaveLocator.Saves(value)) Saves.Add(s);
+        foreach (var s in LegacyJobs.Saves(value.Info)) Saves.Add(new SaveOption(s));
         SelectedSave = Saves.FirstOrDefault();
     }
 
-    partial void OnSelectedSaveChanged(SaveInfo? value)
+    partial void OnSelectedSaveChanged(SaveOption? value)
     {
         _session = null;
         _injected = 0;
         InjectedSummary = "";
         Origins.Clear();
-        if (value is null || _catalog is null) return;
+        if (value is null || _gameData is null) return;
         Run(() =>
         {
-            _session = new SaveSession(SiiDocument.Load(value.GameSii), _catalog);
+            _session = LegacyJobs.Open(value.Info, _gameData);
             foreach (var o in _session.Origins()) Origins.Add(o);
-            SaveName = $"{value.Name} + Own Expeditor";
-            return $"Save '{value.Name}' carregado: {Origins.Count} empresas com vaga para frete.";
+            SaveName = $"{value.Info.DisplayName} + Own Expeditor";
+            return $"Save '{value.Info.DisplayName}' carregado: {Origins.Count} empresas com vaga para frete.";
         });
     }
 
@@ -151,7 +163,7 @@ public partial class MainViewModel : ViewModelBase
         {
             if (_session is null || SelectedProfile is null || SelectedSave is null || _injected == 0)
                 throw new InvalidOperationException("Adicione ao menos um frete antes de gravar.");
-            var folder = SaveLocator.WriteAsNewSave(SelectedProfile, SelectedSave, _session.Document, SaveName);
+            var folder = LegacyJobs.WriteAsNewSave(SelectedSave.Info, _session, SaveName);
             var done = $"Save '{SaveName}' gravado em {folder}. O save original não foi alterado.";
             var profile = SelectedProfile;
             SelectedProfile = null;

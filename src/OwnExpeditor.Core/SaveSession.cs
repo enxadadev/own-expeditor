@@ -1,4 +1,7 @@
+using OwnExpeditor.Core.Games;
+using OwnExpeditor.Core.Legacy;
 using OwnExpeditor.Data;
+using OwnExpeditor.Domain.Games;
 using OwnExpeditor.Sii;
 
 namespace OwnExpeditor.Core;
@@ -26,7 +29,7 @@ public sealed record JobTemplate(string TrailerVariant, string TrailerDefinition
 /// </summary>
 public sealed class SaveSession
 {
-    private readonly GameCatalog _catalog;
+    private readonly IGameData _data;
     private readonly Dictionary<string, CompanyLocation> _locations = new(StringComparer.Ordinal);
     private readonly HashSet<string> _withEmptySlot = new(StringComparer.Ordinal);
     private readonly Dictionary<(string, string), int> _distances = [];
@@ -35,9 +38,16 @@ public sealed class SaveSession
     public SiiDocument Document { get; }
 
     public SaveSession(SiiDocument document, GameCatalog catalog)
+        : this(document, new LegacyGameData(catalog))
     {
+    }
+
+    public SaveSession(SiiDocument document, IGameData data)
+    {
+        ArgumentNullException.ThrowIfNull(document);
+        ArgumentNullException.ThrowIfNull(data);
         Document = document;
-        _catalog = catalog;
+        _data = data;
 
         foreach (var company in document.OfType("company"))
         {
@@ -47,7 +57,7 @@ public sealed class SaveSession
             var (companyId, cityId) = (key[..dot], key[(dot + 1)..]);
             var location = new CompanyLocation(companyId, cityId)
             {
-                Display = $"{catalog.CityName(cityId)} – {catalog.CompanyName(companyId)}",
+                Display = $"{data.Get(GameNameKind.City, cityId)} – {data.Get(GameNameKind.Company, companyId)}",
             };
             _locations[key] = location;
 
@@ -94,14 +104,12 @@ public sealed class SaveSession
 
     /// <summary>Cargas que a origem envia e para as quais existe modelo de reboque no save.</summary>
     public IReadOnlyList<string> CargosFor(CompanyLocation origin) =>
-        _catalog.Companies.TryGetValue(origin.Company, out var c)
-            ? c.CargoOut.Where(_templates.ContainsKey).ToList()
-            : [];
+        _data.CargoOut(origin.Company).Where(_templates.ContainsKey).ToList();
 
     /// <summary>Empresas do save que recebem a carga, exceto na mesma cidade.</summary>
     public IReadOnlyList<CompanyLocation> Destinations(CompanyLocation origin, string cargo) =>
         _locations.Values
-            .Where(l => l.City != origin.City && _catalog.Accepts(l.Company, cargo))
+            .Where(l => l.City != origin.City && _data.Accepts(l.Company, cargo))
             .OrderBy(l => l.ToString(), StringComparer.CurrentCulture)
             .ToList();
 
@@ -109,7 +117,7 @@ public sealed class SaveSession
     public int? Distance(string fromCity, string toCity) =>
         _distances.TryGetValue((fromCity, toCity), out var km) ? km : null;
 
-    public string CargoName(string cargo) => _catalog.CargoName(cargo);
+    public string CargoName(string cargo) => _data.Get(GameNameKind.Cargo, cargo);
 
     public JobTemplate? Template(string cargo) => _templates.GetValueOrDefault(cargo);
 
@@ -118,7 +126,7 @@ public sealed class SaveSession
         var t = Template(cargo) ?? throw new JobInjectionException($"Sem modelo de reboque para '{cargo}' no save.");
         var spec = new JobSpec(target.Key, "cargo." + cargo, t.TrailerVariant, t.TrailerDefinition,
             t.CompanyTruck, distanceKm, t.UnitsCount, urgency);
-        var id = JobInjector.Inject(Document, origin.SaveId, spec, _catalog);
+        var id = JobInjector.Inject(Document, origin.SaveId, spec, _data);
         _withEmptySlot.Remove(origin.Key);
         foreach (var jobId in Document.Find(origin.SaveId)!.GetArray("job_offer"))
             if (Document.Find(jobId)?.Get("target") == "\"\"") { _withEmptySlot.Add(origin.Key); break; }

@@ -4,6 +4,9 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <!-- App so enxerga Core e Domain; Sii/Data nao vazam por referencia transitiva (ADR 0006). -->
+    <DisableTransitiveProjectReferences>true</DisableTransitiveProjectReferences>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,5 +24,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OwnExpeditor.Core\OwnExpeditor.Core.csproj" />
+    <ProjectReference Include="..\OwnExpeditor.Domain\OwnExpeditor.Domain.csproj" />
   </ItemGroup>
 </Project>

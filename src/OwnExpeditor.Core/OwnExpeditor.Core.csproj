@@ -1,6 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <InternalsVisibleTo Include="OwnExpeditor.Core.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\OwnExpeditor.Domain\OwnExpeditor.Domain.csproj" />
     <ProjectReference Include="..\OwnExpeditor.Sii\OwnExpeditor.Sii.csproj" />
     <ProjectReference Include="..\OwnExpeditor.Data\OwnExpeditor.Data.csproj" />

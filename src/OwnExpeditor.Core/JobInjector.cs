@@ -1,3 +1,5 @@
+using OwnExpeditor.Core.Games;
+using OwnExpeditor.Core.Legacy;
 using OwnExpeditor.Data;
 using OwnExpeditor.Sii;
 
@@ -23,7 +25,10 @@ public static class JobInjector
     /// Preenche um slot de oferta vazio da empresa de origem. Não apaga ofertas existentes.
     /// Retorna o id do job_offer_data alterado.
     /// </summary>
-    public static string Inject(SiiDocument doc, string originCompanyId, JobSpec spec, GameCatalog? catalog = null)
+    public static string Inject(SiiDocument doc, string originCompanyId, JobSpec spec, GameCatalog? catalog = null) =>
+        Inject(doc, originCompanyId, spec, catalog is null ? null : new LegacyGameData(catalog));
+
+    public static string Inject(SiiDocument doc, string originCompanyId, JobSpec spec, IGameData? data)
     {
         var company = doc.Find(originCompanyId);
         if (company is null || company.Type != "company")
@@ -32,14 +37,14 @@ public static class JobInjector
         if (doc.Find("company.volatile." + spec.Target) is null)
             throw new JobInjectionException($"Destino '{spec.Target}' não existe no save.");
 
-        if (catalog is not null)
+        if (data is not null)
         {
             var cargo = spec.Cargo.Replace("cargo.", "");
             var origin = originCompanyId.Replace("company.volatile.", "").Split('.')[0];
             var target = spec.Target.Split('.')[0];
-            if (!catalog.Ships(origin, cargo))
+            if (!data.Ships(origin, cargo))
                 throw new JobInjectionException($"A empresa '{origin}' não envia '{cargo}'.");
-            if (!catalog.Accepts(target, cargo))
+            if (!data.Accepts(target, cargo))
                 throw new JobInjectionException($"A empresa '{target}' não recebe '{cargo}'.");
         }
 
