@@ -16,6 +16,8 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" Version="8.10.0" />
     <PackageReference Include="coverlet.collector" Version="6.0.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
@@ -26,6 +28,7 @@
     <ProjectReference Include="..\..\src\OwnExpeditor.Core\OwnExpeditor.Core.csproj" />
     <ProjectReference Include="..\..\src\OwnExpeditor.Sii\OwnExpeditor.Sii.csproj" />
     <ProjectReference Include="..\..\src\OwnExpeditor.Data\OwnExpeditor.Data.csproj" />
+    <ProjectReference Include="..\..\src\OwnExpeditor.Domain\OwnExpeditor.Domain.csproj" />
   </ItemGroup>
 
 </Project>

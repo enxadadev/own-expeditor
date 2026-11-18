@@ -1,4 +1,5 @@
 using System.Globalization;
+using OwnExpeditor.Core.Internal;
 using OwnExpeditor.Data;
 using OwnExpeditor.Domain.Saves;
 using OwnExpeditor.Sii;
@@ -56,6 +57,5 @@ public static class LegacyJobs
         return SaveLocator.WriteAsNewSave(source.Profile, legacy, session.Document, name);
     }
 
-    internal static CoreException ToCoreError(SiiFormatException e) =>
-        new(e.IsUnreadable ? CoreError.SaveCorrupt : CoreError.SaveParseFailed, e.Message, e) { Line = e.Line };
+    internal static CoreException ToCoreError(SiiFormatException e) => CoreErrors.FromSii(e);
 }
