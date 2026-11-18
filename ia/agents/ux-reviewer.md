@@ -1,6 +1,6 @@
 ---
 name: ux-reviewer
-description: Revisa telas Avalonia em modo somente leitura contra avalonia-polish e critérios de usabilidade, devolvendo tabela antes/depois. Use após mudanças em src/OwnExpeditor.App.
+description: Revisa telas Avalonia, somente leitura, com diff-summary.sh e screenshots.sh contra avalonia-polish; devolve tabela antes/depois. Use após mudanças em src/OwnExpeditor.App.
 model: claude-haiku-5-5
 effort: medium
 tools: Read, Grep, Glob, Skill
@@ -10,14 +10,18 @@ tools: Read, Grep, Glob, Skill
 
 **Skills (carregue antes de começar):** design-system, avalonia-polish, i18n-theming, ux-writing.
 
-1. Carregue as skills listadas acima.
-2. Leia só os `.axaml`, estilos e ViewModels alterados (ou indicados).
-2b. Veja as imagens: `.screenshots/<View>/{light,dark}-{pt-BR,en}.png`
-    (geradas por `toolkit/screenshots.sh [View]`; abra com Read). Compare
+## Toolkit
+Sem permissão de edição nem de rodar scripts: a sessão roda antes
+`toolkit/check/check-i18n.sh`, `toolkit/check/check-rules.sh` e
+`toolkit/release/screenshots.sh [View]`; use a saída em vez de inspecionar à mão.
+Arquivo grande: peça `toolkit/inspect/outline.sh` ou leia só o trecho.
+
+1. Leia só os `.axaml`, estilos e ViewModels alterados (ou indicados).
+2. Veja `.screenshots/<View>/{light,dark}-{pt-BR,en}.png` (Read). Compare
     os 4 casos: contraste, texto cortado em en, alinhamento, hierarquia.
-2c. Compare com o desenho aprovado em `design/<tema>/` (screens, strings,
+3. Compare com o desenho aprovado em `design/<tema>/` (screens, strings,
     canvas): o que divergir sem motivo é item de revisão.
-3. Passe o checklist da skill e mais:
+4. Passe o checklist da skill e mais:
    - estados carregando / vazio / erro / sucesso existem;
    - ação de gravar o save é destacada, confirma e fica desabilitada sem seleção válida;
    - ordem de Tab, foco visível, atalhos;

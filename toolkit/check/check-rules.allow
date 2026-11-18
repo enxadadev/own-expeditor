@@ -1,0 +1,5 @@
+# Exceções do toolkit/check/check-rules.sh. Formato: regra:caminho  (regra = a|b|c|d; caminho = prefixo ou glob)
+# a = texto fixo na UI, b = cor fixa, c = lista fixa de cidades/cargas, d = escrita de save sem backup
+# Nome da marca não é traduzido.
+a:src/OwnExpeditor.App/Views/SettingsView.axaml
+a:src/OwnExpeditor.App/Views/ShellWindow.axaml

@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
-# Build + testes com resumo curto. uso: toolkit/check.sh [--filter <expr>]
-source "$(dirname "$0")/_lib.sh"
+# Build + testes com resumo curto.
+# uso: toolkit/check/check.sh [--filter <expr>]
+# agentes: test-runner, build-fixer, core-dev, sii-engine, ui-dev, test-engineer, git-ops
+# saída: <= 20 linhas
+source "$(dirname "$0")/../_lib.sh"
 LOG=$(mktemp -d); trap 'rm -rf "$LOG"' EXIT
 if dotnet build -nologo -v q -clp:NoSummary >"$LOG/b" 2>&1; then
   w=$(grep -c ' warning ' "$LOG/b" || true); echo "BUILD: ok ($w avisos)"

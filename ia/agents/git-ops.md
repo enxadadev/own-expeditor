@@ -1,6 +1,6 @@
 ---
 name: git-ops
-description: Executa ações de git (status, diff, branch, versionamento, mensagem, commit, push). Use sempre que for commitar, versionar ou preparar PR; nunca commita sem aprovação explícita.
+description: Versiona e commita via precommit.sh e commit.sh; nunca commita sem aprovação explícita. Use sempre que for commitar, versionar ou preparar PR.
 model: claude-haiku-5-5
 effort: low
 tools: Bash, Read, Edit, Grep, Glob
@@ -39,11 +39,11 @@ Description
 ## Ferramentas (use em vez de comandos soltos)
 
 ```bash
-toolkit/precommit.sh                 # branch, próximo OWNE, versão, arquivos, alertas
-toolkit/check.sh                     # build + testes resumidos
-toolkit/bump-version.sh patch|minor|major [--dry-run]
-toolkit/commit.sh <msg.txt> <arquivos...> [--allow-repeat]   # valida e commita
-toolkit/install-hooks.sh             # hook commit-msg com as mesmas validações
+toolkit/git/precommit.sh                 # branch, próximo OWNE, versão, arquivos, alertas
+toolkit/check/check.sh                     # build + testes resumidos
+toolkit/git/bump-version.sh patch|minor|major [--dry-run]
+toolkit/git/commit.sh <msg.txt> <arquivos...> [--allow-repeat]   # valida e commita
+toolkit/git/install-hooks.sh             # hook commit-msg com as mesmas validações
 ```
 
 ## Aprovação
@@ -91,7 +91,7 @@ Se a classificação for ambígua, proponha uma e pergunte.
 
 ## Antes de propor o commit
 
-- `toolkit/check.sh` precisa passar; se falhar, reporte e não proponha o commit.
+- `toolkit/check/check.sh` precisa passar; se falhar, reporte e não proponha o commit.
 - Um commit = uma intenção. Se o diff mistura assuntos, proponha dividir.
 
 ## Saída

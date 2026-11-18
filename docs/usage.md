@@ -16,7 +16,7 @@ sem sua confirmação, e todo save gravado ganha um backup ao lado.
 
 ## Como abrir
 
-No Windows, use o `OwnExpeditor.App.exe` gerado por `toolkit/release.sh` (ver
+No Windows, use o `OwnExpeditor.App.exe` gerado por `toolkit/release/release.sh` (ver
 [development.md](development.md#publicar-para-windows)). Para rodar a partir do
 código-fonte:
 

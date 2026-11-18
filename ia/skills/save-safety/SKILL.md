@@ -1,6 +1,6 @@
 ---
 name: save-safety
-description: Regras obrigatórias para código que lê, grava ou substitui o game.sii — backup, escrita atômica, verificação, jogo aberto, encoding. Use ao implementar ou revisar escrita de save.
+description: Regras para código que lê, grava ou substitui o game.sii: backup, escrita atômica, verificação, jogo aberto, encoding; check-rules.sh (regra d). Use ao implementar ou revisar escrita de save.
 ---
 
 # Save safety

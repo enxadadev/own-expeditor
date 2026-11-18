@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
-# Cria o próximo ADR numerado a partir do texto em stdin. uso: toolkit/new-adr.sh "titulo-curto" < adr.md
-source "$(dirname "$0")/_lib.sh"
+# Cria o próximo ADR numerado a partir do texto em stdin.
+# uso: toolkit/gen/new-adr.sh "titulo-curto" < adr.md
+# agentes: docs-keeper
+# saída: caminho do ADR criado
+source "$(dirname "$0")/../_lib.sh"
 slug=$(tr '[:upper:] ' '[:lower:]-' <<<"${1:?titulo}" | tr -cd 'a-z0-9-')
 mkdir -p docs/decisions
 n=$(ls docs/decisions | grep -oE '^[0-9]{4}' | sort -n | tail -1)

@@ -19,7 +19,7 @@ dotnet test                                    # roda os quatro projetos de test
 dotnet run --project src/OwnExpeditor.App      # abre a aplicação (sempre o shell modular)
 ```
 
-Resultado verificado com `toolkit/check.sh` (build e testes): 0 avisos, 0 erros,
+Resultado verificado com `toolkit/check/check.sh` (build e testes): 0 avisos, 0 erros,
 764 testes passando, 0 falhas.
 
 ### Projetos de teste
@@ -44,11 +44,11 @@ Não coloque saves pessoais no repositório. Use `samples/` para isso.
 
 ## Publicar para Windows
 
-Use o script de release, que roda `toolkit/check.sh` antes e só publica se os
+Use o script de release, que roda `toolkit/check/check.sh` antes e só publica se os
 testes passarem:
 
 ```bash
-toolkit/release.sh
+toolkit/release/release.sh
 ```
 
 O script publica `OwnExpeditor.App` para `win-x64`, self-contained e em arquivo
@@ -76,8 +76,8 @@ A lista completa e o papel de cada script estão na seção Toolkit de
 ### Build e testes
 
 ```bash
-toolkit/check.sh                                  # build + testes, resumido
-toolkit/check.sh --filter "FullyQualifiedName~Sii" # só um subconjunto dos testes
+toolkit/check/check.sh                                  # build + testes, resumido
+toolkit/check/check.sh --filter "FullyQualifiedName~Sii" # só um subconjunto dos testes
 ```
 
 `check.sh` imprime `BUILD: ok (N avisos)` e
@@ -87,15 +87,15 @@ primeiras linhas de erro, de falha e de exceção.
 ### Screenshots das telas
 
 ```bash
-toolkit/screenshots.sh                  # todas as Views do App
-toolkit/screenshots.sh <filtro> [largura altura]   # só as Views cujo nome contém o filtro
+toolkit/release/screenshots.sh                  # todas as Views do App
+toolkit/release/screenshots.sh <filtro> [largura altura]   # só as Views cujo nome contém o filtro
 ```
 
 Renderiza cada View com Avalonia.Headless, sem abrir janela, em Light e Dark
 × pt-BR e en. Grava `.screenshots/<View>/{light,dark}-{pt-BR,en}.png`. A pasta
 `.screenshots/` está no `.gitignore`. Antes de gerar, o script apaga os PNGs
 que já existem para o mesmo filtro. Sem filtro, apaga todos. O projeto de
-apoio é `toolkit/Screenshots`, que compila em Release na primeira execução.
+apoio é `toolkit/release/Screenshots`, que compila em Debug na primeira execução.
 
 O `ux-reviewer` usa essas imagens como evidência visual (ver
 [ai-workflow.md](ai-workflow.md#evidência-visual-do-ux-reviewer)).
@@ -103,11 +103,24 @@ O `ux-reviewer` usa essas imagens como evidência visual (ver
 ### Regras de camadas e docs
 
 ```bash
-toolkit/check-layers.sh    # CAMADAS: ok, ou VIOLACAO: <projeto> -> <referência>
-toolkit/check-docs.sh      # DOCS: ok, ou LINK QUEBRADO / FORA DO INDICE
+toolkit/check/check-layers.sh    # CAMADAS: ok, ou VIOLACAO: <projeto> -> <referência>
+toolkit/check/check-docs.sh      # DOCS: ok, ou LINK QUEBRADO / FORA DO INDICE
 ```
 
 `check-docs.sh` também conta os `TODO: confirmar` espalhados em `docs/`.
+
+### Outras checagens e utilitários
+
+```bash
+toolkit/check/check-rules.sh   # regras do CLAUDE.md por grep: texto fixo, cor fixa, listas fixas, save sem backup
+toolkit/check/check-i18n.sh    # .resx pt-BR x en e chaves usadas; chave sem uso só avisa
+toolkit/check/check-agents.sh  # frontmatter e links de ia/agents e ia/skills
+toolkit/inspect/outline.sh <arquivo.cs|pasta>   # API pública sem corpo
+toolkit/help.sh [--agents]     # lista todos os scripts
+```
+
+`toolkit/help.sh` é a fonte da verdade: lista cada script com a descrição do
+cabeçalho (`--agents` agrupa por quem usa). Todo script aceita `--help`.
 
 ### Textos e recursos (`.resx`)
 
@@ -115,8 +128,8 @@ Os textos visíveis ficam em `src/OwnExpeditor.App/Resources/*.resx`. Eles são
 gerados a partir das tabelas `Chave | pt-BR | en` de `design/*/strings.md`:
 
 ```bash
-toolkit/gen-resx.py           # regenera Strings*.resx e Gallery*.resx
-toolkit/gen-resx.py --check   # não grava; sai com 1 se os arquivos estariam diferentes
+toolkit/gen/gen-resx.py           # regenera Strings*.resx e Gallery*.resx
+toolkit/gen/gen-resx.py --check   # não grava; sai com 1 se os arquivos estariam diferentes
 ```
 
 Não edite os `.resx` à mão. Depois de gerar, `App.Tests` confere a paridade
@@ -125,8 +138,8 @@ pt-BR/en e as chaves `_One`/`_Other`.
 ### Diff para revisão
 
 ```bash
-toolkit/diff-summary.sh                           # contra a branch principal
-toolkit/diff-summary.sh main -- src/OwnExpeditor.Sii   # base e caminhos específicos
+toolkit/git/diff-summary.sh                           # contra a branch principal
+toolkit/git/diff-summary.sh main -- src/OwnExpeditor.Sii   # base e caminhos específicos
 ```
 
 Mostra o `stat` e o diff com 2 linhas de contexto, sem `*.Designer.cs`, `obj/`
@@ -135,16 +148,16 @@ e `*.sii`.
 ### Saves de exemplo e inspeção do formato
 
 ```bash
-toolkit/samples.sh            # lista game.sii de samples/ com o formato de cada um
-toolkit/samples.sh --text     # só os que o parser atual consegue ler
-toolkit/sii.sh types  <save>            # contagem por tipo de bloco
-toolkit/sii.sh list   <save> <tipo> 10  # ids de um tipo
-toolkit/sii.sh show   <save> <id>       # um bloco inteiro
-toolkit/sii.sh attrs  <save> <tipo>     # atributos de um tipo e quantos blocos têm cada um
-toolkit/sii.sh roundtrip <save>         # parse + write reproduz o texto?
+toolkit/inspect/samples.sh            # lista game.sii de samples/ com o formato de cada um
+toolkit/inspect/samples.sh --text     # só os que o parser atual consegue ler
+toolkit/inspect/sii.sh types  <save>            # contagem por tipo de bloco
+toolkit/inspect/sii.sh list   <save> <tipo> 10  # ids de um tipo
+toolkit/inspect/sii.sh show   <save> <id>       # um bloco inteiro
+toolkit/inspect/sii.sh attrs  <save> <tipo>     # atributos de um tipo e quantos blocos têm cada um
+toolkit/inspect/sii.sh roundtrip <save>         # parse + write reproduz o texto?
 ```
 
-`toolkit/sii.sh` compila a ferramenta `toolkit/SiiTool` na primeira execução e
+`toolkit/inspect/sii.sh` compila a ferramenta `toolkit/inspect/SiiTool` na primeira execução e
 de novo sempre que `src/OwnExpeditor.Sii` ou o próprio `SiiTool` mudam. Rode
 sem argumentos para ver a ajuda.
 
@@ -159,9 +172,9 @@ Para detalhes do formato, ver [sii-format.md](sii-format.md).
 ### Versão e numeração
 
 ```bash
-toolkit/next-owne.sh                  # próximo número OWNE livre, ex.: OWNE-11
-toolkit/bump-version.sh patch --dry-run   # mostra 0.1.0 -> 0.1.1 sem gravar
-toolkit/bump-version.sh minor             # altera Directory.Build.props
+toolkit/git/next-owne.sh                  # próximo número OWNE livre, ex.: OWNE-11
+toolkit/git/bump-version.sh patch --dry-run   # mostra 0.1.0 -> 0.1.1 sem gravar
+toolkit/git/bump-version.sh minor             # altera Directory.Build.props
 ```
 
 `bump-version.sh` aceita `patch`, `minor` ou `major`. `--dry-run` vai como
@@ -171,10 +184,10 @@ histórico de todas as branches.
 ### Commits
 
 ```bash
-toolkit/precommit.sh                       # branch, próximo OWNE, versão, arquivos e alertas
-toolkit/lint-commit-msg.sh msg.txt         # valida título, linha em branco e OWNE repetido
-toolkit/install-hooks.sh                   # instala o hook commit-msg (vale para os worktrees)
-toolkit/commit.sh msg.txt src/a.cs src/b.cs  # valida e commita só os arquivos listados
+toolkit/git/precommit.sh                       # branch, próximo OWNE, versão, arquivos e alertas
+toolkit/git/lint-commit-msg.sh msg.txt         # valida título, linha em branco e OWNE repetido
+toolkit/git/install-hooks.sh                   # instala o hook commit-msg (vale para os worktrees)
+toolkit/git/commit.sh msg.txt src/a.cs src/b.cs  # valida e commita só os arquivos listados
 ```
 
 `precommit.sh` alerta quando a branch atual é a principal, quando há arquivos
@@ -192,7 +205,7 @@ ou co-autoria.
 ### ADRs
 
 ```bash
-toolkit/new-adr.sh "usar-cache-de-distancias" < texto-do-adr.md
+toolkit/gen/new-adr.sh "usar-cache-de-distancias" < texto-do-adr.md
 ```
 
 Cria `docs/decisions/NNNN-usar-cache-de-distancias.md` com o próximo número
@@ -202,8 +215,8 @@ vazia, o script recusa e não cria o arquivo. Ver [decisions/](decisions/).
 ### Revisão pelo Codex
 
 ```bash
-toolkit/codex-review.sh            # diff contra a branch principal
-toolkit/codex-review.sh origin/main
+toolkit/release/codex-review.sh            # diff contra a branch principal
+toolkit/release/codex-review.sh origin/main
 ```
 
 Precisa do Codex CLI instalado e autenticado (`npm i -g @openai/codex` e

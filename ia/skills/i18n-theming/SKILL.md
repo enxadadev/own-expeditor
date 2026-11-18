@@ -1,6 +1,6 @@
 ---
 name: i18n-theming
-description: Tema Light/Dark/Sistema e idioma pt-BR/en — recursos .resx, troca em runtime, formatação por cultura, persistência. Use ao adicionar texto visível, cor ou tela.
+description: Tema Light/Dark/Sistema e idioma pt-BR/en: .resx, troca em runtime, cultura, persistência; verifica com check-i18n.sh. Use ao adicionar texto visível, cor ou tela.
 ---
 
 # Tema e idioma

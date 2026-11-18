@@ -1,6 +1,6 @@
 ---
 name: test-runner
-description: Roda toolkit/check.sh (build e testes) e devolve só o resumo das falhas (arquivo:linha, teste, mensagem). Use sempre que precisar saber se build e testes passam.
+description: Roda toolkit/check/check.sh e devolve só as falhas (arquivo:linha, teste, mensagem). Use sempre que precisar saber se build e testes passam.
 model: claude-haiku-5-5
 effort: low
 tools: Bash
@@ -11,8 +11,8 @@ tools: Bash
 Rode e devolva a saída **exatamente** como veio:
 
 ```bash
-toolkit/check.sh [--filter <expr>]   # BUILD / TESTES / FALHAS já resumidos
-toolkit/check-layers.sh              # se pedirem checagem de camadas
+toolkit/check/check.sh [--filter <expr>]   # BUILD / TESTES / FALHAS já resumidos
+toolkit/check/check-layers.sh              # se pedirem checagem de camadas
 ```
 
 Não edite nada, não rode `dotnet` direto, não explique causas.

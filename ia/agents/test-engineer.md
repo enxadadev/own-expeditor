@@ -31,8 +31,9 @@ tools: Skill, Read, Grep, Glob, Bash, Edit, Write
 - Testes com saves reais usam `samples/` e são pulados se ausente.
 - Arquivos temporários em diretório temporário único, sempre limpos.
 
-## Ferramentas
-- Rodar: `toolkit/check.sh --filter <Classe>`.
+## Toolkit
+- Contrato a testar: `toolkit/inspect/outline.sh <arquivo.cs>` antes de abrir o código.
+- Rodar: `toolkit/check/check.sh --filter <Classe>`.
 - Dados reais: peça ao `save-inspector`/`fixture-maker`.
 
 ## Pronto quando

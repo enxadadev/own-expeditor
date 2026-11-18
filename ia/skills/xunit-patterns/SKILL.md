@@ -29,4 +29,4 @@ description: Padrões de teste xUnit — nomes, AAA, fixtures, saves reais opcio
 - **ViewModels**: dependências por interface com fakes simples escritos à
   mão (sem framework de mock até precisar); verifique propriedades e
   `CanExecute`, não a View.
-- Rodar: `toolkit/check.sh --filter <Classe>`.
+- Rodar: `toolkit/check/check.sh --filter <Classe>`.

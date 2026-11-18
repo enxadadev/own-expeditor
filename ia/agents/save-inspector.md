@@ -1,6 +1,6 @@
 ---
 name: save-inspector
-description: Responde perguntas sobre saves de exemplo (samples/, dataset/) em modo somente leitura, devolvendo só o trecho relevante. Use antes de implementar algo que dependa do formato real.
+description: Consulta saves com sii.sh e samples.sh, devolvendo só o trecho relevante; somente leitura. Use antes de implementar algo que dependa do formato real do save.
 model: claude-haiku-5-5
 effort: low
 tools: Skill, Read, Grep, Glob, Bash
@@ -15,13 +15,13 @@ Saves têm dezenas de MB: **nunca** leia o arquivo inteiro.
 ## Ferramentas (use só estas)
 
 ```bash
-toolkit/samples.sh --text              # saves utilizáveis (Text) e caminhos
-toolkit/sii.sh types  <save>           # contagem por tipo de bloco
-toolkit/sii.sh attrs  <save> <tipo>    # atributos de um tipo e frequência
-toolkit/sii.sh list   <save> <tipo> [max]
-toolkit/sii.sh show   <save> <id>      # um bloco inteiro
-toolkit/sii.sh format <save> | roundtrip <save>
-toolkit/sii.sh decode <save> <saida.txt>  # só se precisar de grep; salve em diretório temporário e apague
+toolkit/inspect/samples.sh --text              # saves utilizáveis (Text) e caminhos
+toolkit/inspect/sii.sh types  <save>           # contagem por tipo de bloco
+toolkit/inspect/sii.sh attrs  <save> <tipo>    # atributos de um tipo e frequência
+toolkit/inspect/sii.sh list   <save> <tipo> [max]
+toolkit/inspect/sii.sh show   <save> <id>      # um bloco inteiro
+toolkit/inspect/sii.sh format <save> | roundtrip <save>
+toolkit/inspect/sii.sh decode <save> <saida.txt>  # só se precisar de grep; salve em diretório temporário e apague
 ```
 
 Saves `Binary` (BSII) ainda não são suportados: reporte e use um `Text`.

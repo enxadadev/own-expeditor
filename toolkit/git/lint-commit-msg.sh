@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
-# Valida mensagem de commit. uso: toolkit/lint-commit-msg.sh <arquivo> [--allow-repeat]
-# Também usado como hook commit-msg (toolkit/install-hooks.sh).
-source "$(dirname "$0")/_lib.sh"
+# Valida mensagem de commit.
+# uso: toolkit/git/lint-commit-msg.sh <arquivo> [--allow-repeat]
+# agentes: git-ops
+# saída: 0 a poucas linhas de erro
+# Também usado como hook commit-msg (toolkit/git/install-hooks.sh).
+source "$(dirname "$0")/../_lib.sh"
 f=${1:?arquivo}; msg=$(grep -v '^#' "$f")
 subj=$(head -1 <<<"$msg"); err=0
 fail() { echo "commit-msg: $*" >&2; err=1; }
@@ -12,6 +15,6 @@ fail() { echo "commit-msg: $*" >&2; err=1; }
 grep -qiE 'claude|anthropic|co-authored|generated with' <<<"$msg" && fail "menção proibida (claude/anthropic/co-author)"
 if [[ ${2:-} != --allow-repeat && -n ${BASH_REMATCH[1]:-} ]]; then
   n=${BASH_REMATCH[1]}
-  git log --all --format=%s | grep -qE "^OWNE-$n:" && [[ ${GIT_REFLOG_ACTION:-} != *amend* ]] && fail "OWNE-$n já existe (use o próximo: $(toolkit/next-owne.sh))"
+  git log --all --format=%s | grep -qE "^OWNE-$n:" && [[ ${GIT_REFLOG_ACTION:-} != *amend* ]] && fail "OWNE-$n já existe (use o próximo: $(toolkit/git/next-owne.sh))"
 fi
 exit $err

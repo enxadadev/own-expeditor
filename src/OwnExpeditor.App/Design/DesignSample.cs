@@ -4,7 +4,7 @@ using OwnExpeditor.App.Design.Samples;
 
 namespace OwnExpeditor.App.Design;
 
-/// <summary>Um estado de tela alcançável sem disco nem jogo (usado por toolkit/screenshots.sh). Só existe em Debug.</summary>
+/// <summary>Um estado de tela alcançável sem disco nem jogo (usado por toolkit/release/screenshots.sh). Só existe em Debug.</summary>
 public sealed record DesignSample(string Name, Func<object> CreateViewModel, double Width = 1280, double Height = 800);
 
 public static class DesignCatalog

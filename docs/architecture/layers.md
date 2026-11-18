@@ -25,9 +25,9 @@ Pelos `ProjectReference` dos `.csproj`:
 | `OwnExpeditor.Sii` | `Domain` |
 | `OwnExpeditor.Domain` | nada |
 
-`toolkit/check-layers.sh` confere isso em três níveis: `ProjectReference`, `using`
+`toolkit/check/check-layers.sh` confere isso em três níveis: `ProjectReference`, `using`
 e `global using`, e uso qualificado (`OwnExpeditor.Sii.Foo`) em `.cs` e `.axaml`.
-Ele roda em `toolkit/check.sh`. A App só pode usar `Core` e `Domain`.
+Ele roda em `toolkit/check/check.sh`. A App só pode usar `Core` e `Domain`.
 
 Fora da regra: `tools/OwnExpeditor.Cli` (ferramenta de desenvolvimento com
 `decode`, `scs-ls`, `scs-cat` e `catalog`) e `toolkit/` (scripts e
@@ -67,7 +67,7 @@ projeto próprio: `GameCatalog` (`Data`) guarda as definições lidas dos `.scs`
 | `tests/OwnExpeditor.Core.Tests` | `Core` (e `Domain`) | Sessão e aplicação (`EditSession*`), `JobBoardTests`, `JobPlannerTests`, `DistanceTests`, `JobsEndToEndTests`, `ProfileServiceTests`, `ScsTests` |
 | `tests/OwnExpeditor.App.Tests` | `App` | Paridade `.resx`, textos `_One`/`_Other`, `Error_*`, atalhos e navegação do shell, tema, página de Fretes, `JobsRealSaveTests` |
 
-Total: 764 testes passando (`toolkit/check.sh`). Os testes com saves reais
+Total: 764 testes passando (`toolkit/check/check.sh`). Os testes com saves reais
 (`RealSaveTests`, `JobsRealSaveTests`) só rodam se `samples/` existir; ver
 [development.md](../development.md).
 
@@ -78,7 +78,7 @@ Regra da [ADR 0004](../decisions/0004-suporte-a-tema-e-idioma.md) e da skill
 
 - **App**: todo texto visível vem de `Resources/Strings.resx` (en) e
   `Strings.pt-BR.resx`, lidos pelo `Localizer`. As tabelas de origem ficam em
-  `design/*/strings.md`, e `toolkit/gen-resx.py` gera os `.resx` (com `--check`
+  `design/*/strings.md`, e `toolkit/gen/gen-resx.py` gera os `.resx` (com `--check`
   para conferir). As cores vêm de tokens em `Styles/` (Light e Dark).
 - **Core**: devolve `CoreError` e chaves de texto, não frases. Por exemplo,
   `InvalidEdit` vem com `Reason = Jobs_Error_*`, e a App traduz.

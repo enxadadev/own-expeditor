@@ -103,7 +103,7 @@ altera código nem docs.
 
 ### Evidência visual do ux-reviewer
 
-O `ux-reviewer` não vê a tela rodando. Ele usa `toolkit/screenshots.sh`, que
+O `ux-reviewer` não vê a tela rodando. Ele usa `toolkit/release/screenshots.sh`, que
 gera PNGs de cada View em Light/Dark × pt-BR/en, em `.screenshots/` (fora do
 git). Os PNGs são a prova de que o código renderiza nos quatro casos. O revisor
 compara essas imagens com `design/`. Detalhes do comando em
@@ -112,11 +112,11 @@ compara essas imagens com `design/`. Detalhes do comando em
 ## Regras que valem para todos os workflows
 
 - Commit só com aprovação explícita do usuário. O `git-ops` prepara a
-  proposta, e `toolkit/commit.sh` valida a mensagem antes de commitar.
+  proposta, e `toolkit/git/commit.sh` valida a mensagem antes de commitar.
 - Documentação em `docs/` é atualizada pelo `docs-keeper`. Ele não altera código.
 - Antes de mudar a leitura ou a escrita do save, a descoberta vai para
   [sii-format.md](sii-format.md), conforme o `CLAUDE.md`.
-- Saídas de build e teste são resumidas por `toolkit/check.sh`, para não
+- Saídas de build e teste são resumidas por `toolkit/check/check.sh`, para não
   lotar o contexto da sessão principal com log bruto.
 
 ## Onde registrar mudanças do processo

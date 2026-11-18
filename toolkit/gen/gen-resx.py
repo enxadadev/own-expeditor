@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
+# Gera os .resx do App (Strings*/Gallery*) a partir das tabelas de design/*/strings.md.
+# uso: toolkit/gen/gen-resx.py [--check]   (--check não grava: exit 1 se estariam diferentes)
+# agentes: ui-dev, ux-designer, test-runner
+# saída: 1-5 linhas (conflitos de chave no stderr)
 """Gera os .resx do App a partir das tabelas `Chave | pt-BR | en` de design/*/strings.md.
 
-uso: toolkit/gen-resx.py [--check]
+uso: toolkit/gen/gen-resx.py [--check]
   Strings.resx (en, neutro), Strings.pt-BR.resx e Gallery*.resx (chaves Gallery_*, só Debug)
   em src/OwnExpeditor.App/Resources/. --check não grava: sai com 1 se os arquivos estariam diferentes.
 
@@ -12,14 +16,14 @@ conflito é listado no stderr. Chave com valores diferentes dentro da mesma prio
 import re, sys, pathlib
 from xml.sax.saxutils import escape
 
-ROOT = pathlib.Path(__file__).resolve().parent.parent
+ROOT = pathlib.Path(__file__).resolve().parent.parent.parent
 # Maior prioridade primeiro. review-apply é a fonte dos 20 Error_<CoreError> (ADR 0006).
 SOURCES = ["controles", "review-apply", "shell", "fretes"]
 OUT = ROOT / "src/OwnExpeditor.App/Resources"
 KEY = re.compile(r"[A-Za-z][A-Za-z0-9_]*")
 
 HEADER = """<?xml version="1.0" encoding="utf-8"?>
-<!-- GERADO por toolkit/gen-resx.py a partir de design/*/strings.md. Não edite à mão. -->
+<!-- GERADO por toolkit/gen/gen-resx.py a partir de design/*/strings.md. Não edite à mão. -->
 <root>
   <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
   <resheader name="version"><value>2.0</value></resheader>

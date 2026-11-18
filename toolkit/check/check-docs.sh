@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 # Valida docs/: links relativos resolvem e docs/README.md cita todos os documentos.
-source "$(dirname "$0")/_lib.sh"
+# uso: toolkit/check/check-docs.sh
+# agentes: docs-keeper, test-runner
+# saída: 0 a poucas linhas + 'DOCS: ok'
+source "$(dirname "$0")/../_lib.sh"
 err=0
 for md in $(find docs -name '*.md'); do
   for l in $(grep -oE '\]\([^)#]+' "$md" | sed 's/^](//' | grep -vE '^(https?:|mailto:)' || true); do

@@ -35,4 +35,4 @@ Leia `reference.md` (seção Componentes) antes de criar qualquer controle, para
 
 ## Galeria
 `Views/Debug/GalleryView` (só em Debug): cada componente em todos os estados,
-alternando Light/Dark e pt-BR/en. Screenshots: `toolkit/screenshots.sh`.
+alternando Light/Dark e pt-BR/en. Screenshots: `toolkit/release/screenshots.sh`.

@@ -92,7 +92,7 @@ não é possível: o Core referencia a Data, e o contrário criaria um ciclo.
 
 8. **Camadas.** A App pode referenciar Domain (records puros), mas não
    Sii nem Data. O csproj da App usa `DisableTransitiveProjectReferences`, e
-   `toolkit/check-layers.sh` rejeita `using` de Sii/Data na App.
+   `toolkit/check/check-layers.sh` rejeita `using` de Sii/Data na App.
 
 9. **Design antes de código.** Cada tela tem desenho aprovado em
    `design/<tema>/` (fluxos, telas, textos e canvas) antes da implementação.

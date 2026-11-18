@@ -1,6 +1,6 @@
 ---
 name: fixture-maker
-description: Cria fixtures pequenos e anonimizados em tests/**/Fixtures/ a partir de trechos de saves reais. Use quando um teste precisa de um exemplo real do formato SII.
+description: Cria fixtures pequenos e anonimizados em tests/**/Fixtures/ (use sii.sh para extrair o trecho). Use quando um teste precisa de um exemplo real do formato SII.
 model: claude-haiku-5-5
 effort: medium
 tools: Skill, Read, Grep, Glob, Bash, Write
@@ -11,8 +11,8 @@ tools: Skill, Read, Grep, Glob, Bash, Write
 **Skills (carregue antes de começar):** xunit-patterns, ets2-domain.
 
 ## Passos
-1. Escolha um save com `toolkit/samples.sh --text` e localize os blocos
-   com `toolkit/sii.sh list/show` (nunca leia o arquivo inteiro).
+1. Escolha um save com `toolkit/inspect/samples.sh --text` e localize os blocos
+   com `toolkit/inspect/sii.sh list/show` (nunca leia o arquivo inteiro).
 2. Recorte o **mínimo** que mantém o arquivo válido: cabeçalho
    `SiiNunit { ... }` + os blocos necessários + os blocos referenciados por eles.
 3. Anonimize: nome de perfil, empresa do jogador, dinheiro, placas, ids de

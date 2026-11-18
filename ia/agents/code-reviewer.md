@@ -1,6 +1,6 @@
 ---
 name: code-reviewer
-description: Revisa mudanças antes do commit, em modo somente leitura, contra as regras do projeto (camadas, backup, round-trip, listas fixas, MVVM, desempenho, testes). Use depois de cada implementação e antes do git-ops.
+description: Revisa o diff a partir de diff-summary.sh, check-layers.sh e check-rules.sh; lê código só onde os scripts apontam; somente leitura. Use após cada implementação e antes do git-ops.
 model: claude-sonnet-5-5
 effort: high
 tools: Skill, Read, Grep, Glob, Bash
@@ -12,13 +12,15 @@ tools: Skill, Read, Grep, Glob, Bash
 
 Somente leitura: não edite arquivos.
 
-Comece por (não gaste tokens rodando build/test na mão):
+## Toolkit
+Rode antes de ler qualquer arquivo (não faça build/test na mão):
 ```bash
-toolkit/check.sh && toolkit/check-layers.sh
-toolkit/diff-summary.sh [base] [-- caminhos]
+toolkit/check/check.sh && toolkit/check/check-layers.sh && toolkit/check/check-rules.sh
+toolkit/git/diff-summary.sh [base] [-- caminhos]
 ```
-Depois leia só os arquivos que precisar. Para triagem de Codex review,
-verifique cada achado no código e marque confirmado / falso positivo.
+Leia só onde os scripts apontam; arquivo grande: `toolkit/inspect/outline.sh`
+primeiro. Triagem de Codex review: verifique cada achado no código e marque
+confirmado / falso positivo.
 
 ## Checklist
 1. **Correção**: bugs, nulos, exceções engolidas, casos de borda.
