@@ -29,3 +29,21 @@ do arquivo original é feito antes (ver [../architecture/data-flow.md](../archit
   ao usuário quando encontra um save binário. Ver [../usage.md](../usage.md).
 - Para validar esta decisão é preciso testar um save gravado no jogo real.
   TODO: confirmar.
+
+## Atualização (2026-11-17)
+
+- **Leitura de BSII.** Saves binários (`BSII`) agora são lidos:
+  `src/OwnExpeditor.Sii/BsiiDecoder.cs` converte o binário para texto
+  `SiiNunit` antes do parser. A seção "O formato binário `BSII` continua sem
+  suporte" acima não vale mais. O formato está em
+  [../sii-format.md](../sii-format.md), seção 8.
+- **Gravação em texto validada no jogo.** O jogo carregou `game.sii` em texto
+  puro, e um job injetado num slot vazio apareceu no mercado. O slot 3 (BSII),
+  convertido para texto e com job injetado, também carregou. Ver
+  [../sii-format.md](../sii-format.md), seções 5 e 8. Com isso, o TODO desta
+  ADR sobre a validação no jogo está respondido para o caso de slot novo. Falta
+  validar a sobrescrita de save (ver [0006](0006-integracao-do-codigo-de-injecao-ao-shell.md)).
+- **Destino da gravação.** O usuário escolhe, na confirmação, entre
+  **Sobrescrever este save** e **Criar um novo save**. O texto em UTF-8 sem BOM
+  e com CRLF continua o mesmo; o que muda é o destino. Ver
+  [0006](0006-integracao-do-codigo-de-injecao-ao-shell.md), item 5.

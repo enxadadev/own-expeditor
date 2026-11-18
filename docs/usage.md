@@ -73,7 +73,6 @@ As mensagens abaixo vêm do código atual (`SiiDecoder` e `SiiDocument`):
 
 | Mensagem | Causa | O que fazer |
 |----------|-------|-------------|
-| `Save em formato binário (BSII) ainda não é suportado. Use g_save_format "2" e salve de novo.` | O save está no formato binário do jogo. | Defina `g_save_format "2"` (a mensagem do app indica essa opção) e salve um jogo novo. TODO: confirmar onde essa opção é definida no jogo. |
 | `Formato 3nK ainda não é suportado.` | O arquivo usa o formato ofuscado `3nK`. | Não há solução no app hoje. |
 | `Arquivo não reconhecido como .sii.` | O arquivo não começa com `ScsC`, `BSII`, `3nK` nem `SiiNunit`. | Confira se o arquivo é o `game.sii` do perfil. |
 | `Cabeçalho ScsC inválido.` | O arquivo é menor que o cabeçalho ou está corrompido. | Use um backup íntegro. |

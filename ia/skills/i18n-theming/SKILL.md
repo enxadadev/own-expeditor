@@ -21,9 +21,28 @@ cor funciona em Light e Dark. Preferências do usuário são persistidas.
   **códigos de erro**, a App traduz — Core não depende de recursos de UI.
 - Números, distâncias, dinheiro e datas: `ToString(format, CultureInfo.CurrentCulture)`.
   Nunca concatenar unidades à mão fora da string de recurso (`"{0:N0} km"`).
-- Nomes vindos do save (cidades, empresas, cargas) **não** são traduzidos
-  pelo app; exiba o nome legível derivado do id.
+- Plural: chaves `Chave_Zero` (opcional), `Chave_One` e `Chave_Other`, usadas
+  via `ILocalizer.GetPlural(baseKey, count, args)` (planejado, ADR 0006; hoje
+  ainda não existe no código).
+- Dinheiro: moeda fixa por jogo, EUR no ETS2 e USD no ATS, com a chave
+  `Format_Money_<Jogo>` (`Format_Money_Ets2`, `Format_Money_Ats`). O número
+  segue a cultura do app.
 - Checagem: chave nova nos dois `.resx`; texto em inglês ~30% de folga no layout.
+
+## Nomes do jogo (cidades, empresas, cargas, reboques, caminhões)
+- Os nomes **vêm da localização do próprio jogo**, não dos `.resx` do app. O
+  Core expõe `IGameNames.Get(GameNameKind, id)` (planejado, ADR 0006; hoje a
+  App lê `GameCatalog` da Data direto, o que o ADR proíbe). `Get` nunca devolve
+  `null`.
+- Cadeia de fallback: **tradução** (`@@chave@@` do `locale.scs`) → **nome local**
+  (`city_name`, ou o `name` da empresa) → **id legível** (`Domain.Games.GameIds.Humanize`).
+- Idioma dos nomes: segue o idioma do app (pt-BR → `pt_br`; en → `en_us` ou
+  `en_gb`), não o `config.cfg` do jogo. Hoje o código usa `g_lang_init` do
+  jogo; isso muda com a ADR 0006.
+- Os nomes do jogo entram no `DiffValue` como `DiffValue.GameName(kind, id)`
+  e são resolvidos na hora de exibir, nunca gravados como texto traduzido.
+- Não crie listas fixas de nomes: tudo vem do save e dos pacotes do jogo
+  (ADR 0003).
 
 ## Tema
 - `Application.RequestedThemeVariant` = `ThemeVariant.Light | Dark | Default` (sistema).

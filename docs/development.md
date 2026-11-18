@@ -128,9 +128,8 @@ toolkit/sii.sh roundtrip <save>         # parse + write reproduz o texto?
 de novo sempre que `src/OwnExpeditor.Sii` ou o próprio `SiiTool` mudam. Rode
 sem argumentos para ver a ajuda.
 
-Limitação atual: saves no formato **BSII** (binário) não são suportados. O
-`samples.sh` marca cada save como `Text` (utilizável) ou `Binary` (BSII, ainda
-não suportado). Os comandos do `sii.sh` só funcionam nos `Text`. O `samples.sh`
+Saves em texto e binários (BSII) funcionam. O `samples.sh` mostra o formato
+interno de cada save (`Text` ou `Binary`); `--text` lista só os em texto. O `samples.sh`
 procura `samples/` na raiz do worktree e, em seguida, na do repositório
 principal. Os caminhos que ele imprime são locais: não os copie para a
 documentação.

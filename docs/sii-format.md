@@ -14,8 +14,8 @@ O `game.sii` pode chegar em três formatos. Os 4 primeiros bytes dizem qual:
 | `SiiNunit` | texto puro (`g_save_format "2"`) |
 | `3nK` (0x014B6E33) | texto ofuscado com XOR (usado em alguns arquivos do jogo) |
 
-O `SiiDecoder` ainda não lê `BSII` nem `3nK`: ambos lançam
-`NotSupportedException` (ver seção 6).
+O `SiiDecoder` lê `BSII` (ver seção 8); `3nK` ainda lança
+`NotSupportedException`.
 
 ### ScsC (criptografado)
 
