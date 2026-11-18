@@ -1,4 +1,4 @@
-using System.Text;
+﻿using System.Text;
 using OwnExpeditor.Data.Scs;
 
 namespace OwnExpeditor.Data;
@@ -76,7 +76,14 @@ public sealed class GameCatalog
         return Load(files, language);
     }
 
-    public static GameCatalog Load(IEnumerable<string> archives, string? language = null)
+    public static GameCatalog Load(IEnumerable<string> archives, string? language = null) =>
+        Build(archives, withTexts: true, language);
+
+    /// <summary>Só as definições (empresas, cidades, cargas); <see cref="Texts"/> fica vazio (carregue com <see cref="Localization"/>).</summary>
+    public static GameCatalog LoadDefinitions(IEnumerable<string> archives) =>
+        Build(archives, withTexts: false, language: null);
+
+    private static GameCatalog Build(IEnumerable<string> archives, bool withTexts, string? language)
     {
         var catalog = new GameCatalog();
         var opened = archives.Select(HashFsArchive.Open).ToList();
@@ -88,7 +95,7 @@ public sealed class GameCatalog
                 catalog.AddCargos(scs);
                 catalog.AddCities(scs);
             }
-            catalog.Texts = Localization.Load(opened, language);
+            if (withTexts) catalog.Texts = Localization.Load(opened, language);
         }
         finally
         {
