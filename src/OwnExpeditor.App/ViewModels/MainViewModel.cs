@@ -181,7 +181,7 @@ public partial class MainViewModel : ViewModelBase
         }
         catch (Exception e) when (e is IOException or InvalidDataException or NotSupportedException
                                        or InvalidOperationException or JobInjectionException
-                                       or UnauthorizedAccessException)
+                                       or UnauthorizedAccessException or CoreException)
         {
             Status = e.Message;
             IsError = true;

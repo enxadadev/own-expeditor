@@ -74,7 +74,7 @@ public static class SaveLocator
             var doc = SiiDocument.Load(info);
             return doc.Units.FirstOrDefault()?.Get("name")?.Trim('"');
         }
-        catch (Exception e) when (e is InvalidDataException or NotSupportedException or IOException)
+        catch (Exception e) when (e is SiiFormatException or InvalidDataException or NotSupportedException or IOException)
         {
             return null;
         }

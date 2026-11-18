@@ -33,7 +33,16 @@ public static class LegacyJobs
     {
         ArgumentNullException.ThrowIfNull(save);
         ArgumentNullException.ThrowIfNull(data);
-        return new SaveSession(SiiDocument.Load(save.GameSiiPath), data.Catalog);
+        SiiDocument doc;
+        try
+        {
+            doc = SiiDocument.Load(save.GameSiiPath);
+        }
+        catch (SiiFormatException e)
+        {
+            throw ToCoreError(e);
+        }
+        return new SaveSession(doc, data.Catalog);
     }
 
     /// <summary>Grava o save editado em pasta nova; o original não é tocado. Retorna a pasta criada.</summary>
@@ -46,4 +55,7 @@ public static class LegacyJobs
         var legacy = new SaveInfo(folder, source.Id, source.DisplayName);
         return SaveLocator.WriteAsNewSave(source.Profile, legacy, session.Document, name);
     }
+
+    internal static CoreException ToCoreError(SiiFormatException e) =>
+        new(e.IsUnreadable ? CoreError.SaveCorrupt : CoreError.SaveParseFailed, e.Message, e) { Line = e.Line };
 }

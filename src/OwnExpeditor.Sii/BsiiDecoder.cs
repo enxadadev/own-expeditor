@@ -18,10 +18,13 @@ public static class BsiiDecoder
 
     public static string ToText(byte[] data)
     {
+        ArgumentNullException.ThrowIfNull(data);
         var r = new Reader(data);
-        if (r.U32() != 0x49495342) throw new InvalidDataException("Não é um arquivo BSII.");
+        if (r.U32() != 0x49495342)
+            throw new SiiFormatException(SiiErrorKind.UnknownFormat, "Não é um arquivo BSII.", offset: 0);
         var version = r.U32();
-        if (version is < 1 or > 3) throw new NotSupportedException($"Versão BSII {version} não suportada.");
+        if (version is < 1 or > 3)
+            throw new SiiFormatException(SiiErrorKind.UnsupportedVersion, $"Versão BSII {version} não suportada.", offset: 4);
 
         var structures = new Dictionary<uint, Structure>();
         var sb = new StringBuilder(data.Length * 8);
@@ -49,12 +52,14 @@ public static class BsiiDecoder
                     fields.Add(new Field(vt, fname, ords));
                 }
                 if (id == 0 || !structures.TryAdd(id, new Structure(name, fields)))
-                    throw new InvalidDataException($"Estrutura BSII inválida ou duplicada: {id}.");
+                    throw new SiiFormatException(SiiErrorKind.Syntax,
+                        $"Estrutura BSII inválida ou duplicada: {id} (offset {r.Position}).", offset: r.Position);
                 continue;
             }
 
             if (!structures.TryGetValue(blockType, out var st))
-                throw new InvalidDataException($"Estrutura BSII desconhecida: {blockType}.");
+                throw new SiiFormatException(SiiErrorKind.Syntax,
+                    $"Estrutura BSII desconhecida: {blockType} (offset {r.Position}).", offset: r.Position);
 
             sb.Append(st.Name).Append(" : ").Append(ReadId(r, version)).Append(" {").Append(Nl);
             foreach (var f in st.Fields)
@@ -122,7 +127,8 @@ public static class BsiiDecoder
             case 0x3A or 0x3C or 0x3E: Array(sb, r, f, () => ReadId(r, ver)); break;
 
             default:
-                throw new NotSupportedException($"Tipo de valor BSII 0x{f.Type:X2} ('{f.Name}') não suportado.");
+                throw new SiiFormatException(SiiErrorKind.UnknownValueType,
+                    $"Tipo de valor BSII 0x{f.Type:X2} ('{f.Name}') não suportado (offset {r.Position}).", offset: r.Position);
         }
     }
 
@@ -225,7 +231,7 @@ public static class BsiiDecoder
         {
             var idx = (int)(v % 38);
             v /= 38;
-            if (idx is < 1 or > 37) throw new InvalidDataException("Token BSII inválido.");
+            if (idx is < 1 or > 37) throw new SiiFormatException(SiiErrorKind.Syntax, "Token BSII inválido.");
             sb.Append(Alphabet[idx - 1]);
         }
         return sb.ToString();
@@ -235,10 +241,13 @@ public static class BsiiDecoder
     {
         private int _pos;
         public bool Eof => _pos >= data.Length;
+        public int Position => _pos;
 
         private ReadOnlySpan<byte> Take(int n)
         {
-            if (_pos + n > data.Length) throw new InvalidDataException("Fim inesperado do arquivo BSII.");
+            if (n < 0 || n > data.Length - _pos)
+                throw new SiiFormatException(SiiErrorKind.Truncated,
+                    $"Fim inesperado do arquivo BSII no offset {_pos}.", offset: _pos);
             var span = data.AsSpan(_pos, n);
             _pos += n;
             return span;

@@ -14,8 +14,8 @@ O `game.sii` pode chegar em três formatos. Os 4 primeiros bytes dizem qual:
 | `SiiNunit` | texto puro (`g_save_format "2"`) |
 | `3nK` (0x014B6E33) | texto ofuscado com XOR (usado em alguns arquivos do jogo) |
 
-O `SiiDecoder` lê `BSII` (ver seção 8); `3nK` ainda lança
-`NotSupportedException`.
+O `SiiDecoder` lê `BSII` (ver seção 8) e `3nK` (XOR; só para arquivos de
+definição do jogo). Erros: ver "Erros e índice" na seção 7.
 
 ### ScsC (criptografado)
 
@@ -191,6 +191,42 @@ descreve o jogo.
 - **Round-trip**: `RealSaveTests` compara `ToText()` com o texto original dos
   saves de `samples/` e passa para todos os saves que estão lá. Os saves não
   vêm com o repositório.
+
+### Erros e índice (`SiiFormatException`)
+
+Todo conteúdo inválido lança `SiiFormatException` (deriva de
+`FormatException`), com `Kind` (`SiiErrorKind`), `Line` (texto, 1-based) ou
+`Offset` (binário, em bytes) quando se aplicam. Nunca há documento parcial.
+Erros de E/S (arquivo ausente, sem permissão) continuam sendo `IOException`.
+
+| `Kind` | Situações | Local |
+|---|---|---|
+| `Empty` | Entrada com 0 bytes (decoder); texto sem nenhuma linha não vazia (`Parse`) | |
+| `UnknownFormat` | Início sem `SiiNunit`, `ScsC`, `BSII` nem `3nK` | `Offset` 0 |
+| `Truncated` | ScsC com menos de 56 bytes; 3nK com menos de 6; BSII sem os 8 bytes do cabeçalho ou que acaba no meio de um valor; bloco de texto sem `}` | `Offset` / `Line` do bloco aberto |
+| `DecryptFailed` | AES falha (cifrado que não é múltiplo de 16 bytes) | |
+| `DecompressFailed` | zlib inválido depois de decifrar (chave certa, dados ruins) | |
+| `SizeMismatch` | Tamanho descomprimido diferente do cabeçalho ScsC (inclui cabeçalho maior que 2 GB) | |
+| `UnsupportedVersion` | BSII com versão fora de 1–3 | `Offset` 4 |
+| `UnknownValueType` | Tipo de valor de campo BSII não tratado | `Offset` |
+| `Syntax` | Texto: cabeçalho diferente de `SiiNunit`, linha de bloco ou atributo inválido (`Line`). BSII: estrutura desconhecida ou duplicada, token inválido | `Line` / `Offset` quando disponível |
+
+`IsUnreadable` é `true` para `Empty`, `Truncated`, `DecryptFailed`,
+`DecompressFailed` e `SizeMismatch` (o arquivo está danificado; no Core vira
+`SaveCorrupt`) e `false` para `UnknownFormat`, `UnsupportedVersion`,
+`UnknownValueType` e `Syntax` (o arquivo está inteiro, mas não o entendemos;
+no Core vira `SaveParseFailed`).
+
+`3nK` é decodificado hoje (XOR), mas só para arquivos de definição do jogo;
+um `game.sii` em 3nK não é esperado. Não há erro específico: cabeçalho curto é
+`Truncated`.
+
+**Índice por tipo**: `SiiDocument` mantém um índice `tipo → blocos` montado no
+`Parse`. `OfType(tipo)` devolve `IReadOnlyList<SiiUnit>` na ordem do arquivo
+(lista vazia se não há o tipo), sem varrer `Units`. O índice reflete apenas
+blocos presentes no `Parse`; `Units` é público e não é observado.
+`Parse(texto, IProgress<double>? progress)` reporta 0..1 pela posição no
+texto.
 
 ## 8. BSII (binário)
 

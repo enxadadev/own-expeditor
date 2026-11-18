@@ -69,7 +69,7 @@ public class SiiDocumentTests
     [Fact]
     public void Parse_rejects_unclosed_unit()
     {
-        Assert.Throws<InvalidDataException>(() => SiiDocument.Parse("SiiNunit\r\n{\r\nx : a {\r\n k: v\r\n"));
+        Assert.Throws<SiiFormatException>(() => SiiDocument.Parse("SiiNunit\r\n{\r\nx : a {\r\n k: v\r\n"));
     }
 
     [Fact]

@@ -42,6 +42,8 @@ public static class SiiDecoder
 
     public static string DecodeToText(byte[] data)
     {
+        ArgumentNullException.ThrowIfNull(data);
+        if (data.Length == 0) throw new SiiFormatException(SiiErrorKind.Empty, "Arquivo .sii vazio.", offset: 0);
         switch (DetectFormat(data))
         {
             case SiiFormat.Text:
@@ -53,7 +55,7 @@ public static class SiiDecoder
             case SiiFormat.ThreeNK:
                 return DecodeToText(Decode3nK(data));
             default:
-                throw new InvalidDataException("Arquivo não reconhecido como .sii.");
+                throw new SiiFormatException(SiiErrorKind.UnknownFormat, "Arquivo não reconhecido como .sii.", offset: 0);
         }
     }
 
@@ -72,8 +74,10 @@ public static class SiiDecoder
     /// <summary>3nK: XOR com tabela fixa a partir de uma semente (cabeçalho de 6 bytes).</summary>
     public static byte[] Decode3nK(byte[] data)
     {
-        if (data.Length < 6 || DetectFormat(data) != SiiFormat.ThreeNK)
-            throw new InvalidDataException("Cabeçalho 3nK inválido.");
+        if (DetectFormat(data) != SiiFormat.ThreeNK)
+            throw new SiiFormatException(SiiErrorKind.UnknownFormat, "Cabeçalho 3nK inválido.", offset: 0);
+        if (data.Length < 6)
+            throw new SiiFormatException(SiiErrorKind.Truncated, "Cabeçalho 3nK incompleto.", offset: data.Length);
         var seed = data[5];
         var output = new byte[data.Length - 6];
         for (var j = 0; j < output.Length; j++)
@@ -88,24 +92,48 @@ public static class SiiDecoder
     /// <summary>Remove a camada ScsC e devolve o conteúdo interno (texto ou BSII).</summary>
     public static byte[] Decrypt(byte[] data)
     {
-        if (data.Length < EncryptedHeaderSize || DetectFormat(data) != SiiFormat.Encrypted)
-            throw new InvalidDataException("Cabeçalho ScsC inválido.");
+        if (DetectFormat(data) != SiiFormat.Encrypted)
+            throw new SiiFormatException(SiiErrorKind.UnknownFormat, "Cabeçalho ScsC inválido.", offset: 0);
+        if (data.Length < EncryptedHeaderSize)
+            throw new SiiFormatException(SiiErrorKind.Truncated,
+                $"Cabeçalho ScsC incompleto ({data.Length} de {EncryptedHeaderSize} bytes).", offset: data.Length);
 
         var iv = data.AsSpan(36, 16).ToArray();
         var expectedSize = BinaryPrimitives.ReadUInt32LittleEndian(data.AsSpan(52, 4));
 
-        using var aes = Aes.Create();
-        aes.Key = Key;
-        var compressed = aes.DecryptCbc(data.AsSpan(EncryptedHeaderSize), iv, PaddingMode.None); // o zlib ignora o padding no fim
+        byte[] compressed;
+        try
+        {
+            using var aes = Aes.Create();
+            aes.Key = Key;
+            compressed = aes.DecryptCbc(data.AsSpan(EncryptedHeaderSize), iv, PaddingMode.None); // o zlib ignora o padding no fim
+        }
+        catch (CryptographicException e)
+        {
+            throw new SiiFormatException(SiiErrorKind.DecryptFailed,
+                "Falha ao decifrar o conteúdo ScsC.", offset: EncryptedHeaderSize, inner: e);
+        }
 
-        using var input = new MemoryStream(compressed);
-        using var zlib = new ZLibStream(input, CompressionMode.Decompress);
-        using var output = new MemoryStream((int)expectedSize);
-        zlib.CopyTo(output);
+        if (expectedSize > int.MaxValue)
+            throw new SiiFormatException(SiiErrorKind.SizeMismatch,
+                $"Tamanho declarado no cabeçalho ScsC ({expectedSize}) é grande demais.", offset: 52);
+
+        using var output = new MemoryStream((int)Math.Min(expectedSize, 1 << 28));
+        try
+        {
+            using var input = new MemoryStream(compressed);
+            using var zlib = new ZLibStream(input, CompressionMode.Decompress);
+            zlib.CopyTo(output);
+        }
+        catch (InvalidDataException e)
+        {
+            throw new SiiFormatException(SiiErrorKind.DecompressFailed,
+                "Falha ao descomprimir o conteúdo ScsC.", offset: EncryptedHeaderSize, inner: e);
+        }
 
         if (output.Length != expectedSize)
-            throw new InvalidDataException(
-                $"Tamanho decodificado ({output.Length}) difere do cabeçalho ({expectedSize}).");
+            throw new SiiFormatException(SiiErrorKind.SizeMismatch,
+                $"Tamanho decodificado ({output.Length}) difere do cabeçalho ({expectedSize}).", offset: 52);
 
         return output.ToArray();
     }
