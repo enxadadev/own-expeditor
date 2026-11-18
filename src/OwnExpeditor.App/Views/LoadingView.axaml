@@ -1,0 +1,51 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:OwnExpeditor.App.ViewModels"
+             xmlns:c="using:OwnExpeditor.App.Controls"
+             xmlns:shell="using:OwnExpeditor.App.Shell"
+             xmlns:loc="using:OwnExpeditor.App.Markup"
+             x:Class="OwnExpeditor.App.Views.LoadingView"
+             x:DataType="vm:LoadingViewModel">
+  <Border x:Name="Card" Classes="panel" Width="520" Padding="24" HorizontalAlignment="Center" VerticalAlignment="Center"
+          AutomationProperties.LiveSetting="Polite">
+    <StackPanel Spacing="14">
+      <Grid ColumnDefinitions="*,Auto">
+        <TextBlock Classes="title" Text="{loc:Tr Loading_Title}" />
+        <TextBlock Grid.Column="1" Classes="bodysm muted num" Text="{Binding SizeText}" VerticalAlignment="Center" />
+      </Grid>
+      <TextBlock Classes="body muted trim" Text="{Binding SaveName}" />
+      <ProgressBar Minimum="0" Maximum="1" Value="{Binding Progress}" IsIndeterminate="{Binding IsIndeterminate}" Height="6"
+                   Background="{DynamicResource LineBrush}" Foreground="{DynamicResource AccentBrush}" CornerRadius="3"
+                   AutomationProperties.Name="{Binding AutomationName}">
+        <ProgressBar.Styles>
+          <Style Selector="ProgressBar /template/ Border#PART_Indicator"><Setter Property="CornerRadius" Value="3" /></Style>
+        </ProgressBar.Styles>
+      </ProgressBar>
+      <Grid ColumnDefinitions="*,Auto">
+        <TextBlock Classes="body" Text="{Binding StageText}" />
+        <TextBlock Grid.Column="1" Classes="body num" FontWeight="SemiBold" Text="{Binding PercentShort}" />
+      </Grid>
+      <ItemsControl ItemsSource="{Binding StageItems}" IsVisible="{Binding !IsIndeterminate}">
+        <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Spacing="6" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="vm:LoadingStageItem">
+            <StackPanel Orientation="Horizontal" Spacing="10" Opacity="{Binding IsPending, Converter={x:Static shell:ShellConverters.DimWhen}}">
+              <Grid Width="18" Height="18" VerticalAlignment="Center">
+                <Ellipse Stroke="{DynamicResource BorderStrongBrush}" StrokeThickness="1.5" IsVisible="{Binding IsPending}" />
+                <Ellipse Stroke="{DynamicResource AccentBrush}" StrokeThickness="2" IsVisible="{Binding IsCurrent}" />
+                <Ellipse Width="8" Height="8" Fill="{DynamicResource AccentBrush}" IsVisible="{Binding IsCurrent}" />
+                <Path Data="{StaticResource IconCheck}" Fill="{DynamicResource SuccessBrush}" Stretch="Uniform" Width="16" Height="16"
+                      IsVisible="{Binding IsDone}" AutomationProperties.AccessibilityView="Raw" />
+              </Grid>
+              <TextBlock Classes="bodysm" Text="{Binding Text}" VerticalAlignment="Center" />
+            </StackPanel>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+      <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16" Margin="0,6,0,0">
+        <TextBlock Classes="bodysm muted" Text="{loc:Tr Loading_Hint}" TextWrapping="Wrap" VerticalAlignment="Center" />
+        <Button x:Name="CancelButton" Grid.Column="1" Content="{Binding CancelText}" Command="{Binding CancelCommand}" />
+      </Grid>
+    </StackPanel>
+  </Border>
+</UserControl>

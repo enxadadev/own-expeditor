@@ -69,25 +69,7 @@ public class SiiDocumentTests
     [Fact]
     public void Parse_rejects_unclosed_unit()
     {
-        Assert.Throws<InvalidDataException>(() => SiiDocument.Parse("SiiNunit\r\n{\r\nx : a {\r\n k: v\r\n"));
-    }
-
-    [Fact]
-    public void Save_creates_backup_of_existing_file()
-    {
-        var dir = Directory.CreateTempSubdirectory();
-        try
-        {
-            var path = Path.Combine(dir.FullName, "game.sii");
-            File.WriteAllText(path, "original");
-
-            var backup = SiiDocument.Parse(Sample).Save(path);
-
-            Assert.NotNull(backup);
-            Assert.Equal("original", File.ReadAllText(backup));
-            Assert.Equal(Sample, File.ReadAllText(path));
-        }
-        finally { dir.Delete(recursive: true); }
+        Assert.Throws<SiiFormatException>(() => SiiDocument.Parse("SiiNunit\r\n{\r\nx : a {\r\n k: v\r\n"));
     }
 
     [Fact]

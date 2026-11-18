@@ -1,0 +1,163 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:OwnExpeditor.App.ViewModels"
+             xmlns:c="using:OwnExpeditor.App.Controls"
+             xmlns:loc="using:OwnExpeditor.App.Markup"
+             x:Class="OwnExpeditor.App.Views.ConfirmApplyView"
+             x:DataType="vm:ConfirmApplyViewModel">
+  <Border Classes="panel" Width="620" MaxHeight="724" Padding="0" BoxShadow="{StaticResource ShadowPopup}"
+          AutomationProperties.Name="{Binding Title}" KeyboardNavigation.TabNavigation="Cycle">
+    <Grid RowDefinitions="Auto,*,Auto">
+      <!-- título -->
+      <Border Padding="24,20,24,12">
+        <TextBlock Classes="title" Text="{Binding TitleUpper}" TextWrapping="Wrap" IsVisible="{Binding !HasError}" />
+      </Border>
+      <Border Padding="24,20,24,12" IsVisible="{Binding HasError}">
+        <StackPanel Orientation="Horizontal" Spacing="10">
+          <Path Data="{StaticResource IconWarning}" Fill="{DynamicResource DangerBrush}" Width="24" Height="24" Stretch="Uniform"
+                AutomationProperties.AccessibilityView="Raw" />
+          <TextBlock Classes="title" Text="{Binding ErrorTitleUpper}" TextWrapping="Wrap" />
+        </StackPanel>
+      </Border>
+
+      <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled">
+        <Panel>
+          <!-- pergunta -->
+          <StackPanel Margin="24,0,24,16" Spacing="14" IsVisible="{Binding ShowQuestion}">
+            <TextBlock Classes="body" Text="{Binding IntroText}" TextWrapping="Wrap" />
+            <Border Classes="warn-danger">
+              <StackPanel Orientation="Horizontal" Spacing="10">
+                <Path Data="{StaticResource IconWarning}" Fill="{DynamicResource DangerBrush}" Width="18" Height="18" Stretch="Uniform"
+                      VerticalAlignment="Top" AutomationProperties.AccessibilityView="Raw" />
+                <StackPanel Spacing="2">
+                  <TextBlock Classes="body" FontWeight="SemiBold" Text="{Binding WarnTitle}" TextWrapping="Wrap" MaxWidth="500" />
+                  <TextBlock Classes="bodysm" Text="{Binding WarnBody}" TextWrapping="Wrap" MaxWidth="500" />
+                </StackPanel>
+              </StackPanel>
+            </Border>
+            <Border Classes="warn-amber" IsVisible="{Binding IsSteamCloud}">
+              <StackPanel Orientation="Horizontal" Spacing="10">
+                <Path Data="{StaticResource IconWarning}" Fill="{DynamicResource AccentTextBrush}" Width="18" Height="18" Stretch="Uniform"
+                      VerticalAlignment="Top" AutomationProperties.AccessibilityView="Raw" />
+                <StackPanel Spacing="2">
+                  <TextBlock Classes="body" FontWeight="SemiBold" Text="{Binding CloudTitle}" TextWrapping="Wrap" MaxWidth="500" />
+                  <TextBlock Classes="bodysm" Text="{Binding CloudText}" TextWrapping="Wrap" MaxWidth="500" />
+                </StackPanel>
+              </StackPanel>
+            </Border>
+
+            <TextBlock Classes="caption" Text="{loc:Tr Confirm_What_Title}" />
+            <ItemsControl ItemsSource="{Binding Modules}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:ConfirmModuleSummary">
+                  <Border Classes="pathbox" Margin="0,0,0,6">
+                    <StackPanel Spacing="2">
+                      <Grid ColumnDefinitions="*,Auto">
+                        <TextBlock Classes="caption" Text="{Binding Name, Converter={x:Static c:Converters.Upper}}" />
+                        <TextBlock Grid.Column="1" Classes="bodysm muted" Text="{Binding CountText}" />
+                      </Grid>
+                      <TextBlock Classes="bodysm trim" Text="{Binding Titles}" ToolTip.Tip="{Binding Titles}" />
+                    </StackPanel>
+                  </Border>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <TextBlock Classes="caption" Text="{loc:Tr Confirm_Dest_Title}" />
+            <StackPanel Spacing="8" AutomationProperties.Name="{loc:Tr Confirm_Dest_Title}">
+              <RadioButton Classes="choice-card" GroupName="Destination" IsChecked="{Binding IsOverwrite}">
+                <StackPanel Spacing="2">
+                  <StackPanel Orientation="Horizontal" Spacing="8">
+                    <TextBlock Classes="body" FontWeight="SemiBold" Text="{loc:Tr Confirm_Dest_Overwrite}" />
+                    <Border Classes="kbd"><TextBlock Classes="caption" Text="{loc:Tr Confirm_Dest_Default}" /></Border>
+                  </StackPanel>
+                  <TextBlock Classes="bodysm muted" Text="{Binding OverwriteHelp}" TextWrapping="Wrap" />
+                </StackPanel>
+              </RadioButton>
+              <RadioButton Classes="choice-card" GroupName="Destination" IsChecked="{Binding IsNewSlot}">
+                <StackPanel Spacing="2">
+                  <TextBlock Classes="body" FontWeight="SemiBold" Text="{loc:Tr Confirm_Dest_New}" />
+                  <TextBlock Classes="bodysm muted" Text="{loc:Tr Confirm_Dest_New_Help}" TextWrapping="Wrap" />
+                </StackPanel>
+              </RadioButton>
+            </StackPanel>
+
+            <!-- destino: sobrescrever -->
+            <StackPanel Spacing="6" IsVisible="{Binding IsOverwrite}">
+              <TextBlock Classes="caption" Text="{loc:Tr Confirm_Backup_Title}" />
+              <Border Classes="pathbox">
+                <StackPanel Spacing="2">
+                  <TextBlock FontFamily="{StaticResource FontMono}" FontSize="12" Text="{Binding FolderPath}" TextWrapping="Wrap" />
+                  <TextBlock FontFamily="{StaticResource FontMono}" FontSize="12" Foreground="{DynamicResource AccentTextBrush}" Text="{Binding BackupPattern}" />
+                </StackPanel>
+              </Border>
+              <TextBlock Classes="bodysm muted" Text="{loc:Tr Confirm_Backup_Note}" TextWrapping="Wrap" />
+            </StackPanel>
+
+            <!-- destino: novo save -->
+            <StackPanel Spacing="6" IsVisible="{Binding IsNewSlot}">
+              <TextBlock Classes="caption" Text="{loc:Tr Confirm_NewName_Label}" />
+              <TextBox Text="{Binding NewName}" MaxLength="40" MinHeight="44" Classes.invalid="{Binding NameInvalid}"
+                       AutomationProperties.Name="{loc:Tr Confirm_NewName_Label}" />
+              <TextBlock Classes="bodysm" Foreground="{DynamicResource DangerBrush}" Text="{loc:Tr Confirm_NewName_Invalid}"
+                         IsVisible="{Binding NameInvalid}" AutomationProperties.LiveSetting="Polite" />
+              <TextBlock Classes="bodysm muted" Text="{loc:Tr Confirm_NewName_Hint}" TextWrapping="Wrap" IsVisible="{Binding NameValid}" />
+              <TextBlock Classes="caption" Text="{loc:Tr Confirm_NewSlot_Title}" Margin="0,8,0,0" />
+              <Border Classes="pathbox">
+                <StackPanel Spacing="2">
+                  <TextBlock FontFamily="{StaticResource FontMono}" FontSize="12" Text="{Binding ProfileFolderPath}" TextWrapping="Wrap" />
+                  <TextBlock FontFamily="{StaticResource FontMono}" FontSize="12" Foreground="{DynamicResource AccentTextBrush}" Text="{loc:Tr Confirm_NewSlot_Next}" />
+                </StackPanel>
+              </Border>
+              <TextBlock Classes="bodysm muted" Text="{Binding NewSlotNote}" TextWrapping="Wrap" />
+            </StackPanel>
+            <TextBlock Classes="bodysm muted" Text="{Binding UndoNote}" TextWrapping="Wrap" />
+          </StackPanel>
+
+          <!-- gravando -->
+          <StackPanel Margin="24,8,24,24" Spacing="12" HorizontalAlignment="Center" IsVisible="{Binding IsApplying}"
+                      AutomationProperties.LiveSetting="Polite">
+            <c:Spinner HorizontalAlignment="Center" />
+            <TextBlock Classes="subtitle" Text="{loc:Tr Confirm_Applying}" HorizontalAlignment="Center" />
+            <TextBlock Classes="bodysm muted" Text="{Binding ApplyingHint}" TextWrapping="Wrap" TextAlignment="Center" MaxWidth="440" />
+          </StackPanel>
+
+          <!-- erro -->
+          <StackPanel Margin="24,0,24,16" Spacing="12" IsVisible="{Binding HasError}" AutomationProperties.LiveSetting="Assertive">
+            <TextBlock Classes="body" Text="{Binding ErrorMessage}" TextWrapping="Wrap" />
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <Path Data="{StaticResource IconCheck}" Fill="{DynamicResource SuccessBrush}" Width="16" Height="16" Stretch="Uniform"
+                    VerticalAlignment="Top" Margin="0,2,0,0" AutomationProperties.AccessibilityView="Raw" />
+              <TextBlock Classes="bodysm" Text="{loc:Tr Error_NothingWritten}" TextWrapping="Wrap" MaxWidth="500" />
+            </StackPanel>
+            <TextBlock Classes="bodysm muted" Text="{Binding PendingText}" TextWrapping="Wrap" IsVisible="{Binding PendingText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+            <Border Classes="pathbox">
+              <StackPanel Spacing="2">
+                <TextBlock Classes="caption" Text="{loc:Tr Error_Details}" />
+                <SelectableTextBlock FontFamily="{StaticResource FontMono}" FontSize="12" Text="{Binding ErrorDetails}" TextWrapping="Wrap" />
+              </StackPanel>
+            </Border>
+          </StackPanel>
+        </Panel>
+      </ScrollViewer>
+
+      <!-- botões fixos -->
+      <Border Grid.Row="2" Padding="24,12" BorderBrush="{DynamicResource LineBrush}" BorderThickness="0,1,0,0">
+        <Panel>
+          <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Right" IsVisible="{Binding ShowQuestion}">
+            <Button x:Name="CancelButton" Classes="large" Content="{loc:Tr Common_Cancel}" Command="{Binding CancelCommand}" />
+            <Button Classes="danger large" Content="{Binding ConfirmLabel}" Command="{Binding ConfirmCommand}" />
+          </StackPanel>
+          <ItemsControl ItemsSource="{Binding ErrorActions}" HorizontalAlignment="Right" IsVisible="{Binding HasError}">
+            <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Orientation="Horizontal" Spacing="12" FlowDirection="RightToLeft" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:ErrorActionItem">
+                <Button Classes="large" Classes.accent="{Binding IsPrimary}" Content="{Binding Label}" Command="{Binding Command}" FlowDirection="LeftToRight" />
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </Panel>
+      </Border>
+    </Grid>
+  </Border>
+</UserControl>

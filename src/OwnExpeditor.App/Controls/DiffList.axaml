@@ -1,0 +1,53 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:OwnExpeditor.App.Controls"
+             xmlns:loc="using:OwnExpeditor.App.Markup"
+             x:Class="OwnExpeditor.App.Controls.DiffList"
+             x:Name="Root" x:DataType="c:DiffList">
+  <Panel>
+    <ItemsControl ItemsSource="{Binding #Root.Groups}" IsVisible="{Binding !#Root.IsEmpty}">
+      <ItemsControl.ItemsPanel>
+        <ItemsPanelTemplate><StackPanel Spacing="12" /></ItemsPanelTemplate>
+      </ItemsControl.ItemsPanel>
+      <ItemsControl.ItemTemplate>
+        <DataTemplate x:DataType="c:IDiffGroup">
+          <Border Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource LineBrush}" BorderThickness="1"
+                  CornerRadius="{StaticResource RadiusLg}" ClipToBounds="True"
+                  AutomationProperties.Name="{Binding Title}">
+            <StackPanel>
+              <Border Background="{DynamicResource SideBrush}" Padding="16,8" BorderBrush="{DynamicResource LineBrush}" BorderThickness="0,0,0,1">
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                  <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center" MinWidth="0">
+                    <TextBlock Classes="caption" Text="{Binding ModuleName, Converter={x:Static c:Converters.Upper}}" VerticalAlignment="Center" />
+                    <TextBlock Classes="subtitle trim" Text="{Binding Title}" ToolTip.Tip="{Binding Title}" VerticalAlignment="Center" />
+                  </StackPanel>
+                  <Button Grid.Column="1" Classes="compact" Content="{loc:Tr Diff_Discard}" Command="{Binding DiscardCommand}"
+                          IsEnabled="{Binding #Root.IsDiscardEnabled}"
+                          AutomationProperties.Name="{Binding Title, Converter={x:Static c:Converters.DiscardName}}" />
+                </Grid>
+              </Border>
+              <ItemsControl ItemsSource="{Binding Lines}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="c:IDiffLine">
+                    <Border Padding="16,10" BorderBrush="{DynamicResource LineBrush}" BorderThickness="0,0,0,1" Background="Transparent">
+                      <Border.Styles>
+                        <Style Selector="Border:pointerover"><Setter Property="Background" Value="{DynamicResource SurfaceHoverBrush}" /></Style>
+                      </Border.Styles>
+                      <Grid ColumnDefinitions="150,*" ColumnSpacing="12">
+                        <TextBlock Classes="bodysm muted trim" Text="{Binding Label}" ToolTip.Tip="{Binding Label}" VerticalAlignment="Center" />
+                        <c:ValueChange Grid.Column="1" Before="{Binding Before}" After="{Binding After}"
+                                       IsNumeric="{Binding IsNumeric}" Label="{Binding Label}" />
+                      </Grid>
+                    </Border>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </StackPanel>
+          </Border>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ItemsControl>
+    <ContentControl Content="{Binding #Root.EmptyContent}" IsVisible="{Binding #Root.ShowCustomEmpty}" />
+    <c:EmptyState Title="{loc:Tr Diff_Empty_Title}" Message="{loc:Tr Diff_Empty_Message}" IsVisible="{Binding #Root.ShowDefaultEmpty}" />
+  </Panel>
+</UserControl>

@@ -1,0 +1,64 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:OwnExpeditor.App.ViewModels"
+             xmlns:shell="using:OwnExpeditor.App.Shell"
+             xmlns:loc="using:OwnExpeditor.App.Markup"
+             x:Class="OwnExpeditor.App.Views.OpenErrorView"
+             x:DataType="vm:OpenErrorViewModel">
+  <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+    <StackPanel MaxWidth="720" Margin="32,32" Spacing="16" HorizontalAlignment="Center" AutomationProperties.LiveSetting="Assertive">
+      <Grid ColumnDefinitions="Auto,*" ColumnSpacing="16">
+        <Path Grid.Column="0" Data="{StaticResource IconWarning}" Fill="{DynamicResource DangerBrush}" Width="36" Height="36"
+              Stretch="Uniform" VerticalAlignment="Top" AutomationProperties.AccessibilityView="Raw" />
+        <StackPanel Grid.Column="1" Spacing="6">
+          <TextBlock x:Name="TitleText" Classes="title" Focusable="True" Text="{Binding TitleUpper}" TextWrapping="Wrap" />
+          <TextBlock Classes="body" Text="{Binding Body}" TextWrapping="Wrap" />
+          <TextBlock Classes="bodysm muted" Text="{Binding ProfileSaveText}" />
+        </StackPanel>
+      </Grid>
+
+      <Border Classes="panel" IsVisible="{Binding ShowCauses}">
+        <StackPanel Spacing="8">
+          <TextBlock Classes="caption" Text="{Binding CausesTitleUpper}" />
+          <ItemsControl ItemsSource="{Binding Causes}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="x:String">
+                <TextBlock Classes="body" Text="{Binding StringFormat='• {0}'}" TextWrapping="Wrap" />
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </StackPanel>
+      </Border>
+
+      <ItemsControl ItemsSource="{Binding Tips}" IsVisible="{Binding ShowTips}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="x:String">
+            <TextBlock Classes="body" Text="{Binding StringFormat='• {0}'}" TextWrapping="Wrap" Margin="0,0,0,4" />
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+
+      <!-- Detalhes técnicos (recolhido por padrão) -->
+      <StackPanel Spacing="6">
+        <Button Classes="link" Command="{Binding ToggleDetailsCommand}" HorizontalAlignment="Left" Padding="0,0,8,0"
+                AutomationProperties.Name="{Binding DetailsLabel}">
+          <StackPanel Orientation="Horizontal" Spacing="6">
+            <TextBlock Text="{Binding IsDetailsOpen, Converter={x:Static shell:ShellConverters.Chevron}}" />
+            <TextBlock Classes="bodysm" FontWeight="SemiBold" Text="{Binding DetailsLabel}" />
+          </StackPanel>
+        </Button>
+        <Border Classes="pathbox" IsVisible="{Binding IsDetailsOpen}">
+          <SelectableTextBlock FontFamily="{StaticResource FontMono}" FontSize="12" Text="{Binding DetailsText}" TextWrapping="Wrap" />
+        </Border>
+      </StackPanel>
+
+      <Grid ColumnDefinitions="Auto,Auto,*,Auto,Auto" ColumnSpacing="12" Margin="0,8,0,0">
+        <Button Grid.Column="0" Classes="accent large" Content="{loc:Tr OpenError_ChooseAnother}" Command="{Binding ChooseAnotherCommand}" />
+        <Button Grid.Column="1" Classes="large" Content="{loc:Tr OpenError_Retry}" Command="{Binding RetryCommand}" />
+        <Button Grid.Column="3" Classes="link" Content="{loc:Tr OpenError_OpenSaveFolder}" Command="{Binding OpenFolderCommand}"
+                IsVisible="{Binding ShowOpenFolder}" />
+        <Button Grid.Column="4" Content="{Binding CopyText}" Command="{Binding CopyDetailsCommand}" IsVisible="{Binding ShowCopyDetails}" />
+      </Grid>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

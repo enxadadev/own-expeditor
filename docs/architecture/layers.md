@@ -1,98 +1,103 @@
 # Camadas e dependências
 
-O código fica em `src/` (cinco projetos de biblioteca/app) e `tests/` (dois
+O código fica em `src/` (cinco projetos de biblioteca e app) e `tests/` (quatro
 projetos xUnit). A regra do `CLAUDE.md` é que as dependências **só apontam para
 baixo**:
 
 ```
 App → Core → Data → Sii → Domain
-        ↘ Sii ↗   ↘ Domain ↗
+  ↘ Domain        ↘ Domain
 ```
 
 Em outras palavras: `App` fala com `Core` e, para records puros, com `Domain`;
-`Core` usa `Data` e `Sii`; `Data` e `Sii` usam `Domain`.
+`Core` usa `Data`, `Sii` e `Domain`; `Data` usa `Sii` e `Domain`; `Sii` usa
+`Domain`. O `Domain` não tem dependências.
 
-Na prática, pelos `ProjectReference` dos `.csproj`:
+## Referências reais
+
+Pelos `ProjectReference` dos `.csproj`:
 
 | Projeto | Referencia |
 |---------|-----------|
-| `OwnExpeditor.App` | `Core` (hoje). `Domain` é permitido pela [ADR 0005](../decisions/0005-shell-modular-e-sessao-de-edicao.md), ainda não referenciado |
+| `OwnExpeditor.App` | `Core`, `Domain`. Com `DisableTransitiveProjectReferences`, `Data` e `Sii` não entram por transitividade |
 | `OwnExpeditor.Core` | `Domain`, `Sii`, `Data` |
 | `OwnExpeditor.Data` | `Domain`, `Sii` |
 | `OwnExpeditor.Sii` | `Domain` |
 | `OwnExpeditor.Domain` | nada |
 
-Nenhum projeto referencia uma camada acima dela, e o `Domain` não tem
-dependências. Isso bate com a regra.
+`toolkit/check-layers.sh` confere isso em três níveis: `ProjectReference`, `using`
+e `global using`, e uso qualificado (`OwnExpeditor.Sii.Foo`) em `.cs` e `.axaml`.
+Ele roda em `toolkit/check.sh`. A App só pode usar `Core` e `Domain`.
+
+Fora da regra: `tools/OwnExpeditor.Cli` (ferramenta de desenvolvimento com
+`decode`, `scs-ls`, `scs-cat` e `catalog`) e `toolkit/` (scripts e
+`SiiTool`). Só `src/` é verificado.
 
 ### App: Domain sim, Sii e Data não
 
 A [ADR 0005](../decisions/0005-shell-modular-e-sessao-de-edicao.md) (item 8)
 define o que a App pode usar:
 
-- **Pode** referenciar `Domain`, porque são só records puros (`ProfileInfo`,
-  `AppSettings` etc.), sem I/O.
-- **Não pode** referenciar `Sii` nem `Data`. Ela só acessa o save por `Core`.
-- O `csproj` da App vai usar `DisableTransitiveProjectReferences`. Assim, a
-  referência ao `Core` não traz `Data` e `Sii` por transitividade.
-- `toolkit/check-layers.sh` barra `using OwnExpeditor.Sii` e
-  `using OwnExpeditor.Data` na App, e também `ProjectReference` fora da lista
-  permitida (App: `Core` e `Domain`).
+- **Pode** referenciar `Domain`, para os records puros (`ProfileInfo`,
+  `SaveSlotInfo`, `AppSettings`, `GameKind`, etc.).
+- **Não pode** referenciar `Sii` nem `Data`. Ela acessa o save só por `Core`, e
+  os tipos da Data que aparecem na tela (como `GameCatalog`) chegam por meio de
+  interfaces do `Core`.
 
-Estado: o `check-layers.sh` já aplica essas regras. O `csproj` da App ainda
-não tem `DisableTransitiveProjectReferences` nem referência a `Domain`; isso
-vem com a tarefa A1 do [plano 0005](plan-0005-shell.md).
-> TODO: confirmar quando A1 for implementada.
+## Responsabilidade de cada projeto
 
-## Responsabilidade e estado atual de cada projeto
+| Projeto | Responsabilidade | Principais tipos |
+|---------|------------------|------------------|
+| `src/OwnExpeditor.App` | UI Avalonia em MVVM: shell, módulos, revisão, confirmação, resultado, configurações, temas e idiomas | `App`, `Program`, `Shell/AppComposition`, `ViewRegistry`, `ShellViewModel`, `SessionBarViewModel`, `WelcomeViewModel`, `LoadingViewModel`, `ReviewViewModel`, `ConfirmApplyViewModel`, `ResultViewModel`, `SettingsViewModel`, `Modules/Jobs/JobsPageViewModel`, `Services/Localizer`, `Services/ThemeService`, `Controls/*` |
+| `src/OwnExpeditor.Core` | Casos de uso: sessão de edição, mudanças, Jobs, jogo, perfis e ajustes | `EditSession`, `EditSessionHost`, `ChangeSet`, `SavePatch`, `ApplyTarget`, `ISaveView`, `CoreError`, `CoreException`, `Modules/Jobs/JobBoard`, `JobPlanner`, `DistanceTable`, `GameDataService`, `GameStatusMonitor`, `ProfileService`, `AppSettingsService`, `IGameNames` |
+| `src/OwnExpeditor.Data` | Perfis e saves no disco, gravação segura, catálogo do jogo, cache de distâncias, ajustes em JSON | `ProfileLocator`, `SaveFileStore` (`ISaveFileStore`), `SaveLocator` (utilitários internos), `GameCatalog`, `GameInstallLocator`, `GameProcessMonitor`, `Localization`, `Scs/HashFsArchive`, `Distances/JsonDistanceCache`, `Settings/JsonSettingsStore` |
+| `src/OwnExpeditor.Sii` | Decodificar ScsC, BSII e 3nK; parsear e gravar o texto SiiNunit | `SiiDecoder`, `BsiiDecoder`, `SiiDocument`, `SiiFormatException`, `SiiErrorKind` |
+| `src/OwnExpeditor.Domain` | Records e enums puros, sem I/O | `GameKind`, `GameIds`, `GameNameKind`, `GameFolderCheck`, `CityPair`, `ProfileInfo`, `SaveSlotInfo`, `ProfileNames`, `AppSettings`, `GameFolders`, `Language`, `ThemePreference` |
 
-| Projeto | Responsabilidade (alvo) | Estado no código hoje |
-|---------|-------------------------|-----------------------|
-| `src/OwnExpeditor.App` | UI Avalonia em MVVM | Esqueleto do template: `App.axaml`, `Views/MainWindow.axaml` com um `TextBox` ligado a `MainViewModel.Greeting`. Nenhuma tela de jobs ainda. Há uma pasta `Models\` declarada no `.csproj` que não existe. |
-| `src/OwnExpeditor.Core` | Casos de uso: ler save, listar opções, injetar job, backup | Só o `.csproj`. Nenhum `.cs` de produção. |
-| `src/OwnExpeditor.Data` | Perfis e saves no disco, cache de distâncias | Só o `.csproj`. |
-| `src/OwnExpeditor.Sii` | Decodificar ScsC e parsear/gravar o texto SiiNunit | Implementado: `SiiDecoder.cs` (detecção de formato, descriptografia ScsC) e `SiiDocument.cs` (parse, `ToText`, `Save` com backup). |
-| `src/OwnExpeditor.Domain` | Entidades puras | Só o `.csproj`. Ver [domain.md](domain.md). |
+A lista de entidades do jogo (empresas, cidades, cargas, reboques) não tem
+projeto próprio: `GameCatalog` (`Data`) guarda as definições lidas dos `.scs`, e
+`JobBoard` (`Core`) as expõe como opções. Ver [domain.md](domain.md).
 
-Testes:
+### Testes
 
-| Projeto de teste | Cobre | Estado |
-|------------------|-------|--------|
-| `tests/OwnExpeditor.Sii.Tests` | `Sii` | 7 testes com strings inline em `SiiDocumentTests.cs` e `RealSaveTests.cs` (saves reais de `samples/`, fora do git) |
-| `tests/OwnExpeditor.Core.Tests` | `Core` | `UnitTest1.cs`, um teste vazio gerado pelo template |
+| Projeto | Cobre | Observação |
+|---------|-------|-----------|
+| `tests/OwnExpeditor.Sii.Tests` | `Sii` | `SiiDocumentTests`, `SiiErrorTests` (um caso por `SiiErrorKind`), `RealSaveTests` (saves de `samples/`) |
+| `tests/OwnExpeditor.Data.Tests` | `Data` | Gravação segura (`SaveFileStoreTests`), perfis, instalação do jogo, monitor de processo, ajustes JSON, cache de catálogo |
+| `tests/OwnExpeditor.Core.Tests` | `Core` (e `Domain`) | Sessão e aplicação (`EditSession*`), `JobBoardTests`, `JobPlannerTests`, `DistanceTests`, `JobsEndToEndTests`, `ProfileServiceTests`, `ScsTests` |
+| `tests/OwnExpeditor.App.Tests` | `App` | Paridade `.resx`, textos `_One`/`_Other`, `Error_*`, atalhos e navegação do shell, tema, página de Fretes, `JobsRealSaveTests` |
 
-> TODO: confirmar quando `Core`, `Data` e `Domain` ganharem código, e se o
-> `Models\` do App será usado ou removido.
+Total: 764 testes passando (`toolkit/check.sh`). Os testes com saves reais
+(`RealSaveTests`, `JobsRealSaveTests`) só rodam se `samples/` existir; ver
+[development.md](../development.md).
 
 ## Tema e idioma por camada
 
 Regra da [ADR 0004](../decisions/0004-suporte-a-tema-e-idioma.md) e da skill
-`i18n-theming`. Os itens marcados como TODO ainda não existem no código.
+`i18n-theming`.
 
-- **App** (`src/OwnExpeditor.App`): todo texto visível vem de `.resx`
-  (`Resources/Strings.resx` em en e `Strings.pt-BR.resx`). Cores próprias ficam
-  em `ThemeDictionaries` (Light e Dark). Hoje só o tema do sistema está ligado
-  (`RequestedThemeVariant="Default"`). TODO: confirmar a pasta `Resources/`.
-- **Core** (`src/OwnExpeditor.Core`): devolve códigos de erro, não mensagens. A
-  App traduz o código. O Core não referencia recursos de UI. TODO: confirmar
-  quando o Core ganhar código.
-- **Data** (`src/OwnExpeditor.Data`): lê e grava `settings.json` em
-  `ApplicationData/OwnExpeditor/`, com tema e idioma. A interface
-  (`ISettingsStore`) fica na própria Data e é implementada lá. O Core consome
-  essa interface e expõe `IAppSettingsService` à App. Isso corrige a ADR 0004
-  (ver a nota de atualização nela e a
-  [ADR 0005](../decisions/0005-shell-modular-e-sessao-de-edicao.md), item 2).
-  TODO: confirmar quando `Data` ganhar código.
-- **Domain**: não tem texto nem cor. Nomes de cidades, empresas e cargas vêm do
-  save e não são traduzidos.
+- **App**: todo texto visível vem de `Resources/Strings.resx` (en) e
+  `Strings.pt-BR.resx`, lidos pelo `Localizer`. As tabelas de origem ficam em
+  `design/*/strings.md`, e `toolkit/gen-resx.py` gera os `.resx` (com `--check`
+  para conferir). As cores vêm de tokens em `Styles/` (Light e Dark).
+- **Core**: devolve `CoreError` e chaves de texto, não frases. Por exemplo,
+  `InvalidEdit` vem com `Reason = Jobs_Error_*`, e a App traduz.
+- **Data**: lê e grava `settings.json` (`JsonSettingsStore`) com tema, idioma,
+  última pasta e pastas do jogo. `ISettingsStore` fica na Data; `IAppSettingsService`
+  (`Core`) a expõe à App.
+- **Nomes do jogo**: cidades, empresas, cargas e reboques são traduzidos pelo
+  `locale.scs` do próprio jogo, no idioma escolhido no app. `IGameNames` (`Core`)
+  faz essa resolução.
+- **Domain**: não tem texto nem cor.
 
 ## Regras que a estrutura precisa manter
 
 - Nenhuma camada inferior conhece a superior. Por exemplo, `Sii` não pode
-  referenciar `Core` nem `App`.
-- A UI (`App`) não lê nem grava `game.sii` diretamente; deve passar pelo `Core`.
-  Hoje o `App` nem referencia `Sii`, então isso vale como alvo, não como fato
-  verificado.
+  referenciar `Core` nem `App`. `check-layers.sh` confere.
+- A UI (`App`) não lê nem grava `game.sii` diretamente; passa pelo `Core`
+  (`IEditSessionHost`, `IEditSession`, `IProfileService`, `IGameDataService`).
+- A gravação passa só por `ISaveFileStore` (`Data`), chamado por
+  `EditSession.ApplyAsync`. Não há outro caminho de escrita de save.
 - Não há listas fixas de cidades, cargas ou reboques em nenhum projeto (ver
   [ADR 0003](../decisions/0003-sem-listas-fixas.md)).
 

@@ -129,3 +129,23 @@ Alternativas descartadas:
 - O mapa da rota depende de coordenadas de cidades que não estão no save
   (vêm dos arquivos de definição do jogo/mods); exige descoberta própria.
 - A ADR 0004 continua valendo, com o ajuste do item 2.
+
+## Atualização (2026-11-17)
+
+Esta ADR continua em proposta. A integração do código já existente ao shell
+(leitura BSII, `.scs`, catálogo, `SaveSession` e `JobInjector`) está na
+[ADR 0006](0006-integracao-do-codigo-de-injecao-ao-shell.md), com o plano em
+[../architecture/plan-0006-integracao.md](../architecture/plan-0006-integracao.md).
+Pontos que a ADR 0006 altera nesta ADR:
+
+- **Destino da gravação.** `IEditSession.ApplyAsync` recebe um `ApplyTarget`:
+  **Sobrescrever este save** (padrão, com backup, `.tmp` e verificação) ou
+  **Criar um novo save** (copia a pasta do slot para um slot livre; o original
+  não é tocado). Os dois passam pelo mesmo `ApplyAsync` e pela Data.
+- **Códigos de erro.** `SaveFormatUnsupported` foi renomeado para
+  `SaveParseFailed`. `SaveCorrupt` e `InvalidEdit` foram acrescentados ao
+  `CoreError`. Erros de leitura do Sii são `SiiFormatException` com
+  `SiiErrorKind`.
+- **Estado do código.** A escrita atual (`SaveLocator.WriteAsNewSave`) só cria
+  slot novo, sem `.tmp` nem verificação. `ApplyAsync` e `ISaveFileStore` ainda
+  não existem no código.

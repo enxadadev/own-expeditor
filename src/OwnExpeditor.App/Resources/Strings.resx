@@ -1,0 +1,497 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- GERADO por toolkit/gen-resx.py a partir de design/*/strings.md. Não edite à mão. -->
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Action_BackToReview" xml:space="preserve"><value>Back to review</value></data>
+  <data name="Action_ChooseSave" xml:space="preserve"><value>Choose another save</value></data>
+  <data name="Action_OpenFolder" xml:space="preserve"><value>Open folder</value></data>
+  <data name="Action_OpenReview" xml:space="preserve"><value>Open review</value></data>
+  <data name="Action_ReopenSave" xml:space="preserve"><value>Open the save again</value></data>
+  <data name="Action_Retry" xml:space="preserve"><value>Try again</value></data>
+  <data name="Action_RetryGameClosed" xml:space="preserve"><value>I closed it, try again</value></data>
+  <data name="Banner_Details_Hide" xml:space="preserve"><value>Hide details</value></data>
+  <data name="Banner_Details_Show" xml:space="preserve"><value>Show details</value></data>
+  <data name="Banner_Dismiss_A11y" xml:space="preserve"><value>Dismiss message</value></data>
+  <data name="Banner_Name_A11y" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="Banner_Severity_Error" xml:space="preserve"><value>Error</value></data>
+  <data name="Banner_Severity_Info" xml:space="preserve"><value>Information</value></data>
+  <data name="Banner_Severity_Warning" xml:space="preserve"><value>Warning</value></data>
+  <data name="Common_Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Common_Clear" xml:space="preserve"><value>Clear</value></data>
+  <data name="Common_Close" xml:space="preserve"><value>Close</value></data>
+  <data name="Common_Details" xml:space="preserve"><value>Details</value></data>
+  <data name="Common_Dismiss" xml:space="preserve"><value>Dismiss</value></data>
+  <data name="Common_Edit" xml:space="preserve"><value>Edit</value></data>
+  <data name="Common_Refresh" xml:space="preserve"><value>Refresh</value></data>
+  <data name="Common_Retry" xml:space="preserve"><value>Try again</value></data>
+  <data name="Common_Unknown" xml:space="preserve"><value>No value</value></data>
+  <data name="Confirm_Applying" xml:space="preserve"><value>Writing…</value></data>
+  <data name="Confirm_Applying_Hint" xml:space="preserve"><value>Creating the backup and writing the save. Don't close the app.</value></data>
+  <data name="Confirm_Applying_Hint_New" xml:space="preserve"><value>Creating the new save and writing the changes. Don't close the app.</value></data>
+  <data name="Confirm_Backup_Note" xml:space="preserve"><value>A copy of the original save is created in this folder before writing. The name uses the date and time of the write.</value></data>
+  <data name="Confirm_Backup_Pattern" xml:space="preserve"><value>game.sii.bak-YYYYMMDD-HHMMSS</value></data>
+  <data name="Confirm_Backup_Title" xml:space="preserve"><value>Where the backup goes</value></data>
+  <data name="Confirm_Cloud_New" xml:space="preserve"><value>The game may not show saves created outside it. If the new save doesn't show up, write with “Overwrite this save”.</value></data>
+  <data name="Confirm_Cloud_Overwrite" xml:space="preserve"><value>The cloud may restore the old save when the game opens. If that happens, close the game and write again.</value></data>
+  <data name="Confirm_Cloud_Title" xml:space="preserve"><value>This profile uses Steam Cloud</value></data>
+  <data name="Confirm_Confirm" xml:space="preserve"><value>Write to save</value></data>
+  <data name="Confirm_Confirm_New" xml:space="preserve"><value>Create new save</value></data>
+  <data name="Confirm_Dest_Default" xml:space="preserve"><value>Default</value></data>
+  <data name="Confirm_Dest_New" xml:space="preserve"><value>Create a new save</value></data>
+  <data name="Confirm_Dest_New_Help" xml:space="preserve"><value>Creates a new save with the changes. The original save isn't touched.</value></data>
+  <data name="Confirm_Dest_Overwrite" xml:space="preserve"><value>Overwrite this save</value></data>
+  <data name="Confirm_Dest_Overwrite_Help" xml:space="preserve"><value>Writes to the open save ({0}). A backup is created first.</value></data>
+  <data name="Confirm_Dest_Title" xml:space="preserve"><value>How to write</value></data>
+  <data name="Confirm_IntroNew_One" xml:space="preserve"><value>1 change will be written to a new save, created from {0}.</value></data>
+  <data name="Confirm_IntroNew_Other" xml:space="preserve"><value>{0} changes will be written to a new save, created from {1}.</value></data>
+  <data name="Confirm_Intro_One" xml:space="preserve"><value>1 change will be written to {0}.</value></data>
+  <data name="Confirm_Intro_Other" xml:space="preserve"><value>{0} changes will be written to {1}.</value></data>
+  <data name="Confirm_NewName_Default" xml:space="preserve"><value>{0} (edited)</value></data>
+  <data name="Confirm_NewName_Hint" xml:space="preserve"><value>It's the name shown in the game's save list.</value></data>
+  <data name="Confirm_NewName_Invalid" xml:space="preserve"><value>Enter a name of 1 to 40 characters.</value></data>
+  <data name="Confirm_NewName_Label" xml:space="preserve"><value>New save name</value></data>
+  <data name="Confirm_NewSlot_Next" xml:space="preserve"><value>(next free slot)</value></data>
+  <data name="Confirm_NewSlot_Note" xml:space="preserve"><value>The app creates a new folder in the next free slot of profile {0}. The original save stays as it is.</value></data>
+  <data name="Confirm_NewSlot_Title" xml:space="preserve"><value>Where the new save goes</value></data>
+  <data name="Confirm_Title" xml:space="preserve"><value>Write changes to the save?</value></data>
+  <data name="Confirm_Undo_Note" xml:space="preserve"><value>To undo later, just restore the backup. We show how on the next screen.</value></data>
+  <data name="Confirm_Undo_Note_New" xml:space="preserve"><value>The original save doesn't change. To discard the new save, just delete it. We show how on the next screen.</value></data>
+  <data name="Confirm_Warn_Body" xml:space="preserve"><value>With the game running, it may overwrite the save when it saves or exits, and writing may fail.</value></data>
+  <data name="Confirm_Warn_Body_Running" xml:space="preserve"><value>Close the game before writing. It may overwrite the save when it saves or exits.</value></data>
+  <data name="Confirm_Warn_Title" xml:space="preserve"><value>Close the game before continuing</value></data>
+  <data name="Confirm_Warn_Title_Running" xml:space="preserve"><value>The game is running</value></data>
+  <data name="Confirm_What_Title" xml:space="preserve"><value>What will be written</value></data>
+  <data name="Count_Changes_One" xml:space="preserve"><value>1 change</value></data>
+  <data name="Count_Changes_Other" xml:space="preserve"><value>{0} changes</value></data>
+  <data name="Count_Changes_Zero" xml:space="preserve"><value>No changes</value></data>
+  <data name="Count_Modules_One" xml:space="preserve"><value>1 module</value></data>
+  <data name="Count_Modules_Other" xml:space="preserve"><value>{0} modules</value></data>
+  <data name="Count_Modules_Zero" xml:space="preserve"><value>No modules</value></data>
+  <data name="Diff_Change_A11y" xml:space="preserve"><value>{0}: from {1} to {2}</value></data>
+  <data name="Diff_Discard" xml:space="preserve"><value>Discard</value></data>
+  <data name="Diff_Discard_A11y" xml:space="preserve"><value>Discard change: {0}</value></data>
+  <data name="Diff_Empty" xml:space="preserve"><value>empty</value></data>
+  <data name="Diff_Empty_Message" xml:space="preserve"><value>Edit something in a module and come back here to review.</value></data>
+  <data name="Diff_Empty_Title" xml:space="preserve"><value>No pending changes</value></data>
+  <data name="Diff_Group_Lines_One" xml:space="preserve"><value>{0} line</value></data>
+  <data name="Diff_Group_Lines_Other" xml:space="preserve"><value>{0} lines</value></data>
+  <data name="Diff_Group_Lines_Zero" xml:space="preserve"><value>No lines</value></data>
+  <data name="Diff_Value_Empty" xml:space="preserve"><value>(empty)</value></data>
+  <data name="Discard_All_Confirm" xml:space="preserve"><value>Discard all</value></data>
+  <data name="Discard_All_Message" xml:space="preserve"><value>All pending changes will be lost. Your save has not been changed.</value></data>
+  <data name="Discard_All_Title" xml:space="preserve"><value>Discard all changes?</value></data>
+  <data name="Empty_Default_Title" xml:space="preserve"><value>Nothing here yet</value></data>
+  <data name="Empty_Go" xml:space="preserve"><value>Go to {0}</value></data>
+  <data name="Empty_Message" xml:space="preserve"><value>You haven't made any changes to this save yet. Pick a module, edit what you like and come back here to review before writing.</value></data>
+  <data name="Empty_NoResults_Action" xml:space="preserve"><value>Clear search</value></data>
+  <data name="Empty_NoResults_Message" xml:space="preserve"><value>No results for “{0}”. Try another term.</value></data>
+  <data name="Empty_NoResults_Title" xml:space="preserve"><value>Nothing found</value></data>
+  <data name="Empty_Tip" xml:space="preserve"><value>Tip: Ctrl+R opens this screen any time.</value></data>
+  <data name="Empty_Title" xml:space="preserve"><value>Nothing to review</value></data>
+  <data name="Error_AccessDenied" xml:space="preserve"><value>The system denied access to the save folder. Check that the folder isn't read-only or protected (for example by antivirus or cloud sync) and try again.</value></data>
+  <data name="Error_BackupExists" xml:space="preserve"><value>A backup with this same time already exists, and the app never overwrites backups. Wait a second and try again.</value></data>
+  <data name="Error_BackupFailed" xml:space="preserve"><value>The backup couldn't be created, so the app didn't write. Check the free space and permissions of the save folder and try again.</value></data>
+  <data name="Error_Conflict" xml:space="preserve"><value>This change edits something another pending change already edited. Open the review, discard one of the two and redo the edit.</value></data>
+  <data name="Error_Details" xml:space="preserve"><value>Details</value></data>
+  <data name="Error_GameRunning" xml:space="preserve"><value>The game is running, and it would overwrite the save when it saves or exits. Close the game and try again.</value></data>
+  <data name="Error_InvalidEdit" xml:space="preserve"><value>This change isn't valid for this save. Discard it, adjust your choice and try again.</value></data>
+  <data name="Error_NoSession" xml:space="preserve"><value>No save is open. Choose a profile and a save to get started.</value></data>
+  <data name="Error_NothingToApply" xml:space="preserve"><value>There are no changes to write. Make an edit in a module and come back to review.</value></data>
+  <data name="Error_NothingWritten" xml:space="preserve"><value>Nothing was written. Your save is as it was.</value></data>
+  <data name="Error_PendingKept" xml:space="preserve"><value>Your pending changes are still here.</value></data>
+  <data name="Error_PendingLost" xml:space="preserve"><value>Pending changes will be discarded.</value></data>
+  <data name="Error_ReadOnlySession" xml:space="preserve"><value>This save is open for viewing only, so it can't be written. Open the save again from the save picker.</value></data>
+  <data name="Error_SaveChangedOnDisk" xml:space="preserve"><value>The save file changed after you opened it (for example, the game saved). To avoid losing progress, the app didn't write. Open the save again and redo your changes.</value></data>
+  <data name="Error_SaveCorrupt" xml:space="preserve"><value>The save file looks damaged and couldn't be read. Pick another save or restore a backup (game.sii.bak-…).</value></data>
+  <data name="Error_SaveNotFound" xml:space="preserve"><value>We couldn't find the save file. It may have been moved, renamed or deleted. Go back to the save list and pick another one.</value></data>
+  <data name="Error_SaveParseFailed" xml:space="preserve"><value>Couldn't understand this save: its content wasn't recognized. It may come from a newer game version, an unusual mod or a damaged file. Try another save from the same profile or, if it keeps happening, report the problem.</value></data>
+  <data name="Error_SessionBusy" xml:space="preserve"><value>The save is still being read or written. Wait a few seconds and try again.</value></data>
+  <data name="Error_SlotUnavailable" xml:space="preserve"><value>Couldn't create a new save: the profile has no free slot or the folder couldn't be created. Go back to the review and write with “Overwrite this save”, or delete an old save in the game.</value></data>
+  <data name="Error_StalePatch" xml:space="preserve"><value>The data behind this change is out of date. Go back to the review, discard the change and redo the edit. If it keeps happening, open the save again.</value></data>
+  <data name="Error_Title_Apply" xml:space="preserve"><value>Couldn't write the save</value></data>
+  <data name="Error_Title_Edit" xml:space="preserve"><value>Couldn't add the change</value></data>
+  <data name="Error_Title_Open" xml:space="preserve"><value>Couldn't open the save</value></data>
+  <data name="Error_UnknownAttribute" xml:space="preserve"><value>This save doesn't have the field the app tried to change. This usually happens with saves from mods or another game version. Discard the change, try another item or update the app.</value></data>
+  <data name="Error_UnknownUnit" xml:space="preserve"><value>We couldn't find the item you wanted to change in the save. It may have been removed. Go back to the review, discard the change and pick the item again.</value></data>
+  <data name="Error_VerifyFailed" xml:space="preserve"><value>The written file didn't pass verification, so the original save was kept. Try again; if it repeats, open the save again and redo your changes.</value></data>
+  <data name="Error_WriteFailed" xml:space="preserve"><value>The file couldn't be written. Check whether another program (such as antivirus or cloud backup) is using the save folder and try again.</value></data>
+  <data name="Format_Days" xml:space="preserve"><value>{0} d</value></data>
+  <data name="Format_Hours" xml:space="preserve"><value>{0} h</value></data>
+  <data name="Format_Km" xml:space="preserve"><value>{0:N0} km</value></data>
+  <data name="Format_KmApprox" xml:space="preserve"><value>≈ {0:N0} km</value></data>
+  <data name="Format_Money_Ats" xml:space="preserve"><value>${0:N0}</value></data>
+  <data name="Format_Money_Ets2" xml:space="preserve"><value>€{0:N0}</value></data>
+  <data name="Game_Ats" xml:space="preserve"><value>American Truck Simulator</value></data>
+  <data name="Game_Ats_Short" xml:space="preserve"><value>ATS</value></data>
+  <data name="Game_Ets2" xml:space="preserve"><value>Euro Truck Simulator 2</value></data>
+  <data name="Game_Ets2_Short" xml:space="preserve"><value>ETS2</value></data>
+  <data name="Jobs_Add" xml:space="preserve"><value>Add to review</value></data>
+  <data name="Jobs_Added_Toast" xml:space="preserve"><value>Job added to review.</value></data>
+  <data name="Jobs_Added_View" xml:space="preserve"><value>View review</value></data>
+  <data name="Jobs_CancelEdit" xml:space="preserve"><value>Cancel editing</value></data>
+  <data name="Jobs_Change_Title" xml:space="preserve"><value>Job {0} → {1}</value></data>
+  <data name="Jobs_Chip_FromAria" xml:space="preserve"><value>Departure city: {0}. Change it in the list</value></data>
+  <data name="Jobs_Chip_FromHint" xml:space="preserve"><value>Choose the departure city in the list on the left</value></data>
+  <data name="Jobs_Chip_ToAria" xml:space="preserve"><value>Destination city: {0}. Change</value></data>
+  <data name="Jobs_Cloud_Body" xml:space="preserve"><value>The cloud may bring back an older save or hide new ones. When you apply, you choose how to write.</value></data>
+  <data name="Jobs_Cloud_Chip" xml:space="preserve"><value>Steam Cloud</value></data>
+  <data name="Jobs_Cloud_Dismiss" xml:space="preserve"><value>Got it</value></data>
+  <data name="Jobs_Cloud_Title" xml:space="preserve"><value>This profile uses Steam Cloud</value></data>
+  <data name="Jobs_Companies_One" xml:space="preserve"><value>1 company</value></data>
+  <data name="Jobs_Companies_Other" xml:space="preserve"><value>{0} companies</value></data>
+  <data name="Jobs_Distance_Estimated" xml:space="preserve"><value>Estimated</value></data>
+  <data name="Jobs_Distance_EstimatedShort" xml:space="preserve"><value>estimated</value></data>
+  <data name="Jobs_Distance_Estimated_Help" xml:space="preserve"><value>This is the app's estimate: your saves don't have this route. The game recalculates the route on the GPS.</value></data>
+  <data name="Jobs_Distance_FromSave" xml:space="preserve"><value>Known: from offers in your saves</value></data>
+  <data name="Jobs_Distance_Pending" xml:space="preserve"><value>Choose both cities</value></data>
+  <data name="Jobs_Editing_Body" xml:space="preserve"><value>The company and slot stay the same. When you update, it replaces the previous one in review.</value></data>
+  <data name="Jobs_Editing_Title" xml:space="preserve"><value>Editing a pending change</value></data>
+  <data name="Jobs_Empty_Body" xml:space="preserve"><value>A city only shows up here if one of its companies has a free slot or an offer to replace and ships a cargo the app has already seen in a job in this save.</value></data>
+  <data name="Jobs_Empty_Tip" xml:space="preserve"><value>Open the freight market of a few companies in the game, save and open the save again.</value></data>
+  <data name="Jobs_Empty_Title" xml:space="preserve"><value>No city with a slot or offer</value></data>
+  <data name="Jobs_Error_CargoNotAccepted" xml:space="preserve"><value>The arrival company doesn't accept this cargo. Choose another arrival company or another cargo.</value></data>
+  <data name="Jobs_Error_CargoNotShipped" xml:space="preserve"><value>The departure company doesn't ship this cargo. Choose another cargo or another departure company.</value></data>
+  <data name="Jobs_Error_ExpirationInvalid" xml:space="preserve"><value>The chosen time limit isn't valid. Choose 24 h, 48 h, 72 h or 7 d.</value></data>
+  <data name="Jobs_Error_NoFreeSlot" xml:space="preserve"><value>This company has no free slot left: another pending change already uses it. Choose an offer to replace, edit or discard that change, or choose another departure company.</value></data>
+  <data name="Jobs_Error_NoGameTime" xml:space="preserve"><value>We couldn't find the game date in this save, so we can't work out when the job expires. Open the save again; if it keeps happening, choose another save.</value></data>
+  <data name="Jobs_Error_NoTrailer" xml:space="preserve"><value>This save has no job with this cargo to copy the trailer from. Choose another cargo.</value></data>
+  <data name="Jobs_Error_OfferMissing" xml:space="preserve"><value>The offer you were going to replace is gone or already has another pending change. Choose another offer or use a free slot.</value></data>
+  <data name="Jobs_Error_OriginMissing" xml:space="preserve"><value>The departure company is no longer in this save. Choose another departure company.</value></data>
+  <data name="Jobs_Error_SameCity" xml:space="preserve"><value>The departure and destination cities are the same. Choose another destination city.</value></data>
+  <data name="Jobs_Error_TargetMissing" xml:space="preserve"><value>The arrival company isn't in this save. Choose another arrival company or another destination city.</value></data>
+  <data name="Jobs_Expiration_Help" xml:space="preserve"><value>Game time, counted from the save's clock.</value></data>
+  <data name="Jobs_Field_Cargo" xml:space="preserve"><value>Cargo</value></data>
+  <data name="Jobs_Field_Destination" xml:space="preserve"><value>Destination</value></data>
+  <data name="Jobs_Field_Distance" xml:space="preserve"><value>Distance</value></data>
+  <data name="Jobs_Field_Expiration" xml:space="preserve"><value>Expires in</value></data>
+  <data name="Jobs_Field_Origin" xml:space="preserve"><value>Origin</value></data>
+  <data name="Jobs_Field_Trailer" xml:space="preserve"><value>Trailer</value></data>
+  <data name="Jobs_Field_Units" xml:space="preserve"><value>Units</value></data>
+  <data name="Jobs_Form_Label" xml:space="preserve"><value>New job</value></data>
+  <data name="Jobs_FromCity_Placeholder" xml:space="preserve"><value>Choose from the list</value></data>
+  <data name="Jobs_Hint_Locked" xml:space="preserve"><value>Locked while editing</value></data>
+  <data name="Jobs_Hint_NeedCargo" xml:space="preserve"><value>Choose the cargo first</value></data>
+  <data name="Jobs_Hint_NeedCities" xml:space="preserve"><value>Choose both cities first</value></data>
+  <data name="Jobs_Hint_NeedFromCompany" xml:space="preserve"><value>Choose the departure company first</value></data>
+  <data name="Jobs_Hint_OnlyOption" xml:space="preserve"><value>Only option, already chosen</value></data>
+  <data name="Jobs_Hint_Options_One" xml:space="preserve"><value>1 option</value></data>
+  <data name="Jobs_Hint_Options_Other" xml:space="preserve"><value>{0} options</value></data>
+  <data name="Jobs_List_Count_One" xml:space="preserve"><value>1 departure city</value></data>
+  <data name="Jobs_List_Count_Other" xml:space="preserve"><value>{0} departure cities</value></data>
+  <data name="Jobs_List_Search" xml:space="preserve"><value>Search city…</value></data>
+  <data name="Jobs_List_SearchLabel" xml:space="preserve"><value>Search departure city</value></data>
+  <data name="Jobs_List_Title" xml:space="preserve"><value>Departure cities</value></data>
+  <data name="Jobs_Map_Empty_Aria" xml:space="preserve"><value>Route map: choose the cities</value></data>
+  <data name="Jobs_Map_Label" xml:space="preserve"><value>Route from {0} to {1}</value></data>
+  <data name="Jobs_Map_PickFrom" xml:space="preserve"><value>Choose the departure city in the list</value></data>
+  <data name="Jobs_Map_PickTo" xml:space="preserve"><value>Choose the destination city</value></data>
+  <data name="Jobs_Map_Route" xml:space="preserve"><value>Route</value></data>
+  <data name="Jobs_Map_Schematic" xml:space="preserve"><value>Route sketch, without real positions</value></data>
+  <data name="Jobs_Missing" xml:space="preserve"><value>Still to choose: {0}</value></data>
+  <data name="Jobs_Missing_Cargo" xml:space="preserve"><value>cargo</value></data>
+  <data name="Jobs_Missing_FromCity" xml:space="preserve"><value>departure city</value></data>
+  <data name="Jobs_Missing_FromCompany" xml:space="preserve"><value>departure company</value></data>
+  <data name="Jobs_Missing_Offer" xml:space="preserve"><value>offer to replace</value></data>
+  <data name="Jobs_Missing_ToCity" xml:space="preserve"><value>destination city</value></data>
+  <data name="Jobs_Missing_ToCompany" xml:space="preserve"><value>arrival company</value></data>
+  <data name="Jobs_Mode_Free" xml:space="preserve"><value>Use a free slot</value></data>
+  <data name="Jobs_Mode_Help" xml:space="preserve"><value>Replacing swaps one of the company's current offers: the review shows before → after.</value></data>
+  <data name="Jobs_Mode_Locked" xml:space="preserve"><value>Locked while editing: to change it, discard this change and create another.</value></data>
+  <data name="Jobs_Mode_NoFree" xml:space="preserve"><value>No free slot in this company. Replace one of the current offers.</value></data>
+  <data name="Jobs_Mode_NoOffers" xml:space="preserve"><value>This company has no offers to replace. Use the free slot.</value></data>
+  <data name="Jobs_Mode_Replace" xml:space="preserve"><value>Replace an offer</value></data>
+  <data name="Jobs_Mode_Title" xml:space="preserve"><value>Where the job goes</value></data>
+  <data name="Jobs_NoCatalog_Action" xml:space="preserve"><value>Open Settings</value></data>
+  <data name="Jobs_NoCatalog_Body" xml:space="preserve"><value>We show names as they appear in the save and only the cargo rules it reveals. There may be fewer options.</value></data>
+  <data name="Jobs_NoCatalog_Title" xml:space="preserve"><value>{0} folder not found</value></data>
+  <data name="Jobs_NoMatch_Body" xml:space="preserve"><value>No company in {0} with a free slot ships a cargo that a company in {1} accepts. Change one of the cities.</value></data>
+  <data name="Jobs_NoMatch_CatalogNote" xml:space="preserve"><value>Without the game folder, only the cargo rules seen in the save apply.</value></data>
+  <data name="Jobs_NoMatch_ChangeFrom" xml:space="preserve"><value>Change departure city</value></data>
+  <data name="Jobs_NoMatch_ChangeTo" xml:space="preserve"><value>Change destination city</value></data>
+  <data name="Jobs_NoMatch_Title" xml:space="preserve"><value>No possible match</value></data>
+  <data name="Jobs_NoSlots_Body" xml:space="preserve"><value>Every slot and offer in {0} already has a pending change. Edit or discard one of them to free it.</value></data>
+  <data name="Jobs_NoSlots_Title" xml:space="preserve"><value>No free slot or offer in {0}</value></data>
+  <data name="Jobs_Notice_Cleared" xml:space="preserve"><value>Cleared {0}: the new choice changes the options.</value></data>
+  <data name="Jobs_Notice_Close" xml:space="preserve"><value>Dismiss notice</value></data>
+  <data name="Jobs_Notice_Replaced" xml:space="preserve"><value>{0}: only one option was left, so it was chosen.</value></data>
+  <data name="Jobs_Notice_SameCity" xml:space="preserve"><value>Cleared the destination city: it can't be the same as the departure city.</value></data>
+  <data name="Jobs_Offer_Expires" xml:space="preserve"><value>expires in {0}</value></data>
+  <data name="Jobs_Offer_Meta" xml:space="preserve"><value>{0} · {1} · {2}</value></data>
+  <data name="Jobs_Offers_One" xml:space="preserve"><value>1 offer</value></data>
+  <data name="Jobs_Offers_Other" xml:space="preserve"><value>{0} offers</value></data>
+  <data name="Jobs_Pending_Edit" xml:space="preserve"><value>Edit</value></data>
+  <data name="Jobs_Pending_EditAria" xml:space="preserve"><value>Edit change: {0}</value></data>
+  <data name="Jobs_Pending_Mode_Free" xml:space="preserve"><value>Free slot</value></data>
+  <data name="Jobs_Pending_Mode_Replace" xml:space="preserve"><value>Replaces offer</value></data>
+  <data name="Jobs_Pending_One" xml:space="preserve"><value>1 pending</value></data>
+  <data name="Jobs_Pending_Other" xml:space="preserve"><value>{0} pending</value></data>
+  <data name="Jobs_Pending_Title" xml:space="preserve"><value>Pending changes in this city</value></data>
+  <data name="Jobs_Picker_Count_One" xml:space="preserve"><value>1 option</value></data>
+  <data name="Jobs_Picker_Count_Other" xml:space="preserve"><value>{0} options</value></data>
+  <data name="Jobs_Picker_NoItems" xml:space="preserve"><value>Nothing to choose here.</value></data>
+  <data name="Jobs_Picker_NoMatch" xml:space="preserve"><value>No match</value></data>
+  <data name="Jobs_Picker_OnlyPossible" xml:space="preserve"><value>Only possible matches</value></data>
+  <data name="Jobs_Picker_SameCity" xml:space="preserve"><value>Already the departure city</value></data>
+  <data name="Jobs_Picker_SearchCargo" xml:space="preserve"><value>Search cargo…</value></data>
+  <data name="Jobs_Picker_SearchCity" xml:space="preserve"><value>Search city…</value></data>
+  <data name="Jobs_Picker_SearchCompany" xml:space="preserve"><value>Search company…</value></data>
+  <data name="Jobs_Picker_SearchOffer" xml:space="preserve"><value>Search offer…</value></data>
+  <data name="Jobs_Ready" xml:space="preserve"><value>Ready. Nothing is written now: the job goes to review.</value></data>
+  <data name="Jobs_Search_Clear" xml:space="preserve"><value>Clear search</value></data>
+  <data name="Jobs_Search_NoResult_Body" xml:space="preserve"><value>Nothing for “{0}”. Check the name or clear the search.</value></data>
+  <data name="Jobs_Search_NoResult_Title" xml:space="preserve"><value>No city found</value></data>
+  <data name="Jobs_Slots_One" xml:space="preserve"><value>1 free slot</value></data>
+  <data name="Jobs_Slots_Other" xml:space="preserve"><value>{0} free slots</value></data>
+  <data name="Jobs_Slots_Zero" xml:space="preserve"><value>No free slots</value></data>
+  <data name="Jobs_Step_Cargo" xml:space="preserve"><value>Cargo</value></data>
+  <data name="Jobs_Step_Choose" xml:space="preserve"><value>Choose…</value></data>
+  <data name="Jobs_Step_FromCity" xml:space="preserve"><value>Departure city</value></data>
+  <data name="Jobs_Step_FromCompany" xml:space="preserve"><value>Departure company</value></data>
+  <data name="Jobs_Step_Offer" xml:space="preserve"><value>Offer to replace</value></data>
+  <data name="Jobs_Step_ToCity" xml:space="preserve"><value>Destination city</value></data>
+  <data name="Jobs_Step_ToCompany" xml:space="preserve"><value>Arrival company</value></data>
+  <data name="Jobs_Swap" xml:space="preserve"><value>Swap departure and destination</value></data>
+  <data name="Jobs_ToCity_Placeholder" xml:space="preserve"><value>Choose city…</value></data>
+  <data name="Jobs_Trailer_Help" xml:space="preserve"><value>Copied from a job in this save with the same cargo</value></data>
+  <data name="Jobs_Units_Help" xml:space="preserve"><value>Set by the trailer</value></data>
+  <data name="Jobs_Update" xml:space="preserve"><value>Update in review</value></data>
+  <data name="Jobs_Updated_Toast" xml:space="preserve"><value>Change updated in review.</value></data>
+  <data name="Loading_Automation" xml:space="preserve"><value>Reading save, {0}%</value></data>
+  <data name="Loading_Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Loading_Cancelling" xml:space="preserve"><value>Cancelling…</value></data>
+  <data name="Loading_Default" xml:space="preserve"><value>Loading…</value></data>
+  <data name="Loading_Hint" xml:space="preserve"><value>Large saves can take a few seconds.</value></data>
+  <data name="Loading_Map" xml:space="preserve"><value>Loading map…</value></data>
+  <data name="Loading_Progress_A11y" xml:space="preserve"><value>{0}% complete</value></data>
+  <data name="Loading_Size" xml:space="preserve"><value>{0:N1} MB</value></data>
+  <data name="Loading_Stage_Index" xml:space="preserve"><value>Organizing jobs and companies</value></data>
+  <data name="Loading_Stage_Parse" xml:space="preserve"><value>Interpreting the save</value></data>
+  <data name="Loading_Stage_Read" xml:space="preserve"><value>Reading the file</value></data>
+  <data name="Loading_Title" xml:space="preserve"><value>Reading save…</value></data>
+  <data name="Module_Jobs_Title" xml:space="preserve"><value>Jobs</value></data>
+  <data name="Module_Profile_Title" xml:space="preserve"><value>Profile</value></data>
+  <data name="Module_company" xml:space="preserve"><value>Company</value></data>
+  <data name="Module_fleet" xml:space="preserve"><value>Fleet</value></data>
+  <data name="Module_jobs" xml:space="preserve"><value>Jobs</value></data>
+  <data name="Module_map" xml:space="preserve"><value>Map</value></data>
+  <data name="Module_profile" xml:space="preserve"><value>Profile</value></data>
+  <data name="Nav_DisabledHint" xml:space="preserve"><value>Open a save to use this module</value></data>
+  <data name="Nav_Label" xml:space="preserve"><value>Modules</value></data>
+  <data name="Nav_Settings" xml:space="preserve"><value>Settings</value></data>
+  <data name="Nav_Settings_Short" xml:space="preserve"><value>Settings</value></data>
+  <data name="Offer_A11y" xml:space="preserve"><value>{0} to {1}, {2}, {3}</value></data>
+  <data name="Offer_Expired" xml:space="preserve"><value>Expired</value></data>
+  <data name="Offer_Modified" xml:space="preserve"><value>Modified</value></data>
+  <data name="Offer_Tooltip" xml:space="preserve"><value>{0} → {1}</value></data>
+  <data name="OpenError_AccessDenied_Body" xml:space="preserve"><value>Check whether another program is using the file or the folder is protected, then try again.</value></data>
+  <data name="OpenError_AccessDenied_Title" xml:space="preserve"><value>No permission to read the save</value></data>
+  <data name="OpenError_ChooseAnother" xml:space="preserve"><value>Choose another save</value></data>
+  <data name="OpenError_Copied" xml:space="preserve"><value>Copied</value></data>
+  <data name="OpenError_CopyDetails" xml:space="preserve"><value>Copy details</value></data>
+  <data name="OpenError_Corrupt_Body" xml:space="preserve"><value>The file couldn't be read in full: it looks incomplete or unreadable, as if the game closed while saving. Your save was not changed.</value></data>
+  <data name="OpenError_Corrupt_Tip1" xml:space="preserve"><value>Try the most recent autosave of the same profile.</value></data>
+  <data name="OpenError_Corrupt_Tip2" xml:space="preserve"><value>Or open the game, load the profile and save again.</value></data>
+  <data name="OpenError_Corrupt_Title" xml:space="preserve"><value>Couldn't read this save</value></data>
+  <data name="OpenError_Details" xml:space="preserve"><value>Technical details</value></data>
+  <data name="OpenError_DetailsCode" xml:space="preserve"><value>Code: {0}</value></data>
+  <data name="OpenError_DetailsText" xml:space="preserve"><value>Code: {0} · near line {1:N0}</value></data>
+  <data name="OpenError_NotFound_Body" xml:space="preserve"><value>The file no longer exists. It may have been moved or deleted.</value></data>
+  <data name="OpenError_NotFound_Title" xml:space="preserve"><value>Save not found</value></data>
+  <data name="OpenError_OpenSaveFolder" xml:space="preserve"><value>Open save folder</value></data>
+  <data name="OpenError_Parse_Body" xml:space="preserve"><value>The file was read, but Own Expeditor couldn't make sense of what's inside. Your save was not changed.</value></data>
+  <data name="OpenError_Parse_Cause1" xml:space="preserve"><value>A game version newer than the one the app knows.</value></data>
+  <data name="OpenError_Parse_Cause2" xml:space="preserve"><value>A mod that changes how the save is written.</value></data>
+  <data name="OpenError_Parse_Cause3" xml:space="preserve"><value>A damaged file.</value></data>
+  <data name="OpenError_Parse_CausesTitle" xml:space="preserve"><value>What may have caused this</value></data>
+  <data name="OpenError_Parse_DetailsText" xml:space="preserve"><value>Code: {0}
+Game: {1}
+Profile: {2}
+Save: {3}
+Size: {4}
+Step: {5}
+App: {6}</value></data>
+  <data name="OpenError_Parse_Tip1" xml:space="preserve"><value>Try another save from the same profile, such as the most recent autosave.</value></data>
+  <data name="OpenError_Parse_Tip2" xml:space="preserve"><value>If it keeps happening, copy the technical details and send them when you report the problem.</value></data>
+  <data name="OpenError_Parse_Title" xml:space="preserve"><value>Couldn't understand the save</value></data>
+  <data name="OpenError_Retry" xml:space="preserve"><value>Try again</value></data>
+  <data name="OpenError_Unknown_Body" xml:space="preserve"><value>Something unexpected happened. Your save was not changed. Try again or choose another save.</value></data>
+  <data name="OpenError_Unknown_Title" xml:space="preserve"><value>Couldn't open the save</value></data>
+  <data name="PageHeader_Count_A11y" xml:space="preserve"><value>Total: {0}</value></data>
+  <data name="Pending_Count_One" xml:space="preserve"><value>{0} pending change</value></data>
+  <data name="Pending_Count_Other" xml:space="preserve"><value>{0} pending changes</value></data>
+  <data name="Pending_Count_Zero" xml:space="preserve"><value>No pending changes</value></data>
+  <data name="Pending_Modified" xml:space="preserve"><value>Modified</value></data>
+  <data name="Pending_Overflow" xml:space="preserve"><value>{0}+</value></data>
+  <data name="Pending_Overflow_A11y" xml:space="preserve"><value>more than {0} pending changes</value></data>
+  <data name="Picker_Clear_A11y" xml:space="preserve"><value>Clear selection</value></data>
+  <data name="Picker_CountOf" xml:space="preserve"><value>{0} of {1}</value></data>
+  <data name="Picker_Empty" xml:space="preserve"><value>No options available</value></data>
+  <data name="Picker_Loading" xml:space="preserve"><value>Loading options…</value></data>
+  <data name="Picker_Name_A11y" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="Picker_NoResults" xml:space="preserve"><value>No options found</value></data>
+  <data name="Picker_None" xml:space="preserve"><value>None selected</value></data>
+  <data name="Picker_Open_A11y" xml:space="preserve"><value>Open list: {0}</value></data>
+  <data name="Picker_Required_A11y" xml:space="preserve"><value>{0} (required)</value></data>
+  <data name="Picker_Required_Error" xml:space="preserve"><value>Choose an option</value></data>
+  <data name="Picker_Tag_Mod" xml:space="preserve"><value>Mod</value></data>
+  <data name="Profile_Change_Money_Title" xml:space="preserve"><value>Profile money</value></data>
+  <data name="Profile_Field_Money" xml:space="preserve"><value>Money</value></data>
+  <data name="Result_Backup_Help" xml:space="preserve"><value>We kept a copy of the save as it was before. It sits in the same folder.</value></data>
+  <data name="Result_Backup_Title" xml:space="preserve"><value>Backup of the original save</value></data>
+  <data name="Result_Cloud_New" xml:space="preserve"><value>If the new save doesn't show up in the game (Steam Cloud), write again with “Overwrite this save”.</value></data>
+  <data name="Result_Cloud_Overwrite" xml:space="preserve"><value>If the game brings the old save back (Steam Cloud), close the game and write again.</value></data>
+  <data name="Result_CopyPath" xml:space="preserve"><value>Copy path</value></data>
+  <data name="Result_Discard_Step1" xml:space="preserve"><value>Close the game.</value></data>
+  <data name="Result_Discard_Step2" xml:space="preserve"><value>Delete the new save's folder (the path is above).</value></data>
+  <data name="Result_Discard_Title" xml:space="preserve"><value>How to discard the new save</value></data>
+  <data name="Result_Keep" xml:space="preserve"><value>Keep editing</value></data>
+  <data name="Result_Now_Body" xml:space="preserve"><value>Open the game and load this save to see the changes.</value></data>
+  <data name="Result_Now_Body_New" xml:space="preserve"><value>Open the game and load “{0}” to see the changes.</value></data>
+  <data name="Result_Now_Title" xml:space="preserve"><value>Now in the game</value></data>
+  <data name="Result_OpenFolder" xml:space="preserve"><value>Open folder</value></data>
+  <data name="Result_OpenFolder_Failed" xml:space="preserve"><value>Couldn't open the folder. It is at: {0}</value></data>
+  <data name="Result_PathCopied" xml:space="preserve"><value>Path copied</value></data>
+  <data name="Result_Restore_Step1" xml:space="preserve"><value>Close the game.</value></data>
+  <data name="Result_Restore_Step2" xml:space="preserve"><value>In the save folder, rename game.sii to game.sii.old.</value></data>
+  <data name="Result_Restore_Step3" xml:space="preserve"><value>Rename the backup (game.sii.bak-…) to game.sii.</value></data>
+  <data name="Result_Restore_Title" xml:space="preserve"><value>How to restore the backup</value></data>
+  <data name="Result_Session_New" xml:space="preserve"><value>Editing continues in the new save.</value></data>
+  <data name="Result_Slot_Help" xml:space="preserve"><value>The open save was updated.</value></data>
+  <data name="Result_Slot_Help_New" xml:space="preserve"><value>Created next to the original, which wasn't changed.</value></data>
+  <data name="Result_Slot_Name" xml:space="preserve"><value>{0} · slot {1}</value></data>
+  <data name="Result_Slot_Title" xml:space="preserve"><value>Saved to</value></data>
+  <data name="Result_Slot_Title_New" xml:space="preserve"><value>New save</value></data>
+  <data name="Result_TextNote" xml:space="preserve"><value>Own Expeditor writes the save as plain text. If the game doesn't load this save, restore the backup.</value></data>
+  <data name="Result_TextNote_New" xml:space="preserve"><value>Own Expeditor writes the save as plain text. If the game doesn't load the new save, delete it: the original stays intact.</value></data>
+  <data name="Result_Title" xml:space="preserve"><value>Changes written</value></data>
+  <data name="Result_Title_New" xml:space="preserve"><value>New save created</value></data>
+  <data name="Result_WrittenNew_One" xml:space="preserve"><value>1 change written to the new save “{0}”.</value></data>
+  <data name="Result_WrittenNew_Other" xml:space="preserve"><value>{0} changes written to the new save “{1}”.</value></data>
+  <data name="Result_Written_One" xml:space="preserve"><value>1 change written to the save.</value></data>
+  <data name="Result_Written_Other" xml:space="preserve"><value>{0} changes written to the save.</value></data>
+  <data name="Review_AllDiscarded" xml:space="preserve"><value>You discarded every change. Your save was not changed.</value></data>
+  <data name="Review_Apply" xml:space="preserve"><value>Apply changes</value></data>
+  <data name="Review_Apply_Disabled_Hint" xml:space="preserve"><value>Apply becomes available when there are changes.</value></data>
+  <data name="Review_Apply_Hint" xml:space="preserve"><value>Nothing is written without your confirmation.</value></data>
+  <data name="Review_Back" xml:space="preserve"><value>Keep editing</value></data>
+  <data name="Review_Col_After" xml:space="preserve"><value>After</value></data>
+  <data name="Review_Col_Before" xml:space="preserve"><value>Before</value></data>
+  <data name="Review_Col_Field" xml:space="preserve"><value>Field</value></data>
+  <data name="Review_Discard" xml:space="preserve"><value>Discard</value></data>
+  <data name="Review_DiscardAll" xml:space="preserve"><value>Discard all</value></data>
+  <data name="Review_DiscardItem_Aria" xml:space="preserve"><value>Discard change: {0}</value></data>
+  <data name="Review_DiscardModule" xml:space="preserve"><value>Discard module</value></data>
+  <data name="Review_DiscardModule_Aria" xml:space="preserve"><value>Discard all changes in {0}</value></data>
+  <data name="Review_Line_Aria" xml:space="preserve"><value>{0}: before {1}, after {2}</value></data>
+  <data name="Review_List_Label" xml:space="preserve"><value>Pending changes</value></data>
+  <data name="Review_Safety_Backup" xml:space="preserve"><value>A backup of the save is created next to it.</value></data>
+  <data name="Review_Safety_CloseGame" xml:space="preserve"><value>Close the game before applying.</value></data>
+  <data name="Review_Safety_Once" xml:space="preserve"><value>All modules are written at once.</value></data>
+  <data name="Review_Safety_Title" xml:space="preserve"><value>Before writing</value></data>
+  <data name="Review_Stat_Changes" xml:space="preserve"><value>Changes</value></data>
+  <data name="Review_Stat_Modules" xml:space="preserve"><value>Modules</value></data>
+  <data name="Review_Subtitle" xml:space="preserve"><value>{0} in {1}</value></data>
+  <data name="Review_Subtitle_None" xml:space="preserve"><value>No pending changes</value></data>
+  <data name="Review_Summary" xml:space="preserve"><value>Summary</value></data>
+  <data name="Review_Title" xml:space="preserve"><value>Review changes</value></data>
+  <data name="Route_A11y" xml:space="preserve"><value>Route map from {0} to {1}, {2}</value></data>
+  <data name="Route_A11y_Empty" xml:space="preserve"><value>Route map: no offer picked</value></data>
+  <data name="Route_Destination" xml:space="preserve"><value>Destination</value></data>
+  <data name="Route_Empty_Message" xml:space="preserve"><value>The route appears here.</value></data>
+  <data name="Route_Empty_Title" xml:space="preserve"><value>Pick an offer</value></data>
+  <data name="Route_Label" xml:space="preserve"><value>Route</value></data>
+  <data name="Route_Origin" xml:space="preserve"><value>Origin</value></data>
+  <data name="Route_SameCity" xml:space="preserve"><value>Origin and destination in the same city</value></data>
+  <data name="SaveKind_Auto" xml:space="preserve"><value>Autosave</value></data>
+  <data name="SaveKind_Manual" xml:space="preserve"><value>Manual</value></data>
+  <data name="SaveKind_Quick" xml:space="preserve"><value>Quicksave</value></data>
+  <data name="Search_Busy" xml:space="preserve"><value>Searching…</value></data>
+  <data name="Search_Clear_A11y" xml:space="preserve"><value>Clear search</value></data>
+  <data name="Search_Placeholder_Default" xml:space="preserve"><value>Search…</value></data>
+  <data name="Search_Results_One" xml:space="preserve"><value>{0} result</value></data>
+  <data name="Search_Results_Other" xml:space="preserve"><value>{0} results</value></data>
+  <data name="Search_Results_Zero" xml:space="preserve"><value>No results</value></data>
+  <data name="SessionBar_ChangeHint" xml:space="preserve"><value>Change save…</value></data>
+  <data name="SessionBar_GameClosed" xml:space="preserve"><value>Game closed</value></data>
+  <data name="SessionBar_GameRunning" xml:space="preserve"><value>Game running</value></data>
+  <data name="SessionBar_GameRunningHint" xml:space="preserve"><value>Close the game before applying.</value></data>
+  <data name="SessionBar_Label" xml:space="preserve"><value>Session</value></data>
+  <data name="SessionBar_NoSession" xml:space="preserve"><value>No save open</value></data>
+  <data name="SessionBar_Profile" xml:space="preserve"><value>Profile</value></data>
+  <data name="SessionBar_ProfileAutomation" xml:space="preserve"><value>Profile: {0}. Change save</value></data>
+  <data name="SessionBar_Review" xml:space="preserve"><value>Review ({0})</value></data>
+  <data name="SessionBar_ReviewAutomation" xml:space="preserve"><value>Review changes: {0}</value></data>
+  <data name="SessionBar_ReviewAutomationNone" xml:space="preserve"><value>Review changes: none pending</value></data>
+  <data name="SessionBar_ReviewHint" xml:space="preserve"><value>Review changes (Ctrl+R)</value></data>
+  <data name="SessionBar_ReviewNone" xml:space="preserve"><value>No changes</value></data>
+  <data name="SessionBar_Save" xml:space="preserve"><value>Save</value></data>
+  <data name="SessionBar_SaveAutomation" xml:space="preserve"><value>Save: {0}. Change save</value></data>
+  <data name="Settings_About" xml:space="preserve"><value>About</value></data>
+  <data name="Settings_Appearance" xml:space="preserve"><value>Appearance</value></data>
+  <data name="Settings_Disclaimer" xml:space="preserve"><value>Community project, not affiliated with SCS Software.</value></data>
+  <data name="Settings_GameFolder" xml:space="preserve"><value>Game installation folder</value></data>
+  <data name="Settings_GameFolder_Auto" xml:space="preserve"><value>Detected automatically</value></data>
+  <data name="Settings_GameFolder_Automation" xml:space="preserve"><value>Installation folder of {0}: {1}</value></data>
+  <data name="Settings_GameFolder_Choose" xml:space="preserve"><value>Choose…</value></data>
+  <data name="Settings_GameFolder_Help" xml:space="preserve"><value>Used to read game data (such as the map) straight from the installed files.</value></data>
+  <data name="Settings_GameFolder_Invalid" xml:space="preserve"><value>This folder doesn't look like the installation of {0}. Choose the folder where the game is installed.</value></data>
+  <data name="Settings_GameFolder_Manual" xml:space="preserve"><value>Chosen by you</value></data>
+  <data name="Settings_GameFolder_NotFound" xml:space="preserve"><value>Not found</value></data>
+  <data name="Settings_GameFolder_NotFoundHelp" xml:space="preserve"><value>We couldn't find {0}. Choose the installation folder. Without it, the map isn't available.</value></data>
+  <data name="Settings_GameFolder_Open" xml:space="preserve"><value>Open folder</value></data>
+  <data name="Settings_GameFolder_Reset" xml:space="preserve"><value>Use automatic detection</value></data>
+  <data name="Settings_Games" xml:space="preserve"><value>Games</value></data>
+  <data name="Settings_Language" xml:space="preserve"><value>Language</value></data>
+  <data name="Settings_Language_En" xml:space="preserve"><value>English</value></data>
+  <data name="Settings_Language_Help" xml:space="preserve"><value>Changes right away, no restart.</value></data>
+  <data name="Settings_Language_PtBr" xml:space="preserve"><value>Português (Brasil)</value></data>
+  <data name="Settings_Note" xml:space="preserve"><value>Your pending changes are not affected.</value></data>
+  <data name="Settings_SaveFailed" xml:space="preserve"><value>Couldn't save the preference. It applies only until you close the app.</value></data>
+  <data name="Settings_Saved" xml:space="preserve"><value>Preference saved</value></data>
+  <data name="Settings_Theme" xml:space="preserve"><value>Theme</value></data>
+  <data name="Settings_Theme_Dark" xml:space="preserve"><value>Dark</value></data>
+  <data name="Settings_Theme_Help" xml:space="preserve"><value>System follows your computer's theme.</value></data>
+  <data name="Settings_Theme_Light" xml:space="preserve"><value>Light</value></data>
+  <data name="Settings_Theme_System" xml:space="preserve"><value>System</value></data>
+  <data name="Settings_Title" xml:space="preserve"><value>Settings</value></data>
+  <data name="Settings_Version" xml:space="preserve"><value>Version {0}</value></data>
+  <data name="Shell_Exit_Confirm" xml:space="preserve"><value>Discard and exit</value></data>
+  <data name="Shell_Exit_Message" xml:space="preserve"><value>Exiting will discard {0}.</value></data>
+  <data name="Shell_Exit_Title" xml:space="preserve"><value>Exit without applying?</value></data>
+  <data name="Shell_HintApply" xml:space="preserve"><value>Apply</value></data>
+  <data name="Shell_HintReview" xml:space="preserve"><value>Review</value></data>
+  <data name="Shell_KeepEditing" xml:space="preserve"><value>Keep editing</value></data>
+  <data name="Shell_Pending_One" xml:space="preserve"><value>1 pending change</value></data>
+  <data name="Shell_Pending_Other" xml:space="preserve"><value>{0} pending changes</value></data>
+  <data name="Shell_Review_Badge" xml:space="preserve"><value>Review ({0})</value></data>
+  <data name="Shell_Review_Badge_Aria" xml:space="preserve"><value>Review pending changes: {0}</value></data>
+  <data name="Shell_SafetyNote" xml:space="preserve"><value>Nothing is saved without review. A backup is created first.</value></data>
+  <data name="Shell_SwitchSave_Confirm" xml:space="preserve"><value>Discard and switch</value></data>
+  <data name="Shell_SwitchSave_Message" xml:space="preserve"><value>Switching saves will discard {0}.</value></data>
+  <data name="Shell_SwitchSave_Title" xml:space="preserve"><value>Switch save?</value></data>
+  <data name="Stat_A11y" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="Stat_Unknown_A11y" xml:space="preserve"><value>{0}: no value</value></data>
+  <data name="Toast_Discarded" xml:space="preserve"><value>Change discarded.</value></data>
+  <data name="Toast_DiscardedMany" xml:space="preserve"><value>Changes discarded.</value></data>
+  <data name="Toast_Undo" xml:space="preserve"><value>Undo</value></data>
+  <data name="Welcome_Browse" xml:space="preserve"><value>Choose folder…</value></data>
+  <data name="Welcome_Continue" xml:space="preserve"><value>Pick up where you left off</value></data>
+  <data name="Welcome_LastSave" xml:space="preserve"><value>{0} · {1} · {2}</value></data>
+  <data name="Welcome_NoProfilesBody" xml:space="preserve"><value>We looked in Documents, in the Euro Truck Simulator 2 and American Truck Simulator folders. If your game is somewhere else, choose the folder manually.</value></data>
+  <data name="Welcome_NoProfilesTitle" xml:space="preserve"><value>No profiles found</value></data>
+  <data name="Welcome_NoSavesBody" xml:space="preserve"><value>Open the game, save once and come back here.</value></data>
+  <data name="Welcome_NoSavesTitle" xml:space="preserve"><value>No saves in this profile</value></data>
+  <data name="Welcome_Open" xml:space="preserve"><value>Open save</value></data>
+  <data name="Welcome_PickHint" xml:space="preserve"><value>Choose a save to continue</value></data>
+  <data name="Welcome_PickedHint" xml:space="preserve"><value>{0} · {1}</value></data>
+  <data name="Welcome_ProfileSaveCount" xml:space="preserve"><value>{0} saves</value></data>
+  <data name="Welcome_Profiles" xml:space="preserve"><value>Profiles</value></data>
+  <data name="Welcome_ReopenLast" xml:space="preserve"><value>Open again</value></data>
+  <data name="Welcome_SavesOf" xml:space="preserve"><value>Saves of {0}</value></data>
+  <data name="Welcome_Searching" xml:space="preserve"><value>Looking for profiles…</value></data>
+  <data name="Welcome_Subtitle" xml:space="preserve"><value>Choose the profile and save you want to edit. Nothing changes until you apply.</value></data>
+  <data name="Welcome_Title" xml:space="preserve"><value>Open a save</value></data>
+</root>

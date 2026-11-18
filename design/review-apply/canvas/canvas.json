@@ -1,0 +1,22 @@
+{
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "Revisar.dc.html": {"expand": "fill", "h": 800, "is_interactive": true, "title": "1 · Revisar mudanças", "w": 1280, "x": 0, "y": 0},
+    "Confirmar.dc.html": {"expand": "fill", "h": 800, "is_interactive": true, "title": "2 · Confirmar gravação", "w": 1280, "x": 1360, "y": 0},
+    "Resultado.dc.html": {"expand": "fill", "h": 800, "is_interactive": true, "title": "3 · Resultado", "w": 1280, "x": 2720, "y": 0},
+    "ErroJogoAberto.dc.html": {"expand": "fill", "h": 800, "is_interactive": true, "title": "4 · Erro ao aplicar (todos os CoreError)", "w": 1280, "x": 0, "y": 900},
+    "Vazio.dc.html": {"expand": "fill", "h": 800, "is_interactive": true, "title": "5 · Nada para revisar", "w": 1280, "x": 1360, "y": 900}
+  },
+  "createdOnFiles": {"at": "2026-11-17T18:00:00Z", "v": 1},
+  "designSystems": [],
+  "launch": {"view": "canvas"},
+  "noteOrder": ["t", "s"],
+  "notes": {
+    "s": {"size": 24, "text": "Rascunho UX-2. Cada tela tem os botões Claro/Escuro e PT/EN. No artboard 4, escolha um CoreError na faixa inferior para ver a mensagem. Dados anonimizados.", "w": 1200, "x": 0, "y": -150},
+    "t": {"kind": "title1", "maxW": 4000, "text": "Own Expeditor — Revisar e aplicar mudanças", "w": 240, "x": 0, "y": -260}
+  },
+  "order": ["Revisar.dc.html", "Confirmar.dc.html", "Resultado.dc.html", "ErroJogoAberto.dc.html", "Vazio.dc.html"],
+  "pages": [],
+  "title": "Own Expeditor — Revisar e aplicar"
+}

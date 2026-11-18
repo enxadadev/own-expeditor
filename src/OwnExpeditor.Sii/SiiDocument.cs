@@ -48,13 +48,36 @@ public sealed class SiiDocument
 
     public SiiUnit? Find(string id) => _byId.GetValueOrDefault(id);
 
-    public IEnumerable<SiiUnit> OfType(string type) => Units.Where(u => u.Type == type);
+    private Dictionary<string, List<SiiUnit>>? _byType;
+    private int _indexedCount = -1;
+
+    /// <summary>Blocos de um tipo, na ordem do arquivo (índice montado no Parse e refeito se Units mudou de tamanho).</summary>
+    public IReadOnlyList<SiiUnit> OfType(string type)
+    {
+        if (_byType is null || _indexedCount != Units.Count)
+        {
+            var index = new Dictionary<string, List<SiiUnit>>(StringComparer.Ordinal);
+            foreach (var u in Units)
+            {
+                if (!index.TryGetValue(u.Type, out var list)) index[u.Type] = list = [];
+                list.Add(u);
+            }
+            _byType = index;
+            _indexedCount = Units.Count;
+        }
+        return _byType.TryGetValue(type, out var found) ? found : [];
+    }
 
     public static SiiDocument Load(string path) => Parse(SiiDecoder.DecodeToText(File.ReadAllBytes(path)));
 
-    public static SiiDocument Parse(string text)
+    public static SiiDocument Parse(string text, IProgress<double>? progress = null)
     {
+        ArgumentNullException.ThrowIfNull(text);
         var doc = new SiiDocument();
+        var total = Math.Max(text.Length, 1);
+        long consumed = 0;
+        var lastPercent = -1;
+        var openedAt = 0;
         using var reader = new StringReader(text.TrimStart('﻿'));
         var lineNo = 0;
         SiiUnit? current = null;
@@ -63,6 +86,12 @@ public sealed class SiiDocument
         while (reader.ReadLine() is { } line)
         {
             lineNo++;
+            consumed += line.Length + 1;
+            if (progress is not null && (int)(consumed * 100 / total) is var pct && pct != lastPercent)
+            {
+                lastPercent = Math.Min(pct, 100);
+                progress.Report(lastPercent / 100.0);
+            }
             var trimmed = line.Trim();
             if (trimmed.Length == 0) continue;
 
@@ -77,6 +106,7 @@ public sealed class SiiDocument
             {
                 if (trimmed is "{" or "}") continue;
                 current = ParseUnitHeader(trimmed, lineNo);
+                openedAt = lineNo;
                 doc.Units.Add(current);
                 doc._byId.TryAdd(current.Id, current);
                 continue;
@@ -102,8 +132,11 @@ public sealed class SiiDocument
             current.Attributes.Add(new SiiAttribute(trimmed[..sep], trimmed[(sep + 2)..]));
         }
 
-        if (!seenHeader) throw new InvalidDataException("Documento SII vazio.");
-        if (current is not null) throw new InvalidDataException($"Bloco '{current.Id}' não foi fechado.");
+        if (!seenHeader) throw new SiiFormatException(SiiErrorKind.Empty, "Documento SII vazio.");
+        if (current is not null)
+            throw new SiiFormatException(SiiErrorKind.Truncated,
+                $"Linha {openedAt}: bloco '{current.Id}' não foi fechado.", line: openedAt);
+        progress?.Report(1.0);
         return doc;
     }
 
@@ -122,19 +155,6 @@ public sealed class SiiDocument
         return sb.ToString();
     }
 
-    /// <summary>Grava em texto puro, criando antes um backup do arquivo existente.</summary>
-    public string? Save(string path)
-    {
-        string? backup = null;
-        if (File.Exists(path))
-        {
-            backup = $"{path}.bak-{DateTime.Now:yyyyMMdd-HHmmss}";
-            File.Copy(path, backup, overwrite: false);
-        }
-        File.WriteAllText(path, ToText(), new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
-        return backup;
-    }
-
     private static SiiUnit ParseUnitHeader(string line, int lineNo)
     {
         // "tipo : id {"
@@ -145,5 +165,6 @@ public sealed class SiiDocument
         return new SiiUnit(parts[0], parts[1]);
     }
 
-    private static InvalidDataException Error(int line, string msg) => new($"Linha {line}: {msg}.");
+    private static SiiFormatException Error(int line, string msg) =>
+        new(SiiErrorKind.Syntax, $"Linha {line}: {msg}.", line: line);
 }

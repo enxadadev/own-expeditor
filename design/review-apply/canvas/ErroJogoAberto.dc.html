@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Erro ao aplicar</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&amp;family=Barlow+Condensed:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#f5a524}a:hover{color:#ffc35c}
+button{font:inherit;cursor:pointer}
+@keyframes oe-spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion: reduce){*{animation-duration:0.01ms !important}}
+</style>
+</helmet>
+<div style="position: relative; width: 1280px; height: 800px; overflow: hidden; display: flex; background: {{t.bg}}; color: {{t.text}}; font-family: Barlow, system-ui, sans-serif; font-size: 14px;">
+  <nav aria-label="{{navLabel}}" style="flex: 0 0 76px; box-sizing: border-box; padding: 16px 0; display: flex; flex-direction: column; align-items: center; gap: 6px; background: {{t.side}}; border-right: 1px solid {{t.line}};">
+    <div style="width: 40px; height: 40px; border-radius: 10px; background: {{t.accent}}; display: flex; align-items: center; justify-content: center; margin-bottom: 14px;">
+      <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1a1206" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h11v9H3z"/><path d="M14 10h4l3 3v3h-7"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>
+    </div>
+    <sc-for list="{{nav}}" as="n" hint-placeholder-count="5">
+      <button type="button" aria-label="{{n.label}}" style="{{n.style}}">
+        <span style="width: 18px; height: 3px; border-radius: 2px; background: {{n.bar}};"></span>
+        <span style="font-family: 'Barlow Condensed', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.06em;">{{n.short}}</span>
+      </button>
+    </sc-for>
+    <div style="flex-grow: 1;"></div>
+    <button type="button" onClick="{{toggle}}" aria-label="{{themeLabel}}" style="width: 48px; height: 48px; border-radius: 10px; border: 1px solid {{t.line}}; background: transparent; color: {{t.muted}}; display: flex; align-items: center; justify-content: center;">
+      <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
+    <button type="button" onClick="{{langToggle}}" aria-label="{{langLabel}}" style="width: 48px; height: 44px; border-radius: 10px; border: 1px solid {{t.line}}; background: transparent; color: {{t.muted}}; font-family: 'Barlow Condensed', sans-serif; font-weight: 600;">{{langShort}}</button>
+  </nav>
+  <div style="flex: 1 1 0; min-width: 0; display: flex; flex-direction: column;">
+    <header aria-label="{{sessionLabel}}" style="flex: 0 0 56px; box-sizing: border-box; padding: 0 32px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid {{t.line}};">
+      <span style="font-size: 12px; color: {{t.muted}}; text-transform: uppercase; letter-spacing: 0.08em;">{{profileSave}}</span>
+      <span style="padding: 2px 8px; border-radius: 8px; border: 1px solid {{t.line}}; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 13px; letter-spacing: 0.06em; color: {{t.muted}};">ETS2</span>
+      <div style="flex-grow: 1;"></div>
+      <button type="button" aria-label="{{pendAria}}" style="{{pendStyle}}">{{pendLabel}}</button>
+    </header>
+    <div style="flex: 1 1 0; min-height: 0; position: relative;">
+
+<div aria-hidden="true" style="position: absolute; inset: 0; box-sizing: border-box; padding: 20px 32px 24px; display: flex; flex-direction: column; gap: 16px;">
+  <div style="display: flex; flex-direction: column; gap: 2px;">
+    <span style="font-family: 'Barlow Condensed', sans-serif; font-size: 26px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em;">{{x.bgTitle}}</span>
+    <span style="color: {{t.muted}};">{{x.bgSub}}</span>
+  </div>
+  <div style="flex: 1 1 0; display: flex; gap: 24px;">
+    <div style="flex: 1 1 0; display: flex; flex-direction: column; gap: 14px;">
+      <div style="height: 150px; border-radius: 12px; background: {{t.panel}}; border: 1px solid {{t.line}};"></div>
+      <div style="height: 110px; border-radius: 12px; background: {{t.panel}}; border: 1px solid {{t.line}};"></div>
+      <div style="height: 70px; border-radius: 12px; background: {{t.panel}}; border: 1px solid {{t.line}};"></div>
+    </div>
+    <div style="flex: 0 0 300px; display: flex; flex-direction: column; gap: 12px;">
+      <div style="height: 80px; border-radius: 12px; background: {{t.panel}}; border: 1px solid {{t.line}};"></div>
+      <div style="height: 120px; border-radius: 12px; background: {{t.panel}}; border: 1px solid {{t.line}};"></div>
+      <div style="flex-grow: 1;"></div>
+      <div style="height: 52px; border-radius: 10px; background: {{t.danger}}; opacity: 0.6;"></div>
+    </div>
+  </div>
+</div>
+
+    </div>
+  </div>
+  <div style="position: absolute; inset: 0 0 96px 0; background: {{t.dim}}; display: flex; align-items: center; justify-content: center;">
+    <div role="alertdialog" aria-modal="true" aria-labelledby="err-title" aria-describedby="err-msg" style="width: 560px; box-sizing: border-box; padding: 28px; border-radius: 16px; background: {{t.panel}}; border: 1px solid {{t.line}}; box-shadow: {{t.shadow}}; display: flex; flex-direction: column; gap: 14px;">
+      <div style="display: flex; align-items: center; gap: 14px;">
+        <div style="flex: 0 0 auto; width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: {{t.dangerBg}}; border: 1.5px solid {{t.danger}}; color: {{t.danger}};"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="9.5"/><path d="M12 7v6M12 16.6v.1"/></svg></div>
+        <h2 id="err-title" style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-size: 26px; font-weight: 700; line-height: 1.1; text-transform: uppercase; letter-spacing: 0.03em;">{{errTitle}}</h2>
+      </div>
+      <span id="err-msg" style="font-size: 15px; line-height: 1.5;">{{errMsg}}</span>
+      <div style="{{okStyle}}"><span style="color: {{t.success}}; flex: 0 0 auto;"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg></span><span>{{x.nothingWritten}}</span></div>
+      <div style="{{pendStyle}}"><span>{{pendText}}</span></div>
+      <div style="display: flex; align-items: center; gap: 8px; padding-top: 4px; border-top: 1px solid {{t.line}}; font-size: 12px; color: {{t.muted}};">
+        <span style="text-transform: uppercase; letter-spacing: 0.08em;">{{x.details}}</span>
+        <span style="font-family: ui-monospace, Consolas, monospace;">{{code}}</span>
+      </div>
+      <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 4px;">
+        <button type="button" style="{{secStyle}}">{{secLabel}}</button>
+        <button type="button" style="{{priStyle}}">{{priLabel}}</button>
+      </div>
+    </div>
+  </div>
+  <div style="position: absolute; left: 0; right: 0; bottom: 0; height: 96px; box-sizing: border-box; padding: 10px 24px; background: {{t.side}}; border-top: 1px solid {{t.line}}; display: flex; flex-direction: column; gap: 6px;">
+    <span style="font-size: 11px; color: {{t.muted}}; text-transform: uppercase; letter-spacing: 0.08em;">{{x.preview}}</span>
+    <div style="display: flex; flex-wrap: wrap; gap: 4px 6px;">
+      <sc-for list="{{chips}}" as="c" hint-placeholder-count="20">
+        <button type="button" onClick="{{c.pick}}" aria-pressed="{{c.pressed}}" style="{{c.style}}">{{c.name}}</button>
+      </sc-for>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":true},"en":{"editor":"boolean","default":false},"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+
+  pal(dark) {
+    return dark
+      ? { bg:'#121417', side:'#0c0e10', panel:'#1a1d21', line:'#2a2f35', text:'#eef0f2', muted:'#9aa3ad', accent:'#f5a524', sel:'#2a2414',
+          danger:'#f87171', onDanger:'#1a0606', dangerBg:'rgba(248,113,113,0.12)', success:'#4ade80', successBg:'rgba(74,222,128,0.12)',
+          dim:'rgba(0,0,0,0.62)', shadow:'0 24px 64px rgba(0,0,0,0.55)' }
+      : { bg:'#f4f2ee', side:'#ebe7df', panel:'#ffffff', line:'#d9d3c7', text:'#1b1d20', muted:'#5f6670', accent:'#b86e00', sel:'#fbecd2',
+          danger:'#b42318', onDanger:'#ffffff', dangerBg:'rgba(180,35,24,0.08)', success:'#157f3b', successBg:'rgba(21,127,59,0.10)',
+          dim:'rgba(27,29,32,0.50)', shadow:'0 24px 64px rgba(27,29,32,0.28)' };
+  }
+  base(t) { return `display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 22px;border-radius:10px;font-weight:700;letter-spacing:0.03em;`; }
+  bPrimary(t) { return this.base(t) + `border:none;background:${t.accent};color:#1a1206;`; }
+  bDanger(t)  { return this.base(t) + `border:none;background:${t.danger};color:${t.onDanger};`; }
+  bOutline(t) { return this.base(t) + `border:1px solid ${t.line};background:transparent;color:${t.text};font-weight:600;`; }
+  bGhost(t, danger) { return `display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 14px;border-radius:10px;border:1px solid transparent;background:transparent;font-weight:600;color:${danger ? t.danger : t.muted};`; }
+  plural(lang, n, one, many) { return n === 1 ? one : many.replace('{0}', n); }
+  cultura(lang) { return lang === 'pt' ? 'pt-BR' : 'en-US'; }
+  // Lateral + barra de sessão simplificadas (o desenho oficial é do UX-1, design/shell/).
+  shell(t, lang, dark, navSel, pendCount, pendMode) {
+    const sh = lang === 'pt'
+      ? { navLabel:'Módulos', nav:['Fretes','Frota','Perfil','Empresa','Mapa'], short:['FRETES','FROTA','PERFIL','EMPRESA','MAPA'], session:'Sessão', profile:'Perfil 1 · Save 4',
+          themeLight:'Usar tema claro', themeDark:'Usar tema escuro', langShort:'PT', langLabel:'Idioma: português. Mudar para inglês', review:'Revisar',
+          pendAria:(n) => n > 0 ? `Revisar mudanças pendentes: ${n}` : 'Revisar mudanças: nenhuma pendente' }
+      : { navLabel:'Modules', nav:['Jobs','Fleet','Profile','Company','Map'], short:['JOBS','FLEET','PROFILE','COMPANY','MAP'], session:'Session', profile:'Profile 1 · Save 4',
+          themeLight:'Use light theme', themeDark:'Use dark theme', langShort:'EN', langLabel:'Language: English. Switch to Portuguese', review:'Review',
+          pendAria:(n) => n > 0 ? `Review pending changes: ${n}` : 'Review changes: none pending' };
+    const nav = sh.nav.map((l, i) => ({ label:l, short:sh.short[i], bar: i === navSel ? t.accent : 'transparent',
+      style:`width:60px;min-height:52px;border-radius:10px;border:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:${i===navSel?t.panel:'transparent'};color:${i===navSel?t.text:t.muted};` }));
+    const cur = pendMode === 'current';
+    const pendStyle = `min-height:44px;padding:0 16px;border-radius:10px;font-weight:600;border:1px solid ${cur ? t.accent : t.line};background:${cur ? t.sel : 'transparent'};color:${pendCount > 0 ? t.text : t.muted};`;
+    return { nav, navLabel: sh.navLabel, sessionLabel: sh.session, profileSave: sh.profile, themeLabel: dark ? sh.themeLight : sh.themeDark,
+      langShort: sh.langShort, langLabel: sh.langLabel, pendStyle, pendAria: sh.pendAria(pendCount),
+      pendLabel: pendCount > 0 ? `${sh.review} (${pendCount})` : sh.review,
+      toggle: () => this.setState({ dark: !dark }), langToggle: () => this.setState({ lang: lang === 'pt' ? 'en' : 'pt' }) };
+  }
+
+  constructor(p) { super(p); this.state = { dark: null, lang: null, sel: 'GameRunning' }; }
+  renderVals() {
+    const dark = this.state.dark ?? (this.props.dark ?? true);
+    const lang = this.state.lang ?? (this.props.en ? 'en' : 'pt');
+    const t = this.pal(dark);
+    const sel = this.state.sel;
+    // [código, contexto (open|apply|edit), ação primária, ação secundária, mudanças pendentes (kept|lost|na)]
+    const E = [
+      ['SaveNotFound','open','choose',null,'na'], ['SaveParseFailed','open','choose',null,'na'], ['SaveCorrupt','open','choose',null,'na'],
+      ['NoSession','open','choose',null,'na'], ['SessionBusy','apply','retry','back','kept'], ['ReadOnlySession','apply','close',null,'kept'],
+      ['Conflict','edit','review','close','kept'], ['InvalidEdit','edit','review','close','kept'], ['StalePatch','apply','back','reopen','kept'], ['UnknownUnit','apply','back','reopen','kept'],
+      ['UnknownAttribute','apply','back','reopen','kept'], ['NothingToApply','apply','close',null,'na'], ['GameRunning','apply','retryGame','back','kept'],
+      ['SaveChangedOnDisk','apply','reopen',null,'lost'], ['BackupExists','apply','retry',null,'kept'], ['BackupFailed','apply','retry','back','kept'],
+      ['WriteFailed','apply','retry','back','kept'], ['VerifyFailed','apply','retry','back','kept'], ['AccessDenied','apply','retry','folder','kept'],
+      ['SlotUnavailable','apply','retry','back','kept']
+    ];
+    const M = {
+      pt: {
+        SaveNotFound:'Não encontramos o arquivo do save. Ele pode ter sido movido, renomeado ou apagado. Volte à lista de saves e escolha outro.',
+        SaveParseFailed:'Não foi possível entender este save: o conteúdo não foi reconhecido. Pode ser de uma versão do jogo mais nova, de um mod incomum ou um arquivo danificado. Tente outro save do mesmo perfil ou, se continuar, relate o problema.',
+        SaveCorrupt:'O arquivo do save parece danificado e não foi possível lê-lo. Escolha outro save ou restaure um backup (game.sii.bak-…).',
+        NoSession:'Nenhum save está aberto. Escolha um perfil e um save para começar.',
+        SessionBusy:'O save ainda está sendo lido ou gravado. Espere alguns segundos e tente de novo.',
+        ReadOnlySession:'Este save está aberto só para visualização, então não dá para gravar. Abra o save de novo pelo seletor de saves.',
+        Conflict:'Esta mudança altera algo que outra mudança pendente já alterou. Abra a revisão, descarte uma das duas e refaça a edição.',
+        InvalidEdit:'Esta mudança não é válida para este save. Descarte-a, ajuste a escolha e tente de novo.',
+        StalePatch:'Os dados desta mudança ficaram desatualizados. Volte à revisão, descarte a mudança e refaça a edição. Se continuar, abra o save de novo.',
+        UnknownUnit:'Não encontramos no save o item que você quis alterar. Ele pode ter sido removido. Volte à revisão, descarte a mudança e escolha o item de novo.',
+        UnknownAttribute:'Este save não tem o campo que o app tentou alterar. Isso costuma acontecer com saves de mods ou de outra versão do jogo. Descarte a mudança, tente outro item ou atualize o app.',
+        NothingToApply:'Não há mudanças para gravar. Faça uma edição em um módulo e volte para revisar.',
+        GameRunning:'O jogo está aberto, e ele sobrescreveria o save ao salvar ou sair. Feche o jogo e tente de novo.',
+        SaveChangedOnDisk:'O arquivo do save mudou depois que você o abriu (por exemplo, o jogo salvou). Para não perder progresso, o app não gravou. Abra o save de novo e refaça as mudanças.',
+        BackupExists:'Já existe um backup com este mesmo horário, e o app não sobrescreve backups. Espere um segundo e tente de novo.',
+        BackupFailed:'Não foi possível criar o backup, então o app não gravou. Verifique o espaço livre e as permissões da pasta do save e tente de novo.',
+        WriteFailed:'Não foi possível gravar o arquivo. Veja se outro programa (como antivírus ou backup na nuvem) está usando a pasta do save e tente de novo.',
+        VerifyFailed:'O arquivo gravado não passou na verificação, então o save original foi mantido. Tente de novo; se repetir, abra o save de novo e refaça as mudanças.',
+        AccessDenied:'O sistema negou o acesso à pasta do save. Veja se a pasta não é somente leitura nem está protegida (por exemplo, por antivírus ou nuvem) e tente de novo.',
+        SlotUnavailable:'Não foi possível criar um novo save: o perfil não tem slot livre ou a pasta não pôde ser criada. Volte à revisão e grave com “Sobrescrever este save”, ou apague um save antigo no jogo.' },
+      en: {
+        SaveNotFound:'We couldn’t find the save file. It may have been moved, renamed or deleted. Go back to the save list and pick another one.',
+        SaveParseFailed:'Couldn’t understand this save: its content wasn’t recognized. It may come from a newer game version, an unusual mod or a damaged file. Try another save from the same profile or, if it keeps happening, report the problem.',
+        SaveCorrupt:'The save file looks damaged and couldn’t be read. Pick another save or restore a backup (game.sii.bak-…).',
+        NoSession:'No save is open. Choose a profile and a save to get started.',
+        SessionBusy:'The save is still being read or written. Wait a few seconds and try again.',
+        ReadOnlySession:'This save is open for viewing only, so it can’t be written. Open the save again from the save picker.',
+        Conflict:'This change edits something another pending change already edited. Open the review, discard one of the two and redo the edit.',
+        InvalidEdit:'This change isn’t valid for this save. Discard it, adjust your choice and try again.',
+        StalePatch:'The data behind this change is out of date. Go back to the review, discard the change and redo the edit. If it keeps happening, open the save again.',
+        UnknownUnit:'We couldn’t find the item you wanted to change in the save. It may have been removed. Go back to the review, discard the change and pick the item again.',
+        UnknownAttribute:'This save doesn’t have the field the app tried to change. This usually happens with saves from mods or another game version. Discard the change, try another item or update the app.',
+        NothingToApply:'There are no changes to write. Make an edit in a module and come back to review.',
+        GameRunning:'The game is running, and it would overwrite the save when it saves or exits. Close the game and try again.',
+        SaveChangedOnDisk:'The save file changed after you opened it (for example, the game saved). To avoid losing progress, the app didn’t write. Open the save again and redo your changes.',
+        BackupExists:'A backup with this same time already exists, and the app never overwrites backups. Wait a second and try again.',
+        BackupFailed:'The backup couldn’t be created, so the app didn’t write. Check the free space and permissions of the save folder and try again.',
+        WriteFailed:'The file couldn’t be written. Check whether another program (such as antivirus or cloud backup) is using the save folder and try again.',
+        VerifyFailed:'The written file didn’t pass verification, so the original save was kept. Try again; if it repeats, open the save again and redo your changes.',
+        AccessDenied:'The system denied access to the save folder. Check that the folder isn’t read-only or protected (for example by antivirus or cloud sync) and try again.',
+        SlotUnavailable:'Couldn’t create a new save: the profile has no free slot or the folder couldn’t be created. Go back to the review and write with “Overwrite this save”, or delete an old save in the game.' }
+    }[lang];
+    const X = {
+      pt: { titles:{ open:'Não foi possível abrir o save', apply:'Não foi possível gravar', edit:'Não foi possível adicionar a mudança' },
+        nothingWritten:'Nada foi gravado. Seu save continua como estava.', kept:'Suas mudanças pendentes continuam aqui.', lost:'As mudanças pendentes serão descartadas.',
+        bgTitle:'Revisar mudanças', bgSub:'3 mudanças em 2 módulos', details:'Detalhes', preview:'Prévia (só no desenho): escolha um erro para ver a mensagem',
+        a:{ retry:'Tentar de novo', retryGame:'Já fechei, tentar de novo', back:'Voltar à revisão', reopen:'Abrir o save de novo', choose:'Escolher outro save', folder:'Abrir pasta', close:'Fechar', review:'Abrir revisão' } },
+      en: { titles:{ open:'Couldn’t open the save', apply:'Couldn’t write the save', edit:'Couldn’t add the change' },
+        nothingWritten:'Nothing was written. Your save is as it was.', kept:'Your pending changes are still here.', lost:'Pending changes will be discarded.',
+        bgTitle:'Review changes', bgSub:'3 changes in 2 modules', details:'Details', preview:'Preview (design only): pick an error to see its message',
+        a:{ retry:'Try again', retryGame:'I closed it, try again', back:'Back to review', reopen:'Open the save again', choose:'Choose another save', folder:'Open folder', close:'Close', review:'Open review' } }
+    }[lang];
+    const cur = E.find(e => e[0] === sel) || E[0];
+    const [code, ctx, pri, sec, pend] = cur;
+    const chips = E.map(e => ({ name: e[0], pressed: e[0] === sel ? 'true' : 'false', pick: () => this.setState({ sel: e[0] }),
+      style:`min-height:26px;padding:0 10px;border-radius:13px;font-size:12px;font-family:ui-monospace,Consolas,monospace;border:1px solid ${e[0]===sel?t.accent:t.line};background:${e[0]===sel?t.sel:'transparent'};color:${e[0]===sel?t.text:t.muted};` }));
+    const showOk = ctx !== 'edit' && code !== 'NothingToApply' && code !== 'SessionBusy' && code !== 'NoSession';
+    return {
+      ...this.shell(t, lang, dark, -1, 3, 'current'),
+      t, x: X, chips, code,
+      errTitle: X.titles[ctx], errMsg: M[code],
+      okStyle: `display:${showOk ? 'flex' : 'none'};align-items:center;gap:10px;color:${t.muted};`,
+      pendStyle: `display:${pend === 'na' ? 'none' : 'flex'};color:${pend === 'lost' ? t.danger : t.muted};font-weight:${pend === 'lost' ? 600 : 400};`,
+      pendText: pend === 'lost' ? X.lost : X.kept,
+      priLabel: X.a[pri], secLabel: sec ? X.a[sec] : '',
+      priStyle: this.bPrimary(t) + `outline:2px solid ${t.accent};outline-offset:2px;`,
+      secStyle: sec ? this.bOutline(t) : 'display:none;'
+    };
+  }
+}
+</script>
+</body>
+</html>

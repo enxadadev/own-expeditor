@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:OwnExpeditor.App.Controls"
+             x:Class="OwnExpeditor.App.Controls.StepBadge"
+             x:Name="Root" x:DataType="c:StepBadge" Width="18" Height="18" HorizontalAlignment="Left" VerticalAlignment="Center"
+             AutomationProperties.AccessibilityView="Raw">
+  <UserControl.Styles>
+    <Style Selector="Border#Ring"><Setter Property="BorderBrush" Value="{DynamicResource BorderStrongBrush}" /></Style>
+    <Style Selector="Border#Ring.done"><Setter Property="BorderBrush" Value="{DynamicResource AccentTextBrush}" /></Style>
+    <Style Selector="Border#Ring TextBlock"><Setter Property="Foreground" Value="{DynamicResource TextMutedBrush}" /></Style>
+    <Style Selector="Border#Ring.done TextBlock"><Setter Property="Foreground" Value="{DynamicResource AccentTextBrush}" /></Style>
+  </UserControl.Styles>
+  <Border x:Name="Ring" Classes.done="{Binding #Root.IsDone}" BorderThickness="1.5" CornerRadius="{StaticResource RadiusPill}">
+    <TextBlock FontFamily="{StaticResource FontDisplay}" FontSize="11" FontWeight="Bold" FontFeatures="+tnum" HorizontalAlignment="Center"
+               VerticalAlignment="Center" Text="{Binding #Root.Number}" />
+  </Border>
+</UserControl>

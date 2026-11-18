@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:OwnExpeditor.App.ViewModels"
+             xmlns:v="using:OwnExpeditor.App.Views"
+             xmlns:loc="using:OwnExpeditor.App.Markup"
+             x:Class="OwnExpeditor.App.Views.WelcomeView"
+             x:DataType="vm:WelcomeViewModel">
+  <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+    <StackPanel MaxWidth="960" Margin="32,28" Spacing="20" HorizontalAlignment="Stretch">
+      <StackPanel Spacing="6">
+        <TextBlock Classes="hero" Text="{Binding TitleUpper}" />
+        <TextBlock Classes="body muted" Text="{loc:Tr Welcome_Subtitle}" TextWrapping="Wrap" />
+      </StackPanel>
+
+      <!-- Continuar de onde parou: só oferece, nunca abre sozinho -->
+      <Border Classes="panel" IsVisible="{Binding HasLastSave}">
+        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
+          <StackPanel Grid.Column="0" Spacing="2" VerticalAlignment="Center" MinWidth="0">
+            <TextBlock Classes="caption" Text="{Binding ContinueLabel}" />
+            <TextBlock Classes="subtitle trim" Text="{Binding LastSaveText}" ToolTip.Tip="{Binding LastSaveText}" />
+          </StackPanel>
+          <Button Grid.Column="1" Classes="accent large" Content="{loc:Tr Welcome_ReopenLast}" Command="{Binding ReopenLastCommand}" />
+        </Grid>
+      </Border>
+
+      <v:SavePickerView DataContext="{Binding Picker}" x:Name="Picker" />
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

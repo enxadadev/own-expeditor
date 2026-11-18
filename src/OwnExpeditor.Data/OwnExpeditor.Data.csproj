@@ -1,6 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <InternalsVisibleTo Include="OwnExpeditor.Data.Tests" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\OwnExpeditor.Domain\OwnExpeditor.Domain.csproj" />
     <ProjectReference Include="..\OwnExpeditor.Sii\OwnExpeditor.Sii.csproj" />
   </ItemGroup>

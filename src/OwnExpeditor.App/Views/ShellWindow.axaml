@@ -1,0 +1,12 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:OwnExpeditor.App.ViewModels"
+        xmlns:v="using:OwnExpeditor.App.Views"
+        x:Class="OwnExpeditor.App.Views.ShellWindow"
+        x:DataType="vm:ShellViewModel"
+        Width="1280" Height="800" MinWidth="960" MinHeight="600"
+        WindowStartupLocation="CenterScreen"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="Own Expeditor">
+  <v:ShellView />
+</Window>

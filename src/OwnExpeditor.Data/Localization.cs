@@ -136,10 +136,6 @@ public sealed class Localization
         return Encoding.UTF8.GetString(bytes.ToArray());
     }
 
-    /// <summary>Nome legível a partir de um id ("plumb_suppl" → "Plumb suppl").</summary>
-    public static string Humanize(string id)
-    {
-        var s = id.Replace('_', ' ').Trim();
-        return s.Length == 0 ? id : char.ToUpperInvariant(s[0]) + s[1..];
-    }
+    /// <summary>Nome legível a partir de um id. Delega a <see cref="Domain.Games.GameIds.Humanize"/>.</summary>
+    public static string Humanize(string id) => Domain.Games.GameIds.Humanize(id);
 }

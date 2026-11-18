@@ -2,14 +2,30 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="OwnExpeditor.App.App"
              xmlns:local="using:OwnExpeditor.App"
+             xmlns:shell="using:OwnExpeditor.App.Shell"
              RequestedThemeVariant="Default">
              <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
 
     <Application.DataTemplates>
+        <shell:ViewRegistry />
         <local:ViewLocator />
     </Application.DataTemplates>
 
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="/Styles/Colors.axaml" />
+                <ResourceInclude Source="/Styles/Tokens.axaml" />
+                <ResourceInclude Source="/Styles/Icons.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+
     <Application.Styles>
         <FluentTheme />
+        <StyleInclude Source="/Styles/Typography.axaml" />
+        <StyleInclude Source="/Styles/Buttons.axaml" />
+        <StyleInclude Source="/Styles/Controls.axaml" />
+        <StyleInclude Source="/Styles/Shell.axaml" />
     </Application.Styles>
 </Application>

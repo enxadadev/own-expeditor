@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- GERADO por toolkit/gen-resx.py a partir de design/*/strings.md. Não edite à mão. -->
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Gallery_HitAreas" xml:space="preserve"><value>Áreas de clique</value></data>
+  <data name="Gallery_Language" xml:space="preserve"><value>Idioma</value></data>
+  <data name="Gallery_LongTexts" xml:space="preserve"><value>Textos longos</value></data>
+  <data name="Gallery_State_Disabled" xml:space="preserve"><value>disabled</value></data>
+  <data name="Gallery_State_Empty" xml:space="preserve"><value>vazio</value></data>
+  <data name="Gallery_State_Error" xml:space="preserve"><value>erro</value></data>
+  <data name="Gallery_State_Focus" xml:space="preserve"><value>focus-visible</value></data>
+  <data name="Gallery_State_Hover" xml:space="preserve"><value>hover</value></data>
+  <data name="Gallery_State_Loading" xml:space="preserve"><value>carregando</value></data>
+  <data name="Gallery_State_LongText" xml:space="preserve"><value>texto longo</value></data>
+  <data name="Gallery_State_Normal" xml:space="preserve"><value>normal</value></data>
+  <data name="Gallery_State_Pressed" xml:space="preserve"><value>pressed</value></data>
+  <data name="Gallery_State_Selected" xml:space="preserve"><value>selecionado</value></data>
+  <data name="Gallery_Theme_Both" xml:space="preserve"><value>Lado a lado</value></data>
+  <data name="Gallery_Theme_Dark" xml:space="preserve"><value>Escuro</value></data>
+  <data name="Gallery_Theme_Light" xml:space="preserve"><value>Claro</value></data>
+  <data name="Gallery_Title" xml:space="preserve"><value>Galeria de controles</value></data>
+</root>

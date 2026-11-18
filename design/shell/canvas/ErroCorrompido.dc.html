@@ -1,0 +1,494 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Shell · Erro save corrompido</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&amp;family=Barlow+Condensed:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+button{font:inherit;cursor:pointer}
+button[aria-disabled="true"]{cursor:default}
+button:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+</style>
+</helmet>
+<div style="--accent: {{t.accent}}; display: flex; flex-direction: column; width: 100%; min-height: 800px; box-sizing: border-box; background: {{t.bg}}; color: {{t.text}}; font-family: Barlow, system-ui, sans-serif; font-size: 14px;">
+  <div style="display: flex; height: 768px; min-height: 0;">
+    <nav aria-label="{{tx.Nav_Label}}" style="flex: 0 0 76px; box-sizing: border-box; padding: 16px 0; display: flex; flex-direction: column; align-items: center; gap: 6px; background: {{t.side}}; border-right: 1px solid {{t.line}};">
+      <div aria-hidden="true" style="width: 40px; height: 40px; border-radius: 10px; background: {{t.accent}}; display: flex; align-items: center; justify-content: center; margin-bottom: 14px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1a1206" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h11v9H3z"/><path d="M14 10h4l3 3v3h-7"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>
+      </div>
+      <sc-for list="{{nav}}" as="n" hint-placeholder-count="5">
+      <button type="button" aria-label="{{n.label}}" aria-current="{{n.current}}" aria-disabled="{{n.disabled}}" tabindex="{{n.tab}}" title="{{n.tip}}" style="{{n.style}}">
+        <span style="width: 18px; height: 3px; border-radius: 2px; background: {{n.bar}};"></span>
+        <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="{{n.icon}}"/></svg>
+        <span style="font-family: 'Barlow Condensed', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.06em;">{{n.short}}</span>
+      </button>
+      </sc-for>
+      <div style="flex-grow: 1;"></div>
+      <sc-for list="{{navBottom}}" as="n" hint-placeholder-count="1">
+      <button type="button" aria-label="{{n.label}}" aria-current="{{n.current}}" aria-disabled="{{n.disabled}}" tabindex="{{n.tab}}" title="{{n.tip}}" style="{{n.style}}">
+        <span style="width: 18px; height: 3px; border-radius: 2px; background: {{n.bar}};"></span>
+        <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="{{n.icon}}"/></svg>
+        <span style="font-family: 'Barlow Condensed', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.06em;">{{n.short}}</span>
+      </button>
+      </sc-for>
+    </nav>
+    <div style="flex: 1 1 0; min-width: 0; display: flex; flex-direction: column;">
+      <header aria-label="{{tx.SessionBar_Label}}" style="flex: 0 0 60px; box-sizing: border-box; padding: 0 20px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid {{t.line}};">
+        <span style="display: {{bar.noSessD}}; color: {{t.muted}};">{{tx.SessionBar_NoSession}}</span>
+        <div style="display: {{bar.chipsD}}; align-items: center; gap: 8px; min-width: 0;">
+          <button type="button" title="{{tx.SessionBar_ChangeHint}}" aria-label="{{bar.profileAria}}" style="{{bar.chipStyle}}">
+            <span style="display: flex; flex-direction: column; align-items: flex-start; min-width: 0;">
+              <span style="font-size: 10px; line-height: 12px; color: {{t.muted}}; text-transform: uppercase; letter-spacing: 0.08em;">{{tx.SessionBar_Profile}}</span>
+              <span style="font-weight: 600; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{bar.profile}}</span>
+            </span>
+            <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="{{t.muted}}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <button type="button" title="{{tx.SessionBar_ChangeHint}}" aria-label="{{bar.saveAria}}" style="{{bar.chipStyle}}">
+            <span style="display: flex; flex-direction: column; align-items: flex-start; min-width: 0;">
+              <span style="font-size: 10px; line-height: 12px; color: {{t.muted}}; text-transform: uppercase; letter-spacing: 0.08em;">{{tx.SessionBar_Save}}</span>
+              <span style="font-weight: 600; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{bar.save}}</span>
+            </span>
+            <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="{{t.muted}}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <span title="{{bar.gameName}}" aria-label="{{bar.gameName}}" role="img" style="padding: 3px 9px; border-radius: 999px; border: 1px solid {{t.line}}; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; letter-spacing: 0.06em; font-size: 13px; color: {{t.text}};">{{bar.game}}</span>
+          <span title="{{bar.statusTip}}" style="display: {{bar.statusD}}; align-items: center; gap: 6px; color: {{t.muted}}; font-size: 13px; white-space: nowrap;">
+            <span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: {{bar.statusDot}};"></span>{{bar.status}}
+          </span>
+        </div>
+        <div style="flex-grow: 1;"></div>
+        <button type="button" title="{{tx.SessionBar_ReviewHint}}" aria-label="{{bar.reviewAria}}" aria-current="{{bar.reviewCurrent}}" aria-disabled="{{bar.reviewDisabled}}" tabindex="{{bar.reviewTab}}" style="{{bar.reviewStyle}}">{{bar.reviewLabel}}</button>
+      </header>
+      <main aria-label="{{main.label}}" style="flex: 1 1 0; min-height: 0; overflow: auto; display: flex; flex-direction: column;">
+        <div style="width: 100%; box-sizing: border-box; padding: 28px 40px; display: flex; flex-direction: column; align-items: center;">
+          <section role="alert" style="width: 100%; max-width: 780px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px;">
+            <div style="display: flex; align-items: flex-start; gap: 16px;">
+              <span aria-hidden="true" style="flex: 0 0 44px; width: 44px; height: 44px; border-radius: 12px; background: {{t.dangerBg}}; border: 1px solid {{t.danger}}; display: flex; align-items: center; justify-content: center;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="{{t.danger}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 20h20z"/><path d="M12 10v4"/><path d="M12 17.2v.01"/></svg>
+              </span>
+              <div style="display: flex; flex-direction: column; gap: 6px;">
+                <h1 tabindex="-1" style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-size: 30px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em;">{{v.title}}</h1>
+                <p style="margin: 0; max-width: 620px; line-height: 1.45; color: {{t.muted}};">{{v.body}}</p>
+              </div>
+            </div>
+            <ul style="margin: 0; padding: 0 0 0 20px; display: {{v.tipsD}}; flex-direction: column; gap: 6px; line-height: 1.45;">
+              <li>{{tx.OpenError_Corrupt_Tip1}}</li>
+              <li>{{tx.OpenError_Corrupt_Tip2}}</li>
+            </ul>
+            <div style="display: flex; flex-direction: column; gap: 8px; align-items: flex-start;">
+              <button type="button" onClick="{{toggleDetails}}" aria-expanded="{{v.expanded}}" style="min-height: 44px; padding: 0 4px; border: none; background: transparent; color: {{t.muted}}; font-weight: 600; display: flex; align-items: center; gap: 6px;">
+                <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="transform: {{v.chev}};"><path d="M9 6l6 6-6 6"/></svg>{{tx.OpenError_Details}}
+              </button>
+              <code style="display: {{v.detailsD}}; padding: 10px 14px; border-radius: 10px; border: 1px solid {{t.line}}; background: {{t.map}}; font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace; font-size: 13px; color: {{t.muted}}; font-variant-numeric: tabular-nums;">{{v.details}}</code>
+            </div>
+            <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px;">
+              <button type="button" style="{{v.primary}}">{{tx.OpenError_ChooseAnother}}</button>
+              <button type="button" style="{{v.secondary}}">{{tx.OpenError_Retry}}</button>
+            </div>
+          </section>
+        </div>
+      </main>
+      <footer style="flex: 0 0 36px; box-sizing: border-box; padding: 0 20px; display: flex; align-items: center; gap: 16px; border-top: 1px solid {{t.line}}; font-size: 12px; color: {{t.muted}};">
+        <span>{{tx.Shell_SafetyNote}}</span>
+        <div style="flex-grow: 1;"></div>
+        <span style="display: {{foot.hintsD}}; align-items: center; gap: 6px; white-space: nowrap;">
+          <span style="{{foot.kbd}}">Ctrl+R</span> {{tx.Shell_HintReview}}
+          <span style="display: {{foot.applyD}}; align-items: center; gap: 6px; margin-left: 10px;"><span style="{{foot.kbd}}">Ctrl+Enter</span> {{tx.Shell_HintApply}}</span>
+        </span>
+      </footer>
+    </div>
+  </div>
+  <div role="group" aria-label="{{tb.label}}" style="flex: 0 0 32px; box-sizing: border-box; padding: 0 12px; display: flex; align-items: center; gap: 8px; border-top: 1px dashed {{t.line}}; background: {{t.tool}}; font-size: 12px; color: {{t.muted}};">
+    <span>{{tb.label}}</span>
+    <div style="flex-grow: 1;"></div>
+    <sc-for list="{{variants}}" as="v" hint-placeholder-count="3">
+      <button type="button" onClick="{{v.pick}}" aria-pressed="{{v.pressed}}" style="{{v.style}}">{{v.label}}</button>
+    </sc-for>
+    <button type="button" onClick="{{toggleTheme}}" style="{{tb.btn}}">{{tb.themeBtn}}</button>
+    <button type="button" onClick="{{toggleLang}}" style="{{tb.btn}}">{{tb.langBtn}}</button>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":true},"$preview":{"width":1280,"height":800}}'>
+const STR = {
+ "pt": {
+  "Nav_Label": "Módulos",
+  "Module_jobs": "Fretes",
+  "Module_fleet": "Frota",
+  "Module_profile": "Perfil",
+  "Module_company": "Empresa",
+  "Module_map": "Mapa",
+  "Nav_Settings": "Configurações",
+  "Nav_Settings_Short": "Config.",
+  "Nav_DisabledHint": "Abra um save para usar este módulo",
+  "Shell_SafetyNote": "Nada é gravado sem revisão. Um backup é criado antes.",
+  "Shell_HintReview": "Revisar",
+  "Shell_HintApply": "Aplicar",
+  "SessionBar_Label": "Sessão",
+  "SessionBar_NoSession": "Nenhum save aberto",
+  "SessionBar_Profile": "Perfil",
+  "SessionBar_Save": "Save",
+  "SessionBar_ChangeHint": "Trocar de save…",
+  "SessionBar_ProfileAutomation": "Perfil: {0}. Trocar de save",
+  "SessionBar_SaveAutomation": "Save: {0}. Trocar de save",
+  "Game_Ets2": "Euro Truck Simulator 2",
+  "Game_Ets2_Short": "ETS2",
+  "Game_Ats": "American Truck Simulator",
+  "Game_Ats_Short": "ATS",
+  "SessionBar_GameClosed": "Jogo fechado",
+  "SessionBar_GameRunning": "Jogo aberto",
+  "SessionBar_GameRunningHint": "Feche o jogo antes de aplicar.",
+  "SessionBar_Review": "Revisar ({0})",
+  "SessionBar_ReviewNone": "Sem mudanças",
+  "SessionBar_ReviewHint": "Revisar mudanças (Ctrl+R)",
+  "SessionBar_ReviewAutomation": "Revisar mudanças: {0}",
+  "SessionBar_ReviewAutomationNone": "Revisar mudanças: nenhuma pendente",
+  "Shell_Pending_One": "1 mudança pendente",
+  "Shell_Pending_Other": "{0} mudanças pendentes",
+  "Welcome_Title": "Abra um save",
+  "Welcome_Subtitle": "Escolha o perfil e o save que você quer editar. Nada é alterado até você aplicar.",
+  "Welcome_Continue": "Continuar de onde parou",
+  "Welcome_LastSave": "{0} · {1} · {2}",
+  "Welcome_ReopenLast": "Abrir de novo",
+  "Welcome_Profiles": "Perfis",
+  "Welcome_ProfileSaveCount": "{0} saves",
+  "Welcome_SavesOf": "Saves de {0}",
+  "Welcome_Open": "Abrir save",
+  "Welcome_Browse": "Escolher pasta…",
+  "Welcome_PickHint": "Escolha um save para continuar",
+  "Welcome_PickedHint": "{0} · {1}",
+  "Welcome_NoProfilesTitle": "Nenhum perfil encontrado",
+  "Welcome_NoProfilesBody": "Procuramos em Documentos, nas pastas do Euro Truck Simulator 2 e do American Truck Simulator. Se o seu jogo está em outro lugar, escolha a pasta manualmente.",
+  "Welcome_Searching": "Procurando perfis…",
+  "Welcome_NoSavesTitle": "Nenhum save neste perfil",
+  "Welcome_NoSavesBody": "Abra o jogo, salve uma vez e volte aqui.",
+  "SaveKind_Auto": "Automático",
+  "SaveKind_Quick": "Rápido",
+  "SaveKind_Manual": "Manual",
+  "Loading_Title": "Lendo save…",
+  "Loading_Stage_Read": "Lendo o arquivo",
+  "Loading_Stage_Parse": "Interpretando o save",
+  "Loading_Stage_Index": "Organizando fretes e empresas",
+  "Loading_Hint": "Saves grandes podem levar alguns segundos.",
+  "Loading_Cancel": "Cancelar",
+  "Loading_Automation": "Lendo save, {0}%",
+  "Loading_Size": "{0:N1} MB",
+  "OpenError_Parse_Title": "Não foi possível entender o save",
+  "OpenError_Parse_Body": "O arquivo foi lido, mas o Own Expeditor não entendeu o que está dentro dele. Seu save não foi alterado.",
+  "OpenError_Parse_CausesTitle": "O que pode ter causado isso",
+  "OpenError_Parse_Cause1": "Uma versão do jogo mais nova do que a que o app conhece.",
+  "OpenError_Parse_Cause2": "Um mod que muda o jeito como o save é gravado.",
+  "OpenError_Parse_Cause3": "Um arquivo danificado.",
+  "OpenError_Parse_Tip1": "Tente outro save do mesmo perfil, como o salvamento automático mais recente.",
+  "OpenError_Parse_Tip2": "Se continuar acontecendo, copie os detalhes técnicos e envie ao relatar o problema.",
+  "OpenError_Parse_DetailsText": "Código: {0}\nJogo: {1}\nPerfil: {2}\nSave: {3}\nTamanho: {4}\nEtapa: {5}\nApp: {6}",
+  "OpenError_CopyDetails": "Copiar detalhes",
+  "OpenError_Copied": "Copiado",
+  "OpenError_OpenSaveFolder": "Abrir pasta do save",
+  "OpenError_ChooseAnother": "Escolher outro save",
+  "OpenError_Retry": "Tentar de novo",
+  "OpenError_Corrupt_Title": "Não foi possível ler este save",
+  "OpenError_Corrupt_Body": "O arquivo não pôde ser lido por inteiro: parece incompleto ou ilegível, como se o jogo tivesse fechado durante o salvamento. Seu save não foi alterado.",
+  "OpenError_Corrupt_Tip1": "Tente o salvamento automático mais recente do mesmo perfil.",
+  "OpenError_Corrupt_Tip2": "Ou abra o jogo, carregue o perfil e salve de novo.",
+  "OpenError_Details": "Detalhes técnicos",
+  "OpenError_DetailsText": "Código: {0} · perto da linha {1:N0}",
+  "OpenError_DetailsCode": "Código: {0}",
+  "OpenError_NotFound_Title": "Save não encontrado",
+  "OpenError_NotFound_Body": "O arquivo não existe mais. Ele pode ter sido movido ou apagado.",
+  "OpenError_AccessDenied_Title": "Sem permissão para ler o save",
+  "OpenError_AccessDenied_Body": "Verifique se outro programa está usando o arquivo ou se a pasta está protegida e tente de novo.",
+  "OpenError_Unknown_Title": "Não foi possível abrir o save",
+  "OpenError_Unknown_Body": "Algo inesperado aconteceu. Seu save não foi alterado. Tente de novo ou escolha outro save.",
+  "Error_SaveParseFailed": "Não foi possível entender este save: o conteúdo não foi reconhecido. Tente outro save do mesmo perfil ou, se continuar, relate o problema.",
+  "Error_SaveCorrupt": "Não foi possível ler este save: o arquivo parece incompleto ou ilegível.",
+  "Error_SaveNotFound": "Não foi possível abrir o save: o arquivo não existe mais.",
+  "Error_AccessDenied": "Não foi possível acessar o arquivo. Verifique as permissões da pasta e tente de novo.",
+  "Shell_SwitchSave_Title": "Trocar de save?",
+  "Shell_SwitchSave_Message": "Trocar de save vai descartar {0}.",
+  "Shell_SwitchSave_Confirm": "Descartar e trocar",
+  "Shell_Exit_Title": "Sair sem aplicar?",
+  "Shell_Exit_Message": "Sair vai descartar {0}.",
+  "Shell_Exit_Confirm": "Descartar e sair",
+  "Shell_KeepEditing": "Continuar editando",
+  "Settings_Title": "Configurações",
+  "Settings_Appearance": "Aparência",
+  "Settings_Theme": "Tema",
+  "Settings_Theme_Help": "Sistema segue o tema do seu computador.",
+  "Settings_Theme_Light": "Claro",
+  "Settings_Theme_Dark": "Escuro",
+  "Settings_Theme_System": "Sistema",
+  "Settings_Language": "Idioma",
+  "Settings_Language_Help": "Muda na hora, sem reiniciar.",
+  "Settings_Language_PtBr": "Português (Brasil)",
+  "Settings_Language_En": "English",
+  "Settings_Games": "Jogos",
+  "Settings_GameFolder": "Pasta de instalação do jogo",
+  "Settings_GameFolder_Help": "Usada para ler os dados do jogo (como o mapa) direto dos arquivos instalados.",
+  "Settings_GameFolder_Auto": "Detectada automaticamente",
+  "Settings_GameFolder_Manual": "Escolhida por você",
+  "Settings_GameFolder_NotFound": "Não encontrada",
+  "Settings_GameFolder_NotFoundHelp": "Não encontramos o {0}. Escolha a pasta de instalação. Sem ela, o mapa não fica disponível.",
+  "Settings_GameFolder_Invalid": "Esta pasta não parece ser a instalação de {0}. Escolha a pasta onde o jogo está instalado.",
+  "Settings_GameFolder_Choose": "Escolher…",
+  "Settings_GameFolder_Reset": "Usar detecção automática",
+  "Settings_GameFolder_Open": "Abrir pasta",
+  "Settings_GameFolder_Automation": "Pasta de instalação de {0}: {1}",
+  "Settings_Saved": "Preferência salva",
+  "Settings_SaveFailed": "Não foi possível salvar a preferência. Ela vale só até você fechar o app.",
+  "Settings_Note": "Suas mudanças pendentes não são afetadas.",
+  "Settings_About": "Sobre",
+  "Settings_Version": "Versão {0}",
+  "Settings_Disclaimer": "Projeto da comunidade, sem ligação com a SCS Software.",
+  "Canvas_ReviewPage": "Página Revisar: o conteúdo é desenhado em design/review-apply",
+  "Canvas_Preview": "Prévia do canvas (fora do app)",
+  "Canvas_ToLight": "Tema claro",
+  "Canvas_ToDark": "Tema escuro",
+  "Canvas_ToEn": "English",
+  "Canvas_ToPt": "Português",
+  "Canvas_ModuleArea": "Área do módulo: o conteúdo é desenhado em design/fretes"
+ },
+ "en": {
+  "Nav_Label": "Modules",
+  "Module_jobs": "Jobs",
+  "Module_fleet": "Fleet",
+  "Module_profile": "Profile",
+  "Module_company": "Company",
+  "Module_map": "Map",
+  "Nav_Settings": "Settings",
+  "Nav_Settings_Short": "Settings",
+  "Nav_DisabledHint": "Open a save to use this module",
+  "Shell_SafetyNote": "Nothing is saved without review. A backup is created first.",
+  "Shell_HintReview": "Review",
+  "Shell_HintApply": "Apply",
+  "SessionBar_Label": "Session",
+  "SessionBar_NoSession": "No save open",
+  "SessionBar_Profile": "Profile",
+  "SessionBar_Save": "Save",
+  "SessionBar_ChangeHint": "Change save…",
+  "SessionBar_ProfileAutomation": "Profile: {0}. Change save",
+  "SessionBar_SaveAutomation": "Save: {0}. Change save",
+  "Game_Ets2": "Euro Truck Simulator 2",
+  "Game_Ets2_Short": "ETS2",
+  "Game_Ats": "American Truck Simulator",
+  "Game_Ats_Short": "ATS",
+  "SessionBar_GameClosed": "Game closed",
+  "SessionBar_GameRunning": "Game running",
+  "SessionBar_GameRunningHint": "Close the game before applying.",
+  "SessionBar_Review": "Review ({0})",
+  "SessionBar_ReviewNone": "No changes",
+  "SessionBar_ReviewHint": "Review changes (Ctrl+R)",
+  "SessionBar_ReviewAutomation": "Review changes: {0}",
+  "SessionBar_ReviewAutomationNone": "Review changes: none pending",
+  "Shell_Pending_One": "1 pending change",
+  "Shell_Pending_Other": "{0} pending changes",
+  "Welcome_Title": "Open a save",
+  "Welcome_Subtitle": "Choose the profile and save you want to edit. Nothing changes until you apply.",
+  "Welcome_Continue": "Pick up where you left off",
+  "Welcome_LastSave": "{0} · {1} · {2}",
+  "Welcome_ReopenLast": "Open again",
+  "Welcome_Profiles": "Profiles",
+  "Welcome_ProfileSaveCount": "{0} saves",
+  "Welcome_SavesOf": "Saves of {0}",
+  "Welcome_Open": "Open save",
+  "Welcome_Browse": "Choose folder…",
+  "Welcome_PickHint": "Choose a save to continue",
+  "Welcome_PickedHint": "{0} · {1}",
+  "Welcome_NoProfilesTitle": "No profiles found",
+  "Welcome_NoProfilesBody": "We looked in Documents, in the Euro Truck Simulator 2 and American Truck Simulator folders. If your game is somewhere else, choose the folder manually.",
+  "Welcome_Searching": "Looking for profiles…",
+  "Welcome_NoSavesTitle": "No saves in this profile",
+  "Welcome_NoSavesBody": "Open the game, save once and come back here.",
+  "SaveKind_Auto": "Autosave",
+  "SaveKind_Quick": "Quicksave",
+  "SaveKind_Manual": "Manual",
+  "Loading_Title": "Reading save…",
+  "Loading_Stage_Read": "Reading the file",
+  "Loading_Stage_Parse": "Interpreting the save",
+  "Loading_Stage_Index": "Organizing jobs and companies",
+  "Loading_Hint": "Large saves can take a few seconds.",
+  "Loading_Cancel": "Cancel",
+  "Loading_Automation": "Reading save, {0}%",
+  "Loading_Size": "{0:N1} MB",
+  "OpenError_Parse_Title": "Couldn't understand the save",
+  "OpenError_Parse_Body": "The file was read, but Own Expeditor couldn't make sense of what's inside. Your save was not changed.",
+  "OpenError_Parse_CausesTitle": "What may have caused this",
+  "OpenError_Parse_Cause1": "A game version newer than the one the app knows.",
+  "OpenError_Parse_Cause2": "A mod that changes how the save is written.",
+  "OpenError_Parse_Cause3": "A damaged file.",
+  "OpenError_Parse_Tip1": "Try another save from the same profile, such as the most recent autosave.",
+  "OpenError_Parse_Tip2": "If it keeps happening, copy the technical details and send them when you report the problem.",
+  "OpenError_Parse_DetailsText": "Code: {0}\nGame: {1}\nProfile: {2}\nSave: {3}\nSize: {4}\nStep: {5}\nApp: {6}",
+  "OpenError_CopyDetails": "Copy details",
+  "OpenError_Copied": "Copied",
+  "OpenError_OpenSaveFolder": "Open save folder",
+  "OpenError_ChooseAnother": "Choose another save",
+  "OpenError_Retry": "Try again",
+  "OpenError_Corrupt_Title": "Couldn't read this save",
+  "OpenError_Corrupt_Body": "The file couldn't be read in full: it looks incomplete or unreadable, as if the game closed while saving. Your save was not changed.",
+  "OpenError_Corrupt_Tip1": "Try the most recent autosave of the same profile.",
+  "OpenError_Corrupt_Tip2": "Or open the game, load the profile and save again.",
+  "OpenError_Details": "Technical details",
+  "OpenError_DetailsText": "Code: {0} · near line {1:N0}",
+  "OpenError_DetailsCode": "Code: {0}",
+  "OpenError_NotFound_Title": "Save not found",
+  "OpenError_NotFound_Body": "The file no longer exists. It may have been moved or deleted.",
+  "OpenError_AccessDenied_Title": "No permission to read the save",
+  "OpenError_AccessDenied_Body": "Check whether another program is using the file or the folder is protected, then try again.",
+  "OpenError_Unknown_Title": "Couldn't open the save",
+  "OpenError_Unknown_Body": "Something unexpected happened. Your save was not changed. Try again or choose another save.",
+  "Error_SaveParseFailed": "Couldn't understand this save: its content wasn't recognized. Try another save from the same profile or, if it keeps happening, report the problem.",
+  "Error_SaveCorrupt": "Couldn't read this save: the file looks incomplete or unreadable.",
+  "Error_SaveNotFound": "Couldn't open the save: the file no longer exists.",
+  "Error_AccessDenied": "Couldn't access the file. Check the folder permissions and try again.",
+  "Shell_SwitchSave_Title": "Switch save?",
+  "Shell_SwitchSave_Message": "Switching saves will discard {0}.",
+  "Shell_SwitchSave_Confirm": "Discard and switch",
+  "Shell_Exit_Title": "Exit without applying?",
+  "Shell_Exit_Message": "Exiting will discard {0}.",
+  "Shell_Exit_Confirm": "Discard and exit",
+  "Shell_KeepEditing": "Keep editing",
+  "Settings_Title": "Settings",
+  "Settings_Appearance": "Appearance",
+  "Settings_Theme": "Theme",
+  "Settings_Theme_Help": "System follows your computer's theme.",
+  "Settings_Theme_Light": "Light",
+  "Settings_Theme_Dark": "Dark",
+  "Settings_Theme_System": "System",
+  "Settings_Language": "Language",
+  "Settings_Language_Help": "Changes right away, no restart.",
+  "Settings_Language_PtBr": "Português (Brasil)",
+  "Settings_Language_En": "English",
+  "Settings_Games": "Games",
+  "Settings_GameFolder": "Game installation folder",
+  "Settings_GameFolder_Help": "Used to read game data (such as the map) straight from the installed files.",
+  "Settings_GameFolder_Auto": "Detected automatically",
+  "Settings_GameFolder_Manual": "Chosen by you",
+  "Settings_GameFolder_NotFound": "Not found",
+  "Settings_GameFolder_NotFoundHelp": "We couldn't find {0}. Choose the installation folder. Without it, the map isn't available.",
+  "Settings_GameFolder_Invalid": "This folder doesn't look like the installation of {0}. Choose the folder where the game is installed.",
+  "Settings_GameFolder_Choose": "Choose…",
+  "Settings_GameFolder_Reset": "Use automatic detection",
+  "Settings_GameFolder_Open": "Open folder",
+  "Settings_GameFolder_Automation": "Installation folder of {0}: {1}",
+  "Settings_Saved": "Preference saved",
+  "Settings_SaveFailed": "Couldn't save the preference. It applies only until you close the app.",
+  "Settings_Note": "Your pending changes are not affected.",
+  "Settings_About": "About",
+  "Settings_Version": "Version {0}",
+  "Settings_Disclaimer": "Community project, not affiliated with SCS Software.",
+  "Canvas_ReviewPage": "Review page: content is designed in design/review-apply",
+  "Canvas_Preview": "Canvas preview (not part of the app)",
+  "Canvas_ToLight": "Light theme",
+  "Canvas_ToDark": "Dark theme",
+  "Canvas_ToEn": "English",
+  "Canvas_ToPt": "Português",
+  "Canvas_ModuleArea": "Module area: content is designed in design/fretes"
+ }
+};
+
+const TH = {
+  dark:  { bg:'#121417', side:'#0c0e10', panel:'#1a1d21', line:'#2a2f35', text:'#eef0f2', muted:'#9aa3ad', accent:'#f5a524', sel:'#2a2414', map:'#101316', grid:'#1a1f24', danger:'#f87171', dangerBg:'rgba(248,113,113,0.10)', success:'#4ade80', onAccent:'#1a1206', tool:'#0c0e10' },
+  light: { bg:'#f4f2ee', side:'#ebe7df', panel:'#ffffff', line:'#d9d3c7', text:'#1b1d20', muted:'#5f6670', accent:'#b86e00', sel:'#fbecd2', map:'#efebe3', grid:'#e2dccf', danger:'#b42318', dangerBg:'rgba(180,35,24,0.07)', success:'#157f3b', onAccent:'#1a1206', tool:'#e3ded3' }
+};
+const ICONS = {
+  jobs: 'M4 7.5 12 3l8 4.5v9L12 21l-8-4.5z M4 7.5l8 4.5 8-4.5 M12 12v9',
+  fleet: 'M3 7h11v9H3z M14 10h4l3 3v3h-7 M5 17a2 2 0 1 0 4 0 2 2 0 1 0-4 0 M15 17a2 2 0 1 0 4 0 2 2 0 1 0-4 0',
+  profile: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8z M4 21c0-4 3.5-6 8-6s8 2 8 6',
+  company: 'M4 21V5l8-2v18 M12 8h8v13 M4 21h16 M7 9h2 M7 13h2 M7 17h2 M15 12h2 M15 16h2',
+  map: 'M9 4 3 6v14l6-2 6 2 6-2V4l-6 2z M9 4v14 M15 6v14',
+  settings: 'M4 7h10 M18 7h2 M4 17h2 M10 17h10 M16 5v4 M8 15v4'
+};
+function fmt(s, ...a) { return String(s).replace(/\{(\d)(?::[A-Z0-9]+)?\}/g, (m, i) => a[i]); }
+function btnPrimary(t, disabled) {
+  return `min-height:48px;padding:0 22px;border-radius:10px;border:none;font-weight:700;letter-spacing:0.03em;background:${disabled ? t.line : t.accent};color:${disabled ? t.muted : t.onAccent};`;
+}
+function btnSecondary(t) {
+  return `min-height:48px;padding:0 18px;border-radius:10px;border:1px solid ${t.line};background:transparent;color:${t.text};font-weight:600;`;
+}
+function resolveTheme(c) {
+  const pref = c.state.pref || (c.props.dark === false ? 'light' : 'dark');
+  const sys = (typeof window !== 'undefined' && window.matchMedia) ? window.matchMedia('(prefers-color-scheme: dark)').matches : true;
+  const dark = pref === 'system' ? sys : pref === 'dark';
+  return { pref, dark, t: dark ? TH.dark : TH.light };
+}
+// o: { active, session, chips, error, pend, running, game, profile, save, variants, mainLabel }
+function shellVals(c, o) {
+  const { pref, dark, t } = resolveTheme(c);
+  const lang = c.state.lang || 'pt';
+  const tx = STR[lang];
+  const sess = !!o.session;
+  const chips = sess || !!o.chips;
+  const pend = o.pend || 0;
+  const running = !!o.running;
+  const modIds = ['jobs', 'fleet', 'profile', 'company', 'map'];
+  const itemStyle = (active, enabled) => `width:60px;min-height:60px;border-radius:10px;border:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;background:${active ? t.panel : 'transparent'};color:${active ? t.text : t.muted};opacity:${enabled ? 1 : 0.4};`;
+  const nav = modIds.map(id => {
+    const active = o.active === id;
+    const tabbable = sess && (active || (!modIds.includes(o.active) && id === 'jobs'));
+    return { label: tx['Module_' + id], short: tx['Module_' + id].toUpperCase(), icon: ICONS[id],
+      current: active ? 'page' : 'false', disabled: sess ? 'false' : 'true', tab: tabbable ? '0' : '-1',
+      tip: sess ? tx['Module_' + id] : tx.Nav_DisabledHint, bar: active ? t.accent : 'transparent', style: itemStyle(active, sess) };
+  });
+  const sActive = o.active === 'settings';
+  const navBottom = [{ label: tx.Nav_Settings, short: tx.Nav_Settings_Short.toUpperCase(), icon: ICONS.settings,
+    current: sActive ? 'page' : 'false', disabled: 'false', tab: '0', tip: tx.Nav_Settings, bar: sActive ? t.accent : 'transparent', style: itemStyle(sActive, true) }];
+  const pendText = pend === 1 ? tx.Shell_Pending_One : fmt(tx.Shell_Pending_Other, pend);
+  const hasPend = sess && pend > 0;
+  const bar = {
+    noSessD: chips ? 'none' : 'inline', chipsD: chips ? 'flex' : 'none',
+    profile: o.profile || '', save: o.save || '',
+    profileAria: fmt(tx.SessionBar_ProfileAutomation, o.profile || ''), saveAria: fmt(tx.SessionBar_SaveAutomation, o.save || ''),
+    chipStyle: `min-height:44px;padding:2px 10px 2px 12px;border-radius:10px;border:1px solid ${o.error ? t.danger : t.line};background:transparent;color:${t.text};display:flex;align-items:center;gap:8px;text-align:left;min-width:0;opacity:${sess || o.error ? 1 : 0.85};`,
+    game: tx[o.game === 'ATS' ? 'Game_Ats_Short' : 'Game_Ets2_Short'], gameName: tx[o.game === 'ATS' ? 'Game_Ats' : 'Game_Ets2'],
+    statusD: sess ? 'flex' : 'none', status: running ? tx.SessionBar_GameRunning : tx.SessionBar_GameClosed,
+    statusDot: running ? t.danger : t.success, statusTip: running ? tx.SessionBar_GameRunningHint : tx.SessionBar_GameClosed,
+    reviewLabel: hasPend ? fmt(tx.SessionBar_Review, pend) : tx.SessionBar_ReviewNone,
+    reviewAria: hasPend ? fmt(tx.SessionBar_ReviewAutomation, pendText) : tx.SessionBar_ReviewAutomationNone,
+    reviewDisabled: hasPend ? 'false' : 'true', reviewTab: hasPend ? '0' : '-1',
+    reviewCurrent: o.reviewCurrent ? 'page' : 'false',
+    reviewStyle: `display:${sess ? 'inline-flex' : 'none'};align-items:center;min-height:44px;padding:0 20px;border-radius:10px;font-weight:700;letter-spacing:0.03em;white-space:nowrap;font-variant-numeric:tabular-nums;` +
+      (o.reviewCurrent ? `border:1px solid ${t.accent};background:${t.sel};color:${t.text};` : hasPend ? `border:none;background:${t.accent};color:${t.onAccent};` : `border:1px solid ${t.line};background:transparent;color:${t.muted};`)
+  };
+  const foot = { hintsD: sess ? 'flex' : 'none', applyD: o.reviewCurrent ? 'flex' : 'none', kbd: `padding:1px 6px;border-radius:6px;border:1px solid ${t.line};font-family:ui-monospace,Consolas,monospace;font-size:11px;color:${t.text};` };
+  const cv = lang === 'pt'
+    ? { label: 'Prévia do canvas (fora do app)', themeBtn: dark ? 'Tema claro' : 'Tema escuro', langBtn: 'English' }
+    : { label: 'Canvas preview (not part of the app)', themeBtn: dark ? 'Light theme' : 'Dark theme', langBtn: 'Português' };
+  const tbBtn = `min-height:24px;padding:0 10px;border-radius:6px;border:1px solid ${t.line};background:transparent;color:${t.text};font-size:12px;`;
+  const tb = { label: cv.label, themeBtn: cv.themeBtn, langBtn: cv.langBtn, btn: tbBtn };
+  const variants = (o.variants || []).map(v => ({ label: v.label, pressed: v.on ? 'true' : 'false', pick: v.pick,
+    style: `min-height:24px;padding:0 10px;border-radius:6px;border:1px solid ${v.on ? t.accent : t.line};background:${v.on ? t.sel : 'transparent'};color:${t.text};font-size:12px;` }));
+  return { t, dark, pref, lang, tx, nav, navBottom, bar, foot, tb, variants, main: { label: o.mainLabel || '' },
+    pendText, pend, sess,
+    toggleTheme: () => c.setState({ pref: dark ? 'light' : 'dark' }),
+    toggleLang: () => c.setState({ lang: lang === 'pt' ? 'en' : 'pt' }) };
+}
+
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { pref: null, lang: 'pt', open: false, kind: 'corrupt' }; }
+  renderVals() {
+    const st = this.state;
+    const k = st.kind;
+    const variants = [['corrupt', 'Corrompido', 'Corrupt'], ['notfound', 'Não encontrado', 'Not found'], ['denied', 'Sem permissão', 'No permission']]
+      .map(([id, pt, en]) => ({ label: (this.state.lang === 'pt' ? pt : en), on: k === id, pick: () => this.setState({ kind: id }) }));
+    const sv = shellVals(this, { active: '', session: false, chips: true, error: true, mainLabel: STR[this.state.lang].OpenError_Corrupt_Title, game: 'ETS2', profile: 'Demo A', save: 'Save 4', variants });
+    const { t, tx, lang } = sv;
+    const loc = lang === 'pt' ? 'pt-BR' : 'en-US';
+    const code = { corrupt: 'SaveCorrupt', notfound: 'SaveNotFound', denied: 'AccessDenied' }[k];
+    const pre = { corrupt: 'Corrupt', notfound: 'NotFound', denied: 'AccessDenied' }[k];
+    const v = { title: tx['OpenError_' + pre + '_Title'], body: tx['OpenError_' + pre + '_Body'], tipsD: k === 'corrupt' ? 'flex' : 'none',
+      expanded: st.open ? 'true' : 'false', chev: st.open ? 'rotate(90deg)' : 'none', detailsD: st.open ? 'block' : 'none',
+      details: k === 'corrupt' ? fmt(tx.OpenError_DetailsText, code, (18204).toLocaleString(loc)) : fmt(tx.OpenError_DetailsCode, code),
+      primary: btnPrimary(t, false), secondary: btnSecondary(t) };
+    return { ...sv, v, toggleDetails: () => this.setState({ open: !st.open }) };
+  }
+}
+</script>
+</body>
+</html>

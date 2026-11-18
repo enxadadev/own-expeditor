@@ -68,6 +68,11 @@ try
             return same ? 0 : 1;
     }
 }
+catch (SiiFormatException e)
+{
+    Console.Error.WriteLine($"SiiFormatException[{e.Kind}{(e.IsUnreadable ? ", unreadable" : "")}]: {e.Message}");
+    return 4;
+}
 catch (Exception e) { Console.Error.WriteLine($"{e.GetType().Name}: {e.Message}"); return 4; }
 return Usage();
 

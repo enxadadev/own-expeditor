@@ -14,7 +14,8 @@ O `game.sii` pode chegar em três formatos. Os 4 primeiros bytes dizem qual:
 | `SiiNunit` | texto puro (`g_save_format "2"`) |
 | `3nK` (0x014B6E33) | texto ofuscado com XOR (usado em alguns arquivos do jogo) |
 
-O `SiiDecoder` lê os quatro formatos (BSII na seção 7, 3nK na seção 8).
+O `SiiDecoder` lê `BSII` (ver seção 8) e `3nK` (XOR; só para arquivos de
+definição do jogo). Erros: ver "Erros e índice" na seção 7.
 
 ### ScsC (criptografado)
 
@@ -170,8 +171,70 @@ O app já lê esses arquivos para validar as escolhas (ver seção 8).
   do jogo e conferir se a barra de status mostra "Textos no idioma pt_br" e se
   cargas/cidades saem traduzidas; se não, gerar
   `tar -a -cf ets2_locale.zip locale.scs` na pasta do jogo e usar como fixture.
+- ~~Se o jogo carrega um `game.sii` em texto puro gravado pelo app~~ —
+  validado no jogo (seção 7; [ADR 0002](decisions/0002-gravar-save-em-texto.md)).
 
-## 7. BSII (binário)
+## 7. Como o código lê e grava (`src/OwnExpeditor.Sii`)
+
+Esta seção registra o comportamento do parser e do writer atuais. Ela não
+descreve o jogo.
+
+- **Detecção**: `DetectFormat` reconhece `SiiNunit`, `SiiNunit` precedido de
+  BOM UTF-8, `ScsC`, `BSII` e `3nK`. Qualquer outro início vira "não
+  reconhecido".
+- **ScsC**: `Decrypt` exige pelo menos 56 bytes e usa o IV no offset 36 e o
+  tamanho no offset 52. O HMAC (offsets 4 a 35) não é verificado. A saída
+  descomprimida precisa ter exatamente o tamanho do cabeçalho.
+- **Texto**: o parser ignora linhas em branco e faz `Trim()` em cada linha. Por
+  isso espaços no início ou no fim de um valor se perdem.
+- **Atributo**: é separado pelo primeiro `": "`. Uma linha `nome:` sem valor
+  vira atributo com valor vazio. Ao gravar, ele sai como `nome: ` (com espaço).
+  TODO: confirmar se o jogo gera linhas `nome:` sem espaço.
+- **Cabeçalho de bloco**: precisa ser `tipo : id {`, com espaço antes e depois
+  do `:`. TODO: confirmar se o jogo gera blocos com outra formatação.
+- **Escrita**: `ToText` usa CRLF e UTF-8 sem BOM. A ordem de blocos e
+  atributos é preservada.
+- **Round-trip**: `RealSaveTests` compara `ToText()` com o texto original dos
+  saves de `samples/` e passa para todos os saves que estão lá. Os saves não
+  vêm com o repositório.
+
+### Erros e índice (`SiiFormatException`)
+
+Todo conteúdo inválido lança `SiiFormatException` (deriva de
+`FormatException`), com `Kind` (`SiiErrorKind`), `Line` (texto, 1-based) ou
+`Offset` (binário, em bytes) quando se aplicam. Nunca há documento parcial.
+Erros de E/S (arquivo ausente, sem permissão) continuam sendo `IOException`.
+
+| `Kind` | Situações | Local |
+|---|---|---|
+| `Empty` | Entrada com 0 bytes (decoder); texto sem nenhuma linha não vazia (`Parse`) | |
+| `UnknownFormat` | Início sem `SiiNunit`, `ScsC`, `BSII` nem `3nK` | `Offset` 0 |
+| `Truncated` | ScsC com menos de 56 bytes; 3nK com menos de 6; BSII sem os 8 bytes do cabeçalho ou que acaba no meio de um valor; bloco de texto sem `}` | `Offset` / `Line` do bloco aberto |
+| `DecryptFailed` | AES falha (cifrado que não é múltiplo de 16 bytes) | |
+| `DecompressFailed` | zlib inválido depois de decifrar (chave certa, dados ruins) | |
+| `SizeMismatch` | Tamanho descomprimido diferente do cabeçalho ScsC (inclui cabeçalho maior que 2 GB) | |
+| `UnsupportedVersion` | BSII com versão fora de 1–3 | `Offset` 4 |
+| `UnknownValueType` | Tipo de valor de campo BSII não tratado | `Offset` |
+| `Syntax` | Texto: cabeçalho diferente de `SiiNunit`, linha de bloco ou atributo inválido (`Line`). BSII: estrutura desconhecida ou duplicada, token inválido | `Line` / `Offset` quando disponível |
+
+`IsUnreadable` é `true` para `Empty`, `Truncated`, `DecryptFailed`,
+`DecompressFailed` e `SizeMismatch` (o arquivo está danificado; no Core vira
+`SaveCorrupt`) e `false` para `UnknownFormat`, `UnsupportedVersion`,
+`UnknownValueType` e `Syntax` (o arquivo está inteiro, mas não o entendemos;
+no Core vira `SaveParseFailed`).
+
+`3nK` é decodificado hoje (XOR), mas só para arquivos de definição do jogo;
+um `game.sii` em 3nK não é esperado. Não há erro específico: cabeçalho curto é
+`Truncated`.
+
+**Índice por tipo**: `SiiDocument` mantém um índice `tipo → blocos` montado no
+`Parse`. `OfType(tipo)` devolve `IReadOnlyList<SiiUnit>` na ordem do arquivo
+(lista vazia se não há o tipo), sem varrer `Units`. O índice reflete apenas
+blocos presentes no `Parse`; `Units` é público e não é observado.
+`Parse(texto, IProgress<double>? progress)` reporta 0..1 pela posição no
+texto.
+
+## 8. BSII (binário)
 
 Implementado em `src/OwnExpeditor.Sii/BsiiDecoder.cs`, portado de
 SII-Decrypt-cpp (MIT). Resumo do formato:
@@ -198,7 +261,7 @@ e a forma dos valores batem com um save que o próprio jogo gravou em texto.
 Validado no jogo: o slot 3 (BSII) convertido para texto e com job injetado
 carregou normalmente, e o frete apareceu.
 
-## 8. Definições do jogo (.scs)
+## 9. Definições do jogo (.scs)
 
 Leitor em `src/OwnExpeditor.Data/Scs/` (HashFS v2 + CityHash64, spec do
 scs_tools, MIT). O app lê `def.scs` e `dlc_*.scs` da instalação do usuário em
@@ -224,26 +287,60 @@ As DLCs só trazem os arquivos delas; o catálogo junta todos os pacotes.
 Ainda não lido: mods (`.scs`/`.zip` na pasta `mod`), HashFS v1 e o vínculo
 reboque ↔ `body_types`.
 
-## 9. Como o código lê e grava (`src/OwnExpeditor.Sii`)
 
-Esta seção registra o comportamento do parser e do writer atuais. Ela não
-descreve o jogo.
+## 10. Distância entre cidades (descoberta de 18/11/2026)
 
-- **Detecção**: `DetectFormat` reconhece `SiiNunit`, `SiiNunit` precedido de
-  BOM UTF-8, `ScsC`, `BSII` e `3nK`. Qualquer outro início vira "não
-  reconhecido".
-- **ScsC**: `Decrypt` exige pelo menos 56 bytes e usa o IV no offset 36 e o
-  tamanho no offset 52. O HMAC (offsets 4 a 35) não é verificado. A saída
-  descomprimida precisa ter exatamente o tamanho do cabeçalho.
-- **Texto**: o parser ignora linhas em branco e faz `Trim()` em cada linha. Por
-  isso espaços no início ou no fim de um valor se perdem.
-- **Atributo**: é separado pelo primeiro `": "`. Uma linha `nome:` sem valor
-  vira atributo com valor vazio. Ao gravar, ele sai como `nome: ` (com espaço).
-  TODO: confirmar se o jogo gera linhas `nome:` sem espaço.
-- **Cabeçalho de bloco**: precisa ser `tipo : id {`, com espaço antes e depois
-  do `:`. TODO: confirmar se o jogo gera blocos com outra formatação.
-- **Escrita**: `ToText` usa CRLF e UTF-8 sem BOM. A ordem de blocos e
-  atributos é preservada.
-- **Round-trip**: `RealSaveTests` compara `ToText()` com o texto original dos
-  saves de `samples/` e passa para todos os saves que estão lá. Os saves não
-  vêm com o repositório.
+Medições com o dataset real (`dataset/scs`: `def.scs` + 10 DLCs; **sem `base.scs`**)
+e os 30+ saves do perfil de exemplo (`save/1..4`, `autosave*`).
+
+**Coordenadas de cidades nos `.scs`: não existem em `def/`.**
+- `def/city/<cidade>.sui` (80 cidades no `def.scs`) só traz `city_name`,
+  `city_name_localized`, `country`, `population`, `map_x_offsets[]`/`map_y_offsets[]`
+  (deslocamentos de **rótulo** por nível de zoom, não posição) e placas.
+- `def/company/<empresa>/editor/<cidade>.sii` (`company_def`) só traz `city` e
+  `prefab` (nome do prefab, sem posição).
+- As posições existem apenas no mapa: `map/europe/sec±XXXX±YYYY.{base,desc,aux,data,snd}`
+  (setores binários em grade; só as DLCs trazem os seus aqui, o mapa base está
+  em `base.scs`, ausente no dataset). Extrair a posição de uma cidade exige ler
+  itens `city` e nós dos `.base` de todos os setores: engenharia reversa do formato
+  do mapa, fora do escopo desta etapa. **Decisão: não usar coordenadas; estimar a partir dos pares conhecidos.**
+
+**Tabela conhecida.** `shortest_distance_km` de cada oferta com `target` e
+distância > 0 dá o par (cidade da empresa dona, cidade do `target`). Os pares são
+tratados como não direcionais (chave ordenada); o primeiro valor visto vence. No
+perfil de exemplo: `save/3` sozinho → 386 cidades e 4.122 pares únicos
+(5,6% dos pares possíveis); todos os saves do perfil juntos → 12.072 pares
+(16,2%, grafo conexo). Agregar todos os saves do usuário triplica a cobertura.
+
+**Estimativa (grafo).** Para um par ausente: menor caminho (Dijkstra) pelo
+grafo de pares conhecidos × fator de calibração. Validação *leave-one-out*
+(remove a aresta e estima, para todos os pares conhecidos), razão real/caminho:
+
+| Base conhecida | Mediana real/caminho | Erro médio absoluto (fator = mediana) |
+|----------------|----------------------|----------------------------------------|
+| todos os saves (12.072 pares) | 1,00 a 1,04 | ≈ 16% (≤ 2 saltos) a ≈ 22% (qualquer) |
+| só `save/3` (4.122 pares) | 0,83 a 0,91 | ≈ 26% a 28% |
+| só `save/1` (580 pares) | 0,54 a 0,56 | ≈ 25% a 28% |
+
+Validação *holdout* (20% dos pares conhecidos escondidos e estimados; fator calibrado
+sem eles), todos os saves: erro médio absoluto 24%, viés +8%; por faixa do valor real:
+< 300 km superestima ≈ +90% (vizinhos não têm caminho curto sem a aresta direta),
+300–600 km ±15%, 600–1000 km ±11%, ≥ 1000 km subestima ≈ −15% a −24%. Só `save/3`:
+erro médio 52% (as faixas curtas pesam). Alternativa testada (limites de desigualdade
+triangular por vizinhos comuns) ficou na mesma faixa (22–25%) e foi descartada.
+Os pares conhecidos não são amostra aleatória dos pares do mapa; o erro real dos
+pares ausentes (em geral mais longos) pode diferir.
+
+O fator depende da densidade do grafo (quanto mais esparso, mais o caminho
+passa por cidades-polo e excede a rota direta), por isso o app **calibra em
+tempo de execução**: mediana de real/caminho (leave-one-out) numa amostra
+determinística (até 300 pares) da própria tabela, limitada a [0,3; 1,2].
+Sem caminho (cidade sem nenhum par conhecido) → mediana dos pares conhecidos;
+sem nenhum par → 500 km. Sempre marcada `Estimated`. Erro típico ≈ 25%: serve
+para exibição; o jogo recalcula a rota ao dirigir (se recalcula
+`shortest_distance_km`/pagamento ao carregar ou aceitar: **a validar no jogo**).
+
+**Cache (Data).** `IDistanceCache` guarda a tabela agregada por jogo em
+`<SettingsDirectory>/distances-<ets2|ats>.json` e as impressões digitais
+(caminho, tamanho, data) dos saves já lidos, para só reler o que mudou. Cresce a
+cada save aberto e por varredura dos saves de todos os perfis.

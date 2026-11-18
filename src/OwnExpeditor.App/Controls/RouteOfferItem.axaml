@@ -1,0 +1,43 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:OwnExpeditor.App.Controls"
+             xmlns:loc="using:OwnExpeditor.App.Markup"
+             x:Class="OwnExpeditor.App.Controls.RouteOfferItem"
+             x:Name="Root" x:DataType="c:RouteOfferItem" MinHeight="64">
+  <UserControl.Styles>
+    <Style Selector="Border#Card">
+      <Setter Property="Background" Value="{DynamicResource SurfaceBrush}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource LineBrush}" />
+      <Setter Property="BorderThickness" Value="1" />
+    </Style>
+    <Style Selector="Border#Card.hover"><Setter Property="Background" Value="{DynamicResource SurfaceHoverBrush}" /></Style>
+    <Style Selector="Border#Card.pressed"><Setter Property="Background" Value="{DynamicResource SurfacePressedBrush}" /></Style>
+    <Style Selector="Border#Card.selected">
+      <Setter Property="Background" Value="{DynamicResource SelectionBrush}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}" />
+    </Style>
+    <Style Selector="Border#Card.focus"><Setter Property="BorderBrush" Value="{DynamicResource FocusBrush}" /><Setter Property="BorderThickness" Value="2" /></Style>
+    <Style Selector="Border#Card.dim"><Setter Property="Opacity" Value="0.7" /></Style>
+    <Style Selector="Border#Card.disabled"><Setter Property="Opacity" Value="0.4" /></Style>
+    <Style Selector="Border#Card.selected TextBlock#Km"><Setter Property="Foreground" Value="{DynamicResource AccentTextBrush}" /></Style>
+  </UserControl.Styles>
+  <Border x:Name="Card"
+          CornerRadius="{StaticResource RadiusLg}" Padding="14,10" ToolTip.Tip="{Binding #Root.FullTooltip}">
+    <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="*,Auto" ColumnSpacing="12" RowSpacing="2">
+      <Grid Grid.Row="0" Grid.Column="0" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8" VerticalAlignment="Center">
+        <TextBlock Grid.Column="0" Classes="body trim" FontWeight="SemiBold" Text="{Binding #Root.Origin}" MaxWidth="{Binding #Root.CityMaxWidth}" />
+        <Rectangle Grid.Column="1" Height="1" MinWidth="12" VerticalAlignment="Center" Stroke="{DynamicResource TextMutedBrush}"
+                   StrokeDashArray="2,3" StrokeThickness="1.5" IsVisible="{Binding #Root.ShowDash}" AutomationProperties.AccessibilityView="Raw" />
+        <TextBlock Grid.Column="2" Classes="body trim" FontWeight="SemiBold" Text="{Binding #Root.Destination}" MaxWidth="{Binding #Root.CityMaxWidth}" />
+      </Grid>
+      <TextBlock x:Name="Km" Grid.Row="0" Grid.Column="1" Classes="metric num" FontSize="19" Text="{Binding #Root.DistanceText}"
+                 VerticalAlignment="Center" HorizontalAlignment="Right" />
+      <TextBlock Grid.Row="1" Grid.Column="0" Classes="bodysm muted trim" Text="{Binding #Root.SecondLine}" />
+      <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Spacing="6" HorizontalAlignment="Right">
+        <c:PendingBadge Variant="Tag" Text="{loc:Tr Offer_Modified}" IsVisible="{Binding #Root.IsModified}" />
+        <TextBlock Classes="bodysm muted" Text="{Binding #Root.StatusText}"
+                   IsVisible="{Binding #Root.StatusText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+      </StackPanel>
+    </Grid>
+  </Border>
+</UserControl>

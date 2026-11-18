@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Confirmar gravação</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&amp;family=Barlow+Condensed:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#f5a524}a:hover{color:#ffc35c}
+button{font:inherit;cursor:pointer}
+button:focus-visible,[tabindex]:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@keyframes oe-spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion: reduce){*{animation-duration:0.01ms !important}}
+</style>
+</helmet>
+<div style="--accent: {{t.accent}}; position: relative; width: 1280px; height: 800px; overflow: hidden; display: flex; background: {{t.bg}}; color: {{t.text}}; font-family: Barlow, system-ui, sans-serif; font-size: 14px;">
+  <nav aria-label="{{navLabel}}" style="flex: 0 0 76px; box-sizing: border-box; padding: 16px 0; display: flex; flex-direction: column; align-items: center; gap: 6px; background: {{t.side}}; border-right: 1px solid {{t.line}};">
+    <div style="width: 40px; height: 40px; border-radius: 10px; background: {{t.accent}}; display: flex; align-items: center; justify-content: center; margin-bottom: 14px;">
+      <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1a1206" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h11v9H3z"/><path d="M14 10h4l3 3v3h-7"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>
+    </div>
+    <sc-for list="{{nav}}" as="n" hint-placeholder-count="5">
+      <button type="button" aria-label="{{n.label}}" style="{{n.style}}">
+        <span style="width: 18px; height: 3px; border-radius: 2px; background: {{n.bar}};"></span>
+        <span style="font-family: 'Barlow Condensed', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.06em;">{{n.short}}</span>
+      </button>
+    </sc-for>
+    <div style="flex-grow: 1;"></div>
+    <button type="button" onClick="{{toggle}}" aria-label="{{themeLabel}}" style="width: 48px; height: 48px; border-radius: 10px; border: 1px solid {{t.line}}; background: transparent; color: {{t.muted}}; display: flex; align-items: center; justify-content: center;">
+      <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
+    <button type="button" onClick="{{langToggle}}" aria-label="{{langLabel}}" style="width: 48px; height: 44px; border-radius: 10px; border: 1px solid {{t.line}}; background: transparent; color: {{t.muted}}; font-family: 'Barlow Condensed', sans-serif; font-weight: 600;">{{langShort}}</button>
+  </nav>
+  <div style="flex: 1 1 0; min-width: 0; display: flex; flex-direction: column;">
+    <header aria-label="{{sessionLabel}}" style="flex: 0 0 56px; box-sizing: border-box; padding: 0 32px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid {{t.line}};">
+      <span style="font-size: 12px; color: {{t.muted}}; text-transform: uppercase; letter-spacing: 0.08em;">{{profileSave}}</span>
+      <span style="padding: 2px 8px; border-radius: 8px; border: 1px solid {{t.line}}; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 13px; letter-spacing: 0.06em; color: {{t.muted}};">ETS2</span>
+      <div style="flex-grow: 1;"></div>
+      <button type="button" aria-label="{{pendAria}}" style="{{pendStyle}}">{{pendLabel}}</button>
+    </header>
+    <div style="flex: 1 1 0; min-height: 0; position: relative;">
+
+<div aria-hidden="true" style="position: absolute; inset: 0; box-sizing: border-box; padding: 20px 32px 24px; display: flex; flex-direction: column; gap: 16px;">
+  <div style="display: flex; flex-direction: column; gap: 2px;">
+    <span style="font-family: 'Barlow Condensed', sans-serif; font-size: 26px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em;">{{x.bgTitle}}</span>
+    <span style="color: {{t.muted}};">{{x.bgSub}}</span>
+  </div>
+  <div style="flex: 1 1 0; display: flex; gap: 24px;">
+    <div style="flex: 1 1 0; display: flex; flex-direction: column; gap: 14px;">
+      <div style="height: 150px; border-radius: 12px; background: {{t.panel}}; border: 1px solid {{t.line}};"></div>
+      <div style="height: 110px; border-radius: 12px; background: {{t.panel}}; border: 1px solid {{t.line}};"></div>
+      <div style="height: 70px; border-radius: 12px; background: {{t.panel}}; border: 1px solid {{t.line}};"></div>
+    </div>
+    <div style="flex: 0 0 300px; display: flex; flex-direction: column; gap: 12px;">
+      <div style="height: 80px; border-radius: 12px; background: {{t.panel}}; border: 1px solid {{t.line}};"></div>
+      <div style="height: 120px; border-radius: 12px; background: {{t.panel}}; border: 1px solid {{t.line}};"></div>
+      <div style="flex-grow: 1;"></div>
+      <div style="height: 52px; border-radius: 10px; background: {{t.danger}}; opacity: 0.6;"></div>
+    </div>
+  </div>
+</div>
+
+    </div>
+  </div>
+  <div style="position: absolute; inset: 0 0 36px 0; background: {{t.dim}}; display: flex; align-items: center; justify-content: center;">
+    <div role="dialog" aria-modal="true" aria-labelledby="dlg-title" aria-describedby="dlg-intro" style="width: 620px; max-height: 724px; box-sizing: border-box; border-radius: 16px; background: {{t.panel}}; border: 1px solid {{t.line}}; box-shadow: {{t.shadow}}; display: flex; flex-direction: column;">
+      <div style="flex: 1 1 auto; min-height: 0; overflow: auto; padding: 24px 28px 8px; display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: flex; flex-direction: column; gap: 4px;">
+          <h2 id="dlg-title" style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-size: 26px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em;">{{x.title}}</h2>
+          <span id="dlg-intro" style="color: {{t.muted}};">{{intro}}</span>
+        </div>
+
+        <div role="alert" style="display: flex; gap: 12px; padding: 8px 12px; border-radius: 12px; background: {{t.dangerBg}}; border: 1px solid {{t.danger}};">
+          <span style="color: {{t.danger}}; flex: 0 0 auto; margin-top: 1px;"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18.2v.1"/></svg></span>
+          <div style="display: flex; flex-direction: column; gap: 2px;">
+            <span style="font-weight: 600;">{{warnTitle}}</span>
+            <span style="color: {{t.muted}}; font-size: 13px;">{{warnBody}}</span>
+          </div>
+        </div>
+
+        <div role="status" style="display: {{cloudD}}; gap: 12px; padding: 8px 12px; border-radius: 12px; background: {{t.sel}}; border: 1px solid {{t.accentText}};">
+          <span style="color: {{t.accentText}}; flex: 0 0 auto; margin-top: 1px;"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18.2v.1"/></svg></span>
+          <div style="display: flex; flex-direction: column; gap: 2px;">
+            <span style="font-weight: 600;">{{x.cloudTitle}}</span>
+            <span style="color: {{t.text}}; font-size: 13px;">{{cloudBody}}</span>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <span style="font-size: 11px; color: {{t.muted}}; text-transform: uppercase; letter-spacing: 0.08em;">{{x.whatTitle}}</span>
+          <div style="border: 1px solid {{t.line}}; border-radius: 12px; padding: 0 14px;">
+            <sc-for list="{{what}}" as="w" hint-placeholder-count="2">
+              <div style="{{w.style}}">
+                <div style="display: flex; align-items: baseline; gap: 10px;">
+                  <span style="{{w.nameStyle}}">{{w.name}}</span>
+                  <div style="flex-grow: 1;"></div>
+                  <span style="{{w.countStyle}}">{{w.count}}</span>
+                </div>
+                <span title="{{w.sub}}" style="font-size: 13px; color: {{t.muted}}; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{w.sub}}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div role="radiogroup" aria-label="{{x.destTitle}}" style="display: flex; flex-direction: column; gap: 6px;">
+          <span style="font-size: 11px; color: {{t.muted}}; text-transform: uppercase; letter-spacing: 0.08em;">{{x.destTitle}}</span>
+          <sc-for list="{{opts}}" as="o" hint-placeholder-count="2">
+            <button type="button" role="radio" aria-checked="{{o.on}}" onClick="{{o.pick}}" style="{{o.style}}">
+              <span aria-hidden="true" style="{{o.dot}}"><span style="{{o.dotIn}}"></span></span>
+              <span style="display: flex; flex-direction: column; gap: 1px; min-width: 0; flex: 1 1 0; align-items: flex-start;">
+                <span style="display: flex; align-items: center; gap: 8px;"><span style="font-weight: 600;">{{o.label}}</span><span style="display: {{o.tagD}}; padding: 0 8px; border-radius: 999px; border: 1px solid {{t.border2}}; font-size: 11px; color: {{t.muted}};">{{x.defaultTag}}</span></span>
+                <span style="font-size: 13px; color: {{t.muted}}; text-align: left;">{{o.help}}</span>
+              </span>
+            </button>
+          </sc-for>
+        </div>
+
+        <div style="display: {{overD}}; flex-direction: column; gap: 6px;">
+          <span style="font-size: 11px; color: {{t.muted}}; text-transform: uppercase; letter-spacing: 0.08em;">{{x.backupTitle}}</span>
+          <div style="border-radius: 12px; padding: 10px 14px; background: {{t.bg}}; border: 1px solid {{t.line}}; display: flex; flex-direction: column; gap: 6px;">
+            <span title="{{path}}{{backupName}}" style="font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; line-height: 1.5; word-break: break-all;">{{path}}<span style="color: {{t.accentText}};">{{backupName}}</span></span>
+            <span style="font-size: 13px; color: {{t.muted}};">{{x.backupNote}}</span>
+          </div>
+        </div>
+
+        <div style="display: {{newD}}; flex-direction: column; gap: 10px;">
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <label for="novo-nome" style="font-size: 11px; color: {{t.muted}}; text-transform: uppercase; letter-spacing: 0.08em;">{{x.nameLabel}}</label>
+            <input id="novo-nome" type="text" value="{{nameVal}}" maxlength="40" aria-invalid="{{nameInvalid}}" aria-describedby="novo-nome-msg" style="{{nameStyle}}">
+            <span id="novo-nome-msg" style="font-size: 12px; color: {{nameMsgColor}};">{{nameMsg}}</span>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <span style="font-size: 11px; color: {{t.muted}}; text-transform: uppercase; letter-spacing: 0.08em;">{{x.newSlotTitle}}</span>
+            <div style="border-radius: 12px; padding: 10px 14px; background: {{t.bg}}; border: 1px solid {{t.line}}; display: flex; flex-direction: column; gap: 6px;">
+              <span title="{{newPath}}" style="font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; line-height: 1.5; word-break: break-all;">{{newPath}}<span style="color: {{t.accentText}};">{{x.nextSlot}}</span></span>
+              <span style="font-size: 13px; color: {{t.muted}};">{{x.newSlotNote}}</span>
+            </div>
+          </div>
+        </div>
+
+        <span style="font-size: 13px; color: {{t.muted}};">{{undoNote}}</span>
+      </div>
+
+      <div style="flex: 0 0 auto; padding: 12px 28px 20px; border-top: 1px solid {{t.line}};">
+        <div style="{{askRow}}">
+          <button type="button" style="{{cancelStyle}}">{{x.cancel}}</button>
+          <button type="button" onClick="{{go}}" aria-disabled="{{goDis}}" style="{{danger}}">{{confirm}}</button>
+        </div>
+        <div role="status" aria-live="polite" style="{{busyRow}}">
+          <span style="{{spinner}}"></span>
+          <div style="display: flex; flex-direction: column;">
+            <span style="font-weight: 600;">{{x.applying}}</span>
+            <span style="font-size: 13px; color: {{t.muted}};">{{applyingHint}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div role="group" aria-label="{{x.canvasLabel}}" style="position: absolute; left: 0; right: 0; bottom: 0; height: 36px; box-sizing: border-box; padding: 0 14px; display: flex; align-items: center; gap: 8px; border-top: 1px dashed {{t.line}}; background: {{t.side}}; font-size: 12px; color: {{t.muted}};">
+    <span>{{x.canvasLabel}}</span>
+    <div style="flex-grow: 1;"></div>
+    <sc-for list="{{toggles}}" as="v" hint-placeholder-count="3">
+      <button type="button" onClick="{{v.pick}}" aria-pressed="{{v.pressed}}" style="{{v.style}}">{{v.label}}</button>
+    </sc-for>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":true},"en":{"editor":"boolean","default":false},"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+
+  pal(dark) {
+    return dark
+      ? { bg:'#121417', side:'#0c0e10', panel:'#1a1d21', line:'#2a2f35', text:'#eef0f2', muted:'#9aa3ad', accent:'#f5a524', sel:'#2a2414',
+          danger:'#f87171', onDanger:'#1a0606', dangerBg:'rgba(248,113,113,0.12)', success:'#4ade80', successBg:'rgba(74,222,128,0.12)',
+          dim:'rgba(0,0,0,0.62)', shadow:'0 24px 64px rgba(0,0,0,0.55)', border2:'#66717d', accentText:'#f5a524' }
+      : { bg:'#f4f2ee', side:'#ebe7df', panel:'#ffffff', line:'#d9d3c7', text:'#1b1d20', muted:'#5f6670', accent:'#b86e00', sel:'#fbecd2',
+          danger:'#b42318', onDanger:'#ffffff', dangerBg:'rgba(180,35,24,0.08)', success:'#157f3b', successBg:'rgba(21,127,59,0.10)',
+          dim:'rgba(27,29,32,0.50)', shadow:'0 24px 64px rgba(27,29,32,0.28)', border2:'#857e6f', accentText:'#8a5200' };
+  }
+  base(t) { return `display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 22px;border-radius:10px;font-weight:700;letter-spacing:0.03em;`; }
+  bPrimary(t) { return this.base(t) + `border:none;background:${t.accent};color:#1a1206;`; }
+  bDanger(t)  { return this.base(t) + `border:none;background:${t.danger};color:${t.onDanger};`; }
+  bOutline(t) { return this.base(t) + `border:1px solid ${t.line};background:transparent;color:${t.text};font-weight:600;`; }
+  bGhost(t, danger) { return `display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 14px;border-radius:10px;border:1px solid transparent;background:transparent;font-weight:600;color:${danger ? t.danger : t.muted};`; }
+  plural(lang, n, one, many) { return n === 1 ? one : many.replace('{0}', n); }
+  cultura(lang) { return lang === 'pt' ? 'pt-BR' : 'en-US'; }
+  // Lateral + barra de sessão simplificadas (o desenho oficial é do UX-1, design/shell/).
+  shell(t, lang, dark, navSel, pendCount, pendMode) {
+    const sh = lang === 'pt'
+      ? { navLabel:'Módulos', nav:['Fretes','Frota','Perfil','Empresa','Mapa'], short:['FRETES','FROTA','PERFIL','EMPRESA','MAPA'], session:'Sessão', profile:'Perfil 1 · Save 4',
+          themeLight:'Usar tema claro', themeDark:'Usar tema escuro', langShort:'PT', langLabel:'Idioma: português. Mudar para inglês', review:'Revisar',
+          pendAria:(n) => n > 0 ? `Revisar mudanças pendentes: ${n}` : 'Revisar mudanças: nenhuma pendente' }
+      : { navLabel:'Modules', nav:['Jobs','Fleet','Profile','Company','Map'], short:['JOBS','FLEET','PROFILE','COMPANY','MAP'], session:'Session', profile:'Profile 1 · Save 4',
+          themeLight:'Use light theme', themeDark:'Use dark theme', langShort:'EN', langLabel:'Language: English. Switch to Portuguese', review:'Review',
+          pendAria:(n) => n > 0 ? `Review pending changes: ${n}` : 'Review changes: none pending' };
+    const nav = sh.nav.map((l, i) => ({ label:l, short:sh.short[i], bar: i === navSel ? t.accent : 'transparent',
+      style:`width:60px;min-height:52px;border-radius:10px;border:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:${i===navSel?t.panel:'transparent'};color:${i===navSel?t.text:t.muted};` }));
+    const cur = pendMode === 'current';
+    const pendStyle = `min-height:44px;padding:0 16px;border-radius:10px;font-weight:600;border:1px solid ${cur ? t.accent : t.line};background:${cur ? t.sel : 'transparent'};color:${pendCount > 0 ? t.text : t.muted};`;
+    return { nav, navLabel: sh.navLabel, sessionLabel: sh.session, profileSave: sh.profile, themeLabel: dark ? sh.themeLight : sh.themeDark,
+      langShort: sh.langShort, langLabel: sh.langLabel, pendStyle, pendAria: sh.pendAria(pendCount),
+      pendLabel: pendCount > 0 ? `${sh.review} (${pendCount})` : sh.review,
+      toggle: () => this.setState({ dark: !dark }), langToggle: () => this.setState({ lang: lang === 'pt' ? 'en' : 'pt' }) };
+  }
+
+  constructor(p) { super(p); this.state = { dark: null, lang: null, busy: false, dest: 'over', cloud: false, badName: false, running: false }; }
+  renderVals() {
+    const dark = this.state.dark ?? (this.props.dark ?? true);
+    const lang = this.state.lang ?? (this.props.en ? 'en' : 'pt');
+    const t = this.pal(dark);
+    const { busy, dest, cloud, badName, running } = this.state;
+    const isNew = dest === 'new';
+    const X = {
+      pt: { bgTitle:'Revisar mudanças', bgSub:'3 mudanças em 2 módulos',
+        title:'Gravar mudanças no save?', whatTitle:'O que será gravado',
+        destTitle:'Como gravar', defaultTag:'Padrão',
+        optOver:'Sobrescrever este save', optOverHelp:'Grava no save aberto (Save 4). Um backup é criado antes.',
+        optNew:'Criar um novo save', optNewHelp:'Cria um save novo com as mudanças. O save original não é tocado.',
+        backupTitle:'Onde fica o backup', backupNote:'A cópia do save original é criada nesta pasta antes de gravar. O nome usa a data e a hora da gravação.',
+        nameLabel:'Nome do novo save', nameHint:'É o nome que aparece na lista de saves do jogo.', nameBad:'Digite um nome de 1 a 40 caracteres.', nameDefault:'Save 4 (editado)',
+        newSlotTitle:'Onde fica o novo save', nextSlot:'(próximo slot livre)', newSlotNote:'O app cria uma pasta nova no próximo slot livre do perfil Perfil 1. O save original continua como está.',
+        cloudTitle:'Este perfil usa Steam Cloud', cloudOver:'A nuvem pode restaurar o save antigo quando o jogo abrir. Se isso acontecer, feche o jogo e grave de novo.',
+        cloudNew:'O jogo pode não mostrar saves criados fora dele. Se o novo save não aparecer, grave com “Sobrescrever este save”.',
+        warnTitle:'Feche o jogo antes de continuar', warnBody:'Com o jogo aberto, ele pode sobrescrever o save ao salvar ou sair, e a gravação pode falhar.',
+        warnTitleRun:'O jogo está aberto', warnBodyRun:'Feche o jogo antes de gravar. Ele pode sobrescrever o save ao salvar ou sair.',
+        undoOver:'Para desfazer depois, basta restaurar o backup. Mostramos como na próxima tela.', undoNew:'O save original não muda. Para descartar o novo save, basta apagá-lo. Mostramos como na próxima tela.',
+        cancel:'Cancelar', confirmOver:'Gravar no save', confirmNew:'Criar novo save', applying:'Gravando…',
+        hintOver:'Criando o backup e gravando o save. Não feche o app.', hintNew:'Criando o novo save e gravando as mudanças. Não feche o app.',
+        introOver:'3 mudanças serão gravadas em Perfil 1 · Save 4.', introNew:'3 mudanças serão gravadas em um novo save, criado a partir de Perfil 1 · Save 4.',
+        mods:['Fretes','Perfil'], items:['Frete Sófia → Belgrado','Frete Viena → Praga','Dinheiro do perfil'], one:'1 mudança', many:'{0} mudanças', stamp:'game.sii.bak-AAAAMMDD-HHMMSS',
+        canvasLabel:'Prévia do canvas (fora do app)', tCloud:'Steam Cloud', tName:'Nome inválido', tRun:'Jogo aberto' },
+      en: { bgTitle:'Review changes', bgSub:'3 changes in 2 modules',
+        title:'Write changes to the save?', whatTitle:'What will be written',
+        destTitle:'How to write', defaultTag:'Default',
+        optOver:'Overwrite this save', optOverHelp:'Writes to the open save (Save 4). A backup is created first.',
+        optNew:'Create a new save', optNewHelp:'Creates a new save with the changes. The original save isn’t touched.',
+        backupTitle:'Where the backup goes', backupNote:'A copy of the original save is created in this folder before writing. The name uses the date and time of the write.',
+        nameLabel:'New save name', nameHint:'It’s the name shown in the game’s save list.', nameBad:'Enter a name of 1 to 40 characters.', nameDefault:'Save 4 (edited)',
+        newSlotTitle:'Where the new save goes', nextSlot:'(next free slot)', newSlotNote:'The app creates a new folder in the next free slot of profile Profile 1. The original save stays as it is.',
+        cloudTitle:'This profile uses Steam Cloud', cloudOver:'The cloud may restore the old save when the game opens. If that happens, close the game and write again.',
+        cloudNew:'The game may not show saves created outside it. If the new save doesn’t show up, write with “Overwrite this save”.',
+        warnTitle:'Close the game before continuing', warnBody:'With the game running, it may overwrite the save when it saves or exits, and writing may fail.',
+        warnTitleRun:'The game is running', warnBodyRun:'Close the game before writing. It may overwrite the save when it saves or exits.',
+        undoOver:'To undo later, just restore the backup. We show how on the next screen.', undoNew:'The original save doesn’t change. To discard the new save, just delete it. We show how on the next screen.',
+        cancel:'Cancel', confirmOver:'Write to save', confirmNew:'Create new save', applying:'Writing…',
+        hintOver:'Creating the backup and writing the save. Don’t close the app.', hintNew:'Creating the new save and writing the changes. Don’t close the app.',
+        introOver:'3 changes will be written to Profile 1 · Save 4.', introNew:'3 changes will be written to a new save, created from Profile 1 · Save 4.',
+        mods:['Jobs','Profile'], items:['Job Sofia → Belgrade','Job Vienna → Prague','Profile money'], one:'1 change', many:'{0} changes', stamp:'game.sii.bak-YYYYMMDD-HHMMSS',
+        canvasLabel:'Canvas preview (not part of the app)', tCloud:'Steam Cloud', tName:'Invalid name', tRun:'Game running' }
+    }[lang];
+    const cnt = (n) => this.plural(lang, n, X.one, X.many);
+    const modStyle = "font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;";
+    const row = (extra) => `display:flex;flex-direction:column;gap:0;padding:6px 0;${extra}`;
+    const what = [
+      { name:X.mods[0], count:cnt(2), sub:X.items[0] + ' · ' + X.items[1], style:row(''), nameStyle:modStyle, countStyle:`color:${t.muted};font-variant-numeric:tabular-nums;` },
+      { name:X.mods[1], count:cnt(1), sub:X.items[2], style:row(`border-top:1px solid ${t.line};`), nameStyle:modStyle, countStyle:`color:${t.muted};font-variant-numeric:tabular-nums;` }
+    ];
+    const optStyle = (on) => `display:flex;align-items:flex-start;gap:12px;width:100%;box-sizing:border-box;min-height:56px;padding:10px 14px;border-radius:12px;border:1px solid ${on ? t.accentText : t.border2};background:${on ? t.sel : 'transparent'};color:${t.text};text-align:left;`;
+    const dot = (on) => `flex:0 0 auto;margin-top:2px;width:18px;height:18px;border-radius:50%;border:2px solid ${on ? t.accentText : t.border2};display:flex;align-items:center;justify-content:center;`;
+    const dotIn = (on) => `width:8px;height:8px;border-radius:50%;background:${on ? t.accentText : 'transparent'};`;
+    const opts = [
+      { label:X.optOver, help:X.optOverHelp, on: !isNew ? 'true' : 'false', tagD:'inline-flex', pick: () => this.setState({ dest:'over' }), style: optStyle(!isNew), dot: dot(!isNew), dotIn: dotIn(!isNew) },
+      { label:X.optNew, help:X.optNewHelp, on: isNew ? 'true' : 'false', tagD:'none', pick: () => this.setState({ dest:'new' }), style: optStyle(isNew), dot: dot(isNew), dotIn: dotIn(isNew) }
+    ];
+    const tgl = (label, key) => ({ label, pressed: this.state[key] ? 'true' : 'false', pick: () => this.setState({ [key]: !this.state[key] }),
+      style: `min-height:24px;padding:0 10px;border-radius:6px;border:1px solid ${this.state[key] ? t.accent : t.line};background:${this.state[key] ? t.sel : 'transparent'};color:${t.text};font-size:12px;` });
+    const toggles = [tgl(X.tCloud, 'cloud'), tgl(X.tName, 'badName'), tgl(X.tRun, 'running')];
+    return {
+      ...this.shell(t, lang, dark, -1, 3, 'current'),
+      t, x: X, what, opts, toggles,
+      intro: isNew ? X.introNew : X.introOver,
+      path:'C:\\Users\\you\\Documents\\Euro Truck Simulator 2\\profiles\\profile_1\\save\\4\\', backupName: X.stamp,
+      newPath:'C:\\Users\\you\\Documents\\Euro Truck Simulator 2\\profiles\\profile_1\\save\\',
+      overD: isNew ? 'none' : 'flex', newD: isNew ? 'flex' : 'none',
+      nameVal: badName ? '' : X.nameDefault, nameInvalid: badName ? 'true' : 'false',
+      nameMsg: badName ? X.nameBad : X.nameHint, nameMsgColor: badName ? t.danger : t.muted,
+      nameStyle: `min-height:44px;box-sizing:border-box;padding:0 14px;border-radius:10px;border:1px solid ${badName ? t.danger : t.border2};background:${t.bg};color:${t.text};font:inherit;`,
+      cloudD: cloud ? 'flex' : 'none', cloudBody: isNew ? X.cloudNew : X.cloudOver,
+      warnTitle: running ? X.warnTitleRun : X.warnTitle, warnBody: running ? X.warnBodyRun : X.warnBody,
+      undoNote: isNew ? X.undoNew : X.undoOver,
+      confirm: isNew ? X.confirmNew : X.confirmOver, applyingHint: isNew ? X.hintNew : X.hintOver,
+      goDis: isNew && badName ? 'true' : 'false',
+      danger: this.bDanger(t) + (busy || (isNew && badName) ? 'opacity:0.4;' : ''),
+      cancelStyle: this.bOutline(t) + `outline:2px solid ${t.accent};outline-offset:2px;`,
+      askRow: `display:${busy ? 'none' : 'flex'};justify-content:flex-end;gap:10px;`,
+      busyRow: `display:${busy ? 'flex' : 'none'};align-items:center;justify-content:flex-end;gap:12px;min-height:48px;`,
+      spinner: `width:20px;height:20px;border-radius:50%;border:3px solid ${t.line};border-top-color:${t.accent};animation:oe-spin 0.9s linear infinite;`,
+      go: () => { if (isNew && badName) return; this.setState({ busy: true }); setTimeout(() => this.setState({ busy: false }), 2500); }
+    };
+  }
+}
+</script>
+</body>
+</html>

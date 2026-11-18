@@ -1,0 +1,22 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:OwnExpeditor.App.Controls"
+             x:Class="OwnExpeditor.App.Controls.StatTile"
+             x:Name="Root" x:DataType="c:StatTile" MinWidth="96" MinHeight="64">
+  <UserControl.Styles>
+    <Style Selector="TextBlock#ValueText.accent"><Setter Property="Foreground" Value="{DynamicResource AccentTextBrush}" /></Style>
+    <Style Selector="TextBlock#ValueText.danger"><Setter Property="Foreground" Value="{DynamicResource DangerBrush}" /></Style>
+    <Style Selector="TextBlock#ValueText.success"><Setter Property="Foreground" Value="{DynamicResource SuccessBrush}" /></Style>
+    <Style Selector="TextBlock#ValueText.unknown"><Setter Property="Foreground" Value="{DynamicResource TextMutedBrush}" /></Style>
+  </UserControl.Styles>
+  <Border Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource LineBrush}" BorderThickness="1"
+          CornerRadius="{StaticResource RadiusLg}" Padding="14,12" ToolTip.Tip="{Binding #Root.Hint}">
+    <StackPanel Spacing="2">
+      <TextBlock Classes="caption trim" Text="{Binding #Root.LabelUpper}" />
+      <TextBlock x:Name="ValueText" Classes="metric trim" Text="{Binding #Root.DisplayValue}"
+                 IsVisible="{Binding !#Root.IsLoading}" ToolTip.Tip="{Binding #Root.Value}" />
+      <Border Height="22" Width="70" HorizontalAlignment="Left" CornerRadius="4" Background="{DynamicResource LineBrush}"
+              IsVisible="{Binding #Root.IsLoading}" />
+    </StackPanel>
+  </Border>
+</UserControl>

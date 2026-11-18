@@ -1,0 +1,70 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:OwnExpeditor.App.ViewModels"
+             xmlns:c="using:OwnExpeditor.App.Controls"
+             xmlns:loc="using:OwnExpeditor.App.Markup"
+             x:Class="OwnExpeditor.App.Views.SavePickerView"
+             x:DataType="vm:SavePickerViewModel">
+  <Grid RowDefinitions="*,Auto" RowSpacing="12">
+    <!-- carregando perfis -->
+    <StackPanel Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="12" Margin="0,32"
+                IsVisible="{Binding IsLoading}">
+      <c:Spinner HorizontalAlignment="Center" />
+      <TextBlock Classes="bodysm muted" Text="{loc:Tr Welcome_Searching}" HorizontalAlignment="Center" AutomationProperties.LiveSetting="Polite" />
+    </StackPanel>
+
+    <!-- nenhum perfil -->
+    <c:EmptyState Grid.Row="0" Icon="{StaticResource IconInbox}" Title="{loc:Tr Welcome_NoProfilesTitle}"
+                  Message="{loc:Tr Welcome_NoProfilesBody}" IsVisible="{Binding ShowNoProfiles}" />
+
+    <!-- listas -->
+    <Grid Grid.Row="0" ColumnDefinitions="*,*" ColumnSpacing="20" IsVisible="{Binding ShowLists}">
+      <StackPanel Grid.Column="0" Spacing="8">
+        <TextBlock Classes="caption" Text="{Binding ProfilesLabel}" />
+        <ListBox x:Name="ProfileList" Classes="picker" ItemsSource="{Binding Profiles}" SelectedItem="{Binding SelectedProfile}"
+                 AutomationProperties.Name="{loc:Tr Welcome_Profiles}" MaxHeight="360">
+          <ListBox.ItemTemplate>
+            <DataTemplate x:DataType="vm:ProfileItemViewModel">
+              <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10" ToolTip.Tip="{Binding Name}"
+                    AutomationProperties.Name="{Binding Name}">
+                <Border Grid.Column="0" Classes="kbd" VerticalAlignment="Center" ToolTip.Tip="{Binding GameName}">
+                  <TextBlock Classes="caption" Text="{Binding GameBadge}" Foreground="{DynamicResource TextBrush}" />
+                </Border>
+                <TextBlock Grid.Column="1" Classes="body trim" FontWeight="SemiBold" Text="{Binding Name}" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="2" Classes="bodysm muted" Text="{Binding CountText}" VerticalAlignment="Center" />
+              </Grid>
+            </DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
+      </StackPanel>
+      <StackPanel Grid.Column="1" Spacing="8">
+        <TextBlock Classes="caption" Text="{Binding SavesLabelUpper}" />
+        <ListBox x:Name="SaveList" Classes="picker" ItemsSource="{Binding Saves}" SelectedItem="{Binding SelectedSave}"
+                 AutomationProperties.Name="{Binding SavesLabel}" MaxHeight="360" IsVisible="{Binding !ShowNoSaves}">
+          <ListBox.ItemTemplate>
+            <DataTemplate x:DataType="vm:SaveItemViewModel">
+              <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10" AutomationProperties.Name="{Binding Name}">
+                <StackPanel Grid.Column="0" MinWidth="0">
+                  <TextBlock Classes="body trim" FontWeight="SemiBold" Text="{Binding Name}" ToolTip.Tip="{Binding Name}" />
+                  <TextBlock Classes="bodysm muted num trim" Text="{Binding DateText}" />
+                </StackPanel>
+                <Border Grid.Column="1" Classes="kbd" VerticalAlignment="Center">
+                  <TextBlock Classes="caption" Text="{Binding KindText}" />
+                </Border>
+              </Grid>
+            </DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
+        <c:EmptyState IsCompact="True" Icon="{StaticResource IconInbox}" Title="{loc:Tr Welcome_NoSavesTitle}"
+                      Message="{loc:Tr Welcome_NoSavesBody}" IsVisible="{Binding ShowNoSaves}" />
+      </StackPanel>
+    </Grid>
+
+    <!-- rodapé: dica + Abrir save -->
+    <Grid Grid.Row="1" ColumnDefinitions="*,Auto" ColumnSpacing="16" IsVisible="{Binding ShowLists}">
+      <TextBlock Grid.Column="0" Classes="bodysm muted trim" VerticalAlignment="Center" Text="{Binding Hint}"
+                 AutomationProperties.LiveSetting="Polite" />
+      <Button Grid.Column="1" x:Name="OpenButton" Classes="accent large" Content="{loc:Tr Welcome_Open}" Command="{Binding OpenCommand}" />
+    </Grid>
+  </Grid>
+</UserControl>

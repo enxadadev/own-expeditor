@@ -1,0 +1,58 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:g="using:OwnExpeditor.App.Gallery"
+             xmlns:loc="using:OwnExpeditor.App.Markup"
+             x:Class="OwnExpeditor.App.Gallery.GalleryView"
+             x:DataType="g:GalleryViewModel">
+  <Design.DataContext><g:GalleryViewModel /></Design.DataContext>
+  <UserControl.Styles>
+    <Style Selector="ToggleButton.seg">
+      <Setter Property="MinHeight" Value="40" />
+      <Setter Property="VerticalContentAlignment" Value="Center" />
+      <Setter Property="HorizontalContentAlignment" Value="Center" />
+      <Setter Property="Padding" Value="14,0" />
+      <Setter Property="CornerRadius" Value="{StaticResource RadiusSm}" />
+      <Setter Property="Background" Value="{DynamicResource SurfaceBrush}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource BorderStrongBrush}" />
+      <Setter Property="BorderThickness" Value="1" />
+    </Style>
+    <Style Selector="ToggleButton.seg:checked /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="{DynamicResource SelectionBrush}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource AccentTextBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource AccentTextBrush}" />
+    </Style>
+  </UserControl.Styles>
+  <DockPanel Background="{DynamicResource BgBrush}">
+    <Border DockPanel.Dock="Top" Background="{DynamicResource SideBrush}" BorderBrush="{DynamicResource LineBrush}" BorderThickness="0,0,0,1" Padding="16,8">
+      <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="16">
+        <TextBlock Classes="title" Text="{Binding Title, Converter={x:Static g:GalleryConverters.Upper}}" VerticalAlignment="Center" />
+        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right">
+          <Button Classes="compact" Content="{loc:Tr Gallery_Theme_Both}" Command="{Binding SetBothCommand}" />
+          <Button Classes="compact" Content="{loc:Tr Gallery_Theme_Light}" Command="{Binding SetLightCommand}" />
+          <Button Classes="compact" Content="{loc:Tr Gallery_Theme_Dark}" Command="{Binding SetDarkCommand}" />
+          <ToggleButton Classes="seg" Content="{loc:Tr Gallery_LongTexts}" IsChecked="{Binding LongTexts, Mode=TwoWay}" />
+          <ToggleButton Classes="seg" Content="{loc:Tr Gallery_HitAreas}" IsChecked="{Binding ShowHitAreas, Mode=TwoWay}" />
+        </StackPanel>
+        <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8">
+          <TextBlock Classes="caption" VerticalAlignment="Center" Text="{loc:Tr Gallery_Language}" />
+          <Button Classes="compact" Content="PT-BR" Command="{Binding SetPtBrCommand}" />
+          <Button Classes="compact" Content="EN" Command="{Binding SetEnCommand}" />
+        </StackPanel>
+      </Grid>
+    </Border>
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+      <UniformGrid Rows="1" Margin="16">
+        <ThemeVariantScope RequestedThemeVariant="Light" IsVisible="{Binding ShowLight}" Margin="0,0,8,0">
+          <Border Background="{DynamicResource BgBrush}" CornerRadius="{StaticResource RadiusLg}" Padding="16">
+            <g:GallerySections />
+          </Border>
+        </ThemeVariantScope>
+        <ThemeVariantScope RequestedThemeVariant="Dark" IsVisible="{Binding ShowDark}" Margin="8,0,0,0">
+          <Border Background="{DynamicResource BgBrush}" CornerRadius="{StaticResource RadiusLg}" Padding="16">
+            <g:GallerySections />
+          </Border>
+        </ThemeVariantScope>
+      </UniformGrid>
+    </ScrollViewer>
+  </DockPanel>
+</UserControl>
