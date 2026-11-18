@@ -17,6 +17,29 @@ public class JobBoardTests
     }
 
     [Fact]
+    public void UsableOriginCompanies_equals_union_of_OriginCompanies_over_DestinationCities()
+    {
+        var b = Board(Open());
+        foreach (var city in b.Cities())
+        {
+            var expected = b.DestinationCities(city).SelectMany(d => b.OriginCompanies(city, d)).Distinct()
+                .OrderBy(l => l.Key, StringComparer.Ordinal).ToList();
+            Assert.Equal(expected, b.UsableOriginCompanies(city));
+        }
+        Assert.Equal([Kaarfor], b.UsableOriginCompanies("budapest"));
+        Assert.Empty(b.UsableOriginCompanies("berlin"));
+    }
+
+    [Fact]
+    public void HasMatch_agrees_with_OriginCompanies()
+    {
+        var b = Board(Open());
+        foreach (var from in b.Cities())
+            foreach (var to in b.Cities())
+                Assert.Equal(b.OriginCompanies(from, to).Count > 0, b.HasMatch(from, to));
+    }
+
+    [Fact]
     public void Cities_lists_every_city_of_the_save()
     {
         Assert.Equal(["berlin", "budapest", "kosice", "wien"], Board(Open()).Cities());

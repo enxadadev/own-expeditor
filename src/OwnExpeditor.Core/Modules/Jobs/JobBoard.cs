@@ -32,6 +32,9 @@ public sealed class JobBoard
     private readonly Dictionary<CityPair, int> _saveDistances = [];
     private DistanceTable _distances = new([]);
     private IReadOnlyDictionary<CityPair, int>? _ownEstimates;
+    // Memos (o board é imutável depois do Build): cargas enviáveis por empresa e cidades que aceitam cada carga.
+    private readonly Dictionary<string, string[]> _shipped = new(StringComparer.Ordinal);
+    private Dictionary<string, HashSet<string>>? _acceptingCities;
 
     private JobBoard(IGameData data) => _data = data;
 
@@ -72,15 +75,37 @@ public sealed class JobBoard
     {
         ArgumentNullException.ThrowIfNull(originCity);
         if (!_byCity.TryGetValue(originCity, out var origins)) return [];
-        var cargos = origins.Where(IsUsable).SelectMany(o => ShippedWithTemplate(o.Location)).ToHashSet(StringComparer.Ordinal);
-        if (cargos.Count == 0) return [];
-        return _byCity
-            .Where(c => c.Key != originCity && c.Value.Any(d => cargos.Any(cargo => Accepts(d.Location.Company, cargo))))
-            .Select(c => c.Key).Order(StringComparer.Ordinal).ToList();
+        var cities = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var o in origins)
+            if (IsUsable(o))
+                foreach (var cargo in ShippedWithTemplate(o.Location)) cities.UnionWith(AcceptingCities(cargo));
+        cities.Remove(originCity);
+        return cities.Order(StringComparer.Ordinal).ToList();
     }
 
     /// <summary>Há alguma empresa de saída com vaga ou oferta que envie uma carga aceita em <paramref name="destinationCity"/>?</summary>
-    public bool HasMatch(string originCity, string destinationCity) => OriginCompanies(originCity, destinationCity).Count > 0;
+    public bool HasMatch(string originCity, string destinationCity)
+    {
+        ArgumentNullException.ThrowIfNull(originCity);
+        ArgumentNullException.ThrowIfNull(destinationCity);
+        if (originCity == destinationCity || !_byCity.TryGetValue(originCity, out var companies)) return false;
+        return companies.Any(c => c.Free.Count + c.Offers.Count > 0 &&
+            ShippedWithTemplate(c.Location).Any(cargo => AcceptingCities(cargo).Contains(destinationCity)));
+    }
+
+    /// <summary>
+    /// Empresas da cidade utilizáveis para algum destino (vaga ou oferta e carga aceita em outra cidade) — o mesmo que
+    /// unir <see cref="OriginCompanies"/> sobre <see cref="DestinationCities"/>, sem varrer todas as cidades.
+    /// </summary>
+    public IReadOnlyList<CompanyLocation> UsableOriginCompanies(string originCity)
+    {
+        ArgumentNullException.ThrowIfNull(originCity);
+        if (!_byCity.TryGetValue(originCity, out var companies)) return [];
+        return companies
+            .Where(c => c.Free.Count + c.Offers.Count > 0 && ShippedWithTemplate(c.Location)
+                .Any(cargo => AcceptingCities(cargo).Any(city => city != originCity)))
+            .Select(c => c.Location).OrderBy(l => l.Key, StringComparer.Ordinal).ToList();
+    }
 
     /// <summary>Empresas da cidade com vaga livre OU oferta substituível e ao menos uma carga que a cidade de destino aceita.</summary>
     public IReadOnlyList<CompanyLocation> OriginCompanies(string originCity, string destinationCity)
@@ -98,9 +123,9 @@ public sealed class JobBoard
     {
         ArgumentNullException.ThrowIfNull(origin);
         ArgumentNullException.ThrowIfNull(destinationCity);
-        if (!_byCity.TryGetValue(destinationCity, out var destinations)) return [];
+        if (!_byCity.ContainsKey(destinationCity)) return [];
         return ShippedWithTemplate(origin)
-            .Where(cargo => destinations.Any(d => Accepts(d.Location.Company, cargo)))
+            .Where(cargo => AcceptingCities(cargo).Contains(destinationCity))
             .Order(StringComparer.Ordinal).ToList();
     }
 
@@ -164,14 +189,37 @@ public sealed class JobBoard
 
     // ---- índice
 
-    private bool IsUsable(Slots c) => c.Free.Count + c.Offers.Count > 0 && ShippedWithTemplate(c.Location).Any();
+    private bool IsUsable(Slots c) => c.Free.Count + c.Offers.Count > 0 && ShippedWithTemplate(c.Location).Length > 0;
 
-    private IEnumerable<string> ShippedWithTemplate(CompanyLocation origin)
+    private string[] ShippedWithTemplate(CompanyLocation origin)
     {
-        var shipped = new HashSet<string>(_data.CargoOut(origin.Company), StringComparer.Ordinal);
-        if (_learnedOut.TryGetValue(origin.Company, out var learned)) shipped.UnionWith(learned);
-        return shipped.Where(_templates.ContainsKey);
+        lock (_shipped)
+        {
+            if (_shipped.TryGetValue(origin.Company, out var hit)) return hit;
+            var shipped = new HashSet<string>(_data.CargoOut(origin.Company), StringComparer.Ordinal);
+            if (_learnedOut.TryGetValue(origin.Company, out var learned)) shipped.UnionWith(learned);
+            return _shipped[origin.Company] = shipped.Where(_templates.ContainsKey).ToArray();
+        }
     }
+
+    /// <summary>Cidades com alguma empresa que aceita a carga (só cargas com reboque conhecido; montado uma vez).</summary>
+    private IReadOnlySet<string> AcceptingCities(string cargo)
+    {
+        var index = Volatile.Read(ref _acceptingCities);
+        if (index is null)
+        {
+            index = new Dictionary<string, HashSet<string>>(StringComparer.Ordinal);
+            foreach (var t in _templates.Keys) index[t] = new HashSet<string>(StringComparer.Ordinal);
+            foreach (var (city, companies) in _byCity)
+                foreach (var c in companies)
+                    foreach (var (t, set) in index)
+                        if (!set.Contains(city) && Accepts(c.Location.Company, t)) set.Add(city);
+            Volatile.Write(ref _acceptingCities, index);
+        }
+        return index.TryGetValue(cargo, out var cities) ? cities : EmptySet;
+    }
+
+    private static readonly HashSet<string> EmptySet = new(StringComparer.Ordinal);
 
     private void Index(ISaveView view)
     {

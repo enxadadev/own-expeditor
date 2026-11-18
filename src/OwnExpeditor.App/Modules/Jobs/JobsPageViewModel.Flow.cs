@@ -106,7 +106,7 @@ public sealed partial class JobsPageViewModel
     private (string, bool) CityMeta(string city)
     {
         var b = _board!;
-        var companies = b.DestinationCities(city).SelectMany(d => b.OriginCompanies(city, d)).Distinct().ToList();
+        var companies = b.UsableOriginCompanies(city);
         var slots = companies.Sum(c => b.FreeSlots(c));
         var offers = companies.Sum(c => b.ReplaceableOffers(c).Count);
         var parts = new List<string>();
