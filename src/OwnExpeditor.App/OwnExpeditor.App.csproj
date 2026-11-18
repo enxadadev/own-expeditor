@@ -4,6 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Assets\mascot.ico</ApplicationIcon>
     <!-- App so enxerga Core e Domain; Sii/Data nao vazam por referencia transitiva (ADR 0006). -->
     <DisableTransitiveProjectReferences>true</DisableTransitiveProjectReferences>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>

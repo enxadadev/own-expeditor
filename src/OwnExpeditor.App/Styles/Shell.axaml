@@ -14,19 +14,25 @@
                 Background="{TemplateBinding Background}">
           <Grid>
             <Border x:Name="Bar" Height="3" VerticalAlignment="Top" Margin="10,0" CornerRadius="2" Background="Transparent" />
-            <ContentPresenter Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <ContentPresenter x:Name="PART_ContentPresenter" Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center" />
           </Grid>
         </Border>
       </ControlTemplate>
     </Setter>
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="Foreground" Value="{DynamicResource TextMutedBrush}" />
+    <Setter Property="Cursor" Value="Hand" />
   </Style>
   <Style Selector="Button.nav:pointerover"><Setter Property="Background" Value="{DynamicResource SurfaceHoverBrush}" /></Style>
   <Style Selector="Button.nav.active"><Setter Property="Background" Value="{DynamicResource SurfaceBrush}" /><Setter Property="Foreground" Value="{DynamicResource TextBrush}" /></Style>
   <Style Selector="Button.nav.active /template/ Border#Bar"><Setter Property="Background" Value="{DynamicResource AccentBrush}" /></Style>
   <Style Selector="Button.nav:focus-visible /template/ Border#Ring"><Setter Property="BorderBrush" Value="{DynamicResource FocusBrush}" /></Style>
-  <Style Selector="Button.nav:disabled"><Setter Property="Opacity" Value="0.4" /></Style>
+  <!-- Logo (cabeça do mascote) como botão Início, leva à seleção de save: mesmo anel de foco/hover/ativo do .nav, mais baixo -->
+  <Style Selector="Button.nav.home">
+    <Setter Property="Height" Value="52" />
+  </Style>
+  <Style Selector="Button.nav:pressed"><Setter Property="Background" Value="{DynamicResource SurfacePressedBrush}" /></Style>
+  <Style Selector="Button.nav:disabled"><Setter Property="Opacity" Value="0.4" /><Setter Property="Cursor" Value="Arrow" /></Style>
 
   <!-- Chip de perfil/save e selo Revisar (botões de contorno 44 px) -->
   <Style Selector="Button.chip">

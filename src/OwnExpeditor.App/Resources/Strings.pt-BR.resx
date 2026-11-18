@@ -279,6 +279,8 @@
   <data name="Module_map" xml:space="preserve"><value>Mapa</value></data>
   <data name="Module_profile" xml:space="preserve"><value>Perfil</value></data>
   <data name="Nav_DisabledHint" xml:space="preserve"><value>Abra um save para usar este módulo</value></data>
+  <data name="Nav_Home" xml:space="preserve"><value>Início</value></data>
+  <data name="Nav_Home_Hint" xml:space="preserve"><value>Início: escolher o save</value></data>
   <data name="Nav_Label" xml:space="preserve"><value>Módulos</value></data>
   <data name="Nav_Settings" xml:space="preserve"><value>Configurações</value></data>
   <data name="Nav_Settings_Short" xml:space="preserve"><value>Config.</value></data>

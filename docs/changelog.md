@@ -41,6 +41,10 @@ por um shell com módulos. Ainda sem release publicado; a versão em
 - **Erros claros.** Erros de leitura e de gravação dizem o que aconteceu e o que
   fazer.
 - **Steam Cloud.** Perfis do Steam Cloud mostram aviso antes de gravar.
+- **Botão Início no logo.** A cabeça do mascote, no topo da barra lateral, volta
+  à seleção de save de qualquer tela. A sessão aberta e as alterações pendentes
+  são mantidas. Corrige: depois de sair da seleção de save não havia como voltar.
+- **Novo ícone.** A janela e o executável usam a cabeça do mascote.
 
 ### Mudanças técnicas
 

@@ -10,23 +10,15 @@
     <Grid ColumnDefinitions="76,*">
       <!-- navegação lateral -->
       <Border Grid.Column="0" Background="{DynamicResource SideBrush}" BorderBrush="{DynamicResource LineBrush}" BorderThickness="0,0,1,0">
-        <DockPanel Margin="0,12,0,12">
-          <StackPanel DockPanel.Dock="Bottom" HorizontalAlignment="Center">
-            <Button Classes="nav" Classes.active="{Binding SettingsNav.IsActive}" Command="{Binding SettingsNav.Command}"
-                    ToolTip.Tip="{Binding SettingsNav.Title}" AutomationProperties.Name="{Binding SettingsNav.Title}">
-              <StackPanel Spacing="4" HorizontalAlignment="Center">
-                <Path Data="{Binding SettingsNav.IconKey, Converter={x:Static shell:ShellConverters.Icon}}"
-                      Stroke="{Binding $parent[Button].Foreground}" StrokeThickness="1.8" StrokeLineCap="Round" StrokeJoin="Round"
-                      Width="22" Height="22" Stretch="Uniform" HorizontalAlignment="Center" AutomationProperties.AccessibilityView="Raw" />
-                <TextBlock FontFamily="{StaticResource FontDisplay}" FontSize="11" FontWeight="SemiBold" LetterSpacing="0.2"
-                           Text="{Binding SettingsNav.ShortTitle}" HorizontalAlignment="Center" Foreground="{Binding $parent[Button].Foreground}" />
-              </StackPanel>
-            </Button>
-          </StackPanel>
-          <TextBlock DockPanel.Dock="Top" Text="OE" FontFamily="{StaticResource FontDisplay}" FontSize="22" FontWeight="Bold"
-                     Foreground="{DynamicResource AccentTextBrush}" HorizontalAlignment="Center" Margin="0,0,0,16"
-                     AutomationProperties.AccessibilityView="Raw" />
-          <ItemsControl ItemsSource="{Binding Modules}" HorizontalAlignment="Center" AutomationProperties.Name="{Binding ModulesLabel}">
+        <!-- ordem no XAML = ordem de Tab: Início → módulos → Configurações -->
+        <Grid Margin="0,12,0,12" RowDefinitions="Auto,*,Auto">
+          <Button Grid.Row="0" Classes="nav home" Classes.active="{Binding IsHomeActive}" Command="{Binding HomeCommand}"
+                  HorizontalAlignment="Center" Margin="0,0,0,16"
+                  ToolTip.Tip="{loc:Tr Nav_Home_Hint}" AutomationProperties.Name="{loc:Tr Nav_Home}">
+            <Image Source="/Assets/mascot-96.png" Width="36" Height="36" Margin="0,4,0,0" Stretch="Uniform"
+                   RenderOptions.BitmapInterpolationMode="HighQuality" AutomationProperties.AccessibilityView="Raw" />
+          </Button>
+          <ItemsControl Grid.Row="1" ItemsSource="{Binding Modules}" HorizontalAlignment="Center" AutomationProperties.Name="{Binding ModulesLabel}">
             <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Spacing="6" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
               <DataTemplate x:DataType="vm:NavItemViewModel">
@@ -43,7 +35,19 @@
               </DataTemplate>
             </ItemsControl.ItemTemplate>
           </ItemsControl>
-        </DockPanel>
+          <StackPanel Grid.Row="2" HorizontalAlignment="Center">
+            <Button Classes="nav" Classes.active="{Binding SettingsNav.IsActive}" Command="{Binding SettingsNav.Command}"
+                    ToolTip.Tip="{Binding SettingsNav.Title}" AutomationProperties.Name="{Binding SettingsNav.Title}">
+              <StackPanel Spacing="4" HorizontalAlignment="Center">
+                <Path Data="{Binding SettingsNav.IconKey, Converter={x:Static shell:ShellConverters.Icon}}"
+                      Stroke="{Binding $parent[Button].Foreground}" StrokeThickness="1.8" StrokeLineCap="Round" StrokeJoin="Round"
+                      Width="22" Height="22" Stretch="Uniform" HorizontalAlignment="Center" AutomationProperties.AccessibilityView="Raw" />
+                <TextBlock FontFamily="{StaticResource FontDisplay}" FontSize="11" FontWeight="SemiBold" LetterSpacing="0.2"
+                           Text="{Binding SettingsNav.ShortTitle}" HorizontalAlignment="Center" Foreground="{Binding $parent[Button].Foreground}" />
+              </StackPanel>
+            </Button>
+          </StackPanel>
+        </Grid>
       </Border>
 
       <Grid Grid.Column="1" RowDefinitions="Auto,*,Auto">

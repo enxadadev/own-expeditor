@@ -32,6 +32,7 @@ não direto no navegador.
 | --- | --- | --- |
 | [direcao-visual](direcao-visual/README.md) | aprovado (A+C) | [link](https://claude.ai/artifact/EBn8WvYp5z8dgDmK8rNmQV) |
 | [shell](shell/README.md) | aprovado | [link](https://claude.ai/artifact/YSdcaqn7AyAqvc6wVuBSYN) |
+| [brand](brand/README.md) | aprovado | — |
 | [review-apply](review-apply/README.md) | aprovado | [link](https://claude.ai/artifact/Sc4DPk3qimRg3ivvk58d5z) |
 | [controles](controles/README.md) | aprovado | [link](https://claude.ai/artifact/AHbpXwyEujo1i82j8AZEED) |
 | [fretes](fretes/README.md) | aprovado | https://claude.ai/artifact/DGcBW2CtBSZWnZXgzE7PhM |

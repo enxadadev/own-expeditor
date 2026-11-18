@@ -17,6 +17,8 @@ Números/datas pela cultura (`{0:N1}`, `{1:N0}`); `Module_*` é exibido em caixa
 | `Nav_Settings` | Configurações | Settings | Título da página e nome acessível do botão |
 | `Nav_Settings_Short` | Config. | Settings | Rótulo curto (cabe em 60 px, caixa alta) |
 | `Nav_DisabledHint` | Abra um save para usar este módulo | Open a save to use this module | ToolTip dos módulos desabilitados |
+| `Nav_Home` | Início | Home | Nome acessível do logo (botão Início) |
+| `Nav_Home_Hint` | Início: escolher o save | Home: choose a save | ToolTip do logo; leva à seleção de save |
 | `Shell_SafetyNote` | Nada é gravado sem revisão. Um backup é criado antes. | Nothing is saved without review. A backup is created first. | Rodapé do shell, sempre visível |
 | `Shell_HintReview` | Revisar | Review | Dica de atalho no rodapé (ao lado de Ctrl+R) |
 | `Shell_HintApply` | Aplicar | Apply | Dica de atalho no rodapé (ao lado de Ctrl+Enter); só aparece na página Revisar |

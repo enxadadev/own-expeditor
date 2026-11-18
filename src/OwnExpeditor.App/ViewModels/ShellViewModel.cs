@@ -85,6 +85,7 @@ public sealed partial class ShellViewModel : LocalizedViewModel, IShellNavigatio
         OpenSettingsCommand = new RelayCommand(OpenSettings);
         NavigateCommand = new RelayCommand<int>(NavigateByIndex);
         BackCommand = new RelayCommand(() => TryBack());
+        HomeCommand = new RelayCommand(GoHome, () => !_opening && Dialog is null);
 
         _page = ShellPage.Welcome;
         _currentPage = welcome;
@@ -135,6 +136,11 @@ public sealed partial class ShellViewModel : LocalizedViewModel, IShellNavigatio
     public RelayCommand<int> NavigateCommand { get; }
 
     public RelayCommand BackCommand { get; }
+
+    /// <summary>Logo do app: volta à seleção de save (Início), com ou sem sessão aberta.</summary>
+    public RelayCommand HomeCommand { get; }
+
+    public bool IsHomeActive => Page == ShellPage.Welcome;
 
     [ObservableProperty] private ShellPage _page;
     [ObservableProperty] private object? _currentPage;
@@ -210,6 +216,8 @@ public sealed partial class ShellViewModel : LocalizedViewModel, IShellNavigatio
         foreach (var m in Modules) { m.IsEnabled = HasSession; (m.Command as RelayCommand)?.NotifyCanExecuteChanged(); }
         ReviewCommand.NotifyCanExecuteChanged();
         RequestApplyCommand.NotifyCanExecuteChanged();
+        HomeCommand.NotifyCanExecuteChanged();
+        OnPropertyChanged(nameof(IsHomeActive));
         OnPropertyChanged(nameof(HasSession));
         OnPropertyChanged(nameof(PendingCount));
         OnPropertyChanged(nameof(ShowReviewHint));
@@ -220,6 +228,23 @@ public sealed partial class ShellViewModel : LocalizedViewModel, IShellNavigatio
     {
         SetPage(ShellPage.Welcome, Welcome);
         _ = Welcome.ActivateAsync(CancellationToken.None);
+    }
+
+    /// <summary>Início: a seleção de save fica sempre acessível. A sessão e as pendências são mantidas;
+    /// abrir outro save daqui pede confirmação se houver alterações.</summary>
+    private void GoHome()
+    {
+        if (_opening || Dialog is not null) return;
+        _before = null;
+        SessionBar.IsPickerOpen = false;
+        if (Page == ShellPage.OpenError && !HasSession)
+        {
+            OpenError?.Dispose();
+            OpenError = null;
+            SessionBar.Save = null;
+            SessionBar.HasError = false;
+        }
+        if (Page != ShellPage.Welcome) ShowWelcome();
     }
 
     public void NavigateToModule(string moduleId)
@@ -363,6 +388,7 @@ public sealed partial class ShellViewModel : LocalizedViewModel, IShellNavigatio
         finally
         {
             _opening = false;
+            HomeCommand.NotifyCanExecuteChanged();
             cts.Dispose();
             if (ReferenceEquals(_openCts, cts)) _openCts = null;
         }
@@ -478,5 +504,6 @@ public sealed partial class ShellViewModel : LocalizedViewModel, IShellNavigatio
         OnPropertyChanged(nameof(Dialog));
         ReviewCommand.NotifyCanExecuteChanged();
         RequestApplyCommand.NotifyCanExecuteChanged();
+        HomeCommand.NotifyCanExecuteChanged();
     }
 }

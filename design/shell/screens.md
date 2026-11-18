@@ -26,7 +26,8 @@ Componentes:
 | Parte | Componente | Observações |
 | --- | --- | --- |
 | Janela | `AppShell` | Um só. Contém nav, `SessionBar`, `main` (conteúdo da página atual) e rodapé. Tema e idioma **não** ficam mais aqui (ver README, decisão 2). |
-| Navegação | **NOVO** `NavItem` (dentro do `AppShell`) | 60×60 (área de clique ≥ 44), ícone 22 + rótulo curto em caixa alta (`Barlow Condensed` 12/600). Estados: normal, `:pointerover`, ativo (fundo `Surface`, barra âmbar de 3 px no topo, `aria-current=page`), `:focus-visible` (anel âmbar 2 px), desabilitado (opacidade 0,4, ToolTip `Nav_DisabledHint`). Fonte do rótulo: `ModuleDescriptor.TitleKey` em caixa alta por conversor; Configurações usa `Nav_Settings_Short` (cabe em 60 px). |
+| Navegação | **NOVO** `NavItem` (dentro do `AppShell`) | 60×60 (área de clique ≥ 44), ícone 22 + rótulo curto em caixa alta (`Barlow Condensed` 12/600). Estados: normal, `:pointerover`, ativo (fundo `Surface`, barra âmbar de 3 px no topo, `aria-current=page`), `:focus-visible` (anel 2 px `FocusBrush`, como no catálogo de controles), desabilitado (opacidade 0,4, ToolTip `Nav_DisabledHint`). Fonte do rótulo: `ModuleDescriptor.TitleKey` em caixa alta por conversor; Configurações usa `Nav_Settings_Short` (cabe em 60 px). |
+| Logo / Início | `NavItem` (classe `home`) | Cabeça do mascote 36×36 (`Assets/mascot-96.png`, ver `design/brand/`) num item 60×52, primeiro na ordem de Tab. Leva à seleção de save de qualquer tela, mantendo sessão e pendências. Ativo na seleção de save. Nome acessível `Nav_Home`, ToolTip `Nav_Home_Hint`. Desabilitado durante a abertura de um save e com diálogo aberto. |
 | Topo | **NOVO** `SessionBar` | Perfil, save, selo do jogo, estado do jogo, selo Revisar. Detalhes na seção 1. |
 | Selos | `Badge` | Selo do jogo (ETS2/ATS) e tipo de save (Automático/Rápido/Manual). |
 | Rodapé | texto + `kbd` | Nota de segurança sempre; dicas de atalho só com sessão. |
