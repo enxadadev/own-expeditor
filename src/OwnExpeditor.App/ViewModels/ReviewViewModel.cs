@@ -139,7 +139,12 @@ public sealed partial class ReviewViewModel : LocalizedViewModel
     }
 
     private Controls.DiffLine ToLine(Core.Session.DiffLine line, IGameNames names) => new(Loc.Format(line.Label),
-        FormatValue(line.Before, names), FormatValue(line.After, names), line.After is DiffValue.Number or DiffValue.Money);
+        FormatValue(line.Before, names), FormatValue(line.After, names), line.After is DiffValue.Number or DiffValue.Money,
+        IconOf(line.Before, names), IconOf(line.After, names));
+
+    /// <summary>Ícone (decoração) só para valores de reboque; os demais e o vazio não têm.</summary>
+    private static string? IconOf(DiffValue value, IGameNames names) =>
+        value is DiffValue.Trailer t ? TrailerIcons.Resolve(names.Trailer(t.Definition, t.Variant))?.Key : null;
 
     /// <summary>Valor vazio vira <c>null</c>: o controle mostra "—" e não risca.</summary>
     private string? FormatValue(DiffValue value, IGameNames names) => value is DiffValue.Empty ? null : Loc.Format(value, names);

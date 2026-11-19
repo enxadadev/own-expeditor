@@ -117,15 +117,19 @@
           <c:SearchablePicker Width="280" Label="{Binding PickerLabel}" Placeholder="{Binding PickerPlaceholder}" Items="{Binding LongOptions}"
                               SelectedItem="{Binding LongOptions[0]}" />
         </g:GalleryCell>
+        <g:GalleryCell Caption="LeadingIcon">
+          <c:SearchablePicker Width="280" Label="{Binding PickerLabel}" Placeholder="{Binding PickerPlaceholder}" Items="{Binding TrailerOptions}"
+                              SelectedItem="{Binding TrailerOptions[0]}" />
+        </g:GalleryCell>
       </WrapPanel>
     </g:GallerySection>
 
     <!-- RouteOfferItem -->
     <g:GallerySection Title="RouteOfferItem">
       <WrapPanel Classes="cells">
-        <g:GalleryCell Caption="{loc:Tr Gallery_State_Normal}"><c:RouteOfferItem Width="292" Origin="{Binding CityA}" Destination="{Binding CityB}" OriginCompany="{Binding CompanyA}" DestinationCompany="{Binding CompanyB}" DistanceText="{Binding Km569}" CargoText="{Binding CargoLine}" TrailerText="{Binding TrailerLine}" /></g:GalleryCell>
+        <g:GalleryCell Caption="{loc:Tr Gallery_State_Normal}"><c:RouteOfferItem Width="292" Origin="{Binding CityA}" Destination="{Binding CityB}" OriginCompany="{Binding CompanyA}" DestinationCompany="{Binding CompanyB}" DistanceText="{Binding Km569}" CargoText="{Binding CargoLine}" TrailerText="{Binding TrailerLine}" TrailerIconKey="IconTrailerFlatbed" /></g:GalleryCell>
         <g:GalleryCell Caption="{loc:Tr Gallery_State_Hover}"><c:RouteOfferItem Width="292" Origin="{Binding CityA}" Destination="{Binding CityB}" DistanceText="{Binding Km569}" CargoText="{Binding CargoLine}" TrailerText="{Binding TrailerLine}" g:Gallery.ForceState="Hover" /></g:GalleryCell>
-        <g:GalleryCell Caption="{loc:Tr Gallery_State_Selected}"><c:RouteOfferItem Width="292" Origin="{Binding CityA}" Destination="{Binding CityB}" DistanceText="{Binding Km569}" CargoText="{Binding CargoLine}" TrailerText="{Binding TrailerLine}" IsSelected="True" /></g:GalleryCell>
+        <g:GalleryCell Caption="{loc:Tr Gallery_State_Selected}"><c:RouteOfferItem Width="292" Origin="{Binding CityA}" Destination="{Binding CityB}" DistanceText="{Binding Km569}" CargoText="{Binding CargoLine}" TrailerText="{Binding TrailerLine}" TrailerIconKey="IconTrailerFlatbed" IsSelected="True" /></g:GalleryCell>
         <g:GalleryCell Caption="{loc:Tr Offer_Modified}"><c:RouteOfferItem Width="292" Origin="{Binding CityA}" Destination="{Binding CityB}" DistanceText="{Binding Km569}" CargoText="{Binding CargoLine}" TrailerText="{Binding TrailerLine}" IsModified="True" /></g:GalleryCell>
         <g:GalleryCell Caption="{loc:Tr Offer_Expired}"><c:RouteOfferItem Width="292" Origin="{Binding CityA}" Destination="{Binding CityB}" DistanceText="{Binding Km569}" CargoText="{Binding CargoLine}" TrailerText="{Binding TrailerLine}" StatusText="{loc:Tr Offer_Expired}" /></g:GalleryCell>
         <g:GalleryCell Caption="{loc:Tr Gallery_State_Focus}"><c:RouteOfferItem Width="292" Origin="{Binding CityA}" Destination="{Binding CityB}" DistanceText="{Binding Km569}" CargoText="{Binding CargoLine}" TrailerText="{Binding TrailerLine}" g:Gallery.ForceState="Focus" /></g:GalleryCell>
@@ -186,6 +190,38 @@
       </WrapPanel>
     </g:GallerySection>
 
+    <!-- TrailerIcon -->
+    <g:GallerySection Title="TrailerIcon" Description="16 · 20 · 24 px; chip 32 px (seletor); selo ×N só a partir de 20 px">
+      <StackPanel Spacing="16">
+        <ItemsControl ItemsSource="{Binding TrailerIconKeys}">
+          <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="x:String">
+              <StackPanel Margin="0,0,24,16" Spacing="4" Width="150">
+                <StackPanel Orientation="Horizontal" Spacing="12">
+                  <c:TrailerIcon IconKey="{Binding}" IconSize="16" />
+                  <c:TrailerIcon IconKey="{Binding}" IconSize="20" />
+                  <c:TrailerIcon IconKey="{Binding}" IconSize="24" Foreground="{DynamicResource TextBrush}" />
+                  <c:TrailerIcon IconKey="{Binding}" IconSize="20" HasChip="True" />
+                </StackPanel>
+                <TextBlock Classes="caption trim" Text="{Binding}" />
+              </StackPanel>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <WrapPanel Classes="cells">
+          <g:GalleryCell Caption="{loc:Tr Gallery_State_Normal}"><c:TrailerIcon IconKey="IconTrailerBox" IconSize="24" Foreground="{DynamicResource TextBrush}" /></g:GalleryCell>
+          <g:GalleryCell Caption="×2 (24)"><c:TrailerIcon IconKey="IconTrailerCurtain" Units="2" IconSize="24" Foreground="{DynamicResource TextBrush}" Margin="0,0,8,0" /></g:GalleryCell>
+          <g:GalleryCell Caption="×3 (20)"><c:TrailerIcon IconKey="IconTrailerBox" Units="3" IconSize="20" Margin="0,0,8,0" /></g:GalleryCell>
+          <g:GalleryCell Caption="×2 (16)"><c:TrailerIcon IconKey="IconTrailerBox" Units="2" IconSize="16" /></g:GalleryCell>
+          <g:GalleryCell Caption="{loc:Tr Gallery_State_Selected}"><c:TrailerIcon IconKey="IconTrailerReefer" IconSize="20" Foreground="{DynamicResource AccentTextBrush}" /></g:GalleryCell>
+          <g:GalleryCell Caption="{loc:Tr Gallery_State_Disabled}"><c:TrailerIcon IconKey="IconTrailerReefer" IconSize="20" Opacity="0.4" /></g:GalleryCell>
+          <g:GalleryCell Caption="Chip ×2"><c:TrailerIcon IconKey="IconTrailerCurtain" Units="2" IconSize="20" HasChip="True" Margin="0,0,8,0" /></g:GalleryCell>
+          <g:GalleryCell Caption="Chip"><c:TrailerIcon IconSize="20" HasChip="True" /></g:GalleryCell>
+        </WrapPanel>
+      </StackPanel>
+    </g:GallerySection>
+
     <!-- ValueChange -->
     <g:GallerySection Title="ValueChange">
       <WrapPanel Classes="cells">
@@ -195,6 +231,7 @@
         <g:GalleryCell Caption="Removed"><c:ValueChange Layout="Horizontal" Width="220" Before="{Binding CityA}" /></g:GalleryCell>
         <g:GalleryCell Caption="Vertical"><c:ValueChange Layout="Vertical" Width="200" Before="{Binding CompanyA}" After="{Binding CompanyB}" /></g:GalleryCell>
         <g:GalleryCell Caption="Auto"><c:ValueChange Layout="Auto" Width="200" Before="{Binding CompanyA}" After="{Binding CompanyB}" /></g:GalleryCell>
+        <g:GalleryCell Caption="Icons"><c:ValueChange Layout="Horizontal" Width="420" Before="Prancha rebaixada" After="Baú refrigerado" BeforeIcon="IconTrailerLowbed" AfterIcon="IconTrailerReefer" /></g:GalleryCell>
       </WrapPanel>
     </g:GallerySection>
 

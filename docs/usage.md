@@ -79,6 +79,26 @@ Notas sobre a distância:
 - Quando não conhece, mostra **≈ km** e marca como **estimada**. A estimativa
   é aproximada (erro típico perto de 25%). O jogo recalcula a rota no GPS.
 
+### Reboque
+
+O campo **Reboque** mostra o tipo do reboque em texto, com um ícone ao lado:
+
+- Nome: o tipo de carroceria e o acabamento, como `Baú refrigerado` ou
+  `Prancha baixa`. Quando a cadeia não é simples, ela entra no nome:
+  `Sider · Rodotrem`.
+- Detalhes, numa linha abaixo: eixos e comprimento, como `3+3 eixos · longo`.
+  O que o app não reconhece não aparece aqui.
+- Ícone: mostra o tipo de relance. Cadeias duplas levam `×2` e HCT leva `×3`.
+  Reboque de mod que o app não conhece usa um ícone genérico e um nome derivado
+  do id.
+- Passe o mouse sobre o nome para ver o id do reboque (por exemplo,
+  `scs.box.single_3.reefer`). É útil para identificar um reboque de mod.
+
+Os mesmos nomes aparecem no seletor de carga, nas ofertas da lista e na revisão.
+Na revisão, a linha de reboque mostra os detalhes entre parênteses, para que uma
+troca só de comprimento não pareça sem efeito. Os ícones são só decoração: eles
+não filtram nem reordenam as opções.
+
 ### Trocar origem e destino
 
 Use **Trocar saída e destino** para inverter as cidades. Se a nova escolha deixar

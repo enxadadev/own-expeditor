@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Nomes de reboque · exemplos de id</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&amp;family=Barlow+Condensed:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+button{font:inherit;cursor:pointer}
+button:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+</style>
+</helmet>
+<div style="--accent: {{t.accent}}; --muted: {{t.muted}}; display: flex; flex-direction: column; width: 100%; min-height: 800px; box-sizing: border-box; background: {{t.bg}}; color: {{t.text}}; font-family: Barlow, system-ui, sans-serif; font-size: 14px;">
+  <div style="height: 768px; box-sizing: border-box; padding: 18px 24px 12px; display: flex; flex-direction: column; gap: 10px; min-height: 0;">
+    <header style="display: flex; flex-direction: column; gap: 2px;">
+      <h1 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-size: 26px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em;">{{tx.title}}</h1>
+      <span style="color: {{t.muted}};">{{tx.sub}}</span>
+    </header>
+    <div role="table" aria-label="{{tx.title}}" style="flex: 1 1 0; min-height: 0; display: flex; flex-direction: column; border-radius: 12px; background: {{t.panel}}; border: 1px solid {{t.line}}; overflow: hidden;">
+      <div role="row" style="display: grid; grid-template-columns: 270px 96px minmax(0, 1.2fr) minmax(0, 0.8fr) minmax(0, 1.2fr) minmax(0, 0.8fr) 84px; gap: 12px; padding: 8px 14px; border-bottom: 1px solid {{t.line}}; font-size: 11px; color: {{t.muted}}; text-transform: uppercase; letter-spacing: 0.08em;">
+        <span role="columnheader">{{tx.cId}}</span><span role="columnheader">{{tx.cIcon}}</span><span role="columnheader">{{tx.cPtName}}</span><span role="columnheader">{{tx.cPtDet}}</span><span role="columnheader">{{tx.cEnName}}</span><span role="columnheader">{{tx.cEnDet}}</span><span role="columnheader">{{tx.cVia}}</span>
+      </div>
+      <sc-for list="{{rows}}" as="r" hint-placeholder-count="13">
+        <div role="row" style="display: grid; grid-template-columns: 270px 96px minmax(0, 1.2fr) minmax(0, 0.8fr) minmax(0, 1.2fr) minmax(0, 0.8fr) 84px; gap: 12px; align-items: center; flex: 1 1 0; min-height: 0; padding: 0 14px; border-top: 1px solid {{t.line}};">
+          <span role="cell" style="font-family: ui-monospace, Consolas, monospace; font-size: 12px; color: {{t.muted}}; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="{{r.id}}">{{r.id}}</span>
+          <span role="cell" style="display: flex; align-items: center; gap: 6px; color: {{t.text}};" title="{{r.iconKey}}">
+            <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="{{t.text}}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex: 0 0 auto;"><path d="{{r.iconD}}"/></svg>
+            <span style="font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums; color: {{t.muted}};">{{r.units}}</span>
+          </span>
+          <span role="cell" style="font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="{{r.ptName}}">{{r.ptName}}</span>
+          <span role="cell" style="color: {{t.muted}}; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{r.ptDet}}</span>
+          <span role="cell" style="font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="{{r.enName}}">{{r.enName}}</span>
+          <span role="cell" style="color: {{t.muted}}; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{r.enDet}}</span>
+          <span role="cell" style="font-size: 12px; color: {{t.muted}};">{{r.via}}</span>
+        </div>
+      </sc-for>
+    </div>
+    <span style="font-size: 12px; color: {{t.muted}};">{{tx.note}}</span>
+  </div>
+
+  <div role="group" aria-label="{{tb.label}}" style="flex: 0 0 32px; box-sizing: border-box; padding: 0 12px; display: flex; align-items: center; gap: 8px; border-top: 1px dashed {{t.line}}; background: {{t.tool}}; font-size: 12px; color: {{t.muted}}; overflow: hidden;">
+    <span style="white-space: nowrap;">{{tb.label}}</span>
+    <div style="flex-grow: 1;"></div>
+    <button type="button" onClick="{{toggleTheme}}" style="{{tb.btn}}">{{tb.themeBtn}}</button>
+    <button type="button" onClick="{{toggleLang}}" style="{{tb.btn}}">{{tb.langBtn}}</button>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":true},"$preview":{"width":1280,"height":800}}'>
+/* A tabela é calculada pela mesma regra de screens.md §2; "Detalhes" vazio = nada a mostrar. */
+const UI = {
+ pt: { title: 'Exemplos: id → nome e detalhes', sub: 'Mesma regra nos dois idiomas. Ids reais de saves, mais dois de mods inventados.',
+  cIcon: 'Ícone', cId: 'Id da definição', cPtName: 'Nome (pt-BR)', cPtDet: 'Detalhes (pt-BR)', cEnName: 'Name (en)', cEnDet: 'Details (en)', cVia: 'Origem',
+  note: 'Origem: finish = vocabulário de acabamento; body = vocabulário de carroceria; token = id humanizado (mod). “—” nos detalhes: nada conhecido para mostrar. Ícone: mesma ordem do nome (acabamento, depois carroceria; sem token conhecido, genérico); ×N = nº de reboques da cadeia.',
+  prev: 'Prévia (fora do app)', themeLight: 'Tema claro', themeDark: 'Tema escuro', langBtn: 'English', via: { finish: 'acabamento', body: 'carroceria', token: 'token' } },
+ en: { title: 'Examples: id → name and details', sub: 'Same rule in both languages. Real ids from saves, plus two made-up mod ids.',
+  cIcon: 'Icon', cId: 'Definition id', cPtName: 'Name (pt-BR)', cPtDet: 'Details (pt-BR)', cEnName: 'Name (en)', cEnDet: 'Details (en)', cVia: 'Source',
+  note: 'Source: finish = finish vocabulary; body = body vocabulary; token = humanized id (mod). “—” in details: nothing known to show. Icon: same order as the name (finish, then body; no known token = generic); ×N = number of trailers in the chain.',
+  prev: 'Preview (not in the app)', themeLight: 'Light theme', themeDark: 'Dark theme', langBtn: 'Português', via: { finish: 'finish', body: 'body', token: 'token' } }
+};
+const VOC = {
+ pt: { axle1: '1 eixo', axleN: '{0} eixos', short: 'curto', long: 'longo',
+  body: { box: 'Baú', flatbed: 'Plataforma', lowbed: 'Prancha rebaixada', lowloader: 'Prancha baixa', gooseneck: 'Gooseneck', dumper: 'Basculante', log: 'Transporte de toras', foodtank: 'Tanque alimentício', silo: 'Silo', livestock: 'Transporte de animais' },
+  finish: { dryvan: 'Baú seco', dryvan_m: 'Baú seco', curtain: 'Sider', insulated: 'Baú isolado', reefer: 'Baú refrigerado', brick: 'Transporte de tijolos', container: 'Porta-contêiner', car_trans: 'Transporte de carros', van_trans: 'Transporte de vans', truck_trans: 'Transporte de caminhões', panel_trans: 'Transporte de painéis', gls_trailer: 'Transporte de vidro' },
+  chain: { double: 'Rodotrem', bdouble: 'Bitrem', hct: 'HCT' } },
+ en: { axle1: '1 axle', axleN: '{0} axles', short: 'short', long: 'long',
+  body: { box: 'Box trailer', flatbed: 'Flatbed', lowbed: 'Lowbed', lowloader: 'Low loader', gooseneck: 'Gooseneck', dumper: 'Dump trailer', log: 'Log trailer', foodtank: 'Food tanker', silo: 'Silo trailer', livestock: 'Livestock trailer' },
+  finish: { dryvan: 'Dry van', dryvan_m: 'Dry van', curtain: 'Curtainsider', insulated: 'Insulated box', reefer: 'Reefer', brick: 'Brick carrier', container: 'Container chassis', car_trans: 'Car transporter', van_trans: 'Van transporter', truck_trans: 'Truck transporter', panel_trans: 'Panel transporter', gls_trailer: 'Glass transporter' },
+  chain: { double: 'Double', bdouble: 'B-double', hct: 'HCT' } }
+};
+const IDS = [
+  'scs.box.single_3.reefer', 'scs.box.double_3_2.curtain', 'scs.box.bdouble_3_3.dryvan', 'scs.lowbed.single_41_ln.long',
+  'scs.lowloader.single_4_sh.short', 'scs.gooseneck.singl_3e_40.container', 'scs.dumper.single_3.steel', 'scs.silo.single_3_10.silo',
+  'scs.flatbed.single_3.flatbed_w', 'car_d.car_trans', 'glass.panel_trans.glass', 'acme_mods.cargo_box.double_2_2.frozen', 'my_trailer'
+];
+const TH = {
+  dark:  { bg:'#121417', panel:'#1a1d21', line:'#2a2f35', text:'#eef0f2', muted:'#9aa3ad', accent:'#f5a524', tool:'#0c0e10' },
+  light: { bg:'#f4f2ee', panel:'#ffffff', line:'#d9d3c7', text:'#1b1d20', muted:'#5f6670', accent:'#b86e00', tool:'#e3ded3' }
+};
+/* Mesmas geometrias de Styles/Icons.axaml (IconTrailer*) e mesma tabela token -> ícone de screens.md §7. */
+const G = 'M5 16v3.4';
+const W = 'M14.1 19.2a1.4 1.4 0 1 0 2.8 0 1.4 1.4 0 1 0-2.8 0M18.1 19.2a1.4 1.4 0 1 0 2.8 0 1.4 1.4 0 1 0-2.8 0';
+const ICONS = {
+  generic:   'M3 12.5h18M3 16h18M8 12.5V16M13 12.5V16' + G + W,
+  box:       'M3 5.5h18V16H3zM17.5 5.5V16' + G + W,
+  curtain:   'M3 5.5h18V16H3zM3 8.5h18M7.5 8.5V16M12 8.5V16M16.5 8.5V16' + G + W,
+  reefer:    'M3 5.5h18V16H3zM12 7.5v6.5M9.2 9.1l5.6 3.2M14.8 9.1l-5.6 3.2' + G + W,
+  flatbed:   'M3 14h18v2H3zM3 7.5V14M7 8.5h11V14H7z' + G + W,
+  lowbed:    'M3 9.5h5.5l1.3 3.7H21V16H3z' + W,
+  container: 'M6 5.5h15V14H6zM9.5 5.5V14M13.5 5.5V14M17.5 5.5V14M3 16h18M3 11.5V16' + W,
+  dumper:    'M3 8h13l5 8H3zM6 8l2-3 2.3 2.2 2.4-3L15 8' + W,
+  log:       'M3 16h18M4.5 6v10M19.5 6v10M8 8.5h8a1.5 1.5 0 0 1 0 3H8a1.5 1.5 0 0 1 0-3zM8 11.5h8a1.5 1.5 0 0 1 0 3H8a1.5 1.5 0 0 1 0-3z' + W,
+  tank:      'M7.5 5h9a4.5 4.5 0 0 1 0 9h-9a4.5 4.5 0 0 1 0-9zM11 5V3.5h2V5M8 14v2M16 14v2M3 16h18' + W,
+  silo:      'M7 16V9.5a5 5 0 0 1 10 0V16M7 12.5h10M3 16h18' + W,
+  livestock: 'M3 5.5h18V16H3zM6 8.5h4M14 8.5h4M6 12.5h4M14 12.5h4' + G + W,
+  car:       'M3 16h18M4.5 10.5h15M4.5 5h15M4.5 5v11M19.5 5v11M7 16l.9-3.2h4.2l.9 3.2M10 10.5l.9-3.2h4.2l.9 3.2' + W,
+  panel:     'M3 16h18M5.5 15 8 7h4l-2.5 8zM12.5 15 15 7h4l-2.5 8z' + W
+};
+const ICON_FIN = { dryvan: 'box', dryvan_m: 'box', insulated: 'box', curtain: 'curtain', reefer: 'reefer', brick: 'flatbed', container: 'container', car_trans: 'car', van_trans: 'car', truck_trans: 'car', panel_trans: 'panel', gls_trailer: 'panel', glass: 'panel' };
+const ICON_BODY = { box: 'box', flatbed: 'flatbed', lowbed: 'lowbed', lowloader: 'lowbed', gooseneck: 'container', dumper: 'dumper', log: 'log', foodtank: 'tank', silo: 'silo', livestock: 'livestock' };
+const ICON_KEY = { generic: 'IconTrailerGeneric', box: 'IconTrailerBox', curtain: 'IconTrailerCurtain', reefer: 'IconTrailerReefer', flatbed: 'IconTrailerFlatbed', lowbed: 'IconTrailerLowbed', container: 'IconTrailerContainer', dumper: 'IconTrailerDumper', log: 'IconTrailerLog', tank: 'IconTrailerTank', silo: 'IconTrailerSilo', livestock: 'IconTrailerLivestock', car: 'IconTrailerCarTransporter', panel: 'IconTrailerPanel' };
+function fmt(s, ...a) { return String(s).replace(/\{(\d)\}/g, (m, i) => a[i]); }
+function human(tok) { const s = tok.replace(/_/g, ' ').trim(); return s ? s[0].toUpperCase() + s.slice(1) : tok; }
+function resolve(def, lang) {
+  const v = VOC[lang];
+  const id = def.replace(/^trailer_def\./, '');
+  const toks = id.split('.');
+  const rest = toks.length > 1 ? toks.slice(1) : [];
+  let chain = null, parts = [], ci = -1;
+  rest.forEach((tk, i) => {
+    if (ci >= 0) return;
+    const m = /^(single|singl|double|bdouble|hct)(?:_(.+))?$/.exec(tk);
+    if (m) { ci = i; chain = m[1] === 'singl' ? 'single' : m[1]; parts = m[2] ? m[2].split('_') : []; }
+  });
+  const cand = rest.filter((_, i) => i !== ci);
+  let base = null, via = 'token';
+  for (let i = cand.length - 1; i >= 0 && !base; i--) if (v.finish[cand[i]]) { base = v.finish[cand[i]]; via = 'finish'; }
+  for (let i = 0; i < cand.length && !base; i++) if (v.body[cand[i]]) { base = v.body[cand[i]]; via = 'body'; }
+  if (!base) base = human(rest.length === 0 ? id : (ci > 0 ? rest[0] : cand[0]));
+  const name = chain && chain !== 'single' && v.chain[chain] ? fmt('{0} · {1}', base, v.chain[chain]) : base;
+  const units = { single: 1, double: 2, bdouble: 2, hct: 3 }[chain] || 0;
+  const ax = [];
+  for (const p of parts) { if (ax.length < units && /^\d[a-z]?$/.test(p)) ax.push(p[0]); else break; }
+  const axOk = chain === 'hct' ? ax.length >= 2 : (units > 0 && ax.length === units);
+  const det = [];
+  if (axOk) det.push(ax.length === 1 && ax[0] === '1' ? v.axle1 : fmt(v.axleN, ax.join('+')));
+  const last = toks[toks.length - 1];
+  const len = (rest.length > 0 && (last === 'short' || last === 'long')) ? last : (parts.includes('sh') ? 'short' : parts.includes('ln') ? 'long' : null);
+  if (len) det.push(v[len]);
+  let icon = null;
+  for (let i = cand.length - 1; i >= 0 && !icon; i--) if (ICON_FIN[cand[i]]) icon = ICON_FIN[cand[i]];
+  for (let i = 0; i < cand.length && !icon; i++) if (ICON_BODY[cand[i]]) icon = ICON_BODY[cand[i]];
+  return { id, name, details: det.join(' · '), via, icon: icon || 'generic', units: { double: 2, bdouble: 2, hct: 3 }[chain] || 1 };
+}
+function resolveTheme(c) {
+  const pref = c.state.pref || (c.props.dark === false ? 'light' : 'dark');
+  const sys = (typeof window !== 'undefined' && window.matchMedia) ? window.matchMedia('(prefers-color-scheme: dark)').matches : true;
+  const dark = pref === 'system' ? sys : pref === 'dark';
+  return { pref, dark, t: dark ? TH.dark : TH.light };
+}
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { pref: null, lang: 'pt' }; }
+  renderVals() {
+    const { dark, t } = resolveTheme(this);
+    const lang = this.state.lang, tx = UI[lang];
+    const rows = IDS.map(id => { const p = resolve(id, 'pt'), e = resolve(id, 'en');
+      return { id, ptName: p.name, ptDet: p.details || '—', enName: e.name, enDet: e.details || '—', via: tx.via[p.via],
+        iconD: ICONS[p.icon], iconKey: ICON_KEY[p.icon], units: p.units > 1 ? '×' + p.units : '' }; });
+    const tbBtn = `min-height:24px;padding:0 10px;border-radius:6px;border:1px solid ${t.line};background:transparent;color:${t.text};font-size:12px;white-space:nowrap;`;
+    return { t, tx, rows, tb: { label: tx.prev, themeBtn: dark ? tx.themeLight : tx.themeDark, langBtn: tx.langBtn, btn: tbBtn },
+      toggleTheme: () => this.setState({ pref: dark ? 'light' : 'dark' }),
+      toggleLang: () => this.setState({ lang: lang === 'pt' ? 'en' : 'pt' }) };
+  }
+}
+</script>
+</body>
+</html>

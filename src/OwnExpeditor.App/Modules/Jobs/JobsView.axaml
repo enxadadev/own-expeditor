@@ -160,9 +160,14 @@
               </Border>
               <Border Grid.Column="3" Classes="tile">
                 <StackPanel Spacing="2">
-                  <TextBlock Classes="caption trim" Text="{loc:Tr Jobs_Field_Trailer, Upper=True}" />
-                  <TextBlock Classes="metric trim" Text="{Binding TrailerValue}" ToolTip.Tip="{Binding TrailerValue}" />
-                  <TextBlock Classes="bodysm muted" TextWrapping="Wrap" MaxHeight="52" TextTrimming="CharacterEllipsis" Text="{Binding TrailerHint}" />
+                  <Grid ColumnDefinitions="*,Auto" MinHeight="24">
+                    <TextBlock Classes="caption trim" VerticalAlignment="Top" AutomationProperties.AccessibilityView="Raw" Text="{loc:Tr Jobs_Field_Trailer, Upper=True}" />
+                    <c:TrailerIcon Grid.Column="1" IconSize="24" Foreground="{DynamicResource TextBrush}" VerticalAlignment="Top"
+                                   IconKey="{Binding TrailerIconKey}" Units="{Binding TrailerUnits}" />
+                  </Grid>
+                  <TextBlock Classes="subtitle" Classes.muted="{Binding !HasTrailer}" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Text="{Binding TrailerValue}"
+                             ToolTip.Tip="{Binding TrailerHint}" AutomationProperties.Name="{Binding TrailerAutomationName}" AutomationProperties.HelpText="{Binding TrailerHint}" />
+                  <TextBlock Classes="bodysm muted trim" MinHeight="16" AutomationProperties.AccessibilityView="Raw" IsVisible="{Binding HasTrailerDetails}" Text="{Binding TrailerDetails}" />
                 </StackPanel>
               </Border>
             </Grid>

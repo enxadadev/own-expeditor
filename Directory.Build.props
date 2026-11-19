@@ -1,6 +1,6 @@
 <Project>
   <!-- Versão única do produto (M.X.Y). Mantida pelo agente git-ops. -->
   <PropertyGroup>
-    <Version>0.2.3</Version>
+    <Version>0.3.0</Version>
   </PropertyGroup>
 </Project>

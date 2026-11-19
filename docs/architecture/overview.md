@@ -66,6 +66,7 @@ Sequência detalhada de leitura e escrita: [data-flow.md](data-flow.md).
 | Parsear e gravar texto | `SiiDocument` (`Sii`) | Implementada, com round-trip. `Save` foi removido: a gravação passa por `SaveFileStore` |
 | Ler definições do jogo (`.scs`) | `HashFsArchive`, `CityHash`, `GameCatalog` (`Data`) | Implementada. Nomes pelo `locale.scs` (`Localization`) |
 | Nomes do jogo na língua do app | `IGameNames` (`Core`) | Implementada |
+| Nome e ícone do reboque | `TrailerDescriptor` (`Domain`), `TrailerText` e `TrailerIcons` (`App`) | Implementada: lidos do id da definição, sem lista fixa ([ADR 0008](../decisions/0008-nomes-e-icones-de-reboque.md)) |
 | Opções de frete | `JobBoard`, `DistanceTable` (`Core/Modules/Jobs`) | Implementada. Distância conhecida ou estimada |
 | Cache de distâncias | `JsonDistanceCache` (`Data/Distances`) | Implementada: `distances-ets2.json` e `distances-ats.json` na pasta de ajustes |
 | Planejar mudança de frete | `JobPlanner` (`Core/Modules/Jobs`) | Implementada. Substitui `JobInjector` |
@@ -104,7 +105,7 @@ está no `CLAUDE.md` e na [ADR 0004](../decisions/0004-suporte-a-tema-e-idioma.m
 | Textos em `.resx` (pt-BR e en) | Implementado: `Resources/Strings*.resx`, gerados por `toolkit/gen/gen-resx.py` a partir de `design/` |
 | Preferências em JSON | Implementado: `settings.json` na pasta de ajustes (`JsonSettingsStore`) |
 | Troca de tema e idioma em runtime | Implementado: idioma sem reiniciar |
-| Nomes do jogo na língua do app | Implementado: resolvidos pelo Core (`IGameNames`), com a tradução do `locale.scs` |
+| Nomes do jogo na língua do app | Implementado: resolvidos pelo Core (`IGameNames`), com a tradução do `locale.scs`. Reboques leem o id e usam o vocabulário `Trailer_*` do `.resx` ([ADR 0008](../decisions/0008-nomes-e-icones-de-reboque.md)) |
 
 Em cada camada: textos ficam em `.resx` na App; o Core devolve códigos de erro
 (`CoreError`) e chaves de texto, nunca frases de UI; a Data guarda as

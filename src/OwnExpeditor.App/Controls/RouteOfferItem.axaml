@@ -19,6 +19,7 @@
     <Style Selector="Border#Card.focus"><Setter Property="BorderBrush" Value="{DynamicResource FocusBrush}" /><Setter Property="BorderThickness" Value="2" /></Style>
     <Style Selector="Border#Card.dim"><Setter Property="Opacity" Value="0.7" /></Style>
     <Style Selector="Border#Card.disabled"><Setter Property="Opacity" Value="0.4" /></Style>
+    <Style Selector="Border#Card.selected c|TrailerIcon"><Setter Property="Foreground" Value="{DynamicResource AccentTextBrush}" /></Style>
     <Style Selector="Border#Card.selected TextBlock#Km"><Setter Property="Foreground" Value="{DynamicResource AccentTextBrush}" /></Style>
   </UserControl.Styles>
   <Border x:Name="Card"
@@ -32,7 +33,11 @@
       </Grid>
       <TextBlock x:Name="Km" Grid.Row="0" Grid.Column="1" Classes="metric num" FontSize="19" Text="{Binding #Root.DistanceText}"
                  VerticalAlignment="Center" HorizontalAlignment="Right" />
-      <TextBlock Grid.Row="1" Grid.Column="0" Classes="bodysm muted trim" Text="{Binding #Root.SecondLine}" />
+      <Grid Grid.Row="1" Grid.Column="0" ColumnDefinitions="Auto,*">
+        <c:TrailerIcon IconSize="16" IconKey="{Binding #Root.TrailerIconKey}" Margin="0,0,6,0" VerticalAlignment="Center"
+                       IsVisible="{Binding #Root.TrailerIconKey, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+        <TextBlock Grid.Column="1" Classes="bodysm muted trim" Text="{Binding #Root.SecondLine}" />
+      </Grid>
       <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Spacing="6" HorizontalAlignment="Right">
         <c:PendingBadge Variant="Tag" Text="{loc:Tr Offer_Modified}" IsVisible="{Binding #Root.IsModified}" />
         <TextBlock Classes="bodysm muted" Text="{Binding #Root.StatusText}"

@@ -479,6 +479,44 @@ App: {6}</value></data>
   <data name="Toast_Discarded" xml:space="preserve"><value>Change discarded.</value></data>
   <data name="Toast_DiscardedMany" xml:space="preserve"><value>Changes discarded.</value></data>
   <data name="Toast_Undo" xml:space="preserve"><value>Undo</value></data>
+  <data name="Trailer_Automation" xml:space="preserve"><value>Trailer: {0}</value></data>
+  <data name="Trailer_Automation_Details" xml:space="preserve"><value>Trailer: {0}, {1}</value></data>
+  <data name="Trailer_Automation_None" xml:space="preserve"><value>Trailer: none</value></data>
+  <data name="Trailer_Axles_Groups" xml:space="preserve"><value>{0} axles</value></data>
+  <data name="Trailer_Axles_One" xml:space="preserve"><value>1 axle</value></data>
+  <data name="Trailer_Axles_Other" xml:space="preserve"><value>{0} axles</value></data>
+  <data name="Trailer_Badge" xml:space="preserve"><value>×{0}</value></data>
+  <data name="Trailer_Body_box" xml:space="preserve"><value>Box trailer</value></data>
+  <data name="Trailer_Body_dumper" xml:space="preserve"><value>Dump trailer</value></data>
+  <data name="Trailer_Body_flatbed" xml:space="preserve"><value>Flatbed</value></data>
+  <data name="Trailer_Body_foodtank" xml:space="preserve"><value>Food tanker</value></data>
+  <data name="Trailer_Body_gooseneck" xml:space="preserve"><value>Gooseneck</value></data>
+  <data name="Trailer_Body_livestock" xml:space="preserve"><value>Livestock trailer</value></data>
+  <data name="Trailer_Body_log" xml:space="preserve"><value>Log trailer</value></data>
+  <data name="Trailer_Body_lowbed" xml:space="preserve"><value>Lowbed</value></data>
+  <data name="Trailer_Body_lowloader" xml:space="preserve"><value>Low loader</value></data>
+  <data name="Trailer_Body_silo" xml:space="preserve"><value>Silo trailer</value></data>
+  <data name="Trailer_Chain_bdouble" xml:space="preserve"><value>B-double</value></data>
+  <data name="Trailer_Chain_double" xml:space="preserve"><value>Double</value></data>
+  <data name="Trailer_Chain_hct" xml:space="preserve"><value>HCT</value></data>
+  <data name="Trailer_Details_Join" xml:space="preserve"><value>{0} · {1}</value></data>
+  <data name="Trailer_Details_Paren" xml:space="preserve"><value>{0} ({1})</value></data>
+  <data name="Trailer_Finish_brick" xml:space="preserve"><value>Brick carrier</value></data>
+  <data name="Trailer_Finish_car_trans" xml:space="preserve"><value>Car transporter</value></data>
+  <data name="Trailer_Finish_container" xml:space="preserve"><value>Container chassis</value></data>
+  <data name="Trailer_Finish_curtain" xml:space="preserve"><value>Curtainsider</value></data>
+  <data name="Trailer_Finish_dryvan" xml:space="preserve"><value>Dry van</value></data>
+  <data name="Trailer_Finish_dryvan_m" xml:space="preserve"><value>Dry van</value></data>
+  <data name="Trailer_Finish_gls_trailer" xml:space="preserve"><value>Glass transporter</value></data>
+  <data name="Trailer_Finish_insulated" xml:space="preserve"><value>Insulated box</value></data>
+  <data name="Trailer_Finish_panel_trans" xml:space="preserve"><value>Panel transporter</value></data>
+  <data name="Trailer_Finish_reefer" xml:space="preserve"><value>Reefer</value></data>
+  <data name="Trailer_Finish_truck_trans" xml:space="preserve"><value>Truck transporter</value></data>
+  <data name="Trailer_Finish_van_trans" xml:space="preserve"><value>Van transporter</value></data>
+  <data name="Trailer_IdTip" xml:space="preserve"><value>Trailer ID: {0}</value></data>
+  <data name="Trailer_Length_long" xml:space="preserve"><value>long</value></data>
+  <data name="Trailer_Length_short" xml:space="preserve"><value>short</value></data>
+  <data name="Trailer_Name_WithChain" xml:space="preserve"><value>{0} · {1}</value></data>
   <data name="Welcome_Browse" xml:space="preserve"><value>Choose folder…</value></data>
   <data name="Welcome_Continue" xml:space="preserve"><value>Pick up where you left off</value></data>
   <data name="Welcome_LastSave" xml:space="preserve"><value>{0} · {1} · {2}</value></data>

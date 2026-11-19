@@ -3,6 +3,34 @@
 A versão do produto fica em `Directory.Build.props` (`M.X.Y`). Quem a altera é
 o agente `git-ops` (ver `ia/agents/git-ops.md`).
 
+## 0.3.0 (em desenvolvimento)
+
+Nomes e ícones legíveis para os reboques na tela de Fretes, no seletor de
+carga, nas ofertas e na revisão.
+
+### Para o usuário
+
+- **Nomes de reboque legíveis.** Em vez de `Scs flat b`, o app mostra o tipo
+  do reboque, como `Baú refrigerado` ou `Prancha baixa`. Cadeias não simples
+  aparecem no nome (`Sider · Rodotrem`), e eixos e comprimento vão numa linha
+  de detalhes (`3+3 eixos · longo`). O nome vale na tela de Fretes, no seletor
+  de carga, na linha da oferta e na revisão. O id cru fica no tooltip.
+  Reboques de mods que o app não conhece usam o id, com um nome derivado dele.
+- **Ícones de reboque.** Um ícone de contorno mostra o tipo do reboque de
+  relance, na tela de Fretes, no seletor de carga, nas ofertas e na revisão.
+  Cadeias duplas ganham o selo `×2` (e `×3` para HCT). Reboque desconhecido ou
+  de mod mostra um ícone genérico. Os ícones são decorativos: não filtram nem
+  reordenam as opções.
+
+### Mudanças técnicas
+
+- Nomes e ícones de reboque saem do id da definição (`trailer_definition`), lido
+  por `TrailerDescriptor` (`Domain`). `IGameNames.Trailer` e `DiffValue.Trailer`
+  (`Core`) levam o reboque até a App, que monta o texto com as chaves
+  `Trailer_*` do `.resx` e o ícone com `TrailerIcons` (ADR 0008).
+- `ILocalizer.TryGet` busca uma chave sem o marcador `!chave!`.
+- Controle novo `TrailerIcon` (App) e tokens de ícones em `Styles/Icons.axaml`.
+
 ## 0.2.0 (em desenvolvimento)
 
 Primeira versão com o app de fretes utilizável. Substitui a tela única da 0.1.0

@@ -15,6 +15,8 @@ public partial class ValueChange : UserControl
     public static readonly StyledProperty<bool> IsNumericProperty = AvaloniaProperty.Register<ValueChange, bool>(nameof(IsNumeric));
     public static readonly StyledProperty<ValueChangeLayout> LayoutProperty = AvaloniaProperty.Register<ValueChange, ValueChangeLayout>(nameof(Layout));
     public static readonly StyledProperty<string?> LabelProperty = AvaloniaProperty.Register<ValueChange, string?>(nameof(Label));
+    public static readonly StyledProperty<string?> BeforeIconProperty = AvaloniaProperty.Register<ValueChange, string?>(nameof(BeforeIcon));
+    public static readonly StyledProperty<string?> AfterIconProperty = AvaloniaProperty.Register<ValueChange, string?>(nameof(AfterIcon));
     public static readonly DirectProperty<ValueChange, string> BeforeTextProperty =
         AvaloniaProperty.RegisterDirect<ValueChange, string>(nameof(BeforeText), o => o.BeforeText);
     public static readonly DirectProperty<ValueChange, string> AfterTextProperty =
@@ -34,6 +36,9 @@ public partial class ValueChange : UserControl
 
     public string? Before { get => GetValue(BeforeProperty); set => SetValue(BeforeProperty, value); }
     public string? After { get => GetValue(AfterProperty); set => SetValue(AfterProperty, value); }
+    /// <summary>Chaves <c>IconTrailer*</c> (16 px antes do texto de cada lado); nulo = sem ícone. Só decoração.</summary>
+    public string? BeforeIcon { get => GetValue(BeforeIconProperty); set => SetValue(BeforeIconProperty, value); }
+    public string? AfterIcon { get => GetValue(AfterIconProperty); set => SetValue(AfterIconProperty, value); }
     public bool IsNumeric { get => GetValue(IsNumericProperty); set => SetValue(IsNumericProperty, value); }
     public ValueChangeLayout Layout { get => GetValue(LayoutProperty); set => SetValue(LayoutProperty, value); }
 

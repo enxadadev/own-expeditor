@@ -1,0 +1,30 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:OwnExpeditor.App.Controls"
+             xmlns:shell="using:OwnExpeditor.App.Shell"
+             x:Class="OwnExpeditor.App.Controls.TrailerIcon"
+             x:Name="Root" x:DataType="c:TrailerIcon" ClipToBounds="False" IsHitTestVisible="False" Focusable="False"
+             AutomationProperties.AccessibilityView="Raw" VerticalAlignment="Center"
+             Width="{Binding #Root.HostSize}" Height="{Binding #Root.HostSize}">
+  <UserControl.Styles>
+    <Style Selector="Border#Chip.filled"><Setter Property="Background" Value="{DynamicResource SurfaceHoverBrush}" /></Style>
+  </UserControl.Styles>
+  <!-- Decorativo (design/nomes-reboques §7). Geometrias 24 x 24 em Viewbox: o traço escala junto, então StrokeWidth compensa. -->
+  <Grid ClipToBounds="False">
+    <Border x:Name="Chip" CornerRadius="{StaticResource RadiusSm}" Classes.filled="{Binding #Root.ShowChipBackground}"
+            AutomationProperties.AccessibilityView="Raw" />
+    <Viewbox Width="{Binding #Root.IconSize}" Height="{Binding #Root.IconSize}" HorizontalAlignment="Center" VerticalAlignment="Center"
+             IsVisible="{Binding #Root.IconKey, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" AutomationProperties.AccessibilityView="Raw">
+      <Canvas Width="24" Height="24">
+        <Path Data="{Binding #Root.IconKey, Converter={x:Static shell:ShellConverters.Icon}}" Stroke="{Binding #Root.Foreground}"
+              StrokeThickness="{Binding #Root.StrokeWidth}" StrokeLineCap="Round" StrokeJoin="Round" />
+      </Canvas>
+    </Viewbox>
+    <Border x:Name="Badge" Height="14" MinWidth="18" Padding="4,0" Margin="0,0,-7,-5" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+            Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderStrongBrush}" BorderThickness="1"
+            CornerRadius="{StaticResource RadiusPill}" IsVisible="{Binding #Root.ShowBadge}" AutomationProperties.AccessibilityView="Raw">
+      <TextBlock FontSize="10" FontWeight="SemiBold" Classes="num" Foreground="{DynamicResource TextBrush}" Text="{Binding #Root.BadgeText}"
+                 HorizontalAlignment="Center" VerticalAlignment="Center" AutomationProperties.AccessibilityView="Raw" />
+    </Border>
+  </Grid>
+</UserControl>

@@ -48,11 +48,11 @@ define o que a App pode usar:
 
 | Projeto | Responsabilidade | Principais tipos |
 |---------|------------------|------------------|
-| `src/OwnExpeditor.App` | UI Avalonia em MVVM: shell, módulos, revisão, confirmação, resultado, configurações, temas e idiomas | `App`, `Program`, `Shell/AppComposition`, `ViewRegistry`, `ShellViewModel`, `SessionBarViewModel`, `WelcomeViewModel`, `LoadingViewModel`, `ReviewViewModel`, `ConfirmApplyViewModel`, `ResultViewModel`, `SettingsViewModel`, `Modules/Jobs/JobsPageViewModel`, `Services/Localizer`, `Services/ThemeService`, `Controls/*` |
-| `src/OwnExpeditor.Core` | Casos de uso: sessão de edição, mudanças, Jobs, jogo, perfis e ajustes | `EditSession`, `EditSessionHost`, `ChangeSet`, `SavePatch`, `ApplyTarget`, `ISaveView`, `CoreError`, `CoreException`, `Modules/Jobs/JobBoard`, `JobPlanner`, `DistanceTable`, `GameDataService`, `GameStatusMonitor`, `ProfileService`, `AppSettingsService`, `IGameNames` |
+| `src/OwnExpeditor.App` | UI Avalonia em MVVM: shell, módulos, revisão, confirmação, resultado, configurações, temas e idiomas | `App`, `Program`, `Shell/AppComposition`, `ViewRegistry`, `ShellViewModel`, `SessionBarViewModel`, `WelcomeViewModel`, `LoadingViewModel`, `ReviewViewModel`, `ConfirmApplyViewModel`, `ResultViewModel`, `SettingsViewModel`, `Modules/Jobs/JobsPageViewModel`, `Services/Localizer`, `Services/ThemeService`, `Services/TrailerText`, `Services/TrailerIcons`, `Controls/*` (inclui `TrailerIcon`) |
+| `src/OwnExpeditor.Core` | Casos de uso: sessão de edição, mudanças, Jobs, jogo, perfis e ajustes | `EditSession`, `EditSessionHost`, `ChangeSet`, `SavePatch`, `ApplyTarget`, `ISaveView`, `CoreError`, `CoreException`, `Modules/Jobs/JobBoard`, `JobPlanner`, `DistanceTable`, `GameDataService`, `GameStatusMonitor`, `ProfileService`, `AppSettingsService`, `IGameNames` (`Trailer` lê o id do reboque) |
 | `src/OwnExpeditor.Data` | Perfis e saves no disco, gravação segura, catálogo do jogo, cache de distâncias, ajustes em JSON | `ProfileLocator`, `SaveFileStore` (`ISaveFileStore`), `SaveLocator` (utilitários internos), `GameCatalog`, `GameInstallLocator`, `GameProcessMonitor`, `Localization`, `Scs/HashFsArchive`, `Distances/JsonDistanceCache`, `Settings/JsonSettingsStore` |
 | `src/OwnExpeditor.Sii` | Decodificar ScsC, BSII e 3nK; parsear e gravar o texto SiiNunit | `SiiDecoder`, `BsiiDecoder`, `SiiDocument`, `SiiFormatException`, `SiiErrorKind` |
-| `src/OwnExpeditor.Domain` | Records e enums puros, sem I/O | `GameKind`, `GameIds`, `GameNameKind`, `GameFolderCheck`, `CityPair`, `ProfileInfo`, `SaveSlotInfo`, `ProfileNames`, `AppSettings`, `GameFolders`, `Language`, `ThemePreference` |
+| `src/OwnExpeditor.Domain` | Records e enums puros, sem I/O | `GameKind`, `GameIds`, `GameNameKind`, `TrailerDescriptor`, `GameFolderCheck`, `CityPair`, `ProfileInfo`, `SaveSlotInfo`, `ProfileNames`, `AppSettings`, `GameFolders`, `Language`, `ThemePreference` |
 
 A lista de entidades do jogo (empresas, cidades, cargas, reboques) não tem
 projeto próprio: `GameCatalog` (`Data`) guarda as definições lidas dos `.scs`, e
@@ -87,7 +87,8 @@ Regra da [ADR 0004](../decisions/0004-suporte-a-tema-e-idioma.md) e da skill
   (`Core`) a expõe à App.
 - **Nomes do jogo**: cidades, empresas, cargas e reboques são traduzidos pelo
   `locale.scs` do próprio jogo, no idioma escolhido no app. `IGameNames` (`Core`)
-  faz essa resolução.
+  faz essa resolução. Reboques são a exceção: o nome vem do id e do vocabulário
+  `Trailer_*` do `.resx` (`TrailerText`, App), pela [ADR 0008](../decisions/0008-nomes-e-icones-de-reboque.md).
 - **Domain**: não tem texto nem cor.
 
 ## Regras que a estrutura precisa manter

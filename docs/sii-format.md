@@ -117,6 +117,26 @@ Slot vazio (1406 no save de exemplo): `target: ""`, `cargo: null`,
 `expiration_time: nil`. Esses slots são os candidatos naturais para injetar
 jobs sem apagar ofertas existentes.
 
+### Ids de reboque
+
+`trailer_definition` segue a convenção
+`trailer_def.<dono>.<carroceria>.<cadeia>_<eixos>[_sh|_ln].<acabamento>`
+(ex.: `trailer_def.scs.box.double_3_2.curtain`). O app lê só a estrutura, sem
+lista fixa:
+
+- **cadeia**: `single`/`singl` (1 grupo de eixos), `double`/`bdouble` (2) e
+  `hct` (3); o número de grupos de eixos tem de bater, senão eixos ficam vazios.
+- **eixos**: dígitos ASCII `[0-9]`, um por grupo (`double_3_2` = 3 + 2).
+- **comprimento**: `_sh` (curto) ou `_ln` (longo) na cadeia, ou token final
+  `short`/`long`; sem diferenciar maiúsculas.
+- **tokens ambíguos** (`41`, `40`, `10`, etc.) são ignorados como eixos ou
+  comprimento e ficam só como tokens de nome.
+- o primeiro token após o dono é a carroceria; o último (se não for
+  comprimento) é o acabamento.
+
+Exemplos: `scs.box.double_3_2.curtain` (double, 3+2, acabamento `curtain`);
+`scs.box.bdouble_3_3.dryvan` (6 eixos); `scs.flatbed.single_3.flatbed_w`.
+
 ### Glossário dos demais atributos
 
 Os atributos acima são os que o app usa hoje. O glossário completo, com as

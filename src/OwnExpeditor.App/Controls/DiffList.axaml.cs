@@ -13,6 +13,10 @@ public interface IDiffLine
     string? Before { get; }
     string? After { get; }
     bool IsNumeric { get; }
+
+    /// <summary>Chaves <c>IconTrailer*</c> de cada lado (só a linha Reboque); nulo = sem ícone. Só decoração.</summary>
+    string? BeforeIcon => null;
+    string? AfterIcon => null;
 }
 
 /// <summary>Um grupo = um ChangeSet (módulo, título, linhas, descartar). Textos já traduzidos/formatados.</summary>
@@ -25,7 +29,7 @@ public interface IDiffGroup
 }
 
 /// <summary>Valor simples para amostras e VMs que não precisam de mais.</summary>
-public sealed record DiffLine(string Label, string? Before, string? After, bool IsNumeric = false) : IDiffLine;
+public sealed record DiffLine(string Label, string? Before, string? After, bool IsNumeric = false, string? BeforeIcon = null, string? AfterIcon = null) : IDiffLine;
 
 public sealed record DiffGroup(string ModuleName, string Title, System.Collections.Generic.IReadOnlyList<IDiffLine> Lines, ICommand? DiscardCommand = null) : IDiffGroup;
 

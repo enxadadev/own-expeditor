@@ -160,6 +160,7 @@ public sealed partial class JobsPageViewModel : ModulePageViewModel
 
     private void ResetState()
     {
+        ClearTrailerCache();
         _staged.Clear();
         _fromCity = _toCity = _cargo = _offerId = _notice = _error = null;
         _fromCompany = _toCompany = null;

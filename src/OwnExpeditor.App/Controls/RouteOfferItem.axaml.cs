@@ -19,6 +19,7 @@ public partial class RouteOfferItem : UserControl
     public static readonly StyledProperty<string> DistanceTextProperty = AvaloniaProperty.Register<RouteOfferItem, string>(nameof(DistanceText), "");
     public static readonly StyledProperty<string> CargoTextProperty = AvaloniaProperty.Register<RouteOfferItem, string>(nameof(CargoText), "");
     public static readonly StyledProperty<string?> TrailerTextProperty = AvaloniaProperty.Register<RouteOfferItem, string?>(nameof(TrailerText));
+    public static readonly StyledProperty<string?> TrailerIconKeyProperty = AvaloniaProperty.Register<RouteOfferItem, string?>(nameof(TrailerIconKey));
     public static readonly StyledProperty<bool> IsSelectedProperty = AvaloniaProperty.Register<RouteOfferItem, bool>(nameof(IsSelected));
     public static readonly StyledProperty<bool> IsModifiedProperty = AvaloniaProperty.Register<RouteOfferItem, bool>(nameof(IsModified));
     public static readonly StyledProperty<string?> StatusTextProperty = AvaloniaProperty.Register<RouteOfferItem, string?>(nameof(StatusText));
@@ -46,6 +47,9 @@ public partial class RouteOfferItem : UserControl
     public string DistanceText { get => GetValue(DistanceTextProperty); set => SetValue(DistanceTextProperty, value); }
     public string CargoText { get => GetValue(CargoTextProperty); set => SetValue(CargoTextProperty, value); }
     public string? TrailerText { get => GetValue(TrailerTextProperty); set => SetValue(TrailerTextProperty, value); }
+
+    /// <summary>Chave <c>IconTrailer*</c> (16 px antes do texto da 2ª linha); nulo = sem ícone. Só decoração.</summary>
+    public string? TrailerIconKey { get => GetValue(TrailerIconKeyProperty); set => SetValue(TrailerIconKeyProperty, value); }
     public bool IsSelected { get => GetValue(IsSelectedProperty); set => SetValue(IsSelectedProperty, value); }
     public bool IsModified { get => GetValue(IsModifiedProperty); set => SetValue(IsModifiedProperty, value); }
 
