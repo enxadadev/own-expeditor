@@ -4,6 +4,11 @@
              xmlns:loc="using:OwnExpeditor.App.Markup"
              x:Class="OwnExpeditor.App.Controls.SearchablePicker"
              x:Name="Root" x:DataType="c:SearchablePicker">
+  <UserControl.Resources>
+    <DataTemplate x:Key="LeadingChip" x:DataType="c:PickerOption">
+      <c:TrailerIcon HasChip="True" IconSize="20" IconKey="{Binding LeadingIcon}" Units="{Binding LeadingBadge}" />
+    </DataTemplate>
+  </UserControl.Resources>
   <UserControl.Styles>
     <Style Selector="Button#FieldButton.error /template/ ContentPresenter#PART_ContentPresenter"><Setter Property="BorderBrush" Value="{DynamicResource DangerBrush}" /></Style>
     <Style Selector="Button#FieldButton.selected /template/ ContentPresenter#PART_ContentPresenter"><Setter Property="BorderBrush" Value="{DynamicResource AccentTextBrush}" /></Style>
@@ -24,6 +29,8 @@
       <Setter Property="BorderThickness" Value="1" />
     </Style>
     <Style Selector="ListBox#OptionList ListBoxItem:selected TextBlock.primary"><Setter Property="Foreground" Value="{DynamicResource AccentTextBrush}" /></Style>
+    <Style Selector="ListBox#OptionList ListBoxItem:selected c|TrailerIcon"><Setter Property="Foreground" Value="{DynamicResource AccentTextBrush}" /></Style>
+    <Style Selector="ListBox#OptionList ListBoxItem:selected c|TrailerIcon Border#Chip"><Setter Property="Background" Value="Transparent" /></Style>
   </UserControl.Styles>
   <StackPanel Spacing="4">
     <Panel>
@@ -71,18 +78,19 @@
                    PointerReleased="OnListPointerReleased" AutomationProperties.Name="{Binding #Root.Label}">
             <ListBox.ItemTemplate>
               <DataTemplate x:DataType="c:PickerOption">
-                <Grid ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="8" ToolTip.Tip="{Binding Primary}"
+                <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto" ColumnSpacing="8" ToolTip.Tip="{Binding Primary}"
                       Opacity="{Binding IsEnabled, Converter={x:Static c:Converters.DisabledOpacity}}">
-                  <StackPanel VerticalAlignment="Center" MinWidth="0">
+                  <ContentControl IsVisible="{Binding ReserveLeading}" Content="{Binding}" ContentTemplate="{StaticResource LeadingChip}" />
+                  <StackPanel Grid.Column="1" VerticalAlignment="Center" MinWidth="0">
                     <TextBlock Classes="body trim primary" FontWeight="SemiBold" Text="{Binding Primary}" />
                     <TextBlock Classes="bodysm muted trim" Text="{Binding Secondary}"
                                IsVisible="{Binding Secondary, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
                   </StackPanel>
-                  <Border Grid.Column="1" BorderBrush="{DynamicResource BorderStrongBrush}" BorderThickness="1" CornerRadius="{StaticResource RadiusPill}"
+                  <Border Grid.Column="2" BorderBrush="{DynamicResource BorderStrongBrush}" BorderThickness="1" CornerRadius="{StaticResource RadiusPill}"
                           Padding="8,1" VerticalAlignment="Center" IsVisible="{Binding Tag, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
                     <TextBlock FontSize="11" Text="{Binding Tag}" />
                   </Border>
-                  <TextBlock Grid.Column="3" Classes="body num" VerticalAlignment="Center" TextAlignment="Right" Text="{Binding Trailing}"
+                  <TextBlock Grid.Column="4" Classes="body num" VerticalAlignment="Center" TextAlignment="Right" Text="{Binding Trailing}"
                              IsVisible="{Binding Trailing, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
                 </Grid>
               </DataTemplate>

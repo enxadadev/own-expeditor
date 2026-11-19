@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Ícones de reboque · catálogo Claro e Escuro</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&amp;family=Barlow+Condensed:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+button{font:inherit;cursor:pointer}
+button:focus-visible,[tabindex]:focus-visible{outline:2px solid #f5a524;outline-offset:2px}
+</style>
+</helmet>
+<div style="display: flex; flex-direction: column; width: 100%; min-height: 800px; box-sizing: border-box; background: #0c0e10; color: #eef0f2; font-family: Barlow, system-ui, sans-serif; font-size: 14px;">
+  <div style="height: 768px; box-sizing: border-box; padding: 16px 20px 12px; display: flex; flex-direction: column; gap: 10px; min-height: 0;">
+    <header style="display: flex; flex-direction: column; gap: 2px;">
+      <h1 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-size: 26px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em;">{{tx.title}}</h1>
+      <span style="color: #9aa3ad;">{{tx.sub}}</span>
+    </header>
+
+    <div style="flex: 1 1 0; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px;">
+      <sc-for list="{{panels}}" as="p" hint-placeholder-count="2">
+        <section aria-label="{{p.title}}" style="{{p.box}}">
+          <span style="font-size: 12px; color: {{p.t.muted}}; text-transform: uppercase; letter-spacing: 0.08em;">{{p.title}}</span>
+
+          <!-- 14 ícones: 36 px + tamanhos reais 24 / 20 / 16 -->
+          <div role="list" aria-label="{{tx.gridLabel}}" style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px;">
+            <sc-for list="{{p.cells}}" as="c" hint-placeholder-count="14">
+              <div role="listitem" style="{{c.box}}">
+                <svg aria-hidden="true" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="{{p.t.text}}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="{{c.d}}"/></svg>
+                <div aria-hidden="true" style="display: flex; align-items: center; gap: 8px; height: 24px;">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="{{p.t.muted}}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="{{c.d}}"/></svg>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{p.t.muted}}" stroke-width="1.92" stroke-linecap="round" stroke-linejoin="round"><path d="{{c.d}}"/></svg>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="{{p.t.muted}}" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="{{c.d}}"/></svg>
+                </div>
+                <span style="font-size: 11px; line-height: 14px; color: {{p.t.text}}; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%;" title="{{c.tip}}">{{c.label}}</span>
+              </div>
+            </sc-for>
+          </div>
+
+          <span style="font-size: 12px; color: {{p.t.muted}}; text-transform: uppercase; letter-spacing: 0.08em; margin-top: 2px;">{{tx.varTitle}}</span>
+          <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+            <sc-for list="{{p.vars}}" as="v" hint-placeholder-count="7">
+              <div style="{{v.cell}}">
+                <div style="{{v.wrap}}">
+                  <svg aria-hidden="true" width="{{v.size}}" height="{{v.size}}" viewBox="0 0 24 24" fill="none" stroke="{{v.color}}" stroke-width="{{v.sw}}" stroke-linecap="round" stroke-linejoin="round" style="{{v.svgStyle}}"><path d="{{v.d}}"/></svg>
+                  <span aria-hidden="true" style="{{v.badgeStyle}}">{{v.badge}}</span>
+                </div>
+                <span style="font-size: 11px; line-height: 14px; color: {{p.t.muted}}; text-align: center;">{{v.caption}}</span>
+              </div>
+            </sc-for>
+          </div>
+
+          <span style="font-size: 12px; line-height: 16px; color: {{p.t.muted}};">{{tx.note}}</span>
+        </section>
+      </sc-for>
+    </div>
+  </div>
+
+  <div role="group" aria-label="{{tb.label}}" style="flex: 0 0 32px; box-sizing: border-box; padding: 0 12px; display: flex; align-items: center; gap: 8px; border-top: 1px dashed #2a2f35; background: #0c0e10; font-size: 12px; color: #9aa3ad; overflow: hidden;">
+    <span style="white-space: nowrap;">{{tb.label}}</span>
+    <div style="flex-grow: 1;"></div>
+    <button type="button" onClick="{{toggleLang}}" style="{{tb.btn}}">{{tb.langBtn}}</button>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":true},"$preview":{"width":1280,"height":800}}'>
+/* Geometrias: as mesmas de Styles/Icons.axaml (IconTrailer*), 24 x 24, de contorno (Stroke, sem Fill). */
+const G = 'M5 16v3.4';
+const W = 'M14.1 19.2a1.4 1.4 0 1 0 2.8 0 1.4 1.4 0 1 0-2.8 0M18.1 19.2a1.4 1.4 0 1 0 2.8 0 1.4 1.4 0 1 0-2.8 0';
+const ICONS = {
+  generic:   'M3 12.5h18M3 16h18M8 12.5V16M13 12.5V16' + G + W,
+  box:       'M3 5.5h18V16H3zM17.5 5.5V16' + G + W,
+  curtain:   'M3 5.5h18V16H3zM3 8.5h18M7.5 8.5V16M12 8.5V16M16.5 8.5V16' + G + W,
+  reefer:    'M3 5.5h18V16H3zM12 7.5v6.5M9.2 9.1l5.6 3.2M14.8 9.1l-5.6 3.2' + G + W,
+  flatbed:   'M3 14h18v2H3zM3 7.5V14M7 8.5h11V14H7z' + G + W,
+  lowbed:    'M3 9.5h5.5l1.3 3.7H21V16H3z' + W,
+  container: 'M6 5.5h15V14H6zM9.5 5.5V14M13.5 5.5V14M17.5 5.5V14M3 16h18M3 11.5V16' + W,
+  dumper:    'M3 8h13l5 8H3zM6 8l2-3 2.3 2.2 2.4-3L15 8' + W,
+  log:       'M3 16h18M4.5 6v10M19.5 6v10M8 8.5h8a1.5 1.5 0 0 1 0 3H8a1.5 1.5 0 0 1 0-3zM8 11.5h8a1.5 1.5 0 0 1 0 3H8a1.5 1.5 0 0 1 0-3z' + W,
+  tank:      'M7.5 5h9a4.5 4.5 0 0 1 0 9h-9a4.5 4.5 0 0 1 0-9zM11 5V3.5h2V5M8 14v2M16 14v2M3 16h18' + W,
+  silo:      'M7 16V9.5a5 5 0 0 1 10 0V16M7 12.5h10M3 16h18' + W,
+  livestock: 'M3 5.5h18V16H3zM6 8.5h4M14 8.5h4M6 12.5h4M14 12.5h4' + G + W,
+  car:       'M3 16h18M4.5 10.5h15M4.5 5h15M4.5 5v11M19.5 5v11M7 16l.9-3.2h4.2l.9 3.2M10 10.5l.9-3.2h4.2l.9 3.2' + W,
+  panel:     'M3 16h18M5.5 15 8 7h4l-2.5 8zM12.5 15 15 7h4l-2.5 8z' + W
+};
+const ORDER = ['box','curtain','reefer','flatbed','lowbed','container','dumper','log','tank','silo','livestock','car','panel','generic'];
+const STR = {
+  pt: { title: 'Ícones de reboque', sub: '14 categorias, contorno monocromático, 24 × 24. Em cada célula: 36 px (referência) e os tamanhos reais 24, 20 e 16.',
+    dark: 'Tema escuro', light: 'Tema claro', gridLabel: 'Categorias de ícone', varTitle: 'Variações de uso',
+    note: 'Decorativo (oculto para leitores de tela): o nome já diz o reboque. Só aparece com reboque conhecido; reboque de mod desconhecido usa “Genérico”. Nunca filtra nem ordena opções.',
+    prev: 'Prévia (fora do app)', langBtn: 'English',
+    cat: { box: 'Baú', curtain: 'Sider', reefer: 'Refrigerado', flatbed: 'Plataforma', lowbed: 'Prancha', container: 'Contêiner', dumper: 'Basculante', log: 'Toras', tank: 'Tanque', silo: 'Silo', livestock: 'Animais', car: 'Carros', panel: 'Painéis', generic: 'Genérico' },
+    tip: { box: 'box · dryvan · insulated', curtain: 'curtain', reefer: 'reefer', flatbed: 'flatbed · brick', lowbed: 'lowbed · lowloader', container: 'container · gooseneck', dumper: 'dumper', log: 'log', tank: 'foodtank', silo: 'silo', livestock: 'livestock', car: 'car_trans · van_trans · truck_trans', panel: 'panel_trans · gls_trailer · glass', generic: 'qualquer outro token (mods)' },
+    v: { card: 'Cartão 24 px', badge2: 'Rodotrem / Bitrem ×2', badge3: 'HCT ×3', picker: 'Linha do seletor 20 px', sel: 'Selecionado', mute: 'Em listas (suave)', dis: 'Desabilitado', none: 'Sem reboque: sem ícone', gen: 'Mod desconhecido' } },
+  en: { title: 'Trailer icons', sub: '14 categories, monochrome outline, 24 × 24. Each cell: 36 px (reference) and the real sizes 24, 20 and 16.',
+    dark: 'Dark theme', light: 'Light theme', gridLabel: 'Icon categories', varTitle: 'Usage variations',
+    note: 'Decorative (hidden from screen readers): the name already says which trailer. Only shown with a known trailer; an unknown mod trailer uses “Generic”. Never filters or sorts options.',
+    prev: 'Preview (not in the app)', langBtn: 'Português',
+    cat: { box: 'Box', curtain: 'Curtain', reefer: 'Reefer', flatbed: 'Flatbed', lowbed: 'Lowbed', container: 'Container', dumper: 'Dumper', log: 'Log', tank: 'Tank', silo: 'Silo', livestock: 'Livestock', car: 'Cars', panel: 'Panels', generic: 'Generic' },
+    tip: { box: 'box · dryvan · insulated', curtain: 'curtain', reefer: 'reefer', flatbed: 'flatbed · brick', lowbed: 'lowbed · lowloader', container: 'container · gooseneck', dumper: 'dumper', log: 'log', tank: 'foodtank', silo: 'silo', livestock: 'livestock', car: 'car_trans · van_trans · truck_trans', panel: 'panel_trans · gls_trailer · glass', generic: 'any other token (mods)' },
+    v: { card: 'Card 24 px', badge2: 'Double / B-double ×2', badge3: 'HCT ×3', picker: 'Picker row 20 px', sel: 'Selected', mute: 'In lists (soft)', dis: 'Disabled', none: 'No trailer: no icon', gen: 'Unknown mod' } }
+};
+const TH = {
+  dark:  { bg:'#121417', panel:'#1a1d21', line:'#2a2f35', text:'#eef0f2', muted:'#9aa3ad', accentText:'#f5a524', sel:'#2a2414', hover:'#22262b', strong:'#66717d' },
+  light: { bg:'#f4f2ee', panel:'#ffffff', line:'#d9d3c7', text:'#1b1d20', muted:'#5f6670', accentText:'#8a5200', sel:'#fbecd2', hover:'#f6f3ec', strong:'#857e6f' }
+};
+/* Largura de traço real (px) por tamanho; em viewBox 24 vira px * 24 / tamanho. */
+const STROKE_PX = { 16: 1.4, 20: 1.6, 24: 1.8 };
+const sw = size => ((STROKE_PX[size] || 1.8) * 24 / size).toFixed(2);
+
+function variant(t, tx, o) {
+  const chip = o.chip ? `width:${o.chip}px;height:${o.chip}px;border-radius:8px;background:${t.hover};` : `width:${o.size}px;height:${o.size}px;`;
+  const wrap = `position:relative;display:flex;align-items:center;justify-content:center;box-sizing:border-box;${chip}${o.opacity ? 'opacity:' + o.opacity + ';' : ''}${o.empty ? `border:1px dashed ${t.line};border-radius:8px;` : ''}`;
+  const badgeStyle = o.badge ? `position:absolute;right:-7px;bottom:-5px;box-sizing:border-box;min-width:18px;height:14px;padding:0 3px;border-radius:7px;background:${t.panel};border:1px solid ${t.strong};color:${t.text};font-size:10px;line-height:12px;font-weight:600;text-align:center;font-variant-numeric:tabular-nums;` : 'display:none;';
+  return { d: o.empty ? '' : ICONS[o.key], size: o.size, sw: sw(o.size), color: o.color, wrap, badge: o.badge || '', badgeStyle, svgStyle: o.empty ? 'display:none;' : '', caption: o.caption,
+    cell: 'display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:8px;width:92px;padding:6px 2px;' };
+}
+
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { lang: 'pt' }; }
+  renderVals() {
+    const lang = this.state.lang, tx = STR[lang];
+    const panels = ['dark', 'light'].map(name => {
+      const t = TH[name];
+      const cells = ORDER.map(k => ({ d: ICONS[k], label: tx.cat[k], tip: tx.tip[k],
+        box: `display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0;padding:8px 4px;border-radius:10px;background:${t.panel};border:1px solid ${t.line};` }));
+      const V = tx.v;
+      const vars = [
+        variant(t, tx, { key: 'reefer', size: 24, color: t.text, caption: V.card }),
+        variant(t, tx, { key: 'curtain', size: 24, color: t.text, badge: '×2', caption: V.badge2 }),
+        variant(t, tx, { key: 'flatbed', size: 24, color: t.text, badge: '×3', caption: V.badge3 }),
+        variant(t, tx, { key: 'lowbed', size: 20, chip: 32, color: t.muted, caption: V.picker }),
+        variant(t, tx, { key: 'lowbed', size: 20, chip: 32, color: t.accentText, caption: V.sel }),
+        variant(t, tx, { key: 'car', size: 16, color: t.muted, caption: V.mute }),
+        variant(t, tx, { key: 'silo', size: 20, chip: 32, color: t.muted, opacity: 0.4, caption: V.dis }),
+        variant(t, tx, { key: 'generic', size: 20, chip: 32, color: t.muted, badge: '×2', caption: V.gen }),
+        variant(t, tx, { size: 24, chip: 32, empty: true, color: t.muted, caption: V.none })
+      ];
+      return { t, title: name === 'dark' ? tx.dark : tx.light, cells, vars,
+        box: `min-width:0;box-sizing:border-box;padding:12px 14px;border-radius:12px;background:${t.bg};color:${t.text};border:1px solid ${t.line};display:flex;flex-direction:column;gap:8px;overflow:hidden;` };
+    });
+    return { tx, panels,
+      tb: { label: tx.prev, langBtn: tx.langBtn, btn: 'min-height:24px;padding:0 10px;border-radius:6px;border:1px solid #2a2f35;background:transparent;color:#eef0f2;font-size:12px;white-space:nowrap;' },
+      toggleLang: () => this.setState({ lang: lang === 'pt' ? 'en' : 'pt' }) };
+  }
+}
+</script>
+</body>
+</html>

@@ -28,6 +28,32 @@ public class JobsPageTests
 
     private static string[] Keys(JobPickerViewModel p) => p.AllOptions.Select(o => (string)o.Key).ToArray();
 
+    [Fact]
+    public async Task Trailer_WithoutCargo_ShowsNoValueAndNoHint()
+    {
+        var fx = await Open();
+
+        Assert.Equal("—", fx.Page.TrailerValue);
+        Assert.False(fx.Page.HasTrailer);
+        Assert.Null(fx.Page.TrailerHint);
+        Assert.Equal("Trailer: none", fx.Page.TrailerAutomationName);
+    }
+
+    [Fact]
+    public async Task Trailer_WithCargo_ShowsNameHintWithIdAndFollowsLanguage()
+    {
+        var fx = await Open();
+        fx.Ready();
+
+        Assert.True(fx.Page.HasTrailer);
+        Assert.NotEqual("—", fx.Page.TrailerValue);
+        Assert.Contains("Trailer ID: x", fx.Page.TrailerHint);
+
+        fx.Loc.SetLanguage(Language.PtBr);
+
+        Assert.Contains("ID do reboque: x", fx.Page.TrailerHint);
+    }
+
     // ---- abertura e países
 
     [Fact]

@@ -76,7 +76,7 @@ catálogo, só as do save).
 `JobSelectionRules` (`Core/Modules/Jobs`) usa esse índice para manter a escolha
 consistente: `Revalidate` limpa o que deixou de valer e escolhe opção única,
 `Swap` troca os lados, `NextJob` prepara o próximo frete depois de "Adicionar" e
-`ToRequest` monta o `JobRequest`. Ver [../decisions/0008-cadeia-de-escolhas-do-frete-no-core-e-pais-da-cidade-pelo-igamedata.md](../decisions/0008-cadeia-de-escolhas-do-frete-no-core-e-pais-da-cidade-pelo-igamedata.md).
+`ToRequest` monta o `JobRequest`. Ver [../decisions/0009-cadeia-de-escolhas-do-frete-no-core-e-pais-da-cidade-pelo-igamedata.md](../decisions/0009-cadeia-de-escolhas-do-frete-no-core-e-pais-da-cidade-pelo-igamedata.md).
 
 A distância vem de `DistanceTable`: primeiro o par conhecido (das ofertas de
 todos os saves do usuário, via `IDistanceCache`), depois a estimativa pelo grafo

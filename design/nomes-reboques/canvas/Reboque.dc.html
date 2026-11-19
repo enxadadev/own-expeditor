@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Nomes de reboque · onde aparece</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&amp;family=Barlow+Condensed:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+button{font:inherit;cursor:pointer}
+button:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+</style>
+</helmet>
+<div style="--accent: {{t.accent}}; --accent-text: {{t.accentText}}; --muted: {{t.muted}}; --border2: {{t.border2}}; display: flex; flex-direction: column; width: 100%; min-height: 800px; box-sizing: border-box; background: {{t.bg}}; color: {{t.text}}; font-family: Barlow, system-ui, sans-serif; font-size: 14px;">
+  <div style="height: 768px; box-sizing: border-box; padding: 18px 24px 16px; display: flex; flex-direction: column; gap: 12px; min-height: 0;">
+    <header style="display: flex; align-items: flex-end; gap: 16px;">
+      <div style="display: flex; flex-direction: column; gap: 2px;">
+        <h1 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-size: 26px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em;">{{tx.title}}</h1>
+        <span style="color: {{t.muted}};">{{tx.sub}}</span>
+      </div>
+      <div style="flex-grow: 1;"></div>
+      <span style="font-size: 12px; color: {{t.muted}}; font-family: ui-monospace, Consolas, monospace;" title="{{tx.idLabel}}">{{head.id}}</span>
+    </header>
+
+    <div style="flex: 1 1 0; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) minmax(0, 1fr); gap: 14px;">
+
+      <!-- A: campo Reboque na tela Fretes -->
+      <section aria-label="{{tx.aTitle}}" style="min-width: 0; box-sizing: border-box; padding: 14px 16px; border-radius: 12px; border: 1px solid {{t.line}}; display: flex; flex-direction: column; gap: 10px; overflow: hidden;">
+        <span style="font-size: 12px; color: {{t.muted}}; text-transform: uppercase; letter-spacing: 0.08em;">{{tx.aTitle}}</span>
+        <div style="display: flex; gap: 14px; align-items: flex-start;">
+          <sc-for list="{{tiles}}" as="k" hint-placeholder-count="2">
+            <div style="display: flex; flex-direction: column; gap: 6px; min-width: 0;">
+              <div role="group" aria-label="{{k.aria}}" style="{{k.box}}">
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px; min-height: 24px;">
+                  <span style="font-size: 11px; color: {{t.muted}}; text-transform: uppercase; letter-spacing: 0.08em;">{{tx.field}}</span>
+                  <span aria-hidden="true" style="{{k.ic.wrap}}">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="{{t.text}}" stroke-width="{{k.ic.sw}}" stroke-linecap="round" stroke-linejoin="round"><path d="{{k.ic.d}}"/></svg>
+                    <span style="{{k.ic.badgeStyle}}">{{k.ic.badge}}</span>
+                  </span>
+                </div>
+                <span style="font-size: 16px; line-height: 20px; font-weight: 600; color: {{k.color}}; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; word-break: break-word;" title="{{k.tip}}">{{k.name}}</span>
+                <span style="font-size: 13px; line-height: 16px; min-height: 16px; color: {{t.muted}};">{{k.details}}</span>
+              </div>
+              <span style="font-size: 11px; color: {{t.muted}};">{{k.caption}}</span>
+            </div>
+          </sc-for>
+          <div style="display: {{tip.d}}; flex-direction: column; gap: 6px; min-width: 0;">
+            <div role="tooltip" style="box-sizing: border-box; max-width: 230px; padding: 8px 10px; border-radius: 8px; background: {{t.panel}}; border: 1px solid {{t.line}}; box-shadow: {{t.shadow}}; font-size: 12px; line-height: 16px; display: flex; flex-direction: column; gap: 4px;">
+              <span>{{tip.help}}</span>
+              <span style="font-family: ui-monospace, Consolas, monospace; color: {{t.muted}}; word-break: break-all;">{{tip.id}}</span>
+            </div>
+            <span style="font-size: 11px; color: {{t.muted}};">{{tx.tipCaption}}</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- B: seletor de carga -->
+      <section aria-label="{{tx.bTitle}}" style="min-width: 0; box-sizing: border-box; padding: 14px 16px; border-radius: 12px; border: 1px solid {{t.line}}; display: flex; flex-direction: column; gap: 10px; overflow: hidden;">
+        <span style="font-size: 12px; color: {{t.muted}}; text-transform: uppercase; letter-spacing: 0.08em;">{{tx.bTitle}}</span>
+        <div role="listbox" aria-label="{{tx.cargoLabel}}" style="width: 100%; max-width: 360px; box-sizing: border-box; padding: 6px; border-radius: 12px; background: {{t.panel}}; border: 1px solid {{t.line}}; box-shadow: {{t.shadow}}; display: flex; flex-direction: column; gap: 2px;">
+          <sc-for list="{{pick}}" as="o" hint-placeholder-count="6">
+            <div role="option" aria-selected="{{o.sel}}" style="{{o.style}}">
+              <span aria-hidden="true" style="{{o.ic.wrap}}">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{o.ic.color}}" stroke-width="{{o.ic.sw}}" stroke-linecap="round" stroke-linejoin="round"><path d="{{o.ic.d}}"/></svg>
+                <span style="{{o.ic.badgeStyle}}">{{o.ic.badge}}</span>
+              </span>
+              <div style="display: flex; flex-direction: column; min-width: 0; flex: 1 1 0;">
+                <span style="font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: {{o.color}};">{{o.primary}}</span>
+                <span style="font-size: 12px; color: {{t.muted}}; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="{{o.tip}}">{{o.secondary}}</span>
+              </div>
+              <span style="display: {{o.checkD}}; color: {{t.accentText}};"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg></span>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+
+      <!-- C: item de oferta -->
+      <section aria-label="{{tx.cTitle}}" style="min-width: 0; box-sizing: border-box; padding: 14px 16px; border-radius: 12px; border: 1px solid {{t.line}}; display: flex; flex-direction: column; gap: 10px; overflow: hidden;">
+        <span style="font-size: 12px; color: {{t.muted}}; text-transform: uppercase; letter-spacing: 0.08em;">{{tx.cTitle}}</span>
+        <div style="display: flex; flex-direction: column; gap: 8px; width: 292px; max-width: 100%;">
+          <sc-for list="{{items}}" as="i" hint-placeholder-count="3">
+            <div style="{{i.style}}">
+              <div style="display: flex; align-items: baseline; gap: 8px; min-width: 0;">
+                <span style="font-weight: 600; font-size: 15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{i.route}}</span>
+                <span style="margin-left: auto; font-family: 'Barlow Condensed', sans-serif; font-size: 17px; font-weight: 600; font-variant-numeric: tabular-nums; color: {{t.muted}}; white-space: nowrap;">{{i.km}}</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 6px; min-width: 0;">
+                <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="{{i.ic.color}}" stroke-width="{{i.ic.sw}}" stroke-linecap="round" stroke-linejoin="round" style="{{i.ic.svgStyle}}"><path d="{{i.ic.d}}"/></svg>
+                <span style="color: {{t.muted}}; font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="{{i.line2}}">{{i.line2}}</span>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+
+      <!-- D: linha do diff -->
+      <section aria-label="{{tx.dTitle}}" style="min-width: 0; box-sizing: border-box; padding: 14px 16px; border-radius: 12px; border: 1px solid {{t.line}}; display: flex; flex-direction: column; gap: 10px; overflow: hidden;">
+        <span style="font-size: 12px; color: {{t.muted}}; text-transform: uppercase; letter-spacing: 0.08em;">{{tx.dTitle}}</span>
+        <div style="display: flex; flex-direction: column; border-radius: 12px; background: {{t.panel}}; border: 1px solid {{t.line}}; overflow: hidden;">
+          <sc-for list="{{diff}}" as="d" hint-placeholder-count="3">
+            <div style="display: grid; grid-template-columns: 78px minmax(0, 1fr) 20px minmax(0, 1fr); gap: 8px; align-items: center; min-height: 48px; padding: 6px 12px; border-top: 1px solid {{t.line}};">
+              <span style="font-size: 11px; color: {{t.muted}}; text-transform: uppercase; letter-spacing: 0.08em;">{{tx.field}}</span>
+              <div style="display: flex; align-items: center; gap: 6px; min-width: 0;">
+                <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="{{t.muted}}" stroke-width="{{d.sw}}" stroke-linecap="round" stroke-linejoin="round" style="{{d.beforeSvg}}"><path d="{{d.beforeD}}"/></svg>
+                <span style="color: {{t.muted}}; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="{{d.beforeTip}}">{{d.before}}</span>
+              </div>
+              <span aria-hidden="true" style="color: {{t.muted}}; text-align: center;">→</span>
+              <div style="display: flex; align-items: center; gap: 6px; min-width: 0;">
+                <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="{{t.text}}" stroke-width="{{d.sw}}" stroke-linecap="round" stroke-linejoin="round" style="{{d.afterSvg}}"><path d="{{d.afterD}}"/></svg>
+                <span style="font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="{{d.afterTip}}">{{d.after}}</span>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+        <span style="font-size: 12px; color: {{t.muted}};">{{tx.dNote}}</span>
+      </section>
+    </div>
+  </div>
+
+  <div role="group" aria-label="{{tb.label}}" style="flex: 0 0 32px; box-sizing: border-box; padding: 0 12px; display: flex; align-items: center; gap: 8px; border-top: 1px dashed {{t.line}}; background: {{t.tool}}; font-size: 12px; color: {{t.muted}}; overflow: hidden;">
+    <span style="white-space: nowrap;">{{tb.label}}</span>
+    <div style="flex-grow: 1;"></div>
+    <sc-for list="{{variants}}" as="v" hint-placeholder-count="6">
+      <button type="button" onClick="{{v.pick}}" aria-pressed="{{v.pressed}}" style="{{v.style}}">{{v.label}}</button>
+    </sc-for>
+    <button type="button" onClick="{{toggleTheme}}" style="{{tb.btn}}">{{tb.themeBtn}}</button>
+    <button type="button" onClick="{{toggleLang}}" style="{{tb.btn}}">{{tb.langBtn}}</button>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":true},"$preview":{"width":1280,"height":800}}'>
+const STR = {
+ pt: {
+  title: 'Nome do reboque', sub: 'Derivado do id da definição do reboque; o mesmo texto em todos os lugares.',
+  idLabel: 'Id da definição do reboque (só no tooltip)',
+  field: 'Reboque',
+  aTitle: 'Campo Reboque (tela Fretes)', bTitle: 'Seletor de carga: texto secundário', cTitle: 'Item de oferta: 2ª linha', dTitle: 'Revisão: linha do diff',
+  capReal: 'Largura real da coluna (176 px)', capWide: 'Largura ampla (260 px)', tipCaption: 'Tooltip do nome (ao passar o mouse)',
+  help: 'Copiado de um frete deste save com a mesma carga', idTip: 'ID do reboque: {0}',
+  cargoLabel: 'Carga', dNote: 'Na revisão o texto leva os detalhes entre parênteses; sem reboque antes, “—”.',
+  autoNone: 'Reboque: nenhum', autoOne: 'Reboque: {0}', autoTwo: 'Reboque: {0}, {1}',
+  cargos: { focus: 'Máquinas', a: 'Vigas de concreto', b: 'Veículos', c: 'Cimento', d: 'Vidro', e: 'Carga do mod', f: 'Peças especiais' },
+  cities: ['Sófia', 'Belgrado'], offer2: 'Eletrônicos', offer3: 'Peças especiais',
+  noTrailer: '—', cap: { name: 'Nome', details: 'Detalhes' },
+  prev: 'Prévia (fora do app)', themeLight: 'Tema claro', themeDark: 'Tema escuro', langBtn: 'English',
+  axle1: '1 eixo', axleN: '{0} eixos', short: 'curto', long: 'longo',
+  vocab: {
+   body: { box: 'Baú', flatbed: 'Plataforma', lowbed: 'Prancha rebaixada', lowloader: 'Prancha baixa', gooseneck: 'Gooseneck', dumper: 'Basculante', log: 'Transporte de toras', foodtank: 'Tanque alimentício', silo: 'Silo', livestock: 'Transporte de animais' },
+   finish: { dryvan: 'Baú seco', dryvan_m: 'Baú seco', curtain: 'Sider', insulated: 'Baú isolado', reefer: 'Baú refrigerado', brick: 'Transporte de tijolos', container: 'Porta-contêiner', car_trans: 'Transporte de carros', van_trans: 'Transporte de vans', truck_trans: 'Transporte de caminhões', panel_trans: 'Transporte de painéis', gls_trailer: 'Transporte de vidro' },
+   chain: { double: 'Rodotrem', bdouble: 'Bitrem', hct: 'HCT' }
+  }
+ },
+ en: {
+  title: 'Trailer name', sub: 'Derived from the trailer definition id; the same text everywhere.',
+  idLabel: 'Trailer definition id (tooltip only)',
+  field: 'Trailer',
+  aTitle: 'Trailer field (Jobs screen)', bTitle: 'Cargo picker: secondary text', cTitle: 'Offer item: second line', dTitle: 'Review: diff line',
+  capReal: 'Real column width (176 px)', capWide: 'Wide (260 px)', tipCaption: 'Name tooltip (on hover)',
+  help: 'Copied from a job in this save with the same cargo', idTip: 'Trailer ID: {0}',
+  cargoLabel: 'Cargo', dNote: 'In review the text carries the details in parentheses; with no trailer before, “—”.',
+  autoNone: 'Trailer: none', autoOne: 'Trailer: {0}', autoTwo: 'Trailer: {0}, {1}',
+  cargos: { focus: 'Machinery', a: 'Concrete beams', b: 'Cars', c: 'Cement', d: 'Glass', e: 'Mod cargo', f: 'Special parts' },
+  cities: ['Sofia', 'Belgrade'], offer2: 'Electronics', offer3: 'Special parts',
+  noTrailer: '—', cap: { name: 'Name', details: 'Details' },
+  prev: 'Preview (not in the app)', themeLight: 'Light theme', themeDark: 'Dark theme', langBtn: 'Português',
+  axle1: '1 axle', axleN: '{0} axles', short: 'short', long: 'long',
+  vocab: {
+   body: { box: 'Box trailer', flatbed: 'Flatbed', lowbed: 'Lowbed', lowloader: 'Low loader', gooseneck: 'Gooseneck', dumper: 'Dump trailer', log: 'Log trailer', foodtank: 'Food tanker', silo: 'Silo trailer', livestock: 'Livestock trailer' },
+   finish: { dryvan: 'Dry van', dryvan_m: 'Dry van', curtain: 'Curtainsider', insulated: 'Insulated box', reefer: 'Reefer', brick: 'Brick carrier', container: 'Container chassis', car_trans: 'Car transporter', van_trans: 'Van transporter', truck_trans: 'Truck transporter', panel_trans: 'Panel transporter', gls_trailer: 'Glass transporter' },
+   chain: { double: 'Double', bdouble: 'B-double', hct: 'HCT' }
+  }
+ }
+};
+
+const TH = {
+  dark:  { bg:'#121417', panel:'#1a1d21', line:'#2a2f35', text:'#eef0f2', muted:'#9aa3ad', accent:'#f5a524', accentText:'#f5a524', sel:'#2a2414', chip:'#22262b', border2:'#66717d', tool:'#0c0e10', shadow:'0 18px 48px rgba(0,0,0,0.55)' },
+  light: { bg:'#f4f2ee', panel:'#ffffff', line:'#d9d3c7', text:'#1b1d20', muted:'#5f6670', accent:'#b86e00', accentText:'#8a5200', sel:'#fbecd2', chip:'#f6f3ec', border2:'#857e6f', tool:'#e3ded3', shadow:'0 18px 48px rgba(27,29,32,0.25)' }
+};
+/* Ícones: as mesmas geometrias de Styles/Icons.axaml (IconTrailer*), 24 x 24, contorno. Tabela token -> ícone: screens.md §7. */
+const G = 'M5 16v3.4';
+const W = 'M14.1 19.2a1.4 1.4 0 1 0 2.8 0 1.4 1.4 0 1 0-2.8 0M18.1 19.2a1.4 1.4 0 1 0 2.8 0 1.4 1.4 0 1 0-2.8 0';
+const ICONS = {
+  generic:   'M3 12.5h18M3 16h18M8 12.5V16M13 12.5V16' + G + W,
+  box:       'M3 5.5h18V16H3zM17.5 5.5V16' + G + W,
+  curtain:   'M3 5.5h18V16H3zM3 8.5h18M7.5 8.5V16M12 8.5V16M16.5 8.5V16' + G + W,
+  reefer:    'M3 5.5h18V16H3zM12 7.5v6.5M9.2 9.1l5.6 3.2M14.8 9.1l-5.6 3.2' + G + W,
+  flatbed:   'M3 14h18v2H3zM3 7.5V14M7 8.5h11V14H7z' + G + W,
+  lowbed:    'M3 9.5h5.5l1.3 3.7H21V16H3z' + W,
+  container: 'M6 5.5h15V14H6zM9.5 5.5V14M13.5 5.5V14M17.5 5.5V14M3 16h18M3 11.5V16' + W,
+  dumper:    'M3 8h13l5 8H3zM6 8l2-3 2.3 2.2 2.4-3L15 8' + W,
+  log:       'M3 16h18M4.5 6v10M19.5 6v10M8 8.5h8a1.5 1.5 0 0 1 0 3H8a1.5 1.5 0 0 1 0-3zM8 11.5h8a1.5 1.5 0 0 1 0 3H8a1.5 1.5 0 0 1 0-3z' + W,
+  tank:      'M7.5 5h9a4.5 4.5 0 0 1 0 9h-9a4.5 4.5 0 0 1 0-9zM11 5V3.5h2V5M8 14v2M16 14v2M3 16h18' + W,
+  silo:      'M7 16V9.5a5 5 0 0 1 10 0V16M7 12.5h10M3 16h18' + W,
+  livestock: 'M3 5.5h18V16H3zM6 8.5h4M14 8.5h4M6 12.5h4M14 12.5h4' + G + W,
+  car:       'M3 16h18M4.5 10.5h15M4.5 5h15M4.5 5v11M19.5 5v11M7 16l.9-3.2h4.2l.9 3.2M10 10.5l.9-3.2h4.2l.9 3.2' + W,
+  panel:     'M3 16h18M5.5 15 8 7h4l-2.5 8zM12.5 15 15 7h4l-2.5 8z' + W
+};
+const ICON_FIN = { dryvan: 'box', dryvan_m: 'box', insulated: 'box', curtain: 'curtain', reefer: 'reefer', brick: 'flatbed', container: 'container', car_trans: 'car', van_trans: 'car', truck_trans: 'car', panel_trans: 'panel', gls_trailer: 'panel', glass: 'panel' };
+const ICON_BODY = { box: 'box', flatbed: 'flatbed', lowbed: 'lowbed', lowloader: 'lowbed', gooseneck: 'container', dumper: 'dumper', log: 'log', foodtank: 'tank', silo: 'silo', livestock: 'livestock' };
+const STROKE_PX = { 16: 1.4, 20: 1.6, 24: 1.8 };
+const swOf = size => ((STROKE_PX[size] || 1.8) * 24 / size).toFixed(2);
+function fmt(s, ...a) { return String(s).replace(/\{(\d)\}/g, (m, i) => a[i]); }
+function human(tok) { const s = tok.replace(/_/g, ' ').trim(); return s ? s[0].toUpperCase() + s.slice(1) : tok; }
+
+/* Regra de resolução (a mesma de screens.md §2): finish -> body -> token humanizado; cadeia só se não for single. */
+function resolve(def, lang) {
+  const S = STR[lang], v = S.vocab;
+  const id = def.replace(/^trailer_def\./, '');
+  const toks = id.split('.');
+  const rest = toks.length > 1 ? toks.slice(1) : [];
+  let chain = null, parts = [], ci = -1;
+  rest.forEach((tk, i) => {
+    if (ci >= 0) return;
+    const m = /^(single|singl|double|bdouble|hct)(?:_(.+))?$/.exec(tk);
+    if (m) { ci = i; chain = m[1] === 'singl' ? 'single' : m[1]; parts = m[2] ? m[2].split('_') : []; }
+  });
+  const cand = rest.filter((_, i) => i !== ci);
+  let base = null;
+  for (let i = cand.length - 1; i >= 0 && !base; i--) if (v.finish[cand[i]]) base = v.finish[cand[i]];
+  for (let i = 0; i < cand.length && !base; i++) if (v.body[cand[i]]) base = v.body[cand[i]];
+  if (!base) base = human(rest.length === 0 ? id : (ci > 0 ? rest[0] : cand[0]));
+  const name = chain && chain !== 'single' && v.chain[chain] ? fmt('{0} · {1}', base, v.chain[chain]) : base;
+  const units = { single: 1, double: 2, bdouble: 2, hct: 3 }[chain] || 0;
+  const ax = [];
+  for (const p of parts) { if (ax.length < units && /^\d[a-z]?$/.test(p)) ax.push(p[0]); else break; }
+  const axOk = chain === 'hct' ? ax.length >= 2 : (units > 0 && ax.length === units);
+  const det = [];
+  if (axOk) det.push(ax.length === 1 && ax[0] === '1' ? S.axle1 : fmt(S.axleN, ax.join('+')));
+  const last = toks[toks.length - 1];
+  const len = (rest.length > 0 && (last === 'short' || last === 'long')) ? last : (parts.includes('sh') ? 'short' : parts.includes('ln') ? 'long' : null);
+  if (len) det.push(S[len]);
+  /* Ícone: mesma ordem do nome (acabamento do último ao primeiro, depois carroceria do primeiro ao último); sem token conhecido = genérico. */
+  let icon = null;
+  for (let i = cand.length - 1; i >= 0 && !icon; i--) if (ICON_FIN[cand[i]]) icon = ICON_FIN[cand[i]];
+  for (let i = 0; i < cand.length && !icon; i++) if (ICON_BODY[cand[i]]) icon = ICON_BODY[cand[i]];
+  return { id, name, details: det.join(' · '), icon: icon || 'generic', units: { double: 2, bdouble: 2, hct: 3 }[chain] || 1 };
+}
+
+const PRESETS = [
+  { id: 'reefer', pt: 'Baú refrigerado', en: 'Reefer', def: 'scs.box.single_3.reefer' },
+  { id: 'sider', pt: 'Sider · Rodotrem', en: 'Curtainsider · Double', def: 'scs.box.double_3_2.curtain' },
+  { id: 'longo', pt: 'Prancha (longo)', en: 'Lowbed (long)', def: 'scs.lowbed.single_41_ln.long' },
+  { id: 'mod', pt: 'Mod desconhecido', en: 'Unknown mod', def: 'acme_mods.cargo_box.double_2_2.frozen' },
+  { id: 'nome', pt: 'Nome longo', en: 'Long name', def: 'scs.box.double_3_2.panel_trans' },
+  { id: 'nenhum', pt: 'Sem reboque', en: 'No trailer', def: null }
+];
+
+function resolveTheme(c) {
+  const pref = c.state.pref || (c.props.dark === false ? 'light' : 'dark');
+  const sys = (typeof window !== 'undefined' && window.matchMedia) ? window.matchMedia('(prefers-color-scheme: dark)').matches : true;
+  const dark = pref === 'system' ? sys : pref === 'dark';
+  return { pref, dark, t: dark ? TH.dark : TH.light };
+}
+
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { pref: null, lang: 'pt', active: 'reefer' }; }
+  renderVals() {
+    const { dark, t } = resolveTheme(this);
+    const lang = this.state.lang, tx = STR[lang];
+    const focus = PRESETS.find(p => p.id === this.state.active);
+    const R = def => def ? resolve(def, lang) : null;
+    const nameOf = def => def ? R(def).name : '';
+    const fullOf = def => { if (!def) return tx.noTrailer; const r = R(def); return r.details ? fmt('{0} ({1})', r.name, r.details) : r.name; };
+    const rf = R(focus.def);
+
+    const tileBox = w => `width:${w}px;box-sizing:border-box;padding:12px;border-radius:12px;background:${t.panel};border:1px solid ${t.line};display:flex;flex-direction:column;gap:4px;`;
+    const autom = rf ? (rf.details ? fmt(tx.autoTwo, rf.name, rf.details) : fmt(tx.autoOne, rf.name)) : tx.autoNone;
+    /* Ícone decorativo (aria-hidden); ×N só em 20 px ou mais; sem reboque = sem ícone. */
+    const badgeCss = `position:absolute;right:-7px;bottom:-5px;box-sizing:border-box;min-width:18px;height:14px;padding:0 3px;border-radius:7px;background:${t.panel};border:1px solid ${t.border2};color:${t.text};font-size:10px;line-height:12px;font-weight:600;text-align:center;font-variant-numeric:tabular-nums;`;
+    const icon = (r, size, o = {}) => {
+      if (!r) return { d: '', sw: '1.8', color: t.muted, wrap: 'display:none;', badge: '', badgeStyle: 'display:none;', svgStyle: 'display:none;' };
+      const badge = size >= 20 && r.units > 1 ? '×' + r.units : '';
+      const chip = o.chip ? `width:${o.chip}px;height:${o.chip}px;border-radius:8px;background:${o.chipBg};` : '';
+      return { d: ICONS[r.icon], sw: swOf(size), color: o.color || t.muted, badge, badgeStyle: badge ? badgeCss : 'display:none;', svgStyle: 'flex:0 0 auto;',
+        wrap: `position:relative;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;${chip}` };
+    };
+    const tiles = [{ w: 176, cap: tx.capReal }, { w: 260, cap: tx.capWide }].map(k => ({
+      box: tileBox(k.w), caption: k.cap, aria: autom, name: rf ? rf.name : tx.noTrailer, color: rf ? t.text : t.muted,
+      details: rf ? rf.details : '', tip: rf ? rf.id : '', ic: icon(rf, 24, { color: t.text })
+    }));
+    const tip = { d: rf ? 'flex' : 'none', help: tx.help, id: rf ? fmt(tx.idTip, rf.id) : '' };
+
+    const cargoRows = [
+      { c: tx.cargos.focus, def: focus.def, sel: true },
+      { c: tx.cargos.a, def: 'scs.flatbed.single_3.flatbed_w' },
+      { c: tx.cargos.b, def: 'car_d.car_trans' },
+      { c: tx.cargos.c, def: 'scs.silo.single_3_10.silo' },
+      { c: tx.cargos.d, def: 'glass.panel_trans.glass' },
+      { c: tx.cargos.f, def: null }
+    ];
+    const pick = cargoRows.map(r => ({
+      primary: r.c, secondary: nameOf(r.def), tip: r.def ? R(r.def).id : '', sel: r.sel ? 'true' : 'false', color: r.sel ? t.accentText : t.text,
+      checkD: r.sel ? 'inline' : 'none',
+      ic: icon(r.def ? R(r.def) : null, 20, { chip: 32, chipBg: r.sel ? 'transparent' : t.chip, color: r.sel ? t.accentText : t.muted }),
+      style: `display:flex;align-items:center;gap:8px;min-height:44px;box-sizing:border-box;padding:6px 12px;border-radius:10px;border:1px solid ${r.sel ? t.accent : 'transparent'};background:${r.sel ? t.sel : 'transparent'};`
+    }));
+
+    const [a, b] = tx.cities;
+    const line2 = (cargo, def) => def ? `${cargo} · ${nameOf(def)}` : cargo;
+    const itemStyle = sel => `box-sizing:border-box;padding:10px 14px;border-radius:12px;background:${sel ? t.sel : t.panel};border:1px solid ${sel ? t.accent : t.line};display:flex;flex-direction:column;gap:2px;min-width:0;`;
+    const dOf = def => def ? R(def) : null;
+    const items = [
+      { route: `${a} ⋯ ${b}`, km: lang === 'pt' ? '394 km' : '394 km', line2: line2(tx.cargos.focus, focus.def), style: itemStyle(true), ic: icon(rf, 16, { color: t.accentText }) },
+      { route: `${b} ⋯ ${a}`, km: '394 km', line2: line2(tx.offer2, 'scs.box.double_3_2.curtain'), style: itemStyle(false), ic: icon(dOf('scs.box.double_3_2.curtain'), 16) },
+      { route: `${a} ⋯ ${b}`, km: '569 km', line2: line2(tx.offer3, null), style: itemStyle(false), ic: icon(null, 16) }
+    ];
+
+    const dRow = (beforeDef, afterDef, before, after) => {
+      const bi = icon(dOf(beforeDef), 16), ai = icon(dOf(afterDef), 16);
+      return { before, after, beforeTip: beforeDef ? R(beforeDef).id : '', afterTip: afterDef ? R(afterDef).id : '', sw: swOf(16),
+        beforeD: bi.d, beforeSvg: bi.svgStyle, afterD: ai.d, afterSvg: ai.svgStyle };
+    };
+    const diff = [
+      dRow('scs.lowbed.single_41_ln.long', focus.def, fullOf('scs.lowbed.single_41_ln.long'), fullOf(focus.def)),
+      dRow('scs.lowloader.single_4_sh.short', 'scs.lowloader.single_4_ln.long', fullOf('scs.lowloader.single_4_sh.short'), fullOf('scs.lowloader.single_4_ln.long')),
+      dRow(null, focus.def, tx.noTrailer, fullOf(focus.def))
+    ];
+
+    const tbBtn = `min-height:24px;padding:0 10px;border-radius:6px;border:1px solid ${t.line};background:transparent;color:${t.text};font-size:12px;white-space:nowrap;`;
+    const variants = PRESETS.map(p => ({ label: p[lang], pressed: this.state.active === p.id ? 'true' : 'false', pick: () => this.setState({ active: p.id }),
+      style: `min-height:24px;padding:0 10px;border-radius:6px;border:1px solid ${this.state.active === p.id ? t.accent : t.line};background:${this.state.active === p.id ? t.sel : 'transparent'};color:${t.text};font-size:12px;white-space:nowrap;` }));
+
+    return { t, tx, tiles, tip, pick, items, diff, variants, head: { id: rf ? rf.id : '—' },
+      tb: { label: tx.prev, themeBtn: dark ? tx.themeLight : tx.themeDark, langBtn: tx.langBtn, btn: tbBtn },
+      toggleTheme: () => this.setState({ pref: dark ? 'light' : 'dark' }),
+      toggleLang: () => this.setState({ lang: lang === 'pt' ? 'en' : 'pt' }) };
+  }
+}
+</script>
+</body>
+</html>

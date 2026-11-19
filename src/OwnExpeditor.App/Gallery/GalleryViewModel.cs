@@ -84,7 +84,7 @@ public partial class GalleryViewModel : ViewModelBase
     public string CompanyA => LongTexts ? "Radus Bulgaria Regional Distribution Center" : "Radus";
     public string CompanyB => "LogNStick";
     public string CargoLine => LongTexts ? "Concrete beams, oversize load with escort vehicles" : _loc["Gallery_State_Normal"];
-    public string TrailerLine => LongTexts ? "Heavy lowboy trailer (Balkans Expansion)" : "Flatbed";
+    public string TrailerLine => LongTexts ? "Low loader · B-double (Balkans Expansion)" : "Flatbed";
     public string PageTitle => LongTexts ? ModuleJobs + " — Balkans Expansion regional freight market" : ModuleJobs;
     public string ButtonLong => LongTexts ? _loc["Review_Title"] + " " + _loc["Review_Title"] : Review;
     public string SelectedPickerText => LongTexts ? "Sofia-Kremikovtsi industrial district, Balkans Expansion" : "Sofia";
@@ -109,6 +109,17 @@ public partial class GalleryViewModel : ViewModelBase
         new("c", "Praha", "Tradeaux", "Mod"), new("d", "Varna", "Radus", null),
     ];
 
+    public IReadOnlyList<PickerOption> TrailerOptions { get; } =
+    [
+        new("t1", "Máquinas", "Sider · Rodotrem", LeadingIcon: "IconTrailerCurtain", LeadingBadge: 2, ReserveLeading: true),
+        new("t2", "Alimentos", "Baú refrigerado", LeadingIcon: "IconTrailerReefer", ReserveLeading: true),
+        new("t3", "Combustível", "Tanque alimentício", LeadingIcon: "IconTrailerTank", ReserveLeading: true),
+        new("t4", "Peças especiais", "", ReserveLeading: true),
+    ];
+
+    /// <summary>Todas as chaves que o resolvedor pode devolver (catálogo do TrailerIcon).</summary>
+    public IReadOnlyCollection<string> TrailerIconKeys => TrailerIcons.AllKeys;
+
     public IReadOnlyList<PickerOption> LongOptions { get; } =
     [
         new("l1", "Sofia-Kremikovtsi industrial district, Balkans Expansion", "Radus Bulgaria Regional Distribution Center", "Mod"),
@@ -123,6 +134,7 @@ public partial class GalleryViewModel : ViewModelBase
         new DiffGroup(_loc["Module_jobs"], $"{CompanyA} · {CityA} → {CompanyB} · {CityB}",
         [
             new DiffLine(_loc["Route_Destination"], $"{CompanyB} · {CityB}", $"Tradeaux · Praha"),
+            new DiffLine(_loc["Jobs_Field_Trailer"], "Prancha rebaixada (longo)", "Baú refrigerado (3 eixos)", false, "IconTrailerLowbed", "IconTrailerReefer"),
             new DiffLine("Km", _loc.Get("Format_Km", 569), _loc.Get("Format_Km", 612), true),
             new DiffLine(_loc["Gallery_State_Empty"], null, "Maquinário"),
         ], NothingCommand),

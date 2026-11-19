@@ -244,6 +244,7 @@
   <data name="Jobs_Step_Choose" xml:space="preserve"><value>Escolher…</value></data>
   <data name="Jobs_Swap" xml:space="preserve"><value>Trocar saída e chegada</value></data>
   <data name="Jobs_Swap_Short" xml:space="preserve"><value>Trocar</value></data>
+  <data name="Jobs_Trailer_Help" xml:space="preserve"><value>Copiado de um frete deste save com a mesma carga</value></data>
   <data name="Jobs_Update" xml:space="preserve"><value>Atualizar na revisão</value></data>
   <data name="Jobs_Updated_Toast" xml:space="preserve"><value>Mudança atualizada na revisão.</value></data>
   <data name="Loading_Automation" xml:space="preserve"><value>Lendo save, {0}%</value></data>
@@ -466,6 +467,44 @@ App: {6}</value></data>
   <data name="Toast_Discarded" xml:space="preserve"><value>Mudança descartada.</value></data>
   <data name="Toast_DiscardedMany" xml:space="preserve"><value>Mudanças descartadas.</value></data>
   <data name="Toast_Undo" xml:space="preserve"><value>Desfazer</value></data>
+  <data name="Trailer_Automation" xml:space="preserve"><value>Reboque: {0}</value></data>
+  <data name="Trailer_Automation_Details" xml:space="preserve"><value>Reboque: {0}, {1}</value></data>
+  <data name="Trailer_Automation_None" xml:space="preserve"><value>Reboque: nenhum</value></data>
+  <data name="Trailer_Axles_Groups" xml:space="preserve"><value>{0} eixos</value></data>
+  <data name="Trailer_Axles_One" xml:space="preserve"><value>1 eixo</value></data>
+  <data name="Trailer_Axles_Other" xml:space="preserve"><value>{0} eixos</value></data>
+  <data name="Trailer_Badge" xml:space="preserve"><value>×{0}</value></data>
+  <data name="Trailer_Body_box" xml:space="preserve"><value>Baú</value></data>
+  <data name="Trailer_Body_dumper" xml:space="preserve"><value>Basculante</value></data>
+  <data name="Trailer_Body_flatbed" xml:space="preserve"><value>Plataforma</value></data>
+  <data name="Trailer_Body_foodtank" xml:space="preserve"><value>Tanque alimentício</value></data>
+  <data name="Trailer_Body_gooseneck" xml:space="preserve"><value>Gooseneck</value></data>
+  <data name="Trailer_Body_livestock" xml:space="preserve"><value>Transporte de animais</value></data>
+  <data name="Trailer_Body_log" xml:space="preserve"><value>Transporte de toras</value></data>
+  <data name="Trailer_Body_lowbed" xml:space="preserve"><value>Prancha rebaixada</value></data>
+  <data name="Trailer_Body_lowloader" xml:space="preserve"><value>Prancha baixa</value></data>
+  <data name="Trailer_Body_silo" xml:space="preserve"><value>Silo</value></data>
+  <data name="Trailer_Chain_bdouble" xml:space="preserve"><value>Bitrem</value></data>
+  <data name="Trailer_Chain_double" xml:space="preserve"><value>Rodotrem</value></data>
+  <data name="Trailer_Chain_hct" xml:space="preserve"><value>HCT</value></data>
+  <data name="Trailer_Details_Join" xml:space="preserve"><value>{0} · {1}</value></data>
+  <data name="Trailer_Details_Paren" xml:space="preserve"><value>{0} ({1})</value></data>
+  <data name="Trailer_Finish_brick" xml:space="preserve"><value>Transporte de tijolos</value></data>
+  <data name="Trailer_Finish_car_trans" xml:space="preserve"><value>Transporte de carros</value></data>
+  <data name="Trailer_Finish_container" xml:space="preserve"><value>Porta-contêiner</value></data>
+  <data name="Trailer_Finish_curtain" xml:space="preserve"><value>Sider</value></data>
+  <data name="Trailer_Finish_dryvan" xml:space="preserve"><value>Baú seco</value></data>
+  <data name="Trailer_Finish_dryvan_m" xml:space="preserve"><value>Baú seco</value></data>
+  <data name="Trailer_Finish_gls_trailer" xml:space="preserve"><value>Transporte de vidro</value></data>
+  <data name="Trailer_Finish_insulated" xml:space="preserve"><value>Baú isolado</value></data>
+  <data name="Trailer_Finish_panel_trans" xml:space="preserve"><value>Transporte de painéis</value></data>
+  <data name="Trailer_Finish_reefer" xml:space="preserve"><value>Baú refrigerado</value></data>
+  <data name="Trailer_Finish_truck_trans" xml:space="preserve"><value>Transporte de caminhões</value></data>
+  <data name="Trailer_Finish_van_trans" xml:space="preserve"><value>Transporte de vans</value></data>
+  <data name="Trailer_IdTip" xml:space="preserve"><value>ID do reboque: {0}</value></data>
+  <data name="Trailer_Length_long" xml:space="preserve"><value>longo</value></data>
+  <data name="Trailer_Length_short" xml:space="preserve"><value>curto</value></data>
+  <data name="Trailer_Name_WithChain" xml:space="preserve"><value>{0} · {1}</value></data>
   <data name="Welcome_Browse" xml:space="preserve"><value>Escolher pasta…</value></data>
   <data name="Welcome_Continue" xml:space="preserve"><value>Continuar de onde parou</value></data>
   <data name="Welcome_LastSave" xml:space="preserve"><value>{0} · {1} · {2}</value></data>

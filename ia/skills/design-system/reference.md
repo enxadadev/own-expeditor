@@ -54,6 +54,7 @@ Números sempre `FontFeatures="+tnum"`.
 | `StatTile` | número grande + rótulo (`+tnum`) | texto longo |
 | `RouteMap` | mapa esquemático origem → destino (+ cidades se houver coordenadas) | navegação geral de mapa |
 | `RouteOfferItem` | item de lista "Origem ⋯ Destino · km" + carga | tabelas genéricas |
+| `TrailerIcon` | ícone decorativo de reboque (`IconKey` `IconTrailer*`, `Units` → selo ×N a partir de 20 px, `IconSize` 16/20/24, `HasChip` 32 px no seletor); Raw para leitor de tela; usado em Reboque (24), `SearchablePicker` (`PickerOption.LeadingIcon`), `RouteOfferItem.TrailerIconKey` e `ValueChange.BeforeIcon/AfterIcon` (16) | `design/nomes-reboques/screens.md` §7 |
 | `EmptyState` | lista vazia com motivo e ação | erro |
 | `ErrorBanner` (Inline/Block) | o que aconteceu + o que fazer + ação | aviso leve |
 | `LoadingPanel` | carregando com etapas e progresso | operações < 300 ms |

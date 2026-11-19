@@ -116,7 +116,18 @@
                   </StackPanel>
                 </Border>
                 <c:StatTile Grid.Column="1" Label="{loc:Tr Jobs_Field_Units}" Value="{Binding UnitsValue}" />
-                <c:StatTile Grid.Column="2" Label="{loc:Tr Jobs_Field_Trailer}" Value="{Binding TrailerValue}" />
+                <Border Grid.Column="2" Classes="tile">
+                  <StackPanel Spacing="2">
+                    <Grid ColumnDefinitions="*,Auto" MinHeight="24">
+                      <TextBlock Classes="caption trim" VerticalAlignment="Top" AutomationProperties.AccessibilityView="Raw" Text="{loc:Tr Jobs_Field_Trailer, Upper=True}" />
+                      <c:TrailerIcon Grid.Column="1" IconSize="24" Foreground="{DynamicResource TextBrush}" VerticalAlignment="Top"
+                                     IconKey="{Binding TrailerIconKey}" Units="{Binding TrailerUnits}" />
+                    </Grid>
+                    <TextBlock Classes="subtitle" Classes.muted="{Binding !HasTrailer}" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" Text="{Binding TrailerValue}"
+                               ToolTip.Tip="{Binding TrailerHint}" AutomationProperties.Name="{Binding TrailerAutomationName}" AutomationProperties.HelpText="{Binding TrailerHint}" />
+                    <TextBlock Classes="bodysm muted trim" MinHeight="16" AutomationProperties.AccessibilityView="Raw" IsVisible="{Binding HasTrailerDetails}" Text="{Binding TrailerDetails}" />
+                  </StackPanel>
+                </Border>
               </Grid>
             </StackPanel>
           </c:SectionCard>

@@ -36,7 +36,7 @@
                       <Grid ColumnDefinitions="150,*" ColumnSpacing="12">
                         <TextBlock Classes="bodysm muted trim" Text="{Binding Label}" ToolTip.Tip="{Binding Label}" VerticalAlignment="Center" />
                         <c:ValueChange Grid.Column="1" Before="{Binding Before}" After="{Binding After}"
-                                       IsNumeric="{Binding IsNumeric}" Label="{Binding Label}" />
+                                       BeforeIcon="{Binding BeforeIcon}" AfterIcon="{Binding AfterIcon}" IsNumeric="{Binding IsNumeric}" Label="{Binding Label}" />
                       </Grid>
                     </Border>
                   </DataTemplate>

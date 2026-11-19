@@ -161,6 +161,26 @@ public class JobPlannerTests
         Assert.Equal(new DiffValue.Number(226, "Format_Km"), distance.Before);
     }
 
+    [Fact]
+    public void ReplaceOffer_trailer_line_carries_definition_and_variant()
+    {
+        var change = Plan(Open(), Replace());
+        var line = change.Lines.Single(l => l.Label.Key == JobsTextKeys.FieldTrailer);
+
+        Assert.Equal(new DiffValue.Trailer("trailer_def.curtain", "trailer.curtain"), line.Before);
+        Assert.Equal(new DiffValue.Trailer("trailer_def.palet", "trailer.palet"), line.After);
+        Assert.Equal("trailer.palet", New(change, "trailer_variant"));
+        Assert.Equal("trailer_def.palet", New(change, "trailer_definition"));
+    }
+
+    [Fact]
+    public void FillEmpty_trailer_line_has_empty_before()
+    {
+        var line = Plan(Open(), Fill()).Lines.Single(l => l.Label.Key == JobsTextKeys.FieldTrailer);
+        Assert.IsType<DiffValue.Empty>(line.Before);
+        Assert.IsType<DiffValue.Trailer>(line.After);
+    }
+
     [Theory]
     [InlineData(null)]
     [InlineData("_nameless.nope")]

@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Concurrent;
+using System.Linq;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Resources;
 using OwnExpeditor.Core;
@@ -19,6 +22,7 @@ public sealed class Localizer : ILocalizer
     private static readonly Lazy<Localizer> Shared = new(() => new Localizer(DetectLanguage(CultureInfo.CurrentUICulture), applyToProcess: true));
 
     private readonly ResourceManager[] _bundles;
+    private readonly ConcurrentDictionary<(string Culture, string Key), string?> _cache = new();
     private readonly bool _applyToProcess;
 
     /// <summary>Instância do app (aplica a cultura ao processo; os testes criam a sua).</summary>
@@ -27,11 +31,11 @@ public sealed class Localizer : ILocalizer
     public Localizer(Language initial, bool applyToProcess = false)
     {
         var asm = typeof(Localizer).Assembly;
-        _bundles =
-        [
-            new ResourceManager("OwnExpeditor.App.Resources.Strings", asm),
-            new ResourceManager("OwnExpeditor.App.Resources.Gallery", asm), // ausente em Release
-        ];
+        var present = asm.GetManifestResourceNames().ToHashSet(StringComparer.Ordinal);
+        _bundles = new[] { "Strings", "Gallery" } // Gallery ausente em Release: sondado uma vez aqui, sem exceção no caminho normal
+            .Where(n => present.Contains($"OwnExpeditor.App.Resources.{n}.resources"))
+            .Select(n => new ResourceManager($"OwnExpeditor.App.Resources.{n}", asm))
+            .ToArray();
         _applyToProcess = applyToProcess;
         Language = initial;
         Culture = ToCulture(initial);
@@ -47,6 +51,8 @@ public sealed class Localizer : ILocalizer
     public event EventHandler? CultureChanged;
 
     public string this[string key] => Lookup(key) ?? $"!{key}!";
+
+    public bool TryGet(string key, [NotNullWhen(true)] out string? value) => (value = Lookup(key)) is not null;
 
     /// <summary>pt-* → pt-BR; qualquer outra → en (padrão da primeira execução).</summary>
     public static Language DetectLanguage(CultureInfo culture) =>
@@ -75,11 +81,18 @@ public sealed class Localizer : ILocalizer
         DiffValue.Empty => Get("Diff_Value_Empty"),
         DiffValue.Raw r => r.Value,
         DiffValue.GameName g => names?.Get(g.Kind, g.Id) ?? GameIds.Humanize(g.Id),
+        DiffValue.Trailer t => FormatTrailer(t, names),
         DiffValue.Number n => Get(n.FormatKey, n.Value),
         DiffValue.Money m => FormatMoney(m.Amount, m.Game),
         DiffValue.Localized l => Format(l.Text),
         _ => value.ToString() ?? string.Empty,
     };
+
+    private string FormatTrailer(DiffValue.Trailer t, IGameNames? names)
+    {
+        var label = TrailerText.Format(this, names?.Trailer(t.Definition, t.Variant) ?? TrailerDescriptor.Parse(t.Definition, t.Variant));
+        return label.HasValue ? TrailerText.WithDetails(this, label) : "—";
+    }
 
     public string FormatError(CoreError code) => Get($"Error_{code}");
 
@@ -105,17 +118,16 @@ public sealed class Localizer : ILocalizer
 
     private string? Lookup(string key)
     {
+        var cacheKey = (Culture.Name, key);
+        if (_cache.TryGetValue(cacheKey, out var cached)) return cached;
+        string? found = null;
         foreach (var bundle in _bundles)
-        {
-            try
+            if (bundle.GetString(key, Culture) is { } text)
             {
-                if (bundle.GetString(key, Culture) is { } text) return text;
+                found = text;
+                break;
             }
-            catch (MissingManifestResourceException)
-            {
-                // bundle fora do build (Gallery em Release): segue para o próximo
-            }
-        }
-        return null;
+        _cache[cacheKey] = found; // inclui ausências: a pergunta repetida não toca o ResourceManager
+        return found;
     }
 }

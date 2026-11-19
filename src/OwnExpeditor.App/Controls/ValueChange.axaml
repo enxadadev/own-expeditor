@@ -12,30 +12,46 @@
   <Panel>
     <!-- Horizontal: uma linha, reticências de cada lado -->
     <Grid x:Name="HorizontalView" ColumnDefinitions="Auto,Auto,Auto" ColumnSpacing="8" IsVisible="{Binding #Root.ShowHorizontal}">
-      <TextBlock x:Name="BeforeH" Grid.Column="0" Classes="before trim num" MaxWidth="180" Classes.empty="{Binding #Root.BeforeEmpty}" ToolTip.Tip="{Binding #Root.BeforeText}"
-                 Text="{Binding #Root.BeforeText}" HorizontalAlignment="Left" />
+      <StackPanel Grid.Column="0" Orientation="Horizontal">
+        <c:TrailerIcon IconSize="16" IconKey="{Binding #Root.BeforeIcon}" Margin="0,0,6,0" VerticalAlignment="Center" IsVisible="{Binding #Root.BeforeIcon, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+        <TextBlock x:Name="BeforeH" Classes="before trim num" MaxWidth="180" Classes.empty="{Binding #Root.BeforeEmpty}" ToolTip.Tip="{Binding #Root.BeforeText}"
+                   Text="{Binding #Root.BeforeText}" HorizontalAlignment="Left" />
+      </StackPanel>
       <Path Grid.Column="1" Classes="arrow" Data="{StaticResource IconArrowRight}" Width="18" Height="12" Stretch="Uniform"
             AutomationProperties.AccessibilityView="Raw" />
-      <TextBlock x:Name="AfterH" Grid.Column="2" Classes="after trim num" MaxWidth="180" Classes.empty="{Binding #Root.AfterEmpty}" Text="{Binding #Root.AfterText}"
-                 ToolTip.Tip="{Binding #Root.AfterText}" />
+      <StackPanel Grid.Column="2" Orientation="Horizontal">
+        <c:TrailerIcon IconSize="16" IconKey="{Binding #Root.AfterIcon}" Margin="0,0,6,0" VerticalAlignment="Center" Foreground="{DynamicResource TextBrush}" IsVisible="{Binding #Root.AfterIcon, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+        <TextBlock x:Name="AfterH" Classes="after trim num" MaxWidth="180" Classes.empty="{Binding #Root.AfterEmpty}" Text="{Binding #Root.AfterText}"
+                   ToolTip.Tip="{Binding #Root.AfterText}" />
+      </StackPanel>
     </Grid>
     <!-- Auto: quebra para a linha de baixo quando não cabe -->
     <WrapPanel x:Name="AutoView" IsVisible="{Binding #Root.ShowAuto}">
-      <TextBlock Classes="before num" Classes.empty="{Binding #Root.BeforeEmpty}" Text="{Binding #Root.BeforeText}" Margin="0,0,8,0" TextWrapping="Wrap" MaxWidth="320" />
+      <StackPanel Orientation="Horizontal" Margin="0,0,8,0">
+        <c:TrailerIcon IconSize="16" IconKey="{Binding #Root.BeforeIcon}" Margin="0,0,6,0" VerticalAlignment="Center" IsVisible="{Binding #Root.BeforeIcon, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+        <TextBlock Classes="before num" Classes.empty="{Binding #Root.BeforeEmpty}" Text="{Binding #Root.BeforeText}" TextWrapping="Wrap" MaxWidth="320" />
+      </StackPanel>
       <StackPanel Orientation="Horizontal" Spacing="8">
         <Path Classes="arrow" Data="{StaticResource IconArrowRight}" Width="18" Height="12" Stretch="Uniform" VerticalAlignment="Center"
               AutomationProperties.AccessibilityView="Raw" />
+        <c:TrailerIcon IconSize="16" IconKey="{Binding #Root.AfterIcon}" Margin="0,0,6,0" VerticalAlignment="Center" Foreground="{DynamicResource TextBrush}" IsVisible="{Binding #Root.AfterIcon, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
         <TextBlock Classes="after num" Classes.empty="{Binding #Root.AfterEmpty}" Text="{Binding #Root.AfterText}" TextWrapping="Wrap" MaxWidth="320" />
       </StackPanel>
     </WrapPanel>
     <!-- Vertical: antes, seta girada, depois -->
     <StackPanel x:Name="VerticalView" Spacing="2" IsVisible="{Binding #Root.ShowVertical}">
-      <TextBlock Classes="before num" Classes.empty="{Binding #Root.BeforeEmpty}" Text="{Binding #Root.BeforeText}" TextWrapping="Wrap" MaxHeight="60" TextTrimming="CharacterEllipsis" />
+      <StackPanel Orientation="Horizontal">
+        <c:TrailerIcon IconSize="16" IconKey="{Binding #Root.BeforeIcon}" Margin="0,0,6,0" VerticalAlignment="Center" IsVisible="{Binding #Root.BeforeIcon, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+        <TextBlock Classes="before num" Classes.empty="{Binding #Root.BeforeEmpty}" Text="{Binding #Root.BeforeText}" TextWrapping="Wrap" MaxHeight="60" TextTrimming="CharacterEllipsis" />
+      </StackPanel>
       <Path Classes="arrow" Data="{StaticResource IconArrowRight}" Width="18" Height="12" Stretch="Uniform" HorizontalAlignment="Left"
             RenderTransformOrigin="50%,50%" AutomationProperties.AccessibilityView="Raw">
         <Path.RenderTransform><RotateTransform Angle="90" /></Path.RenderTransform>
       </Path>
-      <TextBlock Classes="after num" Classes.empty="{Binding #Root.AfterEmpty}" Text="{Binding #Root.AfterText}" TextWrapping="Wrap" MaxHeight="60" TextTrimming="CharacterEllipsis" />
+      <StackPanel Orientation="Horizontal">
+        <c:TrailerIcon IconSize="16" IconKey="{Binding #Root.AfterIcon}" Margin="0,0,6,0" VerticalAlignment="Center" Foreground="{DynamicResource TextBrush}" IsVisible="{Binding #Root.AfterIcon, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+        <TextBlock Classes="after num" Classes.empty="{Binding #Root.AfterEmpty}" Text="{Binding #Root.AfterText}" TextWrapping="Wrap" MaxHeight="60" TextTrimming="CharacterEllipsis" />
+      </StackPanel>
     </StackPanel>
   </Panel>
 </UserControl>

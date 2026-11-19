@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using CommunityToolkit.Mvvm.Input;
 using OwnExpeditor.App.Controls;
+using OwnExpeditor.App.Services;
 using OwnExpeditor.App.ViewModels;
 using OwnExpeditor.Core.Modules.Jobs;
+using OwnExpeditor.Domain.Games;
 
 namespace OwnExpeditor.App.Modules.Jobs;
 
@@ -142,7 +144,77 @@ public sealed partial class JobsPageViewModel
 
     public string UnitsValue => Template is { } t ? t.UnitsCount.ToString("N0", Loc.Culture) : NoValue;
 
-    public string TrailerValue => Template is { } t ? _board!.Names.Get(Domain.Games.GameNameKind.Trailer, TrailerId(t)) : NoValue;
+    /// <summary>Rótulo e ícone de um reboque, calculados uma vez por template/cultura (não por propriedade nem por reconstrução do seletor).</summary>
+    private sealed record TrailerInfo(TrailerLabel Label, TrailerIconInfo? Icon, string Hint, string AutomationName);
+
+    private readonly Dictionary<JobTemplate, TrailerInfo?> _trailerCache = new(ReferenceEqualityComparer.Instance);
+    private string? _trailerCacheCulture;
+    private object? _trailerCacheBoard;
+
+    /// <summary>Resolve o ícone (decoração); trocável em teste para provar que a lista de opções não depende dele.</summary>
+    public Func<TrailerDescriptor, TrailerIconInfo?> IconResolver
+    {
+        get => _iconResolver;
+        set
+        {
+            _iconResolver = value;
+            ClearTrailerCache();
+        }
+    }
+
+    private Func<TrailerDescriptor, TrailerIconInfo?> _iconResolver = TrailerIcons.Resolve;
+
+    private void ClearTrailerCache()
+    {
+        _trailerCache.Clear();
+        _trailerCacheBoard = null;
+        _trailerCacheCulture = null;
+    }
+
+    private TrailerInfo? TrailerInfoOf(JobTemplate? t)
+    {
+        if (t is null || _board is null) return null;
+        if (_trailerCacheCulture != Loc.Culture.Name || !ReferenceEquals(_trailerCacheBoard, _board))
+        {
+            _trailerCache.Clear();
+            _trailerCacheCulture = Loc.Culture.Name;
+            _trailerCacheBoard = _board;
+        }
+        if (_trailerCache.TryGetValue(t, out var cached)) return cached;
+        var descriptor = _board.Names.Trailer(t.TrailerDefinition, t.TrailerVariant);
+        var label = TrailerText.Format(Loc, descriptor);
+        var info = label.HasValue ? new TrailerInfo(label, _iconResolver(descriptor),
+            $"{Loc["Jobs_Trailer_Help"]}\n{Loc.Get("Trailer_IdTip", label.RawId)}",
+            label.Details.Length > 0 ? Loc.Get("Trailer_Automation_Details", label.Name, label.Details) : Loc.Get("Trailer_Automation", label.Name)) : null;
+        _trailerCache[t] = info;
+        return info;
+    }
+
+    private TrailerLabel? TrailerLabelOf(JobTemplate? t) => TrailerInfoOf(t)?.Label;
+
+    private TrailerLabel? CurrentTrailer => TrailerLabelOf(Template);
+
+    /// <summary>Chave do ícone do reboque atual (decoração; nulo sem reboque).</summary>
+    public string? TrailerIconKey => TrailerInfoOf(Template)?.Icon?.Key;
+
+    /// <summary>Reboques da cadeia (selo ×N quando &gt; 1).</summary>
+    public int TrailerUnits => TrailerInfoOf(Template)?.Icon?.Units ?? 1;
+
+    /// <summary>Nome do reboque (ou "—" sem reboque).</summary>
+    public string TrailerValue => CurrentTrailer?.Name ?? NoValue;
+
+    /// <summary>Eixos e comprimento; vazio some a linha.</summary>
+    public string TrailerDetails => CurrentTrailer?.Details ?? "";
+
+    public bool HasTrailerDetails => TrailerDetails.Length > 0;
+
+    /// <summary>Ajuda e id cru (tooltip); vazio sem reboque.</summary>
+    public string? TrailerHint => TrailerInfoOf(Template)?.Hint;
+
+    public bool HasTrailer => CurrentTrailer is not null;
+
+    /// <summary>Nome acessível do cartão.</summary>
+    public string TrailerAutomationName => TrailerInfoOf(Template)?.AutomationName ?? Loc["Trailer_Automation_None"];
 
     private string HoursText(int hours) => hours % 24 == 0 && hours >= 168 ? Loc.Get("Format_Days", hours / 24) : Loc.Get("Format_Hours", hours);
 

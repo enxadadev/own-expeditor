@@ -11,6 +11,7 @@ save e ajustes.
 | `Games` | `GameKind` | `Ets2` ou `Ats` |
 | `Games` | `GameIds` | Converte um identificador do jogo (ex.: `cargo.concr_beams2`) em nome legível (`Humanize`) |
 | `Games` | `GameNameKind` | Categoria de nome do jogo (empresa, cidade, carga, reboque, caminhão, país) |
+| `Games` | `TrailerDescriptor` | Reboque decomposto do id da definição (dono, carroceria, cadeia, eixos, comprimento e tokens). `Parse` nunca lança e não tem texto de tela |
 | `Games` | `GameFolderCheck` | Resultado da validação de uma pasta de instalação |
 | `Games` | `CityPair` | Par de cidades não direcionado, usado pelo cache de distâncias |
 | `Saves` | `ProfileInfo` | Perfil: jogo, id, nome, pasta e se usa Steam Cloud |
@@ -36,9 +37,14 @@ records próprios no `Domain`:
 - `JobSelection` e `JobSelectionResult` (`Core/Modules/Jobs`): a escolha em
   andamento na tela (país, cidade, empresa, vaga, carga, nos dois lados) e o
   resultado de revalidar, com os campos limpos e os preenchidos sozinhos.
-  `JobSelectionRules` faz as contas sobre eles (ver [ADR 0008](../decisions/0008-cadeia-de-escolhas-do-frete-no-core-e-pais-da-cidade-pelo-igamedata.md)).
+  `JobSelectionRules` faz as contas sobre eles (ver [ADR 0009](../decisions/0009-cadeia-de-escolhas-do-frete-no-core-e-pais-da-cidade-pelo-igamedata.md)).
 - `JobRequest`, `ChangeSet` e `SavePatch` (`Core`): o pedido de frete e a mudança
   que vai para a revisão.
+
+O nome e o ícone de um reboque saem do id da definição (`trailer_definition`),
+não de uma lista. `TrailerDescriptor` (`Domain`) lê o id; o texto é montado no
+App por `TrailerText` e o ícone por `TrailerIcons`
+([ADR 0008](../decisions/0008-nomes-e-icones-de-reboque.md)).
 
 A oferta de frete (`job_offer_data`) continua sendo um bloco do save, lido e
 alterado por `SiiUnit` (`Sii`). Os campos relevantes para o frete estão em

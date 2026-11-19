@@ -38,6 +38,7 @@ não direto no navegador.
 | [fretes](fretes/README.md) | aprovado | https://claude.ai/artifact/DGcBW2CtBSZWnZXgzE7PhM |
 | [fretes-pais-cidade](fretes-pais-cidade/README.md) | aprovado | https://claude.ai/artifact/NouqD8vrQDUzGsF2fdkJjc |
 | [mapa-jogo](mapa-jogo/README.md) | aprovado | — |
+| [nomes-reboques](nomes-reboques/README.md) | aprovado | 2026-11-18 |
 
 ## Regras
 - Mudou a tela? Atualize o desenho **antes**, no mesmo PR.

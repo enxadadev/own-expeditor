@@ -166,6 +166,7 @@ public sealed partial class JobsPageViewModel : ModulePageViewModel
 
     private void ResetState()
     {
+        ClearTrailerCache();
         _staged.Clear();
         _sel = new JobSelection();
         _noticeCleared = _noticeAuto = [];

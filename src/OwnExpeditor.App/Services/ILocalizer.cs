@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using OwnExpeditor.Core;
 using OwnExpeditor.Core.Games;
@@ -17,6 +18,9 @@ public interface ILocalizer : INotifyPropertyChanged
 
     /// <summary>Texto da chave; chave inexistente devolve <c>!Chave!</c> (visível, nunca lança).</summary>
     string this[string key] { get; }
+
+    /// <summary>Busca sem o marcador <c>!Chave!</c>: false se a chave não existe.</summary>
+    bool TryGet(string key, [NotNullWhen(true)] out string? value);
 
     string Get(string key, params object?[] args);
 

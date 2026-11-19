@@ -3,6 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:c="using:OwnExpeditor.App.Controls">
 
+  <!-- TrailerIcon: cor padrão do tema; as superfícies sobrescrevem no estado selecionado -->
+  <Style Selector="c|TrailerIcon">
+    <Setter Property="Foreground" Value="{DynamicResource TextMutedBrush}" />
+  </Style>
+
   <!-- Campo (SearchBox): Surface, borda forte, foco = anel de 2 px -->
   <Style Selector="Border.field">
     <Setter Property="Background" Value="{DynamicResource SurfaceBrush}" />

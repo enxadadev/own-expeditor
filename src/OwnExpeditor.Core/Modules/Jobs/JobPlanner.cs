@@ -117,7 +117,8 @@ public static class JobPlanner
         var oldTarget = slot.Get("target")?.Trim('"') ?? "";
         var oldCompany = oldTarget.Contains('.') ? oldTarget[..oldTarget.LastIndexOf('.')] : oldTarget;
         var oldKm = int.TryParse(slot.Get("shortest_distance_km"), out var km) ? km : 0;
-        var oldVariant = Id(slot.Get("trailer_variant"), "trailer.");
+        var oldVariant = Raw(slot.Get("trailer_variant"));
+        var oldDefinition = Raw(slot.Get("trailer_definition"));
         var oldCargo = Id(slot.Get("cargo"), "cargo.");
 
         return
@@ -130,8 +131,8 @@ public static class JobPlanner
                 new DiffValue.GameName(GameNameKind.Cargo, cargo)),
             Line(JobsTextKeys.FieldDistance, Before(() => new DiffValue.Number(oldKm, "Format_Km")),
                 new DiffValue.Number(distance.Km, distance.Source == DistanceSource.Estimated ? "Format_KmApprox" : "Format_Km")),
-            Line(JobsTextKeys.FieldTrailer, Before(() => oldVariant is null ? new DiffValue.Empty() : new DiffValue.GameName(GameNameKind.Trailer, oldVariant)),
-                new DiffValue.GameName(GameNameKind.Trailer, Id(template.TrailerVariant, "trailer.") ?? template.TrailerVariant)),
+            Line(JobsTextKeys.FieldTrailer, Before(() => oldVariant is null && oldDefinition is null ? new DiffValue.Empty() : new DiffValue.Trailer(oldDefinition ?? "", oldVariant)),
+                new DiffValue.Trailer(template.TrailerDefinition, template.TrailerVariant)),
             Line(JobsTextKeys.FieldExpiration, new DiffValue.Empty(), new DiffValue.Localized(
                 expirationHours == 168
                     ? TextRef.Of("Format_Days", expirationHours / 24)
@@ -142,6 +143,8 @@ public static class JobPlanner
 
         static DiffLine Line(string label, DiffValue before, DiffValue after) => new(TextRef.Of(label), before, after);
     }
+
+    private static string? Raw(string? value) => value is null or "" or NullValue or "nil" ? null : value;
 
     private static string? Id(string? value, string prefix)
     {

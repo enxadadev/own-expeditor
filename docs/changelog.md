@@ -3,10 +3,9 @@
 A versão do produto fica em `Directory.Build.props` (`M.X.Y`). Quem a altera é
 o agente `git-ops` (ver `ia/agents/git-ops.md`).
 
-## 0.3.0
+## 0.4.0 (em desenvolvimento)
 
-Fluxo de frete por país. Sem número de versão até o `git-ops` fechar a versão
-em `Directory.Build.props`.
+Fluxo de frete por país.
 
 ### Para o usuário
 
@@ -34,13 +33,41 @@ em `Directory.Build.props`.
 
 - `Core/Modules/Jobs`: `JobSelection`, `JobSelectionResult` e `JobSelectionRules`
   (funções puras sobre o `JobBoard`). A cadeia não fica na ViewModel. Ver
-  [ADR 0008](decisions/0008-cadeia-de-escolhas-do-frete-no-core-e-pais-da-cidade-pelo-igamedata.md).
+  [ADR 0009](decisions/0009-cadeia-de-escolhas-do-frete-no-core-e-pais-da-cidade-pelo-igamedata.md).
 - `JobBoard` responde por país: `DepartureCountries`, `DepartureCities(country)`,
   `ArrivalCountries`, `ArrivalCities`, `ArrivalCompanies` e `Cargos(from, to)`.
 - `IGameData.CityCountry(city)` e `GameNameKind.Country` (nome pela cadeia do jogo,
   sem `.resx`). `Data`: `CountryDef` e países no `GameCatalog`.
 - `JobRequest`, `JobPlanner`, a `Key` `jobs:slot:<id>` e a escrita do save não
   mudaram.
+
+## 0.3.0 (em desenvolvimento)
+
+Nomes e ícones legíveis para os reboques na tela de Fretes, no seletor de
+carga, nas ofertas e na revisão.
+
+### Para o usuário
+
+- **Nomes de reboque legíveis.** Em vez de `Scs flat b`, o app mostra o tipo
+  do reboque, como `Baú refrigerado` ou `Prancha baixa`. Cadeias não simples
+  aparecem no nome (`Sider · Rodotrem`), e eixos e comprimento vão numa linha
+  de detalhes (`3+3 eixos · longo`). O nome vale na tela de Fretes, no seletor
+  de carga, na linha da oferta e na revisão. O id cru fica no tooltip.
+  Reboques de mods que o app não conhece usam o id, com um nome derivado dele.
+- **Ícones de reboque.** Um ícone de contorno mostra o tipo do reboque de
+  relance, na tela de Fretes, no seletor de carga, nas ofertas e na revisão.
+  Cadeias duplas ganham o selo `×2` (e `×3` para HCT). Reboque desconhecido ou
+  de mod mostra um ícone genérico. Os ícones são decorativos: não filtram nem
+  reordenam as opções.
+
+### Mudanças técnicas
+
+- Nomes e ícones de reboque saem do id da definição (`trailer_definition`), lido
+  por `TrailerDescriptor` (`Domain`). `IGameNames.Trailer` e `DiffValue.Trailer`
+  (`Core`) levam o reboque até a App, que monta o texto com as chaves
+  `Trailer_*` do `.resx` e o ícone com `TrailerIcons` (ADR 0008).
+- `ILocalizer.TryGet` busca uma chave sem o marcador `!chave!`.
+- Controle novo `TrailerIcon` (App) e tokens de ícones em `Styles/Icons.axaml`.
 
 ## 0.2.0 (em desenvolvimento)
 

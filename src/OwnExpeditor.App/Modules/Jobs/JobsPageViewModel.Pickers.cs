@@ -143,7 +143,7 @@ public sealed partial class JobsPageViewModel
 
         // ---- carga
         var cargoOptions = from is null || s.ToCompany is null ? []
-            : b.Cargos(from, s.ToCompany).Select(c => new PickerOption(c, CargoName(c), TrailerName(c))).OrderBy(o => o.Primary, culture).ToList();
+            : b.Cargos(from, s.ToCompany).Select(CargoOption).OrderBy(o => o.Primary, culture).ToList();
         Setup(Cargo, "Jobs_Step_Cargo", "Jobs_Step_Cargo", "Jobs_Cargo_Placeholder", "Jobs_Picker_SearchCargo", cargoOptions, s.Cargo);
         Enable(Cargo, s.ToCompany is not null, "Jobs_Hint_ChooseToCompany");
     }
@@ -252,11 +252,11 @@ public sealed partial class JobsPageViewModel
     private string Duration(TimeSpan span) =>
         span.TotalHours >= 48 ? Loc.Get("Format_Days", (int)Math.Ceiling(span.TotalDays)) : Loc.Get("Format_Hours", (int)Math.Ceiling(span.TotalHours));
 
-    private string TrailerName(string cargo) =>
-        _board!.Template(cargo) is { } t ? _board.Names.Get(GameNameKind.Trailer, TrailerId(t)) : "";
-
-    private static string TrailerId(JobTemplate t) =>
-        t.TrailerVariant.StartsWith("trailer.", StringComparison.Ordinal) ? t.TrailerVariant["trailer.".Length..] : t.TrailerVariant;
+    private PickerOption CargoOption(string cargo)
+    {
+        var info = TrailerInfoOf(_board!.Template(cargo));
+        return new PickerOption(cargo, CargoName(cargo), info?.Label.Name ?? "", LeadingIcon: info?.Icon?.Key, LeadingBadge: info?.Icon?.Units ?? 1, ReserveLeading: true);
+    }
 
     private string KmText(RouteDistance d) => Loc.Get(d.Source == DistanceSource.Estimated ? "Format_KmApprox" : "Format_Km", d.Km);
 }

@@ -1,0 +1,69 @@
+{
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "Reboque.dc.html": {
+      "expand": "fill",
+      "h": 800,
+      "is_interactive": true,
+      "title": "1 · Nome e ícone do reboque onde aparece (campo, seletor, item, diff)",
+      "w": 1280,
+      "x": 0,
+      "y": 0
+    },
+    "Exemplos.dc.html": {
+      "expand": "fill",
+      "h": 800,
+      "is_interactive": true,
+      "title": "2 · Exemplos: id → ícone, nome e detalhes (pt-BR / en)",
+      "w": 1280,
+      "x": 1360,
+      "y": 0
+    },
+    "Icones.dc.html": {
+      "expand": "fill",
+      "h": 800,
+      "is_interactive": true,
+      "title": "3 · Ícones de reboque: catálogo Claro e Escuro (PROPOSTO)",
+      "w": 1280,
+      "x": 2720,
+      "y": 0
+    }
+  },
+  "createdOnFiles": {
+    "at": "2026-11-18T12:00:00Z",
+    "v": 1
+  },
+  "designSystems": [],
+  "launch": {
+    "view": "canvas"
+  },
+  "noteOrder": [
+    "t",
+    "s"
+  ],
+  "notes": {
+    "s": {
+      "size": 24,
+      "text": "Nomes de reboque (aprovado) + ícone de reboque (proposto, novo). O nome vem de um vocabulário .resx aplicado ao id da definição; o ícone é só decoração, escolhido pelos mesmos tokens, e nunca filtra opções. Cada tela tem a barra de prévia embaixo (variações, tema, idioma; fora do app). Dados anonimizados.",
+      "w": 1500,
+      "x": 0,
+      "y": -150
+    },
+    "t": {
+      "kind": "title1",
+      "maxW": 4000,
+      "text": "Own Expeditor — Nomes e ícones de reboque",
+      "w": 240,
+      "x": 0,
+      "y": -260
+    }
+  },
+  "order": [
+    "Reboque.dc.html",
+    "Exemplos.dc.html",
+    "Icones.dc.html"
+  ],
+  "pages": [],
+  "title": "Own Expeditor — Nomes e ícones de reboque"
+}
