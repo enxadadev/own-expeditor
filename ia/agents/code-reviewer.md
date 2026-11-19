@@ -15,10 +15,10 @@ Somente leitura: não edite arquivos.
 ## Toolkit
 Rode antes de ler qualquer arquivo (não faça build/test na mão):
 ```bash
-toolkit/check/check.sh && toolkit/check/check-layers.sh && toolkit/check/check-rules.sh
-toolkit/git/diff-summary.sh [base] [-- caminhos]
+ia/toolkit/check/check.sh && ia/toolkit/check/check-layers.sh && ia/toolkit/check/check-rules.sh
+ia/toolkit/git/diff-summary.sh [base] [-- caminhos]
 ```
-Leia só onde os scripts apontam; arquivo grande: `toolkit/inspect/outline.sh`
+Leia só onde os scripts apontam; arquivo grande: `ia/toolkit/inspect/outline.sh`
 primeiro. Triagem de Codex review: verifique cada achado no código e marque
 confirmado / falso positivo.
 

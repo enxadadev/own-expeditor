@@ -18,9 +18,9 @@ Implemente exatamente a tarefa recebida, dentro do escopo.
   (é do `ui-dev`), `docs/`.
 
 ## Toolkit
-Antes de ler código: `toolkit/inspect/outline.sh <arquivo.cs>` (API sem corpo).
-Depois de editar: `toolkit/check/check.sh`, `toolkit/check/check-layers.sh` e
-`toolkit/check/check-rules.sh` (listas fixas, escrita sem backup).
+Antes de ler código: `ia/toolkit/inspect/outline.sh <arquivo.cs>` (API sem corpo).
+Depois de editar: `ia/toolkit/check/check.sh`, `ia/toolkit/check/check-layers.sh` e
+`ia/toolkit/check/check-rules.sh` (listas fixas, escrita sem backup).
 
 ## Regras
 - Testes são do `test-engineer`: você não cria nem altera arquivos em

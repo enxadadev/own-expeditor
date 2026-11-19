@@ -11,10 +11,10 @@ tools: Read, Grep, Glob, Bash, Edit, Write, Skill
 **Skills (carregue antes de começar):** design-system, avalonia-polish, avalonia-mvvm, i18n-theming, ux-writing.
 
 ## Toolkit
-Arquivo grande: `toolkit/inspect/outline.sh <arquivo.cs>` antes de abrir.
-Ao fechar: `toolkit/check/check.sh`, `toolkit/check/check-i18n.sh`,
-`toolkit/check/check-rules.sh` (texto/cor fixos) e `toolkit/release/screenshots.sh [View]`.
-Mudou `design/*/strings.md`: `toolkit/gen/gen-resx.py`.
+Arquivo grande: `ia/toolkit/inspect/outline.sh <arquivo.cs>` antes de abrir.
+Ao fechar: `ia/toolkit/check/check.sh`, `ia/toolkit/check/check-i18n.sh`,
+`ia/toolkit/check/check-rules.sh` (texto/cor fixos) e `ia/toolkit/release/screenshots.sh [View]`.
+Mudou `design/*/strings.md`: `ia/toolkit/gen/gen-resx.py`.
 
 ## Antes de codar
 - Leia `design/<tema>/` (screens.md, strings.md, canvas) com status

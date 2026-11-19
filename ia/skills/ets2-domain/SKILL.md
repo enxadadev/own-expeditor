@@ -5,7 +5,7 @@ description: Glossário ETS2/ATS como aparece no game.sii — job offers, empres
 
 # Domínio ETS2/ATS no save
 
-Fatos levantados com `toolkit/inspect/sii.sh` num save real (texto, ~6.500 ofertas).
+Fatos levantados com `ia/toolkit/inspect/sii.sh` num save real (texto, ~6.500 ofertas).
 O que não foi confirmado está marcado **(?)** — confirme com
 `save-inspector` antes de depender disso. Ao descobrir algo novo,
 atualize esta skill e `docs/sii-format.md`.

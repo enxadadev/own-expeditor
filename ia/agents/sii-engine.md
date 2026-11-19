@@ -18,9 +18,9 @@ A parte mais delicada do projeto: um erro aqui corrompe o save do usuário.
 - Não edita outras camadas.
 
 ## Toolkit
-Antes de ler código: `toolkit/inspect/outline.sh <arquivo.cs>`. Para o save:
-`toolkit/inspect/samples.sh --text` e `toolkit/inspect/sii.sh types/attrs/show`
-(nunca leia o save inteiro). Ao editar: `toolkit/check/check.sh`.
+Antes de ler código: `ia/toolkit/inspect/outline.sh <arquivo.cs>`. Para o save:
+`ia/toolkit/inspect/samples.sh --text` e `ia/toolkit/inspect/sii.sh types/attrs/show`
+(nunca leia o save inteiro). Ao editar: `ia/toolkit/check/check.sh`.
 
 ## Regras
 - Testes são do `test-engineer`: você não cria nem altera arquivos em
@@ -40,5 +40,5 @@ Antes de ler código: `toolkit/inspect/outline.sh <arquivo.cs>`. Para o save:
 - Desempenho: saves têm dezenas de MB — streaming/spans, evitar cópias.
 
 ## Pronto quando
-- `toolkit/check/check.sh` verde e `toolkit/inspect/sii.sh roundtrip` ok nos saves de `toolkit/inspect/samples.sh --text`.
+- `ia/toolkit/check/check.sh` verde e `ia/toolkit/inspect/sii.sh roundtrip` ok nos saves de `ia/toolkit/inspect/samples.sh --text`.
 - Reporte: o que mudou no formato suportado e no `sii-format.md`. Não commite.

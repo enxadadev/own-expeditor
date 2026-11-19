@@ -102,7 +102,7 @@ está no `CLAUDE.md` e na [ADR 0004](../decisions/0004-suporte-a-tema-e-idioma.m
 | Item | Situação |
 |------|----------|
 | Tema Claro, Escuro ou Sistema, escolhido pelo usuário | Implementado (`ThemeService`, `ThemePreference`) |
-| Textos em `.resx` (pt-BR e en) | Implementado: `Resources/Strings*.resx`, gerados por `toolkit/gen/gen-resx.py` a partir de `design/` |
+| Textos em `.resx` (pt-BR e en) | Implementado: `Resources/Strings*.resx`, gerados por `ia/toolkit/gen/gen-resx.py` a partir de `design/` |
 | Preferências em JSON | Implementado: `settings.json` na pasta de ajustes (`JsonSettingsStore`) |
 | Troca de tema e idioma em runtime | Implementado: idioma sem reiniciar |
 | Nomes do jogo na língua do app | Implementado: resolvidos pelo Core (`IGameNames`), com a tradução do `locale.scs`. Reboques leem o id e usam o vocabulário `Trailer_*` do `.resx` ([ADR 0008](../decisions/0008-nomes-e-icones-de-reboque.md)) |

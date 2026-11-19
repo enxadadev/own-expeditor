@@ -19,7 +19,7 @@ dotnet test                                    # roda os quatro projetos de test
 dotnet run --project src/OwnExpeditor.App      # abre a aplicação (sempre o shell modular)
 ```
 
-Resultado verificado com `toolkit/check/check.sh` (build e testes): 0 avisos, 0 erros,
+Resultado verificado com `ia/toolkit/check/check.sh` (build e testes): 0 avisos, 0 erros,
 764 testes passando, 0 falhas.
 
 ### Projetos de teste
@@ -44,11 +44,11 @@ Não coloque saves pessoais no repositório. Use `samples/` para isso.
 
 ## Publicar para Windows
 
-Use o script de release, que roda `toolkit/check/check.sh` antes e só publica se os
+Use o script de release, que roda `ia/toolkit/check/check.sh` antes e só publica se os
 testes passarem:
 
 ```bash
-toolkit/release/release.sh
+ia/toolkit/release/release.sh
 ```
 
 O script publica `OwnExpeditor.App` para `win-x64`, self-contained e em arquivo
@@ -65,7 +65,7 @@ A pasta `publish/` está no `.gitignore`. Não versione o conteúdo dela.
 
 ## Toolkit
 
-`toolkit/` reúne scripts que substituem sequências de comandos repetidas, tanto
+`ia/toolkit/` reúne scripts que substituem sequências de comandos repetidas, tanto
 por pessoas quanto pelos agentes em `ia/`. Os scripts devolvem saídas curtas
 (uma linha de resumo, erros e avisos). Eles rodam a partir de qualquer
 subpasta do repositório, porque resolvem a raiz pelo git.
@@ -76,8 +76,8 @@ A lista completa e o papel de cada script estão na seção Toolkit de
 ### Build e testes
 
 ```bash
-toolkit/check/check.sh                                  # build + testes, resumido
-toolkit/check/check.sh --filter "FullyQualifiedName~Sii" # só um subconjunto dos testes
+ia/toolkit/check/check.sh                                  # build + testes, resumido
+ia/toolkit/check/check.sh --filter "FullyQualifiedName~Sii" # só um subconjunto dos testes
 ```
 
 `check.sh` imprime `BUILD: ok (N avisos)` e
@@ -87,15 +87,15 @@ primeiras linhas de erro, de falha e de exceção.
 ### Screenshots das telas
 
 ```bash
-toolkit/release/screenshots.sh                  # todas as Views do App
-toolkit/release/screenshots.sh <filtro> [largura altura]   # só as Views cujo nome contém o filtro
+ia/toolkit/release/screenshots.sh                  # todas as Views do App
+ia/toolkit/release/screenshots.sh <filtro> [largura altura]   # só as Views cujo nome contém o filtro
 ```
 
 Renderiza cada View com Avalonia.Headless, sem abrir janela, em Light e Dark
 × pt-BR e en. Grava `.screenshots/<View>/{light,dark}-{pt-BR,en}.png`. A pasta
 `.screenshots/` está no `.gitignore`. Antes de gerar, o script apaga os PNGs
 que já existem para o mesmo filtro. Sem filtro, apaga todos. O projeto de
-apoio é `toolkit/release/Screenshots`, que compila em Debug na primeira execução.
+apoio é `ia/toolkit/release/Screenshots`, que compila em Debug na primeira execução.
 
 O `ux-reviewer` usa essas imagens como evidência visual (ver
 [ai-workflow.md](ai-workflow.md#evidência-visual-do-ux-reviewer)).
@@ -103,8 +103,8 @@ O `ux-reviewer` usa essas imagens como evidência visual (ver
 ### Regras de camadas e docs
 
 ```bash
-toolkit/check/check-layers.sh    # CAMADAS: ok, ou VIOLACAO: <projeto> -> <referência>
-toolkit/check/check-docs.sh      # DOCS: ok, ou LINK QUEBRADO / FORA DO INDICE
+ia/toolkit/check/check-layers.sh    # CAMADAS: ok, ou VIOLACAO: <projeto> -> <referência>
+ia/toolkit/check/check-docs.sh      # DOCS: ok, ou LINK QUEBRADO / FORA DO INDICE
 ```
 
 `check-docs.sh` também conta os `TODO: confirmar` espalhados em `docs/`.
@@ -112,14 +112,14 @@ toolkit/check/check-docs.sh      # DOCS: ok, ou LINK QUEBRADO / FORA DO INDICE
 ### Outras checagens e utilitários
 
 ```bash
-toolkit/check/check-rules.sh   # regras do CLAUDE.md por grep: texto fixo, cor fixa, listas fixas, save sem backup
-toolkit/check/check-i18n.sh    # .resx pt-BR x en e chaves usadas; chave sem uso só avisa
-toolkit/check/check-agents.sh  # frontmatter e links de ia/agents e ia/skills
-toolkit/inspect/outline.sh <arquivo.cs|pasta>   # API pública sem corpo
-toolkit/help.sh [--agents]     # lista todos os scripts
+ia/toolkit/check/check-rules.sh   # regras do CLAUDE.md por grep: texto fixo, cor fixa, listas fixas, save sem backup
+ia/toolkit/check/check-i18n.sh    # .resx pt-BR x en e chaves usadas; chave sem uso só avisa
+ia/toolkit/check/check-agents.sh  # frontmatter e links de ia/agents e ia/skills
+ia/toolkit/inspect/outline.sh <arquivo.cs|pasta>   # API pública sem corpo
+ia/toolkit/help.sh [--agents]     # lista todos os scripts
 ```
 
-`toolkit/help.sh` é a fonte da verdade: lista cada script com a descrição do
+`ia/toolkit/help.sh` é a fonte da verdade: lista cada script com a descrição do
 cabeçalho (`--agents` agrupa por quem usa). Todo script aceita `--help`.
 
 ### Textos e recursos (`.resx`)
@@ -128,8 +128,8 @@ Os textos visíveis ficam em `src/OwnExpeditor.App/Resources/*.resx`. Eles são
 gerados a partir das tabelas `Chave | pt-BR | en` de `design/*/strings.md`:
 
 ```bash
-toolkit/gen/gen-resx.py           # regenera Strings*.resx e Gallery*.resx
-toolkit/gen/gen-resx.py --check   # não grava; sai com 1 se os arquivos estariam diferentes
+ia/toolkit/gen/gen-resx.py           # regenera Strings*.resx e Gallery*.resx
+ia/toolkit/gen/gen-resx.py --check   # não grava; sai com 1 se os arquivos estariam diferentes
 ```
 
 Não edite os `.resx` à mão. Depois de gerar, `App.Tests` confere a paridade
@@ -138,8 +138,8 @@ pt-BR/en e as chaves `_One`/`_Other`.
 ### Diff para revisão
 
 ```bash
-toolkit/git/diff-summary.sh                           # contra a branch principal
-toolkit/git/diff-summary.sh main -- src/OwnExpeditor.Sii   # base e caminhos específicos
+ia/toolkit/git/diff-summary.sh                           # contra a branch principal
+ia/toolkit/git/diff-summary.sh main -- src/OwnExpeditor.Sii   # base e caminhos específicos
 ```
 
 Mostra o `stat` e o diff com 2 linhas de contexto, sem `*.Designer.cs`, `obj/`
@@ -148,16 +148,16 @@ e `*.sii`.
 ### Saves de exemplo e inspeção do formato
 
 ```bash
-toolkit/inspect/samples.sh            # lista game.sii de samples/ com o formato de cada um
-toolkit/inspect/samples.sh --text     # só os que o parser atual consegue ler
-toolkit/inspect/sii.sh types  <save>            # contagem por tipo de bloco
-toolkit/inspect/sii.sh list   <save> <tipo> 10  # ids de um tipo
-toolkit/inspect/sii.sh show   <save> <id>       # um bloco inteiro
-toolkit/inspect/sii.sh attrs  <save> <tipo>     # atributos de um tipo e quantos blocos têm cada um
-toolkit/inspect/sii.sh roundtrip <save>         # parse + write reproduz o texto?
+ia/toolkit/inspect/samples.sh            # lista game.sii de samples/ com o formato de cada um
+ia/toolkit/inspect/samples.sh --text     # só os que o parser atual consegue ler
+ia/toolkit/inspect/sii.sh types  <save>            # contagem por tipo de bloco
+ia/toolkit/inspect/sii.sh list   <save> <tipo> 10  # ids de um tipo
+ia/toolkit/inspect/sii.sh show   <save> <id>       # um bloco inteiro
+ia/toolkit/inspect/sii.sh attrs  <save> <tipo>     # atributos de um tipo e quantos blocos têm cada um
+ia/toolkit/inspect/sii.sh roundtrip <save>         # parse + write reproduz o texto?
 ```
 
-`toolkit/inspect/sii.sh` compila a ferramenta `toolkit/inspect/SiiTool` na primeira execução e
+`ia/toolkit/inspect/sii.sh` compila a ferramenta `ia/toolkit/inspect/SiiTool` na primeira execução e
 de novo sempre que `src/OwnExpeditor.Sii` ou o próprio `SiiTool` mudam. Rode
 sem argumentos para ver a ajuda.
 
@@ -172,9 +172,9 @@ Para detalhes do formato, ver [sii-format.md](sii-format.md).
 ### Versão e numeração
 
 ```bash
-toolkit/git/next-owne.sh                  # próximo número OWNE livre, ex.: OWNE-11
-toolkit/git/bump-version.sh patch --dry-run   # mostra 0.1.0 -> 0.1.1 sem gravar
-toolkit/git/bump-version.sh minor             # altera Directory.Build.props
+ia/toolkit/git/next-owne.sh                  # próximo número OWNE livre, ex.: OWNE-11
+ia/toolkit/git/bump-version.sh patch --dry-run   # mostra 0.1.0 -> 0.1.1 sem gravar
+ia/toolkit/git/bump-version.sh minor             # altera Directory.Build.props
 ```
 
 `bump-version.sh` aceita `patch`, `minor` ou `major`. `--dry-run` vai como
@@ -184,10 +184,10 @@ histórico de todas as branches.
 ### Commits
 
 ```bash
-toolkit/git/precommit.sh                       # branch, próximo OWNE, versão, arquivos e alertas
-toolkit/git/lint-commit-msg.sh msg.txt         # valida título, linha em branco e OWNE repetido
-toolkit/git/install-hooks.sh                   # instala o hook commit-msg (vale para os worktrees)
-toolkit/git/commit.sh msg.txt src/a.cs src/b.cs  # valida e commita só os arquivos listados
+ia/toolkit/git/precommit.sh                       # branch, próximo OWNE, versão, arquivos e alertas
+ia/toolkit/git/lint-commit-msg.sh msg.txt         # valida título, linha em branco e OWNE repetido
+ia/toolkit/git/install-hooks.sh                   # instala o hook commit-msg (vale para os worktrees)
+ia/toolkit/git/commit.sh msg.txt src/a.cs src/b.cs  # valida e commita só os arquivos listados
 ```
 
 `precommit.sh` alerta quando a branch atual é a principal, quando há arquivos
@@ -205,7 +205,7 @@ ou co-autoria.
 ### ADRs
 
 ```bash
-toolkit/gen/new-adr.sh "usar-cache-de-distancias" < texto-do-adr.md
+ia/toolkit/gen/new-adr.sh "usar-cache-de-distancias" < texto-do-adr.md
 ```
 
 Cria `docs/decisions/NNNN-usar-cache-de-distancias.md` com o próximo número
@@ -215,8 +215,8 @@ vazia, o script recusa e não cria o arquivo. Ver [decisions/](decisions/).
 ### Revisão pelo Codex
 
 ```bash
-toolkit/release/codex-review.sh            # diff contra a branch principal
-toolkit/release/codex-review.sh origin/main
+ia/toolkit/release/codex-review.sh            # diff contra a branch principal
+ia/toolkit/release/codex-review.sh origin/main
 ```
 
 Precisa do Codex CLI instalado e autenticado (`npm i -g @openai/codex` e
@@ -261,7 +261,7 @@ tools/OwnExpeditor.Cli    ferramenta de desenvolvimento (decode, scs-ls, scs-cat
 docs/                     esta documentação
 design/                   desenhos aprovados das telas (antes do código)
 ia/                       agentes e skills de apoio ao desenvolvimento
-toolkit/                  scripts de build, checagem, commit, .resx e inspeção de saves
+ia/toolkit/                  scripts de build, checagem, commit, .resx e inspeção de saves
 ```
 
 Os arquivos de `.claude/` são configuração do assistente. Ver

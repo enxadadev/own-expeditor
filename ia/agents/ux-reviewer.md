@@ -12,9 +12,9 @@ tools: Read, Grep, Glob, Skill
 
 ## Toolkit
 Sem permissão de edição nem de rodar scripts: a sessão roda antes
-`toolkit/check/check-i18n.sh`, `toolkit/check/check-rules.sh` e
-`toolkit/release/screenshots.sh [View]`; use a saída em vez de inspecionar à mão.
-Arquivo grande: peça `toolkit/inspect/outline.sh` ou leia só o trecho.
+`ia/toolkit/check/check-i18n.sh`, `ia/toolkit/check/check-rules.sh` e
+`ia/toolkit/release/screenshots.sh [View]`; use a saída em vez de inspecionar à mão.
+Arquivo grande: peça `ia/toolkit/inspect/outline.sh` ou leia só o trecho.
 
 1. Leia só os `.axaml`, estilos e ViewModels alterados (ou indicados).
 2. Veja `.screenshots/<View>/{light,dark}-{pt-BR,en}.png` (Read). Compare

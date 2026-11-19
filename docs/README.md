@@ -43,7 +43,7 @@ Fora de `docs/`:
   implementada sem desenho aprovado aqui (ver [development.md](development.md#design)).
 - `ia/agents/` e `ia/skills/`: agentes e skills de apoio ao desenvolvimento
   (resumidos em [ai-workflow.md](ai-workflow.md)).
-- `toolkit/`: scripts de apoio ao desenvolvimento (resumidos em
+- `ia/toolkit/`: scripts de apoio ao desenvolvimento (resumidos em
   [development.md](development.md#toolkit)).
 
 ## Como começar

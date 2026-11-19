@@ -15,13 +15,13 @@ Saves têm dezenas de MB: **nunca** leia o arquivo inteiro.
 ## Ferramentas (use só estas)
 
 ```bash
-toolkit/inspect/samples.sh --text              # saves utilizáveis (Text) e caminhos
-toolkit/inspect/sii.sh types  <save>           # contagem por tipo de bloco
-toolkit/inspect/sii.sh attrs  <save> <tipo>    # atributos de um tipo e frequência
-toolkit/inspect/sii.sh list   <save> <tipo> [max]
-toolkit/inspect/sii.sh show   <save> <id>      # um bloco inteiro
-toolkit/inspect/sii.sh format <save> | roundtrip <save>
-toolkit/inspect/sii.sh decode <save> <saida.txt>  # só se precisar de grep; salve em diretório temporário e apague
+ia/toolkit/inspect/samples.sh --text              # saves utilizáveis (Text) e caminhos
+ia/toolkit/inspect/sii.sh types  <save>           # contagem por tipo de bloco
+ia/toolkit/inspect/sii.sh attrs  <save> <tipo>    # atributos de um tipo e frequência
+ia/toolkit/inspect/sii.sh list   <save> <tipo> [max]
+ia/toolkit/inspect/sii.sh show   <save> <id>      # um bloco inteiro
+ia/toolkit/inspect/sii.sh format <save> | roundtrip <save>
+ia/toolkit/inspect/sii.sh decode <save> <saida.txt>  # só se precisar de grep; salve em diretório temporário e apague
 ```
 
 Saves `Binary` (BSII) ainda não são suportados: reporte e use um `Text`.
