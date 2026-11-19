@@ -66,9 +66,17 @@ Detalhes do parser: `SiiDocument.Parse` lança `SiiFormatException` com
 
 `JobBoard` (`Core/Modules/Jobs`) é um índice só de leitura sobre a `ISaveView`
 (que já inclui as pendências) e o `IGameData` do jogo. Ele responde na ordem do
-fluxo da tela: cidade de saída, cidade de destino, empresa de saída, carga e
-empresa de chegada. As regras de carga são o catálogo do jogo mais as regras
-reveladas pelas ofertas do save (para mods, sem catálogo, só as do save).
+fluxo da tela: país e cidade de saída, empresa de saída (e vaga), país e cidade de
+chegada, empresa de chegada e, por último, carga (`Cargos(from, to)`: o que a
+saída envia e a chegada aceita). País `null` significa sem filtro; cidade sem
+país conhecido vai no grupo `OtherCountry` ("Outros"). As regras de carga são o
+catálogo do jogo mais as regras reveladas pelas ofertas do save (para mods, sem
+catálogo, só as do save).
+
+`JobSelectionRules` (`Core/Modules/Jobs`) usa esse índice para manter a escolha
+consistente: `Revalidate` limpa o que deixou de valer e escolhe opção única,
+`Swap` troca os lados, `NextJob` prepara o próximo frete depois de "Adicionar" e
+`ToRequest` monta o `JobRequest`. Ver [../decisions/0007-cadeia-de-escolhas-do-frete-no-core-e-pais-da-cidade-pelo-igamedata.md](../decisions/0007-cadeia-de-escolhas-do-frete-no-core-e-pais-da-cidade-pelo-igamedata.md).
 
 A distância vem de `DistanceTable`: primeiro o par conhecido (das ofertas de
 todos os saves do usuário, via `IDistanceCache`), depois a estimativa pelo grafo

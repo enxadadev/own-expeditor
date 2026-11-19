@@ -31,6 +31,7 @@ Falta o teste no jogo (item 7.5 do plano 0006).
 | [architecture/plan-0005-shell.md](architecture/plan-0005-shell.md) | Plano de implementação da ADR 0005: contratos, tarefas por agente e riscos |
 | [decisions/0006-integracao-do-codigo-de-injecao-ao-shell.md](decisions/0006-integracao-do-codigo-de-injecao-ao-shell.md) | ADR: integração do código de injeção (BSII, `.scs`, `SaveSession`, `JobInjector`) ao shell; destino da gravação; erros tipados |
 | [architecture/plan-0006-integracao.md](architecture/plan-0006-integracao.md) | Plano de implementação da ADR 0006: reaproveitamento, contratos, fases F0 a F7 (concluídas) e riscos |
+| [decisions/0007-cadeia-de-escolhas-do-frete-no-core-e-pais-da-cidade-pelo-igamedata.md](decisions/0007-cadeia-de-escolhas-do-frete-no-core-e-pais-da-cidade-pelo-igamedata.md) | ADR: cadeia País → Cidade → Empresa → Carga no Core (`JobSelectionRules`); país da cidade pelo `IGameData` |
 | [changelog.md](changelog.md) | Mudanças por versão (`Directory.Build.props`) |
 
 Fora de `docs/`:

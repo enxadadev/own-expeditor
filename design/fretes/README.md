@@ -1,6 +1,13 @@
 # Fretes (módulo)
 
-- **Status:** aprovado (2026-11-18)
+> **Substituído:** o fluxo e a tela de escolha deste desenho foram trocados pelo
+> fluxo País → Cidade, aprovado em [`../fretes-pais-cidade/`](../fretes-pais-cidade/README.md)
+> (2026-11-18). A ordem dos passos, o layout de "Onde entra o frete" e a lista de
+> cidades à esquerda não valem mais; use os canvas e textos de lá. Este documento
+> fica como histórico. Continuam valendo as regras de distância (conhecida ou
+> estimada), vagas e ofertas pendentes, Steam Cloud, sem catálogo e sem origem.
+
+- **Status:** aprovado (2026-11-18), substituído parcialmente por `fretes-pais-cidade`
 - **Canvas:** https://claude.ai/artifact/DGcBW2CtBSZWnZXgzE7PhM; fonte em [`canvas/`](canvas/) (`canvas.json` + um `.dc.html` por tela, 1280×800).
 - **Origem:** [ADR 0006](../../docs/decisions/0006-integracao-do-codigo-de-injecao-ao-shell.md) e [plano 0006](../../docs/architecture/plan-0006-integracao.md) tarefa 0.1.
   Dentro do shell aprovado ([`../shell/`](../shell/README.md)), na direção A+C ([`../direcao-visual/`](../direcao-visual/README.md)), com os controles de [`../controles/`](../controles/README.md).

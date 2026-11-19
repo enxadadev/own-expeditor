@@ -132,22 +132,26 @@
   <data name="Jobs_Added_Toast" xml:space="preserve"><value>Job added to review.</value></data>
   <data name="Jobs_Added_View" xml:space="preserve"><value>View review</value></data>
   <data name="Jobs_CancelEdit" xml:space="preserve"><value>Cancel editing</value></data>
+  <data name="Jobs_Cargo_Placeholder" xml:space="preserve"><value>Choose a cargo</value></data>
   <data name="Jobs_Change_Title" xml:space="preserve"><value>Job {0} → {1}</value></data>
-  <data name="Jobs_Chip_FromAria" xml:space="preserve"><value>Departure city: {0}. Change it in the list</value></data>
-  <data name="Jobs_Chip_FromHint" xml:space="preserve"><value>Choose the departure city in the list on the left</value></data>
-  <data name="Jobs_Chip_ToAria" xml:space="preserve"><value>Destination city: {0}. Change</value></data>
+  <data name="Jobs_City_Placeholder" xml:space="preserve"><value>Choose a city</value></data>
   <data name="Jobs_Cloud_Body" xml:space="preserve"><value>The cloud may bring back an older save or hide new ones. When you apply, you choose how to write.</value></data>
   <data name="Jobs_Cloud_Chip" xml:space="preserve"><value>Steam Cloud</value></data>
   <data name="Jobs_Cloud_Dismiss" xml:space="preserve"><value>Got it</value></data>
   <data name="Jobs_Cloud_Title" xml:space="preserve"><value>This profile uses Steam Cloud</value></data>
   <data name="Jobs_Companies_One" xml:space="preserve"><value>1 company</value></data>
   <data name="Jobs_Companies_Other" xml:space="preserve"><value>{0} companies</value></data>
+  <data name="Jobs_Company_Placeholder" xml:space="preserve"><value>Choose a company</value></data>
+  <data name="Jobs_Country_Cities_One" xml:space="preserve"><value>1 city</value></data>
+  <data name="Jobs_Country_Cities_Other" xml:space="preserve"><value>{0} cities</value></data>
+  <data name="Jobs_Country_Other" xml:space="preserve"><value>Other</value></data>
+  <data name="Jobs_Country_Placeholder" xml:space="preserve"><value>Choose a country</value></data>
+  <data name="Jobs_Country_Search" xml:space="preserve"><value>Search country…</value></data>
   <data name="Jobs_Distance_Estimated" xml:space="preserve"><value>Estimated</value></data>
   <data name="Jobs_Distance_EstimatedShort" xml:space="preserve"><value>estimated</value></data>
   <data name="Jobs_Distance_Estimated_Help" xml:space="preserve"><value>This is the app's estimate: your saves don't have this route. The game recalculates the route on the GPS.</value></data>
-  <data name="Jobs_Distance_FromSave" xml:space="preserve"><value>Known: from offers in your saves</value></data>
   <data name="Jobs_Distance_Pending" xml:space="preserve"><value>Choose both cities</value></data>
-  <data name="Jobs_Editing_Body" xml:space="preserve"><value>The company and slot stay the same. When you update, it replaces the previous one in review.</value></data>
+  <data name="Jobs_Editing_Body" xml:space="preserve"><value>The departure (city, company and slot) stays the same. When you update, it replaces the previous one in review.</value></data>
   <data name="Jobs_Editing_Title" xml:space="preserve"><value>Editing a pending change</value></data>
   <data name="Jobs_Empty_Body" xml:space="preserve"><value>A city only shows up here if one of its companies has a free slot or an offer to replace and ships a cargo the app has already seen in a job in this save.</value></data>
   <data name="Jobs_Empty_Tip" xml:space="preserve"><value>Open the freight market of a few companies in the game, save and open the save again.</value></data>
@@ -162,64 +166,52 @@
   <data name="Jobs_Error_OriginMissing" xml:space="preserve"><value>The departure company is no longer in this save. Choose another departure company.</value></data>
   <data name="Jobs_Error_SameCity" xml:space="preserve"><value>The departure and destination cities are the same. Choose another destination city.</value></data>
   <data name="Jobs_Error_TargetMissing" xml:space="preserve"><value>The arrival company isn't in this save. Choose another arrival company or another destination city.</value></data>
-  <data name="Jobs_Expiration_Help" xml:space="preserve"><value>Game time, counted from the save's clock.</value></data>
+  <data name="Jobs_Field_Aria" xml:space="preserve"><value>{0}, {1}: {2}</value></data>
   <data name="Jobs_Field_Cargo" xml:space="preserve"><value>Cargo</value></data>
+  <data name="Jobs_Field_City" xml:space="preserve"><value>City</value></data>
+  <data name="Jobs_Field_Company" xml:space="preserve"><value>Company</value></data>
+  <data name="Jobs_Field_Country" xml:space="preserve"><value>Country</value></data>
   <data name="Jobs_Field_Destination" xml:space="preserve"><value>Destination</value></data>
   <data name="Jobs_Field_Distance" xml:space="preserve"><value>Distance</value></data>
   <data name="Jobs_Field_Expiration" xml:space="preserve"><value>Expires in</value></data>
   <data name="Jobs_Field_Origin" xml:space="preserve"><value>Origin</value></data>
+  <data name="Jobs_Field_Slot" xml:space="preserve"><value>Slot</value></data>
   <data name="Jobs_Field_Trailer" xml:space="preserve"><value>Trailer</value></data>
   <data name="Jobs_Field_Units" xml:space="preserve"><value>Units</value></data>
   <data name="Jobs_Form_Label" xml:space="preserve"><value>New job</value></data>
-  <data name="Jobs_FromCity_Placeholder" xml:space="preserve"><value>Choose from the list</value></data>
+  <data name="Jobs_Hint_ChooseCity" xml:space="preserve"><value>Choose the city first</value></data>
+  <data name="Jobs_Hint_ChooseCountry" xml:space="preserve"><value>Choose the country first</value></data>
+  <data name="Jobs_Hint_ChooseFromCompany" xml:space="preserve"><value>Choose the departure company first</value></data>
+  <data name="Jobs_Hint_ChooseToCompany" xml:space="preserve"><value>Choose the arrival company first</value></data>
   <data name="Jobs_Hint_Locked" xml:space="preserve"><value>Locked while editing</value></data>
-  <data name="Jobs_Hint_NeedCargo" xml:space="preserve"><value>Choose the cargo first</value></data>
-  <data name="Jobs_Hint_NeedCities" xml:space="preserve"><value>Choose both cities first</value></data>
-  <data name="Jobs_Hint_NeedFromCompany" xml:space="preserve"><value>Choose the departure company first</value></data>
-  <data name="Jobs_Hint_OnlyOption" xml:space="preserve"><value>Only option, already chosen</value></data>
-  <data name="Jobs_Hint_Options_One" xml:space="preserve"><value>1 option</value></data>
-  <data name="Jobs_Hint_Options_Other" xml:space="preserve"><value>{0} options</value></data>
-  <data name="Jobs_List_Count_One" xml:space="preserve"><value>1 departure city</value></data>
-  <data name="Jobs_List_Count_Other" xml:space="preserve"><value>{0} departure cities</value></data>
-  <data name="Jobs_List_Search" xml:space="preserve"><value>Search city…</value></data>
-  <data name="Jobs_List_SearchLabel" xml:space="preserve"><value>Search departure city</value></data>
-  <data name="Jobs_List_Title" xml:space="preserve"><value>Departure cities</value></data>
-  <data name="Jobs_Map_Empty_Aria" xml:space="preserve"><value>Route map: choose the cities</value></data>
+  <data name="Jobs_LoadError_Body" xml:space="preserve"><value>Your save was not changed. Try again or go back and choose another save.</value></data>
+  <data name="Jobs_LoadError_Title" xml:space="preserve"><value>Couldn't load the jobs</value></data>
+  <data name="Jobs_Loading" xml:space="preserve"><value>Updating the job options…</value></data>
+  <data name="Jobs_Map_Empty" xml:space="preserve"><value>Choose both cities</value></data>
+  <data name="Jobs_Map_Empty_Aria" xml:space="preserve"><value>Route map: choose both cities</value></data>
   <data name="Jobs_Map_Label" xml:space="preserve"><value>Route from {0} to {1}</value></data>
-  <data name="Jobs_Map_PickFrom" xml:space="preserve"><value>Choose the departure city in the list</value></data>
-  <data name="Jobs_Map_PickTo" xml:space="preserve"><value>Choose the destination city</value></data>
   <data name="Jobs_Map_Route" xml:space="preserve"><value>Route</value></data>
   <data name="Jobs_Map_Schematic" xml:space="preserve"><value>Route sketch, without real positions</value></data>
   <data name="Jobs_Missing" xml:space="preserve"><value>Still to choose: {0}</value></data>
   <data name="Jobs_Missing_Cargo" xml:space="preserve"><value>cargo</value></data>
   <data name="Jobs_Missing_FromCity" xml:space="preserve"><value>departure city</value></data>
   <data name="Jobs_Missing_FromCompany" xml:space="preserve"><value>departure company</value></data>
-  <data name="Jobs_Missing_Offer" xml:space="preserve"><value>offer to replace</value></data>
-  <data name="Jobs_Missing_ToCity" xml:space="preserve"><value>destination city</value></data>
+  <data name="Jobs_Missing_FromCountry" xml:space="preserve"><value>departure country</value></data>
+  <data name="Jobs_Missing_GroupFrom" xml:space="preserve"><value>departure</value></data>
+  <data name="Jobs_Missing_GroupTo" xml:space="preserve"><value>arrival</value></data>
+  <data name="Jobs_Missing_NoSlot" xml:space="preserve"><value>This company has no slot or offer available</value></data>
+  <data name="Jobs_Missing_Slot" xml:space="preserve"><value>slot</value></data>
+  <data name="Jobs_Missing_ToCity" xml:space="preserve"><value>arrival city</value></data>
   <data name="Jobs_Missing_ToCompany" xml:space="preserve"><value>arrival company</value></data>
-  <data name="Jobs_Mode_Free" xml:space="preserve"><value>Use a free slot</value></data>
-  <data name="Jobs_Mode_Help" xml:space="preserve"><value>Replacing swaps one of the company's current offers: the review shows before → after.</value></data>
-  <data name="Jobs_Mode_Locked" xml:space="preserve"><value>Locked while editing: to change it, discard this change and create another.</value></data>
-  <data name="Jobs_Mode_NoFree" xml:space="preserve"><value>No free slot in this company. Replace one of the current offers.</value></data>
-  <data name="Jobs_Mode_NoOffers" xml:space="preserve"><value>This company has no offers to replace. Use the free slot.</value></data>
-  <data name="Jobs_Mode_Replace" xml:space="preserve"><value>Replace an offer</value></data>
-  <data name="Jobs_Mode_Title" xml:space="preserve"><value>Where the job goes</value></data>
+  <data name="Jobs_Missing_ToCountry" xml:space="preserve"><value>arrival country</value></data>
   <data name="Jobs_NoCatalog_Action" xml:space="preserve"><value>Open Settings</value></data>
-  <data name="Jobs_NoCatalog_Body" xml:space="preserve"><value>We show names as they appear in the save and only the cargo rules it reveals. There may be fewer options.</value></data>
+  <data name="Jobs_NoCatalog_Body" xml:space="preserve"><value>Without it there is no Country field: cities come in one list, with the names as in the save and only the cargo rules it reveals. There may be fewer options.</value></data>
   <data name="Jobs_NoCatalog_Title" xml:space="preserve"><value>{0} folder not found</value></data>
-  <data name="Jobs_NoMatch_Body" xml:space="preserve"><value>No company in {0} with a free slot ships a cargo that a company in {1} accepts. Change one of the cities.</value></data>
-  <data name="Jobs_NoMatch_CatalogNote" xml:space="preserve"><value>Without the game folder, only the cargo rules seen in the save apply.</value></data>
-  <data name="Jobs_NoMatch_ChangeFrom" xml:space="preserve"><value>Change departure city</value></data>
-  <data name="Jobs_NoMatch_ChangeTo" xml:space="preserve"><value>Change destination city</value></data>
-  <data name="Jobs_NoMatch_Title" xml:space="preserve"><value>No possible match</value></data>
   <data name="Jobs_NoSlots_Body" xml:space="preserve"><value>Every slot and offer in {0} already has a pending change. Edit or discard one of them to free it.</value></data>
   <data name="Jobs_NoSlots_Title" xml:space="preserve"><value>No free slot or offer in {0}</value></data>
   <data name="Jobs_Notice_Cleared" xml:space="preserve"><value>Cleared {0}: the new choice changes the options.</value></data>
   <data name="Jobs_Notice_Close" xml:space="preserve"><value>Dismiss notice</value></data>
   <data name="Jobs_Notice_Replaced" xml:space="preserve"><value>{0}: only one option was left, so it was chosen.</value></data>
-  <data name="Jobs_Notice_SameCity" xml:space="preserve"><value>Cleared the destination city: it can't be the same as the departure city.</value></data>
-  <data name="Jobs_Offer_Expires" xml:space="preserve"><value>expires in {0}</value></data>
-  <data name="Jobs_Offer_Meta" xml:space="preserve"><value>{0} · {1} · {2}</value></data>
   <data name="Jobs_Offers_One" xml:space="preserve"><value>1 offer</value></data>
   <data name="Jobs_Offers_Other" xml:space="preserve"><value>{0} offers</value></data>
   <data name="Jobs_Pending_Edit" xml:space="preserve"><value>Edit</value></data>
@@ -232,31 +224,26 @@
   <data name="Jobs_Picker_Count_One" xml:space="preserve"><value>1 option</value></data>
   <data name="Jobs_Picker_Count_Other" xml:space="preserve"><value>{0} options</value></data>
   <data name="Jobs_Picker_NoItems" xml:space="preserve"><value>Nothing to choose here.</value></data>
-  <data name="Jobs_Picker_NoMatch" xml:space="preserve"><value>No match</value></data>
-  <data name="Jobs_Picker_OnlyPossible" xml:space="preserve"><value>Only possible matches</value></data>
-  <data name="Jobs_Picker_SameCity" xml:space="preserve"><value>Already the departure city</value></data>
   <data name="Jobs_Picker_SearchCargo" xml:space="preserve"><value>Search cargo…</value></data>
   <data name="Jobs_Picker_SearchCity" xml:space="preserve"><value>Search city…</value></data>
   <data name="Jobs_Picker_SearchCompany" xml:space="preserve"><value>Search company…</value></data>
   <data name="Jobs_Picker_SearchOffer" xml:space="preserve"><value>Search offer…</value></data>
   <data name="Jobs_Ready" xml:space="preserve"><value>Ready. Nothing is written now: the job goes to review.</value></data>
-  <data name="Jobs_Search_Clear" xml:space="preserve"><value>Clear search</value></data>
-  <data name="Jobs_Search_NoResult_Body" xml:space="preserve"><value>Nothing for “{0}”. Check the name or clear the search.</value></data>
-  <data name="Jobs_Search_NoResult_Title" xml:space="preserve"><value>No city found</value></data>
+  <data name="Jobs_Side_From" xml:space="preserve"><value>Departure</value></data>
+  <data name="Jobs_Side_To" xml:space="preserve"><value>Arrival</value></data>
+  <data name="Jobs_Single_Option" xml:space="preserve"><value>Only option</value></data>
+  <data name="Jobs_Slot_Free" xml:space="preserve"><value>Free slot ({0})</value></data>
+  <data name="Jobs_Slot_Meta" xml:space="preserve"><value>{0} · expires in {1}</value></data>
+  <data name="Jobs_Slot_Placeholder" xml:space="preserve"><value>Choose a slot</value></data>
+  <data name="Jobs_Slot_Replace" xml:space="preserve"><value>Replace: → {0} · {1} · {2}</value></data>
+  <data name="Jobs_Slot_Search" xml:space="preserve"><value>Search slot…</value></data>
   <data name="Jobs_Slots_One" xml:space="preserve"><value>1 free slot</value></data>
   <data name="Jobs_Slots_Other" xml:space="preserve"><value>{0} free slots</value></data>
   <data name="Jobs_Slots_Zero" xml:space="preserve"><value>No free slots</value></data>
   <data name="Jobs_Step_Cargo" xml:space="preserve"><value>Cargo</value></data>
   <data name="Jobs_Step_Choose" xml:space="preserve"><value>Choose…</value></data>
-  <data name="Jobs_Step_FromCity" xml:space="preserve"><value>Departure city</value></data>
-  <data name="Jobs_Step_FromCompany" xml:space="preserve"><value>Departure company</value></data>
-  <data name="Jobs_Step_Offer" xml:space="preserve"><value>Offer to replace</value></data>
-  <data name="Jobs_Step_ToCity" xml:space="preserve"><value>Destination city</value></data>
-  <data name="Jobs_Step_ToCompany" xml:space="preserve"><value>Arrival company</value></data>
-  <data name="Jobs_Swap" xml:space="preserve"><value>Swap departure and destination</value></data>
-  <data name="Jobs_ToCity_Placeholder" xml:space="preserve"><value>Choose city…</value></data>
-  <data name="Jobs_Trailer_Help" xml:space="preserve"><value>Copied from a job in this save with the same cargo</value></data>
-  <data name="Jobs_Units_Help" xml:space="preserve"><value>Set by the trailer</value></data>
+  <data name="Jobs_Swap" xml:space="preserve"><value>Swap departure and arrival</value></data>
+  <data name="Jobs_Swap_Short" xml:space="preserve"><value>Swap</value></data>
   <data name="Jobs_Update" xml:space="preserve"><value>Update in review</value></data>
   <data name="Jobs_Updated_Toast" xml:space="preserve"><value>Change updated in review.</value></data>
   <data name="Loading_Automation" xml:space="preserve"><value>Reading save, {0}%</value></data>

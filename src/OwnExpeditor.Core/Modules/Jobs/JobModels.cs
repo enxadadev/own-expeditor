@@ -52,3 +52,25 @@ public static class JobsTextKeys
     public const string ErrorExpirationInvalid = "Jobs_Error_ExpirationInvalid";
     public const string ErrorNoGameTime = "Jobs_Error_NoGameTime";
 }
+
+/// <summary>País (id; <see cref="JobBoard.OtherCountry"/> = sem país conhecido) e suas cidades.</summary>
+public sealed record CountryInfo(string Country, int Cities);
+
+/// <summary>Cidade de saída com suas empresas e vagas.</summary>
+public sealed record DepartureCity(string City, string? Country, int Companies, int FreeSlots, int Offers, int PendingSlots);
+
+/// <summary>Escolha de vaga: livre ou substituir uma oferta.</summary>
+public sealed record JobSlotChoice(JobSlotMode Mode, string? OfferId = null)
+{
+    public static JobSlotChoice Free { get; } = new(JobSlotMode.FillEmpty);
+
+    public static JobSlotChoice Replace(string offerId) => new(JobSlotMode.ReplaceOffer, offerId);
+}
+
+public enum JobField { FromCountry, FromCity, FromCompany, Slot, ToCountry, ToCity, ToCompany, Cargo }
+
+public sealed record JobSelection(string? FromCountry = null, string? FromCity = null, CompanyLocation? FromCompany = null,
+    JobSlotChoice? Slot = null, string? ToCountry = null, string? ToCity = null, CompanyLocation? ToCompany = null, string? Cargo = null);
+
+/// <summary>Seleção revalidada: campos limpos por deixarem de valer e campos preenchidos automaticamente (opção única).</summary>
+public sealed record JobSelectionResult(JobSelection Selection, IReadOnlyList<JobField> Cleared, IReadOnlyList<JobField> AutoPicked);

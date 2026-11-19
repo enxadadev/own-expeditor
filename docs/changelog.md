@@ -3,6 +3,45 @@
 A versão do produto fica em `Directory.Build.props` (`M.X.Y`). Quem a altera é
 o agente `git-ops` (ver `ia/agents/git-ops.md`).
 
+## 0.3.0
+
+Fluxo de frete por país. Sem número de versão até o `git-ops` fechar a versão
+em `Directory.Build.props`.
+
+### Para o usuário
+
+- **Escolha por país, depois cidade, depois empresa.** Saída e chegada têm os
+  mesmos campos, de cima para baixo: País → Cidade → Empresa. A vaga (Vaga livre
+  ou Substituir uma oferta) aparece na saída só quando há mais de uma opção.
+- **Carga por último.** Ela vem depois da empresa de chegada e lista só o que a
+  empresa de saída envia e a chegada recebe.
+- **Mapa por último.** A rota e a distância ficam no fim da página, logo acima da
+  barra de ação.
+- **Países lidos do jogo.** O país de cada cidade vem do próprio jogo (e de mods).
+  Nada é fixo. Cidades sem país conhecido ficam no grupo "Outros". Sem a pasta do
+  jogo, o campo País some e as cidades aparecem numa lista só.
+- **Só o que combina.** Países, cidades e empresas que não levam a uma carga
+  possível não aparecem. A cidade de saída nunca é opção de chegada.
+- **Trocar limpa só o que mudou.** Ao trocar um campo, só o que deixou de valer é
+  limpo, com aviso. Uma única opção é escolhida sozinha.
+- **⇄ troca país e cidade dos dois lados.** Empresas, vaga e carga são limpas.
+- **Depois de adicionar**, saída e cidades de chegada ficam; vaga, empresa de
+  chegada e carga são limpas, para montar outro frete entre as mesmas cidades.
+- **Editar pendência trava a saída.** País, cidade, empresa e vaga ficam
+  travados; destino, carga, empresa de chegada e prazo continuam editáveis.
+
+### Mudanças técnicas
+
+- `Core/Modules/Jobs`: `JobSelection`, `JobSelectionResult` e `JobSelectionRules`
+  (funções puras sobre o `JobBoard`). A cadeia não fica na ViewModel. Ver
+  [ADR 0007](decisions/0007-cadeia-de-escolhas-do-frete-no-core-e-pais-da-cidade-pelo-igamedata.md).
+- `JobBoard` responde por país: `DepartureCountries`, `DepartureCities(country)`,
+  `ArrivalCountries`, `ArrivalCities`, `ArrivalCompanies` e `Cargos(from, to)`.
+- `IGameData.CityCountry(city)` e `GameNameKind.Country` (nome pela cadeia do jogo,
+  sem `.resx`). `Data`: `CountryDef` e países no `GameCatalog`.
+- `JobRequest`, `JobPlanner`, a `Key` `jobs:slot:<id>` e a escrita do save não
+  mudaram.
+
 ## 0.2.0 (em desenvolvimento)
 
 Primeira versão com o app de fretes utilizável. Substitui a tela única da 0.1.0

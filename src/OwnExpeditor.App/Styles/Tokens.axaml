@@ -29,6 +29,7 @@
   <CornerRadius x:Key="RadiusMd">10</CornerRadius>
   <CornerRadius x:Key="RadiusLg">12</CornerRadius>
   <CornerRadius x:Key="RadiusXl">16</CornerRadius>
+  <x:Double x:Key="RadiusLgValue">12</x:Double> <!-- RadiusLg para formas que pedem double (Rectangle.RadiusX) -->
   <CornerRadius x:Key="RadiusPill">999</CornerRadius>
 
   <x:Double x:Key="TargetMin">40</x:Double>

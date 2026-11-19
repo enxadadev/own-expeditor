@@ -277,7 +277,43 @@ tempo de execução, sem distribuir arquivos do jogo. O catálogo completo
 | `def/cargo.sii` | `@include` de todos os `.sui` |
 | `def/company/<empresa>.sui` | `name: "Kaarfor"` (nome de exibição, sem tradução) |
 | `def/city/<cidade>.sui` | `city_data : city.x`: `city_name` (nome local), `city_name_localized: "@@x@@"`, `country` |
+| `def/country/<pais>.sui` | `country_data : country.data.x`: `name` (nome local), `name_localized: "@@x@@"`, `country_id`, `country_code`, `iso_country_code`, `pos`, fuel_price... |
 | `locale/<idioma>/local*.sii` (em `locale.scs`) | `localization_db`: pares `key[]`/`val[]`; `\xNN` são bytes UTF-8; pode ter `@include` e vir em 3nK |
+
+### Países (descoberta de 18/11/2026)
+
+Medido no dataset real (`def.scs` + 10 DLCs de mapa, sem `base.scs`).
+
+- Definição: `def/country/<pais>.sui` (36 arquivos, todos em `def.scs`; incluídos por
+  `def/country.sii`). As DLCs **não** trazem `.sui` de país, só a subpasta
+  `def/country/<pais>/` (`traffic.sii`, `speed_limits.sii`, ...). Mesmo assim o
+  catálogo varre todos os pacotes, para cobrir mods/DLCs futuras.
+- Campos usados: `country_data : country.data.<id>`, `name` (nome local) e
+  `name_localized` (`"@@<id>@@"`, traduzido em `locale.scs`). Os demais
+  (`country_id`, `country_code`, `iso_country_code`, `pos`, `fuel_price`, fuso, limites de massa)
+  não são lidos.
+- O id do país é o sufixo de `country_data` (igual ao nome do arquivo e à chave `name_localized`).
+
+```
+country_data : country.data.hungary          country_data : country.data.uk
+{                                            {
+	country_id: 13                            	country_id: 10
+	name: "Magyarország"                      	name: "United Kingdom"
+	name_localized: "@@hungary@@"             	name_localized: "@@uk@@"
+	country_code: "H"                         	country_code: "GB"
+	iso_country_code: hun                     	iso_country_code: gbr
+	...                                       	...
+}                                            }
+```
+
+- Conferência com `city_data.country` (356 cidades, def + DLCs): todas têm `country`
+  e todas casam com um país existente (36 países, todos com cidade) **após normalizar**:
+  `pecs` declara `country: Hungary` (maiúscula), os demais vêm em minúsculas. O
+  catálogo normaliza o id para minúsculas, sem aspas e sem o prefixo `country.data.`
+  (`GameCatalog.Countries` e `CityDef.Country` usam a mesma chave). Cidade sem `country`
+  fica com `Country = null`.
+- Nome na tela: `GameCatalog.CountryName(id)` = tradução de `name_localized` → `name` →
+  id legível. Sem `locale.scs` (como no dataset) cai em `name` (ex.: "Magyarország").
 
 Nomes na tela: tradução (`@@chave@@` no idioma de `config.cfg` → `g_lang_init`,
 senão o idioma do sistema, senão en_us/en_gb) → nome local → id legível.

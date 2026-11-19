@@ -17,10 +17,10 @@ using OwnExpeditor.Domain.Games;
 namespace OwnExpeditor.App.Modules.Jobs;
 
 /// <summary>
-/// Módulo Fretes (design/fretes): cidade de saída → cidade de destino → empresa de saída (+ onde entra) → carga → empresa de
-/// chegada. As opções vêm do <see cref="JobBoard"/> (sobre <c>session.View</c>, que já desconta as pendências); o frete vira
-/// <see cref="ChangeSet"/> por <see cref="JobPlanner"/> a partir de <c>session.Original</c> e só entra na sessão com
-/// <c>Stage</c>. Nada é gravado aqui. Regra de negócio fica no Core; aqui só o fluxo de telas.
+/// Módulo Fretes (design/fretes-pais-cidade): Saída (país → cidade → empresa [+ vaga]) → Chegada (país → cidade → empresa) →
+/// carga. A cadeia de escolhas é do Core (<see cref="JobSelectionRules"/>): aqui cada escolha do usuário vira uma
+/// <see cref="JobSelection"/> revalidada e os oito seletores são repopulados a partir dela. O frete vira <see cref="ChangeSet"/>
+/// por <see cref="JobPlanner"/> a partir de <c>session.Original</c> e só entra na sessão com <c>Stage</c>. Nada é gravado aqui.
 /// </summary>
 public sealed partial class JobsPageViewModel : ModulePageViewModel
 {
@@ -37,20 +37,14 @@ public sealed partial class JobsPageViewModel : ModulePageViewModel
     private JobBoard? _board;
     private IEditSession? _session;
     private bool _refreshing;
+    private bool _nextJobPending; // Add pediu: o próximo Rebuild (já com o board novo) aplica NextJob em vez de revalidar
 
-    // escolhas
-    private string? _fromCity;
-    private string? _toCity;
-    private CompanyLocation? _fromCompany;
-    private JobSlotMode _mode = JobSlotMode.FillEmpty;
-    private string? _offerId;
-    private string? _cargo;
-    private CompanyLocation? _toCompany;
+    private JobSelection _sel = new();
     private int _hours = 72;
     private Staged? _editing;
     private string? _editingKey;
-
-    private string? _notice;
+    private IReadOnlyList<JobField> _noticeCleared = [];
+    private IReadOnlyList<JobField> _noticeAuto = [];
     private string? _error;
     private bool _cloudDismissed;
 
@@ -60,47 +54,48 @@ public sealed partial class JobsPageViewModel : ModulePageViewModel
         _toast = toast;
         _ui = ui;
 
-        ToCity = new JobPickerViewModel();
-        FromCompany = new JobPickerViewModel();
-        Cargo = new JobPickerViewModel();
-        ToCompany = new JobPickerViewModel();
-        Offer = new JobPickerViewModel();
-        ToCity.Chosen += (_, o) => Act(() => _toCity = (string)o.Key, JobsFocusTarget.FromCompany);
-        FromCompany.Chosen += (_, o) => Act(() => ChooseCompany((CompanyLocation)o.Key), JobsFocusTarget.Cargo);
-        Cargo.Chosen += (_, o) => Act(() => _cargo = (string)o.Key, JobsFocusTarget.ToCompany);
-        ToCompany.Chosen += (_, o) => Act(() => _toCompany = (CompanyLocation)o.Key, JobsFocusTarget.Add);
-        Offer.Chosen += (_, o) => Act(() => _offerId = (string)o.Key, JobsFocusTarget.Cargo);
+        Listen(FromCountry, JobField.FromCountry);
+        Listen(FromCity, JobField.FromCity);
+        Listen(FromCompany, JobField.FromCompany);
+        Listen(Slot, JobField.Slot);
+        Listen(ToCountry, JobField.ToCountry);
+        Listen(ToCity, JobField.ToCity);
+        Listen(ToCompany, JobField.ToCompany);
+        Listen(Cargo, JobField.Cargo);
 
         SwapCommand = new RelayCommand(Swap, () => CanSwap);
         AddCommand = new RelayCommand(Add, () => CanAdd);
         CancelEditCommand = new RelayCommand(CancelEdit);
-        DismissNoticeCommand = new RelayCommand(() => { _notice = null; Notify(); });
+        DismissNoticeCommand = new RelayCommand(() => { _noticeCleared = _noticeAuto = []; Notify(); });
         DismissErrorCommand = new RelayCommand(() => { _error = null; Notify(); });
         DismissCloudCommand = new RelayCommand(() => { _cloudDismissed = true; Notify(); });
         OpenSettingsCommand = new RelayCommand(() => Navigation?.OpenSettings());
         ChooseSaveCommand = new RelayCommand(() => Navigation?.ChooseSave());
-        ClearCitySearchCommand = new RelayCommand(() => CityQuery = "");
-        ChangeToCityCommand = new RelayCommand(() =>
+        RetryCommand = new RelayCommand(() =>
         {
-            ToCity.ToggleChecked = true;
-            ToCity.IsOpen = true;
+            if (_session is { } session && _lifetime is { } cts) _ = LoadAsync(session, cts.Token);
         });
-        ChangeFromCityCommand = new RelayCommand(() => FocusRequested?.Invoke(this, JobsFocusTarget.CityList));
     }
 
     public override string ModuleId => Id;
 
-    // ---- partes reutilizáveis pela View
+    // ---- partes reutilizáveis pela View (a chave de cada seletor está em JobsPageViewModel.Pickers.cs)
 
-    public JobPickerViewModel ToCity { get; }
+    public JobPickerViewModel FromCountry { get; } = new();
 
-    public JobPickerViewModel FromCompany { get; }
+    public JobPickerViewModel FromCity { get; } = new();
 
-    public JobPickerViewModel Cargo { get; }
+    public JobPickerViewModel FromCompany { get; } = new();
 
-    public JobPickerViewModel ToCompany { get; }
+    public JobPickerViewModel Slot { get; } = new();
 
-    public JobPickerViewModel Offer { get; }
+    public JobPickerViewModel ToCountry { get; } = new();
+
+    public JobPickerViewModel ToCity { get; } = new();
+
+    public JobPickerViewModel ToCompany { get; } = new();
+
+    public JobPickerViewModel Cargo { get; } = new();
 
     public RelayCommand SwapCommand { get; }
 
@@ -118,13 +113,9 @@ public sealed partial class JobsPageViewModel : ModulePageViewModel
 
     public RelayCommand ChooseSaveCommand { get; }
 
-    public RelayCommand ClearCitySearchCommand { get; }
+    public RelayCommand RetryCommand { get; }
 
-    public RelayCommand ChangeToCityCommand { get; }
-
-    public RelayCommand ChangeFromCityCommand { get; }
-
-    /// <summary>Pede à View que mova o foco (próximo passo incompleto, lista de cidades).</summary>
+    /// <summary>Pede à View que mova o foco (campo incompleto seguinte, sem abrir o popup).</summary>
     public event EventHandler<JobsFocusTarget>? FocusRequested;
 
     // ---- sessão
@@ -134,15 +125,30 @@ public sealed partial class JobsPageViewModel : ModulePageViewModel
         ResetState();
         _session = session;
         session.Changed += OnSessionChanged;
-        State = PageState.Loading;
-        Notify();
         _lifetime = new CancellationTokenSource();
         ct.ThrowIfCancellationRequested();
-        await _factory.WarmUpAsync(session.Game, ct); // lê o cache de distâncias fora da UI antes do primeiro board
-        if (!ReferenceEquals(_session, session)) return; // fechada enquanto esperava
-        _board = _factory.Create(session); // índice em memória sobre o save já carregado; as distâncias do disco vêm depois, em segundo plano
-        Refresh();
-        StartDistanceRefresh(session.Game);
+        await LoadAsync(session, ct);
+        if (State == PageState.Ready) FocusRequested?.Invoke(this, NextFocus()); // o primeiro campo vazio, sem abrir popup
+    }
+
+    private async Task LoadAsync(IEditSession session, CancellationToken ct)
+    {
+        State = PageState.Loading;
+        Notify();
+        try
+        {
+            await _factory.WarmUpAsync(session.Game, ct); // lê o cache de distâncias fora da UI antes do primeiro board
+            if (!ReferenceEquals(_session, session)) return; // fechada enquanto esperava
+            _board = _factory.Create(session); // índice em memória sobre o save já carregado; as distâncias do disco vêm depois, em segundo plano
+            Refresh();
+            StartDistanceRefresh(session.Game);
+        }
+        catch (Exception e) when (e is not (OperationCanceledException or OutOfMemoryException))
+        {
+            if (!ReferenceEquals(_session, session)) return;
+            State = PageState.Error;
+            Notify();
+        }
     }
 
     protected override void OnSessionClosed()
@@ -161,24 +167,18 @@ public sealed partial class JobsPageViewModel : ModulePageViewModel
     private void ResetState()
     {
         _staged.Clear();
-        _fromCity = _toCity = _cargo = _offerId = _notice = _error = null;
-        _fromCompany = _toCompany = null;
-        _mode = JobSlotMode.FillEmpty;
+        _sel = new JobSelection();
+        _noticeCleared = _noticeAuto = [];
+        _error = null;
         _hours = 72;
         _editing = null;
         _editingKey = null;
         _cloudDismissed = false;
-        _citySelection = null;
-        _cityQuery = "";
-        _cityItems = _allCityItems = [];
-        _originCityIds = _allCityIds = _usableCityIds = [];
         _pendingRows = [];
-        _companies = _toCompanies = [];
-        _cargos = [];
-        _offers = [];
+        _missing = [];
         _distance = null;
-        _hasMatch = _hasUsableCompanies = true;
-        foreach (var picker in new[] { ToCity, FromCompany, Cargo, ToCompany, Offer }) picker.Set([], null);
+        _hasDepartureCompanies = true;
+        foreach (var picker in Pickers) picker.Set([], null);
     }
 
     /// <summary>O Core avisa em qualquer thread (Stage, Discard, Apply, dados do jogo trocados): refaz o board na thread da UI.</summary>
@@ -187,8 +187,11 @@ public sealed partial class JobsPageViewModel : ModulePageViewModel
     private void Rebuild()
     {
         if (_session is not { } session) return;
+        var afterAdd = _nextJobPending;
+        _nextJobPending = false; // consumido aqui, antes de qualquer coisa que possa lançar
         _board = _factory.Create(session);
-        Refresh();
+        if (afterAdd) _sel = NextAfterAdd(_board, _sel);
+        Refresh(revalidate: !afterAdd);
     }
 
     /// <summary>Soma ao cache as distâncias dos saves do usuário, uma vez por jogo e fora da UI; depois refaz o board.</summary>
@@ -223,43 +226,38 @@ public sealed partial class JobsPageViewModel : ModulePageViewModel
 
     // ---- ações do usuário
 
-    private void Act(Action change, JobsFocusTarget next, bool moveFocus = true)
+    private void Listen(JobPickerViewModel picker, JobField field) =>
+        picker.Chosen += (_, option) => Choose(field, option.Key);
+
+    /// <summary>Escolha do usuário num seletor: a seleção nova é revalidada pelo Core e tudo é repopulado a partir dela.</summary>
+    private void Choose(JobField field, object key)
     {
         if (_refreshing || _board is null) return;
-        _notice = null;
-        _error = null;
-        change();
-        Refresh();
-        if (moveFocus) FocusRequested?.Invoke(this, NextIncomplete() ?? next);
-    }
-
-    private void ChooseCompany(CompanyLocation company)
-    {
-        _fromCompany = company;
-        _mode = JobSlotMode.FillEmpty;
-        _offerId = null;
-        NormalizeMode(forceDefault: true, [], []);
-    }
-
-    /// <summary>
-    /// Escolha na lista de cidades de saída (passo 1). O foco fica na lista: as setas já escolhem, e mover o foco dali no meio
-    /// da navegação por teclado a quebraria (o Tab segue para o campo do passo 2).
-    /// </summary>
-    public void SelectFromCity(string? city)
-    {
-        if (_refreshing || IsEditing || city is null || city == _fromCity) return;
-        Act(() => _fromCity = city, JobsFocusTarget.ToCity, moveFocus: false);
-    }
-
-    public void SelectMode(JobSlotMode mode)
-    {
-        if (_refreshing || IsEditing || _fromCompany is null || mode == _mode) return;
-        Act(() =>
+        Apply(field switch
         {
-            _mode = mode;
-            _offerId = null;
-        }, mode == JobSlotMode.ReplaceOffer ? JobsFocusTarget.Offer : JobsFocusTarget.Cargo);
+            JobField.FromCountry => _sel with { FromCountry = (string)key },
+            JobField.FromCity => _sel with { FromCity = (string)key },
+            JobField.FromCompany => _sel with { FromCompany = (CompanyLocation)key, Slot = null },
+            JobField.Slot => _sel with { Slot = (JobSlotChoice)key },
+            JobField.ToCountry => _sel with { ToCountry = (string)key },
+            JobField.ToCity => _sel with { ToCity = (string)key },
+            JobField.ToCompany => _sel with { ToCompany = (CompanyLocation)key },
+            _ => _sel with { Cargo = (string)key },
+        });
     }
+
+    /// <summary>Revalida (o aviso só existe por ação do usuário), refaz a tela e leva o foco ao próximo campo incompleto.</summary>
+    private void Apply(JobSelectionResult result, IEnumerable<JobField>? alsoCleared = null)
+    {
+        _error = null;
+        _sel = result.Selection;
+        _noticeAuto = result.AutoPicked;
+        _noticeCleared = [.. (alsoCleared ?? []).Concat(result.Cleared).Distinct()];
+        Refresh();
+        FocusRequested?.Invoke(this, NextFocus());
+    }
+
+    private void Apply(JobSelection next) => Apply(JobSelectionRules.Revalidate(_board!, next, IsEditing));
 
     public void SelectExpiration(int hours)
     {
@@ -268,19 +266,15 @@ public sealed partial class JobsPageViewModel : ModulePageViewModel
         Notify();
     }
 
-    private bool CanSwap => !IsEditing && _fromCity is not null && _toCity is not null && IsOriginCity(_toCity);
+    private bool CanSwap => !IsEditing && _board is not null && _sel.FromCity is not null && _sel.ToCity is not null;
 
-    /// <summary>Troca saída e destino; as regras são direcionais, então empresa, modo, carga e chegada são limpos.</summary>
+    /// <summary>Troca saída e chegada (país e cidade); as regras são direcionais, então empresas, vaga e carga são limpas.</summary>
     private void Swap()
     {
         if (!CanSwap) return;
-        Act(() =>
-        {
-            (_fromCity, _toCity) = (_toCity, _fromCity);
-            _fromCompany = _toCompany = null;
-            _cargo = _offerId = null;
-            _mode = JobSlotMode.FillEmpty;
-        }, JobsFocusTarget.FromCompany);
+        var swapped = JobSelectionRules.Swap(_board!, _sel);
+        var result = JobSelectionRules.Revalidate(_board!, swapped.Selection);
+        Apply(result, swapped.Cleared);
     }
 
     // ---- editar / descartar pendentes
@@ -292,26 +286,25 @@ public sealed partial class JobsPageViewModel : ModulePageViewModel
         var r = staged.Request;
         _editing = staged;
         _editingKey = key;
-        _fromCity = r.Origin.City;
-        _toCity = r.Target.City;
-        _fromCompany = r.Origin;
-        _mode = r.Mode;
-        _offerId = r.ReplaceOfferId;
-        _cargo = r.Cargo;
-        _toCompany = r.Target;
+        string? CountryFor(string city) => _board.HasCountries ? _board.CountryOf(city) ?? JobBoard.OtherCountry : null;
+        _sel = new JobSelection(CountryFor(r.Origin.City), r.Origin.City, r.Origin,
+            r.Mode == JobSlotMode.ReplaceOffer ? JobSlotChoice.Replace(r.ReplaceOfferId!) : JobSlotChoice.Free,
+            CountryFor(r.Target.City), r.Target.City, r.Target, r.Cargo);
         _hours = r.ExpirationHours;
-        _notice = _error = null;
+        _noticeCleared = _noticeAuto = [];
+        _error = null;
         Refresh();
-        FocusRequested?.Invoke(this, JobsFocusTarget.ToCity);
     }
 
+    /// <summary>Cancelar a edição mantém saída e cidade de chegada; limpa vaga, empresa de chegada e carga.</summary>
     private void CancelEdit()
     {
-        if (_editing is null) return;
+        if (_editing is null || _board is null) return;
         _editing = null;
         _editingKey = null;
-        ClearFormKeepingCities(keepTo: false);
-        _notice = _error = null;
+        _noticeCleared = _noticeAuto = [];
+        _error = null;
+        _sel = JobSelectionRules.NextJob(_board, _sel).Selection;
         Refresh();
     }
 
@@ -341,11 +334,13 @@ public sealed partial class JobsPageViewModel : ModulePageViewModel
     private void Add()
     {
         if (!CanAdd || _session is not { } session || _board is null) return;
-        var request = BuildRequest();
-        ExistingOffer? offer = _mode == JobSlotMode.ReplaceOffer
-            ? _board.ReplaceableOffers(request.Origin).FirstOrDefault(o => o.OfferId == _offerId) ?? _editing?.Offer
+        var request = JobSelectionRules.ToRequest(_sel, _hours, _editing?.Request.FillSlotId);
+        if (request is null) return;
+        ExistingOffer? offer = request.Mode == JobSlotMode.ReplaceOffer
+            ? _board.ReplaceableOffers(request.Origin).FirstOrDefault(o => o.OfferId == request.ReplaceOfferId) ?? _editing?.Offer
             : null;
         string? key = null;
+        var staged = false;
         _staged.TryGetValue(_editingKey ?? "", out var previous);
         try
         {
@@ -355,7 +350,9 @@ public sealed partial class JobsPageViewModel : ModulePageViewModel
             var slot = change.Patches.OfType<SetAttribute>().Select(p => p.UnitId).FirstOrDefault();
             // guardado antes do Stage: o Changed do Core refaz a tela já com a pendência conhecida
             _staged[key] = new Staged(request.Mode == JobSlotMode.FillEmpty ? request with { FillSlotId = slot } : request, offer);
+            _nextJobPending = true; // o refazer do board (Changed do Core, possivelmente adiado) aplica NextJob já com o board novo
             session.Stage(change);
+            staged = true;
         }
         catch (CoreException e)
         {
@@ -368,28 +365,30 @@ public sealed partial class JobsPageViewModel : ModulePageViewModel
             Refresh();
             return;
         }
+        finally
+        {
+            if (!staged) _nextJobPending = false; // nunca fica preso se o Stage falhar (CoreException ou não)
+        }
 
         var wasEditing = _editing is not null;
         _editing = null;
         _editingKey = null;
-        ClearFormKeepingCities(keepTo: true);
-        _notice = _error = null;
+        _noticeCleared = _noticeAuto = [];
+        _error = null;
         _toast.Show(TextRef.Of(wasEditing ? "Jobs_Updated_Toast" : "Jobs_Added_Toast"),
             wasEditing ? null : TextRef.Of("Jobs_Added_View"), wasEditing ? null : () => Navigation?.OpenReview());
-        Refresh();
+        Refresh(revalidate: false);
     }
 
-    private void ClearFormKeepingCities(bool keepTo)
+    /// <summary>
+    /// Fica a saída e a cidade de chegada; o resto recomeça. Se a empresa de saída esgotou (no board novo), o usuário escolhe
+    /// a próxima. Um Rebuild seguinte (ex.: distâncias) ainda pode escolher sozinha a única empresa restante (opção única).
+    /// </summary>
+    private static JobSelection NextAfterAdd(JobBoard board, JobSelection current)
     {
-        if (!keepTo) _toCity = null;
-        _fromCompany = _toCompany = null;
-        _cargo = _offerId = null;
-        _mode = JobSlotMode.FillEmpty;
+        var next = JobSelectionRules.NextJob(board, current).Selection;
+        return next.FromCompany == current.FromCompany ? next : next with { FromCompany = null, Slot = null };
     }
-
-    private JobRequest BuildRequest() => new(_fromCompany!, _toCompany!, _cargo!, _mode,
-        _mode == JobSlotMode.ReplaceOffer ? _offerId : null, 0, _hours,
-        _mode == JobSlotMode.FillEmpty ? _editing?.Request.FillSlotId : null);
 
     /// <summary>Conflito do Stage vira a mensagem do passo certo; o resto usa o motivo do Core ou o texto do código.</summary>
     private string ErrorText(CoreException e, JobRequest request) => e.Code switch

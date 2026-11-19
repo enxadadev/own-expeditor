@@ -17,4 +17,5 @@ internal sealed class UnavailableGameData(GameKind game) : IGameData
     public bool Ships(string company, string cargo) => false;
     public bool Accepts(string company, string cargo) => false;
     public IReadOnlyCollection<string> CargoOut(string company) => [];
+    public string? CityCountry(string city) => null;
 }

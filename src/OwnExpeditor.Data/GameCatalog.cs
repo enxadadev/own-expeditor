@@ -38,6 +38,8 @@ public sealed class GameCatalog
     public Dictionary<string, CompanyDef> Companies { get; } = new(StringComparer.Ordinal);
     public Dictionary<string, CargoDef> Cargos { get; } = new(StringComparer.Ordinal);
     public Dictionary<string, CityDef> Cities { get; } = new(StringComparer.Ordinal);
+    /// <summary>Países por id (mesma chave de <see cref="CityDef.Country"/>).</summary>
+    public Dictionary<string, CountryDef> Countries { get; } = new(StringComparer.Ordinal);
     public Localization Texts { get; private set; } = new();
 
     public string CompanyName(string id) =>
@@ -47,6 +49,12 @@ public sealed class GameCatalog
     {
         var city = Cities.GetValueOrDefault(id);
         return Texts.Resolve(city?.LocalizationKey) ?? city?.NativeName ?? Localization.Humanize(id);
+    }
+
+    public string CountryName(string id)
+    {
+        var country = Countries.GetValueOrDefault(id);
+        return Texts.Resolve(country?.LocalizationKey) ?? country?.NativeName ?? Localization.Humanize(id);
     }
 
     public string CargoName(string id) =>
@@ -94,6 +102,7 @@ public sealed class GameCatalog
                 catalog.AddCompanies(scs);
                 catalog.AddCargos(scs);
                 catalog.AddCities(scs);
+                catalog.AddCountries(scs);
             }
             if (withTexts) catalog.Texts = Localization.Load(opened, language);
         }
@@ -116,9 +125,32 @@ public sealed class GameCatalog
             {
                 NativeName = Field(text, "city_name")?.Trim('"'),
                 LocalizationKey = Field(text, "city_name_localized")?.Trim('"'),
-                Country = Field(text, "country"),
+                Country = NormalizeCountry(Field(text, "country")),
             };
         }
+    }
+
+    private void AddCountries(HashFsArchive scs)
+    {
+        foreach (var f in scs.List("def/country").Files.Where(f => f.EndsWith(".sui", StringComparison.Ordinal)))
+        {
+            var data = scs.Read("def/country/" + f);
+            if (data is null) continue;
+            var text = OwnExpeditor.Sii.SiiDecoder.DecodeLenient(data);
+            var id = NormalizeCountry(Field(text, "country_data")) ?? Stem(f);
+            Countries[id] = new CountryDef(id)
+            {
+                NativeName = Field(text, "name")?.Trim('"'),
+                LocalizationKey = Field(text, "name_localized")?.Trim('"'),
+            };
+        }
+    }
+
+    /// <summary>Id de país em minúsculas, sem aspas nem prefixo "country.data."; vazio vira null (city pecs usa "Hungary").</summary>
+    private static string? NormalizeCountry(string? value)
+    {
+        var id = value?.Trim().Trim('"').Replace("country.data.", "", StringComparison.Ordinal).Trim().ToLowerInvariant();
+        return string.IsNullOrEmpty(id) ? null : id;
     }
 
     private void AddCompanies(HashFsArchive scs)

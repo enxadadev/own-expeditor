@@ -22,7 +22,12 @@ public sealed class FakeRules(bool available = true) : IGameData
     public bool Ships(string company, string cargo) => Out.TryGetValue(company, out var s) && s.Contains(cargo);
     public bool Accepts(string company, string cargo) => In.TryGetValue(company, out var s) && s.Contains(cargo);
     public IReadOnlyCollection<string> CargoOut(string company) => Out.TryGetValue(company, out var s) ? s : [];
+    public Dictionary<string, string> Countries { get; } = [];
+    public string? CityCountry(string city) => available ? Countries.GetValueOrDefault(city) : null;
 }
+
+/// <summary>Como as cidades do save sintético ficam nos países: sofia=bulgaria, belgrad=serbia, istanbul=turkey; praha e oslo sem país.</summary>
+public enum CountryLayout { Mixed, Single, None }
 
 /// <summary>
 /// Save sintético do módulo (game_time 1000). sofia: radus (oferta a + vagas f1, f2), kaarfor (vaga f3, sem ofertas);
@@ -57,9 +62,17 @@ public static class JobsSample
             : Company("radus.sofia") + Company("tradeaux.belgrad")) +
         "}\r\n";
 
-    public static FakeRules Rules(bool available = true)
+    public static FakeRules Rules(bool available = true, CountryLayout layout = CountryLayout.Mixed)
     {
         var r = new FakeRules(available);
+        if (layout == CountryLayout.Mixed)
+        {
+            r.Countries["sofia"] = "bulgaria";
+            r.Countries["belgrad"] = "serbia";
+            r.Countries["istanbul"] = "turkey";
+        }
+        else if (layout == CountryLayout.Single)
+            foreach (var city in new[] { "sofia", "belgrad", "istanbul", "praha", "oslo" }) r.Countries[city] = "bulgaria";
         r.Out["radus"] = ["machinery", "bricks"];
         r.Out["kaarfor"] = ["machinery", "plastic"];
         r.Out["tradeaux"] = ["beams", "bricks"];
@@ -90,8 +103,17 @@ public sealed class FakeBoardFactory : IJobBoardFactory
 
     public int RefreshAdds { get; set; }
 
+    /// <summary>Quando definidas, a leitura do cache / a criação do board falham com elas.</summary>
+    public Exception? WarmUpFails { get; set; }
+
+    public Exception? CreateFails { get; set; }
+
+    public Task WarmUpAsync(GameKind game, CancellationToken ct) =>
+        WarmUpFails is { } e ? Task.FromException(e) : Task.CompletedTask;
+
     public JobBoard Create(IEditSession session)
     {
+        if (CreateFails is { } e) throw e;
         Creates++;
         return JobBoard.Build(session.View, session.GameData, Known);
     }
@@ -143,14 +165,51 @@ public sealed class StageFailsSession(IEditSession inner, CoreError code) : IEdi
     public Task<ApplyResult> ApplyAsync(ApplyTarget target, CancellationToken ct) => inner.ApplyAsync(target, ct);
 }
 
+/// <summary>Dispatcher que enfileira (como a thread da UI em produção): nada roda até <see cref="Drain"/>.</summary>
+public sealed class QueueUiDispatcher : IUiDispatcher
+{
+    private readonly Queue<Action> _queue = new();
+
+    public int Count => _queue.Count;
+
+    public void Post(Action action) => _queue.Enqueue(action);
+
+    public void Drain()
+    {
+        while (_queue.Count > 0) _queue.Dequeue()();
+    }
+}
+
+/// <summary>Sessão cujo <c>Stage</c> lança a exceção dada (não-Core) e que levanta <c>Changed</c> sob demanda.</summary>
+public sealed class StageThrowsSession(IEditSession inner, Exception error) : IEditSession
+{
+    public SaveSlotInfo Save => inner.Save;
+    public GameKind Game => inner.Game;
+    public bool IsReadOnly => inner.IsReadOnly;
+    public ISaveView Original => inner.Original;
+    public ISaveView View => inner.View;
+    public IGameData GameData => inner.GameData;
+    public IReadOnlyList<ChangeSet> Pending => inner.Pending;
+    public bool HasChanges => inner.HasChanges;
+    public event EventHandler? Changed;
+    public void RaiseChanged() => Changed?.Invoke(this, EventArgs.Empty);
+    public void Stage(ChangeSet change) => throw error;
+    public bool Discard(Guid changeSetId) => inner.Discard(changeSetId);
+    public void DiscardModule(string moduleId) => inner.DiscardModule(moduleId);
+    public void DiscardAll() => inner.DiscardAll();
+    public SessionDiff GetDiff() => inner.GetDiff();
+    public Task<ApplyResult> ApplyAsync(ApplyTarget target, CancellationToken ct) => inner.ApplyAsync(target, ct);
+}
+
 /// <summary>Módulo Fretes montado com fakes; a sessão é real (Stage/Discard/Original/View de verdade) sobre o save sintético.</summary>
 public sealed class JobsFixture
 {
-    public JobsFixture(Language language = Language.En, string? text = null, bool catalog = true, bool cloud = false)
+    public JobsFixture(Language language = Language.En, string? text = null, bool catalog = true, bool cloud = false,
+        CountryLayout countries = CountryLayout.Mixed, IUiDispatcher? ui = null)
     {
         Loc = new Localizer(language);
-        Session = new TestSession(EditSessionFactory.FromText(text ?? JobsSample.Text(), Sample.Slot(cloud: cloud), JobsSample.Rules(catalog)));
-        Page = new JobsPageViewModel(Loc, Factory, Toast, new ImmediateUiDispatcher()) { Navigation = Navigation };
+        Session = new TestSession(EditSessionFactory.FromText(text ?? JobsSample.Text(), Sample.Slot(cloud: cloud), JobsSample.Rules(catalog, countries)));
+        Page = new JobsPageViewModel(Loc, Factory, Toast, ui ?? new ImmediateUiDispatcher()) { Navigation = Navigation };
     }
 
     public Localizer Loc { get; }
@@ -169,13 +228,18 @@ public sealed class JobsFixture
     public static void Pick(JobPickerViewModel picker, object key) =>
         picker.Selected = picker.AllOptions.First(o => Equals(o.Key, key));
 
-    /// <summary>Monta o frete completo sofia → istanbul (radus, machinery, lognstick).</summary>
+    /// <summary>
+    /// Monta o frete completo sofia/radus → istanbul/lognstick, carga machinery. Escolhas já feitas sozinhas (opção única)
+    /// não são refeitas; os países só entram quando a tela os mostra.
+    /// </summary>
     public void Ready()
     {
-        Page.SelectFromCity("sofia");
-        Pick(Page.ToCity, "istanbul");
+        if (Page.ShowCountries) Pick(Page.FromCountry, "bulgaria");
+        Pick(Page.FromCity, "sofia");
         Pick(Page.FromCompany, JobsSample.Radus);
-        Pick(Page.Cargo, "machinery");
+        if (Page.ShowCountries) Pick(Page.ToCountry, "turkey");
+        Pick(Page.ToCity, "istanbul");
         Pick(Page.ToCompany, JobsSample.Lognstick);
+        Pick(Page.Cargo, "machinery");
     }
 }

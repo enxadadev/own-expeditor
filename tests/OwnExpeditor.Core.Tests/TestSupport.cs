@@ -71,6 +71,8 @@ public sealed class FakeGameData(GameKind game = GameKind.Ets2, bool available =
     public bool Ships(string company, string cargo) => false;
     public bool Accepts(string company, string cargo) => false;
     public IReadOnlyCollection<string> CargoOut(string company) => [];
+    public Dictionary<string, string> Countries { get; } = [];
+    public string? CityCountry(string city) => Countries.GetValueOrDefault(city);
 }
 
 public sealed class FakeGameDataService : IGameDataService

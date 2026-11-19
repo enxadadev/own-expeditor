@@ -49,8 +49,8 @@ define o que a App pode usar:
 | Projeto | Responsabilidade | Principais tipos |
 |---------|------------------|------------------|
 | `src/OwnExpeditor.App` | UI Avalonia em MVVM: shell, módulos, revisão, confirmação, resultado, configurações, temas e idiomas | `App`, `Program`, `Shell/AppComposition`, `ViewRegistry`, `ShellViewModel`, `SessionBarViewModel`, `WelcomeViewModel`, `LoadingViewModel`, `ReviewViewModel`, `ConfirmApplyViewModel`, `ResultViewModel`, `SettingsViewModel`, `Modules/Jobs/JobsPageViewModel`, `Services/Localizer`, `Services/ThemeService`, `Controls/*` |
-| `src/OwnExpeditor.Core` | Casos de uso: sessão de edição, mudanças, Jobs, jogo, perfis e ajustes | `EditSession`, `EditSessionHost`, `ChangeSet`, `SavePatch`, `ApplyTarget`, `ISaveView`, `CoreError`, `CoreException`, `Modules/Jobs/JobBoard`, `JobPlanner`, `DistanceTable`, `GameDataService`, `GameStatusMonitor`, `ProfileService`, `AppSettingsService`, `IGameNames` |
-| `src/OwnExpeditor.Data` | Perfis e saves no disco, gravação segura, catálogo do jogo, cache de distâncias, ajustes em JSON | `ProfileLocator`, `SaveFileStore` (`ISaveFileStore`), `SaveLocator` (utilitários internos), `GameCatalog`, `GameInstallLocator`, `GameProcessMonitor`, `Localization`, `Scs/HashFsArchive`, `Distances/JsonDistanceCache`, `Settings/JsonSettingsStore` |
+| `src/OwnExpeditor.Core` | Casos de uso: sessão de edição, mudanças, Jobs, jogo, perfis e ajustes | `EditSession`, `EditSessionHost`, `ChangeSet`, `SavePatch`, `ApplyTarget`, `ISaveView`, `CoreError`, `CoreException`, `Modules/Jobs/JobBoard`, `JobSelectionRules`, `JobSelection`, `JobPlanner`, `DistanceTable`, `GameDataService`, `GameStatusMonitor`, `ProfileService`, `AppSettingsService`, `IGameNames` |
+| `src/OwnExpeditor.Data` | Perfis e saves no disco, gravação segura, catálogo do jogo (cidades, países, empresas, cargas), cache de distâncias, ajustes em JSON | `ProfileLocator`, `SaveFileStore` (`ISaveFileStore`), `SaveLocator` (utilitários internos), `GameCatalog`, `CountryDef`, `GameInstallLocator`, `GameProcessMonitor`, `Localization`, `Scs/HashFsArchive`, `Distances/JsonDistanceCache`, `Settings/JsonSettingsStore` |
 | `src/OwnExpeditor.Sii` | Decodificar ScsC, BSII e 3nK; parsear e gravar o texto SiiNunit | `SiiDecoder`, `BsiiDecoder`, `SiiDocument`, `SiiFormatException`, `SiiErrorKind` |
 | `src/OwnExpeditor.Domain` | Records e enums puros, sem I/O | `GameKind`, `GameIds`, `GameNameKind`, `GameFolderCheck`, `CityPair`, `ProfileInfo`, `SaveSlotInfo`, `ProfileNames`, `AppSettings`, `GameFolders`, `Language`, `ThemePreference` |
 
@@ -64,7 +64,8 @@ projeto próprio: `GameCatalog` (`Data`) guarda as definições lidas dos `.scs`
 |---------|-------|-----------|
 | `tests/OwnExpeditor.Sii.Tests` | `Sii` | `SiiDocumentTests`, `SiiErrorTests` (um caso por `SiiErrorKind`), `RealSaveTests` (saves de `samples/`) |
 | `tests/OwnExpeditor.Data.Tests` | `Data` | Gravação segura (`SaveFileStoreTests`), perfis, instalação do jogo, monitor de processo, ajustes JSON, cache de catálogo |
-| `tests/OwnExpeditor.Core.Tests` | `Core` (e `Domain`) | Sessão e aplicação (`EditSession*`), `JobBoardTests`, `JobPlannerTests`, `DistanceTests`, `JobsEndToEndTests`, `ProfileServiceTests`, `ScsTests` |
+| `tests/OwnExpeditor.Core.Tests` | `Core` (e `Domain`) | Sessão e aplicação (`EditSession*`), `JobBoardTests`, `JobBoardCountryTests`, `JobSelectionRulesTests`, `JobPlannerTests`, `DistanceTests`, `JobsEndToEndTests`, `ProfileServiceTests`, `ScsTests` |
+| `tests/OwnExpeditor.Data.Tests` | `Data` | Inclui `GameCatalogCountriesTests` (países lidos das definições de cidade) |
 | `tests/OwnExpeditor.App.Tests` | `App` | Paridade `.resx`, textos `_One`/`_Other`, `Error_*`, atalhos e navegação do shell, tema, página de Fretes, `JobsRealSaveTests` |
 
 Total: 764 testes passando (`toolkit/check.sh`). Os testes com saves reais
@@ -85,9 +86,10 @@ Regra da [ADR 0004](../decisions/0004-suporte-a-tema-e-idioma.md) e da skill
 - **Data**: lê e grava `settings.json` (`JsonSettingsStore`) com tema, idioma,
   última pasta e pastas do jogo. `ISettingsStore` fica na Data; `IAppSettingsService`
   (`Core`) a expõe à App.
-- **Nomes do jogo**: cidades, empresas, cargas e reboques são traduzidos pelo
-  `locale.scs` do próprio jogo, no idioma escolhido no app. `IGameNames` (`Core`)
-  faz essa resolução.
+- **Nomes do jogo**: cidades, empresas, cargas, reboques e países são traduzidos
+  pelo `locale.scs` do próprio jogo, no idioma escolhido no app. `IGameNames` (`Core`)
+  faz essa resolução (`GameNameKind`, incluindo `Country`). Nenhum país é texto
+  do `.resx`.
 - **Domain**: não tem texto nem cor.
 
 ## Regras que a estrutura precisa manter

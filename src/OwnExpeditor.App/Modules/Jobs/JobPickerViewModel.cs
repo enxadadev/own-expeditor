@@ -10,7 +10,7 @@ namespace OwnExpeditor.App.Modules.Jobs;
 
 /// <summary>
 /// Estado de um <c>SearchablePicker</c> do módulo: opções, busca sem acento (feita aqui, não na View), seleção, dica e
-/// bloqueio. A seleção do usuário vira o evento <see cref="Chosen"/>; mudar <see cref="Selected"/> por código não dispara nada.
+/// bloqueio. <see cref="Badge"/> é a etiqueta ("Única opção" / "Travado na edição"). A seleção do usuário vira o evento <see cref="Chosen"/>; mudar <see cref="Selected"/> por código não dispara nada.
 /// </summary>
 public sealed partial class JobPickerViewModel : ObservableObject
 {
@@ -24,13 +24,12 @@ public sealed partial class JobPickerViewModel : ObservableObject
     [ObservableProperty] private string? _hint;
     [ObservableProperty] private bool _isEnabled = true;
     [ObservableProperty] private bool _isOpen;
-    [ObservableProperty] private string? _toggleText;
     [ObservableProperty] private IReadOnlyList<PickerOption> _items = [];
     [ObservableProperty] private string _query = "";
-    [ObservableProperty] private bool _toggleChecked;
-
-    /// <summary>Com a chave ligada, só ficam as opções que passam aqui (ex.: só combinações possíveis).</summary>
-    public Func<PickerOption, bool>? ToggleFilter { get; set; }
+    [ObservableProperty] private bool _isLocked;
+    [ObservableProperty] private bool _isSingleOption;
+    [ObservableProperty] private string? _badge;
+    [ObservableProperty] private string _automationName = "";
 
     /// <summary>O usuário escolheu uma opção (Enter ou clique); nunca vem nula nem desativada.</summary>
     public event EventHandler<PickerOption>? Chosen;
@@ -63,8 +62,6 @@ public sealed partial class JobPickerViewModel : ObservableObject
         OnPropertyChanged(nameof(EffectiveEmptyText));
     }
 
-    partial void OnToggleCheckedChanged(bool value) => ApplyFilter();
-
     /// <summary>Troca as opções e a seleção (por <c>Key</c>) sem disparar <see cref="Chosen"/>.</summary>
     public void Set(IReadOnlyList<PickerOption> options, object? selectedKey)
     {
@@ -88,11 +85,9 @@ public sealed partial class JobPickerViewModel : ObservableObject
     private void ApplyFilter()
     {
         var query = Normalize(Query);
-        IEnumerable<PickerOption> source = _all;
-        if (ToggleChecked && ToggleFilter is { } keep) source = source.Where(keep);
         Items = query.Length == 0
-            ? source.ToList()
-            : source.Where(o => Normalize(o.Primary).Contains(query, StringComparison.Ordinal)
+            ? _all.ToList()
+            : _all.Where(o => Normalize(o.Primary).Contains(query, StringComparison.Ordinal)
                 || (o.Secondary is { } s && Normalize(s).Contains(query, StringComparison.Ordinal))).ToList();
     }
 

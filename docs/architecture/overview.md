@@ -43,8 +43,10 @@ O fluxo que o app cumpre, na ordem:
    para texto `SiiNunit` (ScsC, BSII ou texto) e indexa o save. O progresso chega
    à tela de carregamento.
 3. **Listar opções**: `JobBoard` (`Core/Modules/Jobs`) responde, só para leitura,
-   quais cidades, empresas, cargas e reboques valem, com as regras do catálogo do
-   jogo (`GameCatalog`, `Data`) e as que o próprio save revela.
+   quais países, cidades, empresas, cargas e reboques valem, com as regras do
+   catálogo do jogo (`GameCatalog`, `Data`) e as que o próprio save revela.
+   `JobSelectionRules` monta a cadeia País → Cidade → Empresa → Carga sobre essas
+   respostas (ver [ADR 0007](../decisions/0007-cadeia-de-escolhas-do-frete-no-core-e-pais-da-cidade-pelo-igamedata.md)).
 4. **Planejar mudanças**: `JobPlanner` transforma a escolha em um `ChangeSet` de
    patches (`SetAttribute`). Nada é alterado ainda. A sessão guarda o `ChangeSet`
    como pendência.

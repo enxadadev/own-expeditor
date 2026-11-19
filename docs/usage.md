@@ -56,22 +56,33 @@ Os módulos ficam desabilitados até você abrir um save.
 
 ## Criar um frete
 
-Na página **Fretes**, escolha, nesta ordem:
+Na página **Fretes** há dois blocos iguais, **Saída** e **Chegada**, com os
+mesmos campos. Escolha, de cima para baixo:
 
-1. **Cidade de saída**: a lista mostra só as cidades que têm uma empresa com
-   vaga livre ou oferta para substituir.
-2. **Cidade de destino**: o mapa da rota mostra as duas cidades.
-3. **Empresa de saída** e **Carga**: a carga precisa ser enviada pela empresa de
-   saída.
-4. **Empresa de chegada**: a empresa precisa receber a carga.
-5. **Onde entra o frete**: **Usar vaga livre** (padrão, quando a empresa tem
-   vaga) ou **Substituir uma oferta** (troca uma oferta atual da empresa).
-6. **Prazo**: 24 h, 48 h, 72 h ou 7 dias de tempo de jogo, a partir do horário
+1. **Saída**: **País**, **Cidade** e **Empresa**. Só aparecem países e cidades
+   que têm uma empresa com vaga livre ou oferta para substituir.
+2. **Vaga**: aparece só quando a empresa tem mais de uma opção. **Vaga livre (n)**
+   usa uma vaga vazia (é o padrão quando há); cada **Substituir** troca uma oferta
+   atual. Com uma única opção, o app escolhe sozinho e mostra **Única opção**.
+3. **Chegada**: **País**, **Cidade** e **Empresa**. Só aparecem as empresas que
+   recebem alguma carga que a empresa de saída envia. A cidade de saída nunca é
+   opção de chegada.
+4. **Carga**: só o que a empresa de saída envia e a empresa de chegada recebe.
+5. **Prazo**: 24 h, 48 h, 72 h ou 7 dias de tempo de jogo, a partir do horário
    do save.
 
+Abaixo fica a rota: as duas cidades, com a distância no mapa. Ele é o último
+bloco da página; a barra de ação fica sempre visível.
+
 Quando tudo estiver escolhido, use **Adicionar à revisão**. O frete vai para a
-revisão e **ainda não é gravado**. Você pode editar uma mudança pendente pelo
-botão **Editar** e descartá-la na revisão.
+revisão e **ainda não é gravado**. Depois de adicionar, o app mantém a saída e
+os países e cidades de chegada, para você montar outro frete entre as mesmas
+cidades. Limpa a vaga, a empresa de chegada e a carga.
+
+Você pode editar uma mudança pendente pelo botão **Editar** e descartá-la na
+revisão. Na edição, a saída (país, cidade, empresa e vaga) fica travada: para
+mudar a saída, descarte a pendência e crie outra. Destino, carga, empresa de
+chegada e prazo continuam editáveis.
 
 Notas sobre a distância:
 
@@ -81,8 +92,13 @@ Notas sobre a distância:
 
 ### Trocar origem e destino
 
-Use **Trocar saída e destino** para inverter as cidades. Se a nova escolha deixar
-uma combinação impossível, o app limpa o campo afetado e mostra um aviso.
+Use **Trocar saída e destino** (⇄) para inverter os países e as cidades dos dois
+lados. Empresas, vaga e carga são limpas, porque mudam com a saída. Se um campo
+ficar com uma única opção, o app a escolhe sozinho.
+
+Quando você troca um campo, o app limpa só o que deixou de valer e mostra um
+aviso (por exemplo, a carga que a nova empresa de saída não envia). O que
+continua valendo fica como está.
 
 ## Revisar e gravar
 
@@ -214,7 +230,7 @@ As mensagens abaixo são as que o app mostra hoje.
 | Não foi possível criar o novo save | O perfil não tem slot livre ou a pasta não pôde ser criada | Grave com **Sobrescrever este save**, ou apague um slot antigo |
 | Não encontramos o item que você quis alterar | A cidade, empresa ou oferta sumiu do save | Descarte a mudança e escolha de novo |
 | Este save não tem o campo que o app tentou alterar | Save de mod ou de outra versão do jogo | Descarte a mudança e tente outro item |
-| Pasta do jogo não encontrada | Sem a pasta, o app usa só o que o próprio save mostra; a lista pode ter menos opções | Escolha a pasta em **Configurações** |
+| Pasta do jogo não encontrada | Sem a pasta, o app usa só o que o próprio save mostra: não há campo País, as cidades vêm numa lista só com os nomes do save, e a lista pode ter menos opções | Escolha a pasta em **Configurações** |
 
 Antes de gravar um save que você não copiou manualmente, faça uma cópia da
 pasta do perfil por fora do app.

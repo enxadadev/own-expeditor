@@ -1,0 +1,24 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:OwnExpeditor.App.Modules.Jobs"
+             xmlns:c="using:OwnExpeditor.App.Controls"
+             x:Class="OwnExpeditor.App.Modules.Jobs.JobPickerField"
+             x:DataType="vm:JobPickerViewModel">
+  <!-- um campo do formulário: SearchablePicker + cadeado (travado) + etiqueta ("Única opção" / "Travado na edição") abaixo, sem sobrepor o botão limpar -->
+  <StackPanel Spacing="4">
+    <Panel>
+      <c:SearchablePicker x:Name="Picker" Label="{Binding Label}" Placeholder="{Binding Placeholder}" IsEnabled="{Binding IsEnabled}"
+                          Items="{Binding Items}" SelectedItem="{Binding Selected, Mode=TwoWay}" Query="{Binding Query, Mode=TwoWay}"
+                          IsDropDownOpen="{Binding IsOpen, Mode=TwoWay}" SearchWatermark="{Binding SearchWatermark}"
+                          EmptyText="{Binding EffectiveEmptyText}" AutomationProperties.Name="{Binding AutomationName}" />
+      <!-- no lugar do chevron: o campo travado não abre -->
+      <Border HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,10,0" Padding="4" CornerRadius="{StaticResource RadiusSm}"
+              Background="{DynamicResource SurfaceBrush}" IsHitTestVisible="False" IsVisible="{Binding IsLocked}">
+        <Path Data="{StaticResource IconLock}" Fill="{DynamicResource TextMutedBrush}" Width="16" Height="16" Stretch="Uniform"
+              AutomationProperties.AccessibilityView="Raw" />
+      </Border>
+    </Panel>
+    <c:InfoTag HorizontalAlignment="Right" IsHitTestVisible="False" Text="{Binding Badge}"
+               IsVisible="{Binding Badge, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+  </StackPanel>
+</UserControl>

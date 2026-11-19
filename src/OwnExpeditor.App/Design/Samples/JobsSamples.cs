@@ -27,53 +27,48 @@ internal static class JobsSamples
     [
         // Escolher.dc.html
         new("Jobs_01_Start", () => Scenario(_ => { })),
-        new("Jobs_02_FromCity", () => Scenario(v => v.SelectFromCity("sofia"))),
-        new("Jobs_03_Route", () => Scenario(v => { v.SelectFromCity("sofia"); Pick(v.ToCity, "istanbul"); })),
-        new("Jobs_04_Ready", () => Scenario(Ready)),
-        new("Jobs_05_Added", () => Scenario(v => { Ready(v); v.AddCommand.Execute(null); })),
-        new("Jobs_06_Error", () => Scenario(Ready, text: DesignJobsData.SaveText(economy: false), after: v => v.AddCommand.Execute(null))),
-        // ModoFrete.dc.html
-        new("Jobs_10_ModeFree", () => Scenario(v => Company(v, "radus"))),
-        new("Jobs_11_ModeReplace", () => Scenario(v => { Company(v, "radus"); v.SelectMode(JobSlotMode.ReplaceOffer); })),
-        new("Jobs_12_ModeNoFree", () => Scenario(v => { v.SelectFromCity("istanbul"); Pick(v.ToCity, "belgrad"); })),
-        new("Jobs_13_ModeNoOffers", () => Scenario(v => Company(v, "kaarfor"))),
-        // Cidades.dc.html
-        new("Jobs_20_DestinationPicker", () => Scenario(v => { v.SelectFromCity("sofia"); v.ToCity.IsOpen = true; })),
-        new("Jobs_21_SameCity", () => Scenario(v => { v.SelectFromCity("sofia"); Pick(v.ToCity, "belgrad"); v.SelectFromCity("belgrad"); })),
-        new("Jobs_22_NoMatch", () => Scenario(v => { v.SelectFromCity("sofia"); Pick(v.ToCity, "oslo"); })),
-        new("Jobs_23_Cleared", () => Scenario(v => { Ready(v); v.SelectFromCity("belgrad"); })),
-        // DistanciaEstimada.dc.html
-        new("Jobs_30_DistanceKnown", () => Scenario(v => { v.SelectFromCity("sofia"); Pick(v.ToCity, "belgrad"); })),
-        new("Jobs_31_DistanceEstimated", () => Scenario(v => { v.SelectFromCity("sofia"); Pick(v.ToCity, "praha"); })),
-        // SemCatalogo.dc.html
-        new("Jobs_40_NoCatalog", () => Scenario(v => { v.SelectFromCity("sofia"); Pick(v.ToCity, "belgrad"); }, catalog: false)),
-        // SemOrigem.dc.html
-        new("Jobs_50_NoOrigin", () => Scenario(_ => { }, text: DesignJobsData.SaveText(slots: false))),
-        new("Jobs_51_SearchEmpty", () => Scenario(v => v.CityQuery = "zzz")),
-        new("Jobs_52_OnlyOffers", () => Scenario(v => { v.SelectFromCity("istanbul"); Pick(v.ToCity, "belgrad"); })),
-        // MudancaPendente.dc.html
-        new("Jobs_60_Pending", () => Scenario(v => { Ready(v); v.AddCommand.Execute(null); })),
-        new("Jobs_61_EditingFree", () => Scenario(v => { Ready(v); v.AddCommand.Execute(null); v.PendingRows[0].EditCommand.Execute(null); })),
-        new("Jobs_62_EditingReplace", () => Scenario(v =>
+        new("Jobs_02_Country", () => Scenario(v => Pick(v.FromCountry, "bulgaria"))),
+        new("Jobs_03_Departure", () => Scenario(v => { Pick(v.FromCountry, "bulgaria"); Pick(v.FromCompany, Radus); })),
+        new("Jobs_04_Arrival", () => Scenario(v => { Pick(v.FromCountry, "bulgaria"); Pick(v.FromCompany, Radus); Pick(v.ToCountry, "turkey"); })),
+        new("Jobs_05_Ready", () => Scenario(Ready)),
+        new("Jobs_06_Added", () => Scenario(v => { Ready(v); v.AddCommand.Execute(null); })),
+        new("Jobs_07_Error", () => Scenario(Ready, text: DesignJobsData.SaveText(economy: false), after: v => v.AddCommand.Execute(null))),
+        // Seletores.dc.html
+        new("Jobs_20_FromCountryPicker", () => Scenario(v => v.FromCountry.IsOpen = true)),
+        new("Jobs_21_FromCityPicker", () => Scenario(v => { Pick(v.FromCountry, "austria"); v.FromCity.IsOpen = true; })),
+        new("Jobs_22_ToCountryPicker", () => Scenario(v => { Pick(v.FromCountry, "bulgaria"); Pick(v.FromCompany, Radus); v.ToCountry.IsOpen = true; })),
+        new("Jobs_23_ToCityPicker", () => Scenario(v => { Pick(v.FromCountry, "bulgaria"); Pick(v.FromCompany, Radus); Pick(v.ToCountry, ""); v.ToCity.IsOpen = true; })),
+        new("Jobs_24_SlotPicker", () => Scenario(v => { Pick(v.FromCountry, "bulgaria"); Pick(v.FromCompany, Radus); v.Slot.IsOpen = true; })),
+        new("Jobs_25_OnlyOption", () => Scenario(v => Pick(v.FromCountry, "hungary"))),
+        new("Jobs_26_OffersOnly", () => Scenario(v => Pick(v.FromCountry, "turkey"))),
+        // Estados.dc.html
+        new("Jobs_40_NoCatalog", () => Scenario(v => { Pick(v.FromCity, "sofia"); Pick(v.FromCompany, Radus); Pick(v.ToCity, "belgrad"); }, catalog: false)),
+        new("Jobs_41_NoOrigin", () => Scenario(_ => { }, text: DesignJobsData.SaveText(slots: false))),
+        new("Jobs_42_Pending", () => Scenario(v => { Ready(v); v.AddCommand.Execute(null); })),
+        new("Jobs_43_EditingFree", () => Scenario(v => { Ready(v); v.AddCommand.Execute(null); v.PendingRows[0].EditCommand.Execute(null); })),
+        new("Jobs_44_EditingReplace", () => Scenario(v =>
         {
-            Company(v, "tradeaux", "belgrad", "sofia");
-            v.SelectMode(JobSlotMode.ReplaceOffer);
-            Pick(v.Cargo, "bricks");
-            Pick(v.ToCompany, new CompanyLocation("radus", "sofia"));
+            Pick(v.FromCountry, "bulgaria");
+            Pick(v.FromCompany, Radus);
+            Pick(v.Slot, JobSlotChoice.Replace("_nameless.a"));
+            Pick(v.ToCountry, "turkey");
+            Pick(v.Cargo, "machinery");
             v.AddCommand.Execute(null);
             v.PendingRows[0].EditCommand.Execute(null);
         })),
-        new("Jobs_63_NothingFree", () => Scenario(v =>
+        new("Jobs_45_Swap", () => Scenario(v => { Ready(v); v.SwapCommand.Execute(null); })),
+        new("Jobs_46_Cleared", () => Scenario(v => { Ready(v); Pick(v.FromCountry, "serbia"); })),
+        new("Jobs_47_NothingFree", () => Scenario(v =>
         {
-            v.SelectFromCity("istanbul");
-            Pick(v.ToCity, "belgrad");
+            Pick(v.FromCountry, "turkey");
+            Pick(v.ToCountry, "serbia");
             Pick(v.Cargo, "bricks");
-            Pick(v.ToCompany, new CompanyLocation("tradeaux", "belgrad"));
             v.AddCommand.Execute(null);
         }, text: DesignJobsData.SaveText(oneOfferInIstanbul: true))),
-        // SteamCloud.dc.html
-        new("Jobs_70_SteamCloud", () => Scenario(v => { v.SelectFromCity("sofia"); Pick(v.ToCity, "belgrad"); }, cloud: true)),
+        new("Jobs_70_SteamCloud", () => Scenario(v => { Pick(v.FromCountry, "bulgaria"); Pick(v.FromCompany, Radus); }, cloud: true)),
     ];
+
+    private static readonly CompanyLocation Radus = new("radus", "sofia");
 
     // ---- montagem
 
@@ -98,24 +93,16 @@ internal static class JobsSamples
 
     private static void Ready(JobsPageViewModel v)
     {
-        v.SelectFromCity("sofia");
-        Pick(v.ToCity, "istanbul");
-        Pick(v.FromCompany, new CompanyLocation("radus", "sofia"));
+        Pick(v.FromCountry, "bulgaria");
+        Pick(v.FromCompany, Radus);
+        Pick(v.ToCountry, "turkey");
         Pick(v.Cargo, "machinery");
-        Pick(v.ToCompany, new CompanyLocation("lognstick", "istanbul"));
-    }
-
-    private static void Company(JobsPageViewModel v, string company, string from = "sofia", string to = "istanbul")
-    {
-        v.SelectFromCity(from);
-        Pick(v.ToCity, to);
-        Pick(v.FromCompany, new CompanyLocation(company, from));
     }
 
     private static void Pick(JobPickerViewModel picker, object key)
     {
         var option = picker.AllOptions.FirstOrDefault(o => Equals(o.Key, key));
-        if (option is not null) picker.Selected = option;
+        if (option is not null) picker.Selected = option; // sem a opção, a amostra segue sem ela (ex.: sem pasta do jogo)
     }
 
     private sealed class DesignBoardFactory : IJobBoardFactory
@@ -135,7 +122,9 @@ internal sealed class DesignJobsData(bool catalog) : IGameData
         ["budapest"] = ("Budapeste", "Budapest"), ["wien"] = ("Viena", "Vienna"), ["praha"] = ("Praga", "Prague"), ["oslo"] = ("Oslo", "Oslo"),
         ["radus"] = ("Radus", "Radus"), ["tradeaux"] = ("Tradeaux", "Tradeaux"), ["lognstick"] = ("LogNStick", "LogNStick"),
         ["kaarfor"] = ("Kaarfor", "Kaarfor"), ["dfh"] = ("DFH", "DFH"), ["lkwlog"] = ("LKW Log", "LKW Log"),
-        ["euroacres"] = ("EuroAcres", "EuroAcres"), ["nordfrakt"] = ("Nordfrakt", "Nordfrakt"),
+        ["euroacres"] = ("EuroAcres", "EuroAcres"), ["nordfrakt"] = ("Nordfrakt", "Nordfrakt"), ["graz"] = ("Graz", "Graz"),
+        ["bulgaria"] = ("Bulgária", "Bulgaria"), ["serbia"] = ("Sérvia", "Serbia"), ["turkey"] = ("Turquia", "Turkey"),
+        ["hungary"] = ("Hungria", "Hungary"), ["austria"] = ("Áustria", "Austria"),
         ["machinery"] = ("Maquinário", "Machinery"), ["concrete_beams"] = ("Vigas de concreto", "Concrete beams"),
         ["bricks"] = ("Tijolos", "Bricks"), ["used_plastic"] = ("Plástico usado", "Used plastic"),
         ["lowboy"] = ("Rebaixado", "Lowboy"), ["flatbed"] = ("Plataforma", "Flatbed"), ["curtain"] = ("Cortina", "Curtain"),
@@ -167,6 +156,15 @@ internal sealed class DesignJobsData(bool catalog) : IGameData
 
     public IReadOnlyCollection<string> CargoOut(string company) => catalog && Out.TryGetValue(company, out var c) ? c : [];
 
+    /// <summary>Praga e Oslo ficam sem país (como cidades de mod): caem em "Outros".</summary>
+    public string? CityCountry(string city) => catalog ? Countries.GetValueOrDefault(city) : null;
+
+    private static readonly Dictionary<string, string> Countries = new()
+    {
+        ["sofia"] = "bulgaria", ["belgrad"] = "serbia", ["istanbul"] = "turkey", ["budapest"] = "hungary", ["wien"] = "austria", ["graz"] = "austria",
+    };
+
+
     private static string Job(string id, string target, string cargo, int km, string variant, int units, string expiration = "1900") =>
         $"job_offer_data : {id} {{\r\n target: {target}\r\n expiration_time: {expiration}\r\n urgency: 0\r\n shortest_distance_km: {km}\r\n" +
         $" ferry_time: 0\r\n ferry_price: 0\r\n cargo: {cargo}\r\n company_truck: truck_demo\r\n trailer_variant: {variant}\r\n" +
@@ -193,6 +191,7 @@ internal sealed class DesignJobsData(bool catalog) : IGameData
             (oneOfferInIstanbul ? Company("lognstick.istanbul", "_nameless.c") : Company("lognstick.istanbul", "_nameless.c", "_nameless.d")) +
             Company("kaarfor.budapest", "_nameless.e", "_nameless.f6") +
             Company("dfh.wien", "_nameless.f7") +
+            Company("dfh.graz", "_nameless.f9") +
             Company("euroacres.praha", "_nameless.f8") +
             Company("nordfrakt.oslo") +
             Job("_nameless.a", "\"tradeaux.belgrad\"", "cargo.machinery", 394, "lowboy", 1, "1700") +
@@ -200,7 +199,7 @@ internal sealed class DesignJobsData(bool catalog) : IGameData
             Job("_nameless.c", "\"tradeaux.belgrad\"", "cargo.bricks", 980, "flatbed", 22, "2300") +
             Job("_nameless.d", "\"lkwlog.belgrad\"", "cargo.used_plastic", 980, "curtain", 33, "2000") +
             Job("_nameless.e", "\"dfh.wien\"", "cargo.machinery", 245, "lowboy", 1, "1800") +
-            string.Concat(Enumerable.Range(1, 8).Select(i => Free($"_nameless.f{i}"))) +
+            string.Concat(Enumerable.Range(1, 9).Select(i => Free($"_nameless.f{i}"))) +
             "}\r\n";
     }
 }

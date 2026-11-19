@@ -8,7 +8,7 @@ namespace OwnExpeditor.Core.Modules.Jobs;
 /// <summary>
 /// Índice somente leitura sobre uma <see cref="ISaveView"/> (<c>View</c>: já inclui as mudanças pendentes) + <see cref="IGameData"/>.
 /// Regras de carga = catálogo do jogo ∪ regras reveladas pelas ofertas do save (mods; sem catálogo, só as do save).
-/// Responde na ordem do fluxo: cidade de saída → cidade de destino → empresa de saída → carga → empresa de chegada.
+/// Responde na ordem do fluxo País → Cidade → Empresa: saída (país, cidade, empresa, vaga) → chegada (país, cidade, empresa) → carga.
 /// Listas ordenadas por id (ordinal); a App ordena pelo nome traduzido. Nunca lança por dado ruim do save.
 /// </summary>
 public sealed class JobBoard
@@ -20,6 +20,7 @@ public sealed class JobBoard
         public CompanyLocation Location { get; } = location;
         public List<string> Free { get; } = [];
         public List<ExistingOffer> Offers { get; } = [];
+        public int Pending { get; set; }
     }
 
     private readonly IGameData _data;
@@ -32,6 +33,10 @@ public sealed class JobBoard
     private readonly Dictionary<CityPair, int> _saveDistances = [];
     private DistanceTable _distances = new([]);
     private IReadOnlyDictionary<CityPair, int>? _ownEstimates;
+    private bool? _hasCountries;
+    private List<DepartureCity>? _departureCities;
+    private Dictionary<string, List<Slots>>? _acceptorsByCargo;
+    private readonly Dictionary<string, List<Slots>> _acceptorsByOrigin = new(StringComparer.Ordinal);
 
     private JobBoard(IGameData data) => _data = data;
 
@@ -60,58 +65,66 @@ public sealed class JobBoard
 
     // ---- fluxo
 
-    /// <summary>Todas as cidades que têm empresa no save (seletor de destino: cada uma com <see cref="HasMatch"/>).</summary>
-    public IReadOnlyList<string> Cities() => _byCity.Keys.Order(StringComparer.Ordinal).ToList();
+    /// <summary>Id usado para cidades sem país conhecido.</summary>
+    public const string OtherCountry = "";
 
-    /// <summary>Cidades com ao menos uma empresa utilizável: vaga livre ou oferta substituível e carga com reboque conhecido.</summary>
-    public IReadOnlyList<string> OriginCities() =>
-        _byCity.Where(c => c.Value.Any(IsUsable)).Select(c => c.Key).Order(StringComparer.Ordinal).ToList();
+    /// <summary>Alguma cidade com empresa tem país conhecido (senão os campos de país não existem).</summary>
+    public bool HasCountries => _hasCountries ??= _byCity.Keys.Any(c => CountryOf(c) is not null);
 
-    /// <summary>Cidades (exceto a de saída) com empresa que recebe alguma carga enviada por uma empresa utilizável da saída.</summary>
-    public IReadOnlyList<string> DestinationCities(string originCity)
+    /// <summary>País da cidade; nulo se desconhecido (nunca vazio).</summary>
+    public string? CountryOf(string city)
     {
-        ArgumentNullException.ThrowIfNull(originCity);
-        if (!_byCity.TryGetValue(originCity, out var origins)) return [];
-        var cargos = origins.Where(IsUsable).SelectMany(o => ShippedWithTemplate(o.Location)).ToHashSet(StringComparer.Ordinal);
-        if (cargos.Count == 0) return [];
-        return _byCity
-            .Where(c => c.Key != originCity && c.Value.Any(d => cargos.Any(cargo => Accepts(d.Location.Company, cargo))))
-            .Select(c => c.Key).Order(StringComparer.Ordinal).ToList();
+        ArgumentNullException.ThrowIfNull(city);
+        return _data.CityCountry(city) is { Length: > 0 } country ? country : null;
     }
 
-    /// <summary>Há alguma empresa de saída com vaga ou oferta que envie uma carga aceita em <paramref name="destinationCity"/>?</summary>
-    public bool HasMatch(string originCity, string destinationCity) => OriginCompanies(originCity, destinationCity).Count > 0;
+    /// <summary>Países com cidade de saída (vazio sem países); "Outros" por último.</summary>
+    public IReadOnlyList<CountryInfo> DepartureCountries() =>
+        HasCountries ? GroupByCountry(DepartureList().Select(c => c.City)) : [];
 
-    /// <summary>Empresas da cidade com vaga livre OU oferta substituível e ao menos uma carga que a cidade de destino aceita.</summary>
-    public IReadOnlyList<CompanyLocation> OriginCompanies(string originCity, string destinationCity)
+    /// <summary>Cidades de saída (país nulo = todas; <see cref="OtherCountry"/> = sem país), por id.</summary>
+    public IReadOnlyList<DepartureCity> DepartureCities(string? country) =>
+        country is null ? DepartureList() : DepartureList().Where(c => (c.Country ?? OtherCountry) == country).ToList();
+
+    /// <summary>Empresas da cidade com vaga livre ou oferta substituível e ao menos uma chegada possível.</summary>
+    public IReadOnlyList<CompanyLocation> DepartureCompanies(string fromCity)
     {
-        ArgumentNullException.ThrowIfNull(originCity);
-        ArgumentNullException.ThrowIfNull(destinationCity);
-        if (originCity == destinationCity || !_byCity.TryGetValue(originCity, out var companies)) return [];
-        return companies
-            .Where(c => c.Free.Count + c.Offers.Count > 0 && Cargos(c.Location, destinationCity).Count > 0)
-            .Select(c => c.Location).OrderBy(l => l.Key, StringComparer.Ordinal).ToList();
+        ArgumentNullException.ThrowIfNull(fromCity);
+        return _byCity.TryGetValue(fromCity, out var companies)
+            ? companies.Where(IsDepartureCompany).Select(c => c.Location).OrderBy(l => l.Key, StringComparer.Ordinal).ToList()
+            : [];
     }
 
-    /// <summary>Cargas que a empresa envia, com reboque conhecido no save, e que alguma empresa de <paramref name="destinationCity"/> recebe.</summary>
-    public IReadOnlyList<string> Cargos(CompanyLocation origin, string destinationCity)
+    /// <summary>Países das empresas que recebem alguma carga da saída (a cidade de saída fica de fora).</summary>
+    public IReadOnlyList<CountryInfo> ArrivalCountries(CompanyLocation from)
     {
-        ArgumentNullException.ThrowIfNull(origin);
-        ArgumentNullException.ThrowIfNull(destinationCity);
-        if (!_byCity.TryGetValue(destinationCity, out var destinations)) return [];
-        return ShippedWithTemplate(origin)
-            .Where(cargo => destinations.Any(d => Accepts(d.Location.Company, cargo)))
+        ArgumentNullException.ThrowIfNull(from);
+        return HasCountries ? GroupByCountry(Acceptors(from).Select(a => a.Location.City).Distinct(StringComparer.Ordinal)) : [];
+    }
+
+    public IReadOnlyList<string> ArrivalCities(CompanyLocation from, string? country)
+    {
+        ArgumentNullException.ThrowIfNull(from);
+        return Acceptors(from).Select(a => a.Location.City).Distinct(StringComparer.Ordinal)
+            .Where(city => country is null || (CountryOf(city) ?? OtherCountry) == country)
             .Order(StringComparer.Ordinal).ToList();
     }
 
-    /// <summary>Empresas da cidade de destino que recebem a carga.</summary>
-    public IReadOnlyList<CompanyLocation> DestinationCompanies(string destinationCity, string cargo)
+    public IReadOnlyList<CompanyLocation> ArrivalCompanies(CompanyLocation from, string toCity)
     {
-        ArgumentNullException.ThrowIfNull(destinationCity);
-        ArgumentNullException.ThrowIfNull(cargo);
-        if (!_byCity.TryGetValue(destinationCity, out var companies)) return [];
-        return companies.Where(c => Accepts(c.Location.Company, cargo))
-            .Select(c => c.Location).OrderBy(l => l.Key, StringComparer.Ordinal).ToList();
+        ArgumentNullException.ThrowIfNull(from);
+        ArgumentNullException.ThrowIfNull(toCity);
+        return Acceptors(from).Where(a => a.Location.City == toCity).Select(a => a.Location)
+            .OrderBy(l => l.Key, StringComparer.Ordinal).ToList();
+    }
+
+    /// <summary>Cargas que a saída envia (com reboque conhecido) e a empresa de chegada recebe.</summary>
+    public IReadOnlyList<string> Cargos(CompanyLocation from, CompanyLocation to)
+    {
+        ArgumentNullException.ThrowIfNull(from);
+        ArgumentNullException.ThrowIfNull(to);
+        if (from.City == to.City) return [];
+        return ShippedWithTemplate(from).Where(cargo => Accepts(to.Company, cargo)).Order(StringComparer.Ordinal).ToList();
     }
 
     /// <summary>Vagas livres (alvo vazio); já desconta as pendentes, porque a <c>View</c> as inclui.</summary>
@@ -164,7 +177,40 @@ public sealed class JobBoard
 
     // ---- índice
 
-    private bool IsUsable(Slots c) => c.Free.Count + c.Offers.Count > 0 && ShippedWithTemplate(c.Location).Any();
+    private bool IsDepartureCompany(Slots c) => c.Free.Count + c.Offers.Count > 0 && Acceptors(c.Location).Count > 0;
+
+    private List<DepartureCity> DepartureList() => _departureCities ??= _byCity
+        .Select(kv =>
+        {
+            var companies = kv.Value.Where(IsDepartureCompany).ToList();
+            var pending = kv.Value.Sum(c => c.Pending);
+            return companies.Count == 0 && pending == 0
+                ? null
+                : new DepartureCity(kv.Key, CountryOf(kv.Key), companies.Count, companies.Sum(c => c.Free.Count),
+                    companies.Sum(c => c.Offers.Count), pending);
+        })
+        .OfType<DepartureCity>().OrderBy(c => c.City, StringComparer.Ordinal).ToList();
+
+    private IReadOnlyList<CountryInfo> GroupByCountry(IEnumerable<string> cities) =>
+        cities.GroupBy(c => CountryOf(c) ?? OtherCountry)
+            .OrderBy(g => g.Key.Length == 0 ? 1 : 0).ThenBy(g => g.Key, StringComparer.Ordinal)
+            .Select(g => new CountryInfo(g.Key, g.Count())).ToList();
+
+    /// <summary>Empresas (fora da cidade de saída) que recebem alguma carga enviada pela empresa, com reboque conhecido.</summary>
+    private List<Slots> Acceptors(CompanyLocation from)
+    {
+        if (_acceptorsByOrigin.TryGetValue(from.Key, out var cached)) return cached;
+        if (_acceptorsByCargo is null)
+        {
+            _acceptorsByCargo = new Dictionary<string, List<Slots>>(StringComparer.Ordinal);
+            foreach (var cargo in _templates.Keys)
+                _acceptorsByCargo[cargo] = _companies.Values.Where(c => Accepts(c.Location.Company, cargo)).ToList();
+        }
+        var result = ShippedWithTemplate(from)
+            .SelectMany(cargo => _acceptorsByCargo.GetValueOrDefault(cargo) ?? [])
+            .Where(a => a.Location.City != from.City).Distinct().ToList();
+        return _acceptorsByOrigin[from.Key] = result;
+    }
 
     private IEnumerable<string> ShippedWithTemplate(CompanyLocation origin)
     {
@@ -198,7 +244,8 @@ public sealed class JobBoard
                     slots.Free.Add(jobId);
                     continue;
                 }
-                if (!job.IsPending)
+                if (job.IsPending) slots.Pending++;
+                else
                 {
                     var offerTarget = ParseLocation(target);
                     if (offerTarget is not null)

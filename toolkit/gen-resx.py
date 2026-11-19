@@ -6,6 +6,8 @@ uso: toolkit/gen-resx.py [--check]
   em src/OwnExpeditor.App/Resources/. --check não grava: sai com 1 se os arquivos estariam diferentes.
 
 Regras: chave = 1a coluna sem crases, só [A-Za-z0-9_]; `Canvas_*` (mockups) é ignorada.
+Seção "## Removidas" de um strings.md: as chaves entre crases (`Prefixo_*` vale como prefixo) somem das fontes de
+menor prioridade, até a linha "**Continuam".
 Chave repetida em arquivos diferentes: vale a de maior prioridade (ordem de SOURCES) e o
 conflito é listado no stderr. Chave com valores diferentes dentro da mesma prioridade = erro.
 """
@@ -14,7 +16,7 @@ from xml.sax.saxutils import escape
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 # Maior prioridade primeiro. review-apply é a fonte dos 20 Error_<CoreError> (ADR 0006).
-SOURCES = ["controles", "review-apply", "shell", "fretes"]
+SOURCES = ["controles", "review-apply", "shell", "fretes-pais-cidade", "fretes"]
 OUT = ROOT / "src/OwnExpeditor.App/Resources"
 KEY = re.compile(r"[A-Za-z][A-Za-z0-9_]*")
 
@@ -50,7 +52,26 @@ def parse():
                     print(f"conflito: {key}: vale {prev}, ignorado {src}", file=sys.stderr)
                 continue
             table[key] = (src, pt, en)
+    drop_removed(table)
     return table
+
+
+def drop_removed(table):
+    """Aplica a seção "## Removidas" (design/fretes-pais-cidade/strings.md) às chaves de fontes de menor prioridade."""
+    f = ROOT / "design" / "fretes-pais-cidade" / "strings.md"
+    patterns, on = [], False
+    for line in f.read_text(encoding="utf8").splitlines():
+        if line.startswith("## "):
+            on = line.strip() == "## Removidas"
+        elif line.startswith("**Continuam"):
+            on = False
+        elif on:
+            patterns += re.findall(r"`([A-Za-z0-9_]+\*?)`", line)
+    for key in list(table):
+        if table[key][0] == "fretes-pais-cidade":
+            continue
+        if any(key.startswith(p[:-1]) if p.endswith("*") else key == p for p in patterns):
+            del table[key]
 
 
 def render(entries):

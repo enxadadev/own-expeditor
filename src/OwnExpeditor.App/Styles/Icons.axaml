@@ -11,6 +11,7 @@
   <StreamGeometry x:Key="IconArrowRight">M4 11h12.2l-4.6-4.6L13 5l7 7-7 7-1.4-1.4 4.6-4.6H4z</StreamGeometry>
   <StreamGeometry x:Key="IconInbox">F0 M19 3H5L2 12v9h20v-9zM5.9 5h12.2l2.1 6H16l-1 2H9l-1-2H3.8zM4 19v-6h3.5l1 2h7l1-2H20v6z</StreamGeometry>
   <StreamGeometry x:Key="IconRefresh">M17.7 6.3A8 8 0 1 0 20 12h-2a6 6 0 1 1-1.8-4.3L13 11h8V3z</StreamGeometry>
+  <StreamGeometry x:Key="IconLock">M18 8h-1V6a5 5 0 0 0-10 0v2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V10a2 2 0 0 0-2-2zM9 6a3 3 0 0 1 6 0v2H9zm3 11a2 2 0 1 1 0-4 2 2 0 0 1 0 4z</StreamGeometry>
   <StreamGeometry x:Key="IconSwap">M7 3 3 7l4 4V8h8V6H7zM17 21l4-4-4-4v3H9v2h8z</StreamGeometry>
   <StreamGeometry x:Key="IconCloud">M6.5 19a4.5 4.5 0 0 1-.5-8.97A6 6 0 0 1 17.6 9.4 4.8 4.8 0 0 1 17.5 19z</StreamGeometry>
   <!-- Ícones da navegação (24 x 24, de contorno: use Stroke 1,8, sem Fill). Fonte: design/shell/canvas (ICONS). -->

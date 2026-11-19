@@ -20,8 +20,8 @@ public class GameDataServiceTests
         {
             if (detected) Locator.Detected[GameKind.Ets2] = [Dir];
             Source.Catalog = Catalog();
-            Source.Texts["en_us"] = Localization.FromText("key[0]: \"city_budapest\"\r\nval[0]: \"Budapest EN\"\r\nkey[1]: \"cargo_goods\"\r\nval[1]: \"Goods EN\"\r\n", "en_us");
-            Source.Texts["pt_br"] = Localization.FromText("key[0]: \"city_budapest\"\r\nval[0]: \"Budapeste\"\r\nkey[1]: \"cargo_goods\"\r\nval[1]: \"Mercadorias\"\r\n", "pt_br");
+            Source.Texts["en_us"] = Localization.FromText("key[0]: \"city_budapest\"\r\nval[0]: \"Budapest EN\"\r\nkey[1]: \"cargo_goods\"\r\nval[1]: \"Goods EN\"\r\nkey[2]: \"hungary\"\r\nval[2]: \"Hungary EN\"\r\n", "en_us");
+            Source.Texts["pt_br"] = Localization.FromText("key[0]: \"city_budapest\"\r\nval[0]: \"Budapeste\"\r\nkey[1]: \"cargo_goods\"\r\nval[1]: \"Mercadorias\"\r\nkey[2]: \"hungary\"\r\nval[2]: \"Hungria\"\r\n", "pt_br");
             Service = new GameDataService(Locator, Source, Settings);
         }
     }
@@ -35,8 +35,10 @@ public class GameDataServiceTests
         receiver.CargoIn.Add("goods");
         cat.Companies["shipper_co"] = shipper;
         cat.Companies["receiver_co"] = receiver;
-        cat.Cities["budapest"] = new CityDef("budapest") { NativeName = "Budapest Native", LocalizationKey = "@@city_budapest@@" };
+        cat.Cities["budapest"] = new CityDef("budapest") { NativeName = "Budapest Native", LocalizationKey = "@@city_budapest@@", Country = "hungary" };
         cat.Cities["native_only"] = new CityDef("native_only") { NativeName = "Nativeville", LocalizationKey = "@@missing_key@@" };
+        cat.Countries["hungary"] = new CountryDef("hungary") { NativeName = "Magyarorszag", LocalizationKey = "@@hungary@@" };
+        cat.Countries["poland"] = new CountryDef("poland") { NativeName = "Polska", LocalizationKey = "@@missing_key@@" };
         cat.Cargos["goods"] = new CargoDef("goods") { LocalizationKey = "@@cargo_goods@@" };
         cat.Cargos["untranslated"] = new CargoDef("untranslated") { LocalizationKey = "@@missing_key@@" };
         return cat;
@@ -175,6 +177,83 @@ public class GameDataServiceTests
         Assert.Equal("Unknown city", data.Get(GameNameKind.City, "unknown_city"));
         Assert.Equal("Untranslated", data.Get(GameNameKind.Cargo, "untranslated"));
         Assert.Equal("Brand new cargo", data.Get(GameNameKind.Cargo, "brand_new_cargo"));
+    }
+
+    [Fact]
+    public async Task CityCountry_CityWithCountry_ReturnsItsId()
+    {
+        var data = await new Env().Service.GetAsync(GameKind.Ets2, default);
+
+        Assert.Equal("hungary", data.CityCountry("budapest"));
+    }
+
+    [Fact]
+    public async Task CityCountry_CityWithoutCountryOrUnknown_IsNull()
+    {
+        var data = await new Env().Service.GetAsync(GameKind.Ets2, default);
+
+        Assert.Null(data.CityCountry("native_only"));
+        Assert.Null(data.CityCountry("atlantis"));
+    }
+
+    [Fact]
+    public async Task CityCountry_NoFolder_IsNull()
+    {
+        var data = await new Env(detected: false).Service.GetAsync(GameKind.Ets2, default);
+
+        Assert.Null(data.CityCountry("budapest"));
+    }
+
+    [Fact]
+    public async Task Names_Country_EnglishAppUsesTranslation()
+    {
+        var data = await new Env().Service.GetAsync(GameKind.Ets2, default);
+
+        Assert.Equal("Hungary EN", data.Get(GameNameKind.Country, "hungary"));
+    }
+
+    [Fact]
+    public async Task Names_Country_PortugueseAppUsesTranslation()
+    {
+        var env = new Env();
+        await SetLanguage(env, Language.PtBr);
+
+        var data = await env.Service.GetAsync(GameKind.Ets2, default);
+
+        Assert.Equal("Hungria", data.Get(GameNameKind.Country, "hungary"));
+    }
+
+    [Fact]
+    public async Task Names_Country_MissingTranslation_FallsBackToNativeNameThenReadableId()
+    {
+        var data = await new Env().Service.GetAsync(GameKind.Ets2, default);
+
+        Assert.Equal("Polska", data.Get(GameNameKind.Country, "poland"));
+        Assert.Equal("New zealand", data.Get(GameNameKind.Country, "new_zealand"));
+    }
+
+    [Fact]
+    public async Task Names_Country_NoFolder_UsesReadableId()
+    {
+        var data = await new Env(detected: false).Service.GetAsync(GameKind.Ets2, default);
+
+        Assert.Equal("Hungary", data.Get(GameNameKind.Country, "hungary"));
+    }
+
+    [Fact]
+    public async Task LanguageChange_CountryNameFollowsTheNewLanguage()
+    {
+        var env = new Env();
+        var before = await env.Service.GetAsync(GameKind.Ets2, default);
+        var changed = new TaskCompletionSource<GameKind>();
+        env.Service.Changed += (_, g) => changed.TrySetResult(g);
+
+        await SetLanguage(env, Language.PtBr);
+        await changed.Task.WaitAsync(TimeSpan.FromSeconds(5));
+        var after = await env.Service.GetAsync(GameKind.Ets2, default);
+
+        Assert.Equal("Hungary EN", before.Get(GameNameKind.Country, "hungary"));
+        Assert.Equal("Hungria", after.Get(GameNameKind.Country, "hungary"));
     }
 
     [Fact]

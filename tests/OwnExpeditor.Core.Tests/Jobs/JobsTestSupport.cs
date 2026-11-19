@@ -16,6 +16,8 @@ public sealed class RulesGameData : IGameData
     public bool Ships(string company, string cargo) => Out.TryGetValue(company, out var s) && s.Contains(cargo);
     public bool Accepts(string company, string cargo) => In.TryGetValue(company, out var s) && s.Contains(cargo);
     public IReadOnlyCollection<string> CargoOut(string company) => Out.TryGetValue(company, out var s) ? s : [];
+    public Dictionary<string, string> Countries { get; } = [];
+    public string? CityCountry(string city) => Countries.GetValueOrDefault(city);
 
     public static RulesGameData Demo()
     {
@@ -67,4 +69,60 @@ public static class JobsSave
     public static readonly CompanyLocation Kaarfor = new("kaarfor", "budapest");
     public static readonly CompanyLocation Dfh = new("dfh", "berlin");
     public static readonly CompanyLocation Lkwlog = new("lkwlog", "kosice");
+}
+
+/// <summary>
+/// Save sintético com países (ids inventados). hu: budapest (kaarfor com oferta a + vaga b; lkwlog vaga h) e gyor (kaarfor, vaga e);
+/// sk: kosice (lkwlog, ofertas c e i, sem vaga livre) e bratislava (lkwlog, vaga g); de: berlin (dfh, sem slots);
+/// sem país: praha (lkwlog, vaga f) e wien (tradeaux, vaga d, sem carga com reboque). Regras de carga = <see cref="RulesGameData.Demo"/>.
+/// </summary>
+public static class CountrySave
+{
+    public static string Text() =>
+        "SiiNunit\r\n{\r\neconomy : _nameless.1 {\r\n game_time: 1000\r\n}\r\n\r\n" +
+        JobsSave.Company("kaarfor.budapest", "_nameless.a", "_nameless.b") +
+        JobsSave.Company("lkwlog.budapest", "_nameless.h") +
+        JobsSave.Company("kaarfor.gyor", "_nameless.e") +
+        JobsSave.Company("dfh.berlin") +
+        JobsSave.Company("lkwlog.kosice", "_nameless.c", "_nameless.i") +
+        JobsSave.Company("lkwlog.bratislava", "_nameless.g") +
+        JobsSave.Company("lkwlog.praha", "_nameless.f") +
+        JobsSave.Company("tradeaux.wien", "_nameless.d") +
+        JobsSave.Job("_nameless.a", "\"lkwlog.kosice\"", "cargo.used_plast", 226, "trailer.curtain", "trailer_def.curtain", "truck_a", 33) +
+        JobsSave.Job("_nameless.c", "\"kaarfor.budapest\"", "cargo.empty_palet", 226, "trailer.palet", "trailer_def.palet", "truck_c", 12) +
+        JobsSave.Job("_nameless.i", "\"kaarfor.gyor\"", "cargo.empty_palet", 300, "trailer.palet", "trailer_def.palet", "truck_c", 12) +
+        string.Concat(new[] { "b", "d", "e", "f", "g", "h" }.Select(id =>
+            JobsSave.Job("_nameless." + id, "\"\"", "null", 0, "null", "null", "null", 0, "nil"))) +
+        "}\r\n";
+
+    public static RulesGameData Data()
+    {
+        var d = RulesGameData.Demo();
+        d.Countries["budapest"] = "hu";
+        d.Countries["gyor"] = "hu";
+        d.Countries["kosice"] = "sk";
+        d.Countries["bratislava"] = "sk";
+        d.Countries["berlin"] = "de";
+        return d;
+    }
+
+    /// <summary>Todas as cidades do save padrão (<see cref="JobsSave.Text"/>) no mesmo país.</summary>
+    public static RulesGameData SingleCountryData()
+    {
+        var d = RulesGameData.Demo();
+        foreach (var city in new[] { "budapest", "berlin", "kosice", "wien" }) d.Countries[city] = "hu";
+        return d;
+    }
+
+    public static IEditSession Open() => JobsSave.Open(Text(), Data());
+
+    public static JobBoard Board(IEditSession? session = null) => JobsSave.Board(session ?? Open());
+
+    public static readonly CompanyLocation Budapest = JobsSave.Kaarfor;
+    public static readonly CompanyLocation LkwlogBudapest = new("lkwlog", "budapest");
+    public static readonly CompanyLocation Gyor = new("kaarfor", "gyor");
+    public static readonly CompanyLocation Berlin = JobsSave.Dfh;
+    public static readonly CompanyLocation Kosice = JobsSave.Lkwlog;
+    public static readonly CompanyLocation Bratislava = new("lkwlog", "bratislava");
+    public static readonly CompanyLocation Praha = new("lkwlog", "praha");
 }

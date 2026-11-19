@@ -13,22 +13,33 @@ using static OwnExpeditor.App.Tests.Support.JobsFixture;
 
 namespace OwnExpeditor.App.Tests;
 
-/// <summary>Fluxo do módulo Fretes (design/fretes): passos, limpeza de escolhas, modo, edição de pendente, conflito, distância.</summary>
+/// <summary>
+/// Ligação do módulo Fretes com a tela (design/fretes-pais-cidade): a cadeia de regras é do Core (JobSelectionRules);
+/// aqui: visibilidade, habilitação, dicas, avisos, foco, fila de pendentes. Chaves dos seletores: país = id ("" = Outros),
+/// cidade = id, empresa = CompanyLocation, vaga = JobSlotChoice, carga = id.
+/// </summary>
 public class JobsPageTests
 {
-    private static async Task<JobsFixture> Open(string? text = null, bool catalog = true, bool cloud = false, Language language = Language.En) =>
-        await new JobsFixture(language, text, catalog, cloud).AttachAsync();
+    private static readonly JobSlotChoice Free = JobSlotChoice.Free;
 
-    // ---- estado e lista de cidades
+    private static async Task<JobsFixture> Open(string? text = null, bool catalog = true, bool cloud = false,
+        Language language = Language.En, CountryLayout countries = CountryLayout.Mixed) =>
+        await new JobsFixture(language, text, catalog, cloud, countries).AttachAsync();
+
+    private static string[] Keys(JobPickerViewModel p) => p.AllOptions.Select(o => (string)o.Key).ToArray();
+
+    // ---- abertura e países
 
     [Fact]
-    public async Task Attach_WithSlotsAndOffers_ListsOriginCitiesSortedByName()
+    public async Task Attach_WithSlotsAndOffers_ListsDepartureCountriesWithOtherLast()
     {
         var fx = await Open();
 
         Assert.Equal(PageState.Ready, fx.Page.State);
-        Assert.Equal(new[] { "belgrad", "istanbul", "praha", "sofia" }, fx.Page.CityItems.Select(c => c.Id).Order().ToArray());
-        Assert.Equal(fx.Page.CityItems.Select(c => c.Name).Order(StringComparer.OrdinalIgnoreCase).ToArray(), fx.Page.CityItems.Select(c => c.Name).ToArray());
+        Assert.True(fx.Page.ShowCountries);
+        Assert.Equal(["bulgaria", "serbia", "turkey", ""], Keys(fx.Page.FromCountry));
+        Assert.Equal("Other", fx.Page.FromCountry.AllOptions[^1].Primary);
+        Assert.Equal("1 city", fx.Page.FromCountry.AllOptions[0].Trailing);
     }
 
     [Fact]
@@ -41,284 +52,380 @@ public class JobsPageTests
     }
 
     [Fact]
-    public async Task CityMeta_ShowsCompaniesSlotsAndOffers()
+    public async Task Attach_WithoutGameFolder_HidesCountriesAndListsEveryCity()
     {
-        var fx = await Open();
+        var fx = await Open(catalog: false);
 
-        var sofia = fx.Page.CityItems.Single(c => c.Id == "sofia");
-        var istanbul = fx.Page.CityItems.Single(c => c.Id == "istanbul");
-
-        Assert.Equal("2 companies · 3 free slots · 1 offer", sofia.Meta);
-        Assert.Equal("1 company · No free slots · 2 offers", istanbul.Meta);
-        Assert.True(istanbul.IsDimmed);
+        Assert.True(fx.Page.ShowNoCatalog);
+        Assert.False(fx.Page.ShowCountries);
+        Assert.Equal(["belgrad", "istanbul", "praha", "sofia"], Keys(fx.Page.FromCity).Order().ToArray());
+        Assert.True(fx.Page.FromCity.IsEnabled);
     }
 
     [Fact]
-    public async Task CityQuery_IgnoresAccents()
+    public async Task Attach_CatalogWithoutCountries_HidesCountries()
     {
-        var fx = await Open(language: Language.PtBr);
+        var fx = await Open(countries: CountryLayout.None);
 
-        fx.Page.CityQuery = "sofia";
-
-        Assert.Equal(["sofia"], fx.Page.CityItems.Select(c => c.Id));
-        Assert.True(fx.Page.ShowCityList);
-        fx.Page.CityQuery = "zzz";
-        Assert.True(fx.Page.NoCityResults);
+        Assert.False(fx.Page.ShowCountries);
+        Assert.False(fx.Page.ShowNoCatalog);
+        Assert.Equal(4, fx.Page.FromCity.AllOptions.Count);
     }
 
-    // ---- fluxo dos passos
+    [Fact]
+    public async Task Attach_SingleCountry_ChoosesItWithoutANotice()
+    {
+        var fx = await Open(countries: CountryLayout.Single);
+
+        Assert.Equal("bulgaria", fx.Page.FromCountry.Selected!.Key);
+        Assert.True(fx.Page.FromCountry.IsSingleOption);
+        Assert.False(fx.Page.HasNotice);
+        Assert.Null(fx.Page.Notice);
+    }
 
     [Fact]
-    public async Task Steps_FollowTheOrder_AndEachListIsFilteredByThePreviousOnes()
+    public async Task Attach_FocusGoesToTheFirstEmptyEnabledField()
+    {
+        var mixed = new JobsFixture();
+        var single = new JobsFixture(countries: CountryLayout.Single);
+        var mixedTargets = new List<JobsFocusTarget>();
+        var singleTargets = new List<JobsFocusTarget>();
+        mixed.Page.FocusRequested += (_, t) => mixedTargets.Add(t);
+        single.Page.FocusRequested += (_, t) => singleTargets.Add(t);
+
+        await mixed.AttachAsync();
+        await single.AttachAsync();
+
+        Assert.Equal(JobsFocusTarget.FromCountry, mixedTargets.First());
+        Assert.Equal(JobsFocusTarget.FromCity, singleTargets.First());
+    }
+
+    // ---- campos: habilitação e dicas
+
+    [Fact]
+    public async Task Fields_OnAFreshForm_AreDisabledWithTheHintOfTheStepBefore()
     {
         var fx = await Open();
+        var p = fx.Page;
 
-        Assert.False(fx.Page.FromCompany.IsEnabled);
-        fx.Page.SelectFromCity("sofia");
-        Assert.False(fx.Page.FromCompany.IsEnabled);
-        Pick(fx.Page.ToCity, "istanbul");
-        Assert.True(fx.Page.FromCompany.IsEnabled);
-        Assert.Equal(new[] { "kaarfor", "radus" }, fx.Page.FromCompany.AllOptions.Select(o => ((CompanyLocation)o.Key).Company).Order().ToArray());
+        Assert.True(p.FromCountry.IsEnabled);
+        Assert.False(p.FromCity.IsEnabled);
+        Assert.Equal("Choose the country first", p.FromCity.Hint);
+        Assert.False(p.FromCompany.IsEnabled);
+        Assert.Equal("Choose the city first", p.FromCompany.Hint);
+        Assert.False(p.Cargo.IsEnabled);
+        Assert.Equal("Choose the arrival company first", p.Cargo.Hint);
+    }
+
+    [Fact]
+    public async Task Arrival_UntilTheDepartureCompanyIsChosen_IsDisabledWithTheHint()
+    {
+        var fx = await Open();
+        fx.Page.FromCountry.Selected = fx.Page.FromCountry.AllOptions.First(o => (string)o.Key == "bulgaria");
+
+        Assert.Equal("sofia", fx.Page.FromCity.Selected!.Key);
+        Assert.Null(fx.Page.FromCompany.Selected);
+        Assert.All(new[] { fx.Page.ToCountry, fx.Page.ToCity, fx.Page.ToCompany }, p =>
+        {
+            Assert.False(p.IsEnabled);
+            Assert.Equal("Choose the departure company first", p.Hint);
+        });
+    }
+
+    [Fact]
+    public async Task Arrival_AfterTheDepartureCompany_OpensCountryFirst_ThenCityAndCompanyHints()
+    {
+        var fx = await Open();
+        fx.Page.FromCountry.Selected = fx.Page.FromCountry.AllOptions.First(o => (string)o.Key == "bulgaria");
 
         Pick(fx.Page.FromCompany, JobsSample.Radus);
-        Assert.Equal(new[] { "bricks", "machinery" }, fx.Page.Cargo.AllOptions.Select(o => (string)o.Key).Order().ToArray());
+
+        Assert.True(fx.Page.ToCountry.IsEnabled);
+        Assert.False(fx.Page.ToCity.IsEnabled);
+        Assert.Equal("Choose the country first", fx.Page.ToCity.Hint);
         Assert.False(fx.Page.ToCompany.IsEnabled);
+        Assert.Equal("Choose the city first", fx.Page.ToCompany.Hint);
+        Assert.Equal(["serbia", "turkey", ""], Keys(fx.Page.ToCountry));
+    }
 
-        Pick(fx.Page.Cargo, "machinery");
+    [Fact]
+    public async Task Fields_AreFilteredByThePreviousOnes()
+    {
+        var fx = await Open();
+
+        Pick(fx.Page.FromCountry, "bulgaria");
+        Assert.Equal(["sofia"], Keys(fx.Page.FromCity));
+        Assert.Equal(["kaarfor", "radus"], fx.Page.FromCompany.AllOptions.Select(o => ((CompanyLocation)o.Key).Company).Order().ToArray());
+        Pick(fx.Page.FromCompany, JobsSample.Radus);
+        Pick(fx.Page.ToCountry, "turkey");
+
+        Assert.Equal(["istanbul"], Keys(fx.Page.ToCity));
         Assert.Equal([JobsSample.Lognstick], fx.Page.ToCompany.AllOptions.Select(o => (CompanyLocation)o.Key));
-    }
-
-    [Fact]
-    public async Task ToCity_ListsTheDepartureCityFirstAndDisabled()
-    {
-        var fx = await Open();
-        fx.Page.SelectFromCity("sofia");
-
-        var first = fx.Page.ToCity.AllOptions[0];
-
-        Assert.Equal("sofia", first.Key);
-        Assert.False(first.IsEnabled);
-        Assert.Equal("Already the departure city", first.Tag);
-    }
-
-    [Fact]
-    public async Task ToCity_ChoosingTheDisabledOption_IsIgnored()
-    {
-        var fx = await Open();
-        fx.Page.SelectFromCity("sofia");
-
-        fx.Page.ToCity.Selected = fx.Page.ToCity.AllOptions[0];
-
-        Assert.Null(fx.Page.ToCity.Selected);
-        Assert.False(fx.Page.Step2Done);
+        Assert.Equal(["bricks", "machinery"], Keys(fx.Page.Cargo).Order().ToArray());
     }
 
     [Fact]
     public async Task Picker_NullSelectionFromTheControl_IsNotAChoice()
     {
         var fx = await Open();
-        fx.Page.SelectFromCity("sofia");
-        Pick(fx.Page.ToCity, "istanbul");
+        Pick(fx.Page.FromCountry, "bulgaria");
 
-        fx.Page.ToCity.Selected = null;
+        fx.Page.FromCountry.Selected = null;
 
-        Assert.NotNull(fx.Page.ToCity.Selected);
-        Assert.True(fx.Page.Step2Done);
+        Assert.Equal("bulgaria", fx.Page.FromCountry.Selected!.Key);
     }
 
     [Fact]
-    public async Task Missing_ListsWhatIsStillToChoose_AndAddIsDisabled()
+    public async Task Choosing_AField_DoesNotOpenTheNextPopup()
     {
         var fx = await Open();
-        fx.Page.SelectFromCity("sofia");
 
-        Assert.False(fx.Page.CanAdd);
-        Assert.Equal("Still to choose: destination city, departure company, cargo, arrival company", fx.Page.MissingText);
+        Pick(fx.Page.FromCountry, "bulgaria");
+
+        Assert.False(fx.Page.FromCity.IsOpen);
+        Assert.False(fx.Page.FromCompany.IsOpen);
     }
 
     [Fact]
-    public async Task OnlyOption_IsChosenAutomatically_WithAHint()
+    public async Task OnlyOption_IsChosenAutomatically_AndMarked()
     {
         var fx = await Open();
-        fx.Page.SelectFromCity("belgrad");
-        Pick(fx.Page.ToCity, "sofia");
 
-        Assert.Equal(JobsSample.Tradeaux, (CompanyLocation)fx.Page.FromCompany.Selected!.Key);
-        Assert.Equal("Only option, already chosen", fx.Page.FromCompany.Hint);
-        Assert.Contains("only one option was left", fx.Page.Notice);
+        Pick(fx.Page.FromCountry, "turkey");
+
+        Assert.Equal("istanbul", fx.Page.FromCity.Selected!.Key);
+        Assert.True(fx.Page.FromCity.IsSingleOption);
+        Assert.Equal(JobsSample.Lognstick, (CompanyLocation)fx.Page.FromCompany.Selected!.Key);
+        Assert.True(fx.Page.FromCompany.IsSingleOption);
+        Assert.False(fx.Page.FromCountry.IsSingleOption);
     }
 
-    // ---- limpar o que deixou de valer
+    // ---- vaga
 
     [Fact]
-    public async Task ChangingTheDepartureCity_ClearsOnlyWhatStoppedBeingValid()
+    public async Task Slot_WithFreeSlotAndAnOffer_IsShown_AndDefaultsToTheFreeSlot()
     {
         var fx = await Open();
-        fx.Ready();
+        Pick(fx.Page.FromCountry, "bulgaria");
 
-        fx.Page.SelectFromCity("belgrad");
-
-        Assert.Equal("istanbul", fx.Page.ToCity.Selected!.Key);
-        Assert.Equal(JobsSample.Tradeaux, (CompanyLocation)fx.Page.FromCompany.Selected!.Key);
-        Assert.Equal("bricks", fx.Page.Cargo.Selected!.Key); // machinery deixou de valer; sobrou uma só carga, escolhida sozinha
-        Assert.Equal(JobsSample.Lognstick, (CompanyLocation)fx.Page.ToCompany.Selected!.Key);
-        Assert.Contains("Cleared departure company, cargo", fx.Page.Notice);
-        Assert.Contains("only one option was left", fx.Page.Notice);
-    }
-
-    [Fact]
-    public async Task ChoosingTheDestinationAsTheDepartureCity_ClearsTheDestinationAndWarns()
-    {
-        var fx = await Open();
-        fx.Page.SelectFromCity("sofia");
-        Pick(fx.Page.ToCity, "belgrad");
-
-        fx.Page.SelectFromCity("belgrad");
-
-        Assert.Null(fx.Page.ToCity.Selected);
-        Assert.Equal("Cleared the destination city: it can't be the same as the departure city.", fx.Page.Notice);
-    }
-
-    [Fact]
-    public async Task ChangingTheCompany_KeepsTheCargoWhileItIsStillValid()
-    {
-        var fx = await Open();
-        fx.Page.SelectFromCity("sofia");
-        Pick(fx.Page.ToCity, "istanbul");
         Pick(fx.Page.FromCompany, JobsSample.Radus);
-        Pick(fx.Page.Cargo, "machinery");
+
+        Assert.True(fx.Page.ShowSlot);
+        Assert.Equal([Free, JobSlotChoice.Replace("_nameless.a")], fx.Page.Slot.AllOptions.Select(o => (JobSlotChoice)o.Key));
+        Assert.Equal(Free, fx.Page.Slot.Selected!.Key);
+        Assert.Equal("Free slot (2)", fx.Page.Slot.AllOptions[0].Primary);
+    }
+
+    [Fact]
+    public async Task Slot_WithASingleOption_IsHidden()
+    {
+        var fx = await Open();
+        Pick(fx.Page.FromCountry, "bulgaria");
 
         Pick(fx.Page.FromCompany, JobsSample.Kaarfor);
 
-        Assert.Equal("machinery", fx.Page.Cargo.Selected!.Key);
+        Assert.False(fx.Page.ShowSlot);
     }
 
     [Fact]
-    public async Task ChangingTheCompany_ClearsACargoTheNewCompanyDoesNotShip()
+    public async Task Slot_OffersOnly_StartsEmpty_AndTheMissingBarAsksForIt()
     {
         var fx = await Open();
-        fx.Page.SelectFromCity("sofia");
-        Pick(fx.Page.ToCity, "istanbul");
-        Pick(fx.Page.FromCompany, JobsSample.Radus);
+        Pick(fx.Page.FromCountry, "turkey");
+        Pick(fx.Page.ToCountry, "serbia");
         Pick(fx.Page.Cargo, "bricks");
 
-        Pick(fx.Page.FromCompany, JobsSample.Kaarfor);
+        Assert.True(fx.Page.ShowSlot);
+        Assert.Null(fx.Page.Slot.Selected);
+        Assert.Equal(2, fx.Page.Slot.AllOptions.Count);
+        Assert.Equal("Still to choose: slot", fx.Page.MissingText);
+        Assert.False(fx.Page.AddCommand.CanExecute(null));
+    }
 
-        Assert.Null(fx.Page.Cargo.Selected);
-        Assert.Contains("cargo", fx.Page.Notice);
+    // ---- barra "Falta escolher"
+
+    [Fact]
+    public async Task Missing_OnAFreshForm_GroupsWhenThereAreMoreThanThree()
+    {
+        var fx = await Open();
+
+        Assert.False(fx.Page.AddCommand.CanExecute(null));
+        Assert.Equal("Still to choose: departure, arrival, cargo", fx.Page.MissingText);
     }
 
     [Fact]
-    public async Task Swap_ExchangesTheCities_AndClearsTheDirectionalChoices()
+    public async Task Missing_OnlyArrivalAndCargoLeft_GroupsJustThose()
+    {
+        var fx = await Open();
+        Pick(fx.Page.FromCountry, "bulgaria");
+        Pick(fx.Page.FromCompany, JobsSample.Radus);
+
+        Assert.Equal("Still to choose: arrival, cargo", fx.Page.MissingText);
+    }
+
+    [Fact]
+    public async Task Missing_UpToThreeFields_ListsThemInChainOrder()
+    {
+        var fx = await Open(countries: CountryLayout.None);
+        Pick(fx.Page.FromCity, "sofia");
+        Pick(fx.Page.FromCompany, JobsSample.Radus);
+
+        Assert.Equal("Still to choose: arrival city, arrival company, cargo", fx.Page.MissingText);
+    }
+
+    [Fact]
+    public async Task Missing_OnlyCargoLeft_NamesIt()
+    {
+        var fx = await Open();
+        Pick(fx.Page.FromCountry, "bulgaria");
+        Pick(fx.Page.FromCompany, JobsSample.Radus);
+        Pick(fx.Page.ToCountry, "turkey");
+
+        Assert.Equal("Still to choose: cargo", fx.Page.MissingText);
+    }
+
+    [Fact]
+    public async Task Ready_EnablesAdd_WithTheReadyText()
+    {
+        var fx = await Open();
+
+        fx.Ready();
+
+        Assert.True(fx.Page.AddCommand.CanExecute(null));
+        Assert.Equal("Ready. Nothing is written now: the job goes to review.", fx.Page.MissingText);
+        Assert.True(fx.Page.ShowDetails);
+        Assert.True(fx.Page.FromDone);
+        Assert.True(fx.Page.ToDone);
+        Assert.True(fx.Page.CargoDone);
+    }
+
+    [Fact]
+    public async Task Details_WithoutCargo_AreHidden()
+    {
+        var fx = await Open();
+
+        Assert.False(fx.Page.ShowDetails);
+        Assert.False(fx.Page.FromDone);
+    }
+
+    // ---- avisos de limpeza (só por ação do usuário)
+
+    [Fact]
+    public async Task Notice_AutoPickedByTheUser_SaysOnlyOneOptionWasLeft()
+    {
+        var fx = await Open();
+
+        Pick(fx.Page.FromCountry, "turkey");
+
+        Assert.Contains("only one option was left", fx.Page.Notice);
+    }
+
+    [Fact]
+    public async Task Notice_ChangingTheDepartureCountry_SaysWhatWasCleared()
     {
         var fx = await Open();
         fx.Ready();
-        Assert.True(fx.Page.CanSwapCities);
+
+        Pick(fx.Page.FromCountry, "serbia");
+
+        Assert.True(fx.Page.HasNotice);
+        Assert.Contains("Cleared", fx.Page.Notice);
+    }
+
+    [Fact]
+    public async Task Notice_DisappearsOnTheNextChoice()
+    {
+        var fx = await Open();
+        Pick(fx.Page.FromCountry, "turkey");
+        Assert.True(fx.Page.HasNotice);
+
+        Pick(fx.Page.Slot, JobSlotChoice.Replace("_nameless.c"));
+
+        Assert.False(fx.Page.HasNotice);
+    }
+
+    [Fact]
+    public async Task ChangingTheArrivalCountry_KeepsTheDeparture()
+    {
+        var fx = await Open();
+        fx.Ready();
+
+        Pick(fx.Page.ToCountry, "serbia");
+
+        Assert.Equal("sofia", fx.Page.FromCity.Selected!.Key);
+        Assert.Equal(JobsSample.Radus, (CompanyLocation)fx.Page.FromCompany.Selected!.Key);
+        Assert.Equal("belgrad", fx.Page.ToCity.Selected!.Key);
+        Assert.Equal(JobsSample.Tradeaux, (CompanyLocation)fx.Page.ToCompany.Selected!.Key);
+    }
+
+    // ---- foco
+
+    [Fact]
+    public async Task FocusRequested_PointsToTheNextIncompleteField()
+    {
+        var fx = await Open();
+        var targets = new List<JobsFocusTarget>();
+        fx.Page.FocusRequested += (_, t) => targets.Add(t);
+
+        Pick(fx.Page.FromCountry, "bulgaria");
+        Pick(fx.Page.FromCompany, JobsSample.Radus);
+        Pick(fx.Page.ToCountry, "turkey");
+
+        Assert.Equal([JobsFocusTarget.FromCompany, JobsFocusTarget.ToCountry, JobsFocusTarget.Cargo], targets);
+    }
+
+    [Fact]
+    public async Task FocusRequested_AfterADepartureWithOnlyOffers_PointsToTheSlot()
+    {
+        var fx = await Open();
+        var targets = new List<JobsFocusTarget>();
+        fx.Page.FocusRequested += (_, t) => targets.Add(t);
+
+        Pick(fx.Page.FromCountry, "turkey");
+
+        Assert.Equal([JobsFocusTarget.Slot], targets);
+    }
+
+    // ---- trocar
+
+    [Fact]
+    public async Task Swap_WithoutBothCities_IsDisabled()
+    {
+        var fx = await Open();
+        Pick(fx.Page.FromCountry, "bulgaria");
+
+        Assert.False(fx.Page.SwapCommand.CanExecute(null));
+    }
+
+    [Fact]
+    public async Task Swap_ExchangesCountriesAndCities_AndClearsTheDirectionalChoices()
+    {
+        var fx = await Open();
+        fx.Ready();
+        Assert.True(fx.Page.SwapCommand.CanExecute(null));
 
         fx.Page.SwapCommand.Execute(null);
 
-        Assert.True(fx.Page.CanSwapCities || fx.Page.Step1Done);
-        Assert.Equal("sofia", fx.Page.ToCity.Selected?.Key);
-        Assert.Equal("istanbul", fx.Page.CityItems.Single(c => c.Id == "istanbul").Id);
-        Assert.Null(fx.Page.Cargo.Selected);
+        Assert.Equal("turkey", fx.Page.FromCountry.Selected!.Key);
+        Assert.Equal("istanbul", fx.Page.FromCity.Selected!.Key);
+        Assert.Equal("bulgaria", fx.Page.ToCountry.Selected!.Key);
+        Assert.Equal("sofia", fx.Page.ToCity.Selected!.Key);
         Assert.Null(fx.Page.ToCompany.Selected);
-    }
-
-    // ---- modo: vaga livre x substituir
-
-    [Fact]
-    public async Task Mode_DefaultsToFreeSlot_WhenTheCompanyHasOne()
-    {
-        var fx = await Open();
-        fx.Page.SelectFromCity("sofia");
-        Pick(fx.Page.ToCity, "istanbul");
-        Pick(fx.Page.FromCompany, JobsSample.Radus);
-
-        Assert.Equal(JobSlotMode.FillEmpty, fx.Page.SelectedMode!.Mode);
-        Assert.Equal(["Use a free slot · 2", "Replace an offer · 1"], fx.Page.ModeChoices.Select(c => c.Label));
-        Assert.True(fx.Page.ShowMode);
-        Assert.False(fx.Page.ShowOffer);
-    }
-
-    [Fact]
-    public async Task Mode_SwitchingToReplace_ShowsTheOffer_AndChoosesTheOnlyOneAlone()
-    {
-        var fx = await Open();
-        fx.Page.SelectFromCity("sofia");
-        Pick(fx.Page.ToCity, "istanbul");
-        Pick(fx.Page.FromCompany, JobsSample.Radus);
-
-        fx.Page.SelectMode(JobSlotMode.ReplaceOffer);
-
-        Assert.True(fx.Page.ShowOffer);
-        Assert.Equal("_nameless.a", fx.Page.Offer.Selected!.Key);
-        Assert.Equal("Only option, already chosen", fx.Page.Offer.Hint);
-    }
-
-    [Fact]
-    public async Task Mode_WithoutFreeSlots_StartsInReplace_WithTheFreeOptionDisabled()
-    {
-        var fx = await Open();
-        fx.Page.SelectFromCity("istanbul");
-        Pick(fx.Page.ToCity, "belgrad");
-
-        Assert.Equal(JobSlotMode.ReplaceOffer, fx.Page.SelectedMode!.Mode);
-        Assert.False(fx.Page.ModeChoices[0].IsEnabled);
-        Assert.Equal("No free slot in this company. Replace one of the current offers.", fx.Page.ModeHint);
-        Assert.Equal(2, fx.Page.Offer.AllOptions.Count);
-        Assert.Null(fx.Page.Offer.Selected);
-        Assert.Contains("offer to replace", fx.Page.MissingText);
-    }
-
-    [Fact]
-    public async Task Mode_WithoutOffers_KeepsFreeSlot_WithTheReplaceOptionDisabled()
-    {
-        var fx = await Open();
-        fx.Page.SelectFromCity("sofia");
-        Pick(fx.Page.ToCity, "istanbul");
-        Pick(fx.Page.FromCompany, JobsSample.Kaarfor);
-
-        Assert.Equal(JobSlotMode.FillEmpty, fx.Page.SelectedMode!.Mode);
-        Assert.False(fx.Page.ModeChoices[1].IsEnabled);
-        Assert.Equal("This company has no offers to replace. Use the free slot.", fx.Page.ModeHint);
-        fx.Page.SelectMode(JobSlotMode.ReplaceOffer);
-        Assert.Equal(JobSlotMode.FillEmpty, fx.Page.SelectedMode!.Mode);
-    }
-
-    [Fact]
-    public async Task Mode_ChangingTheCompany_ResetsToTheNewCompanysDefault()
-    {
-        var fx = await Open();
-        fx.Page.SelectFromCity("sofia");
-        Pick(fx.Page.ToCity, "istanbul");
-        Pick(fx.Page.FromCompany, JobsSample.Radus);
-        fx.Page.SelectMode(JobSlotMode.ReplaceOffer);
-
-        Pick(fx.Page.FromCompany, JobsSample.Kaarfor);
-
-        Assert.Equal(JobSlotMode.FillEmpty, fx.Page.SelectedMode!.Mode);
-        Assert.Null(fx.Page.Offer.Selected);
+        Assert.Null(fx.Page.Cargo.Selected);
     }
 
     // ---- adicionar
 
     [Fact]
-    public async Task Add_StagesOneChangePerSlot_ClearsTheForm_KeepsTheCities_AndToasts()
+    public async Task Add_StagesOneChangePerSlot_AndToasts()
     {
         var fx = await Open();
         fx.Ready();
-        Assert.True(fx.Page.CanAdd);
-        Assert.Equal("Ready. Nothing is written now: the job goes to review.", fx.Page.MissingText);
 
         fx.Page.AddCommand.Execute(null);
 
         var change = Assert.Single(fx.Session.Pending);
         Assert.Equal("jobs:slot:_nameless.f1", change.Key);
-        Assert.Equal("sofia", fx.Page.CityItems.Single(c => c.Id == "sofia").Id);
-        Assert.Equal("istanbul", fx.Page.ToCity.Selected!.Key);
-        Assert.Null(fx.Page.FromCompany.Selected);
-        Assert.Null(fx.Page.Cargo.Selected);
-        Assert.False(fx.Page.CanAdd);
         var toast = Assert.Single(fx.Toast.Shown);
         Assert.Equal("Jobs_Added_Toast", toast.Text.Key);
         Assert.Equal("Jobs_Added_View", toast.Label!.Key);
@@ -327,20 +434,34 @@ public class JobsPageTests
     }
 
     [Fact]
+    public async Task Add_Success_KeepsCountriesCitiesAndDepartureCompany_AndClearsTheCargo()
+    {
+        var fx = await Open();
+        fx.Ready();
+
+        fx.Page.AddCommand.Execute(null);
+
+        Assert.Equal("bulgaria", fx.Page.FromCountry.Selected!.Key);
+        Assert.Equal("sofia", fx.Page.FromCity.Selected!.Key);
+        Assert.Equal(JobsSample.Radus, (CompanyLocation)fx.Page.FromCompany.Selected!.Key);
+        Assert.Equal("turkey", fx.Page.ToCountry.Selected!.Key);
+        Assert.Equal("istanbul", fx.Page.ToCity.Selected!.Key);
+        Assert.Null(fx.Page.Cargo.Selected);
+        Assert.False(fx.Page.AddCommand.CanExecute(null));
+    }
+
+    [Fact]
     public async Task Add_Twice_UsesTheNextFreeSlot_NeverASlotOfAnotherPendingChange()
     {
         var fx = await Open();
         fx.Ready();
         fx.Page.AddCommand.Execute(null);
-        Pick(fx.Page.FromCompany, JobsSample.Radus);
         Pick(fx.Page.Cargo, "machinery");
-        Pick(fx.Page.ToCompany, JobsSample.Lognstick);
 
-        Assert.Equal("Use a free slot · 1", fx.Page.ModeChoices[0].Label);
+        Assert.Equal("Free slot (1)", fx.Page.Slot.AllOptions[0].Primary);
         fx.Page.AddCommand.Execute(null);
 
         Assert.Equal(["jobs:slot:_nameless.f1", "jobs:slot:_nameless.f2"], fx.Session.Pending.Select(c => c.Key));
-        Assert.Equal(2, fx.Page.CityItems.Single(c => c.Id == "sofia").Pending);
     }
 
     [Fact]
@@ -357,17 +478,17 @@ public class JobsPageTests
         Assert.True(afterAdd > before);
         Assert.True(fx.Factory.Creates > afterAdd);
         Assert.Empty(fx.Session.Pending);
-        Assert.Equal("2 companies · 3 free slots · 1 offer", fx.Page.CityItems.Single(c => c.Id == "sofia").Meta);
     }
 
     [Fact]
     public async Task Add_ReplacingAnOffer_StagesTheOffersSlot()
     {
         var fx = await Open();
-        fx.Page.SelectFromCity("istanbul");
-        Pick(fx.Page.ToCity, "belgrad");
+        Pick(fx.Page.FromCountry, "turkey");
+        Pick(fx.Page.Slot, JobSlotChoice.Replace("_nameless.d"));
+        Pick(fx.Page.ToCountry, "serbia");
         Pick(fx.Page.Cargo, "bricks");
-        Pick(fx.Page.Offer, "_nameless.d");
+
         fx.Page.AddCommand.Execute(null);
 
         Assert.Equal("jobs:slot:_nameless.d", Assert.Single(fx.Session.Pending).Key);
@@ -384,12 +505,10 @@ public class JobsPageTests
         await fx.Page.AttachAsync(new StageFailsSession(fx.Session, CoreError.Conflict), default);
         if (replace)
         {
-            fx.Page.SelectFromCity("sofia");
-            Pick(fx.Page.ToCity, "istanbul");
-            Pick(fx.Page.FromCompany, JobsSample.Radus);
-            fx.Page.SelectMode(JobSlotMode.ReplaceOffer);
-            Pick(fx.Page.Cargo, "machinery");
-            Pick(fx.Page.ToCompany, JobsSample.Lognstick);
+            Pick(fx.Page.FromCountry, "turkey");
+            Pick(fx.Page.Slot, JobSlotChoice.Replace("_nameless.c"));
+            Pick(fx.Page.ToCountry, "serbia");
+            Pick(fx.Page.Cargo, "bricks");
         }
         else fx.Ready();
 
@@ -398,7 +517,7 @@ public class JobsPageTests
         Assert.True(fx.Page.HasError);
         Assert.Equal(fx.Loc[key], fx.Page.ErrorMessage);
         Assert.Empty(fx.Toast.Shown);
-        Assert.True(fx.Page.CanAdd); // as escolhas ficam para o usuário corrigir
+        Assert.True(fx.Page.AddCommand.CanExecute(null)); // as escolhas ficam para o usuário corrigir
     }
 
     [Fact]
@@ -438,7 +557,7 @@ public class JobsPageTests
     }
 
     [Fact]
-    public async Task Pending_IsListedOnlyForTheSelectedCity_WithEditAndDiscard()
+    public async Task Pending_IsListedOnlyForTheDepartureCity_WithEditAndDiscard()
     {
         var fx = await WithPending();
 
@@ -446,39 +565,48 @@ public class JobsPageTests
         Assert.Equal("radus · Sófia → lognstick · istanbul", row.Title);
         Assert.Equal("machinery · 980 km · 72 h · Free slot", row.Detail);
         Assert.True(fx.Page.ShowPendingCard);
-        fx.Page.SelectFromCity("belgrad");
+        Pick(fx.Page.FromCountry, "serbia");
         Assert.Empty(fx.Page.PendingRows);
     }
 
     [Fact]
-    public async Task Edit_LocksOriginCompanyAndMode_ButAllowsDestinationCargoArrivalAndDeadline()
+    public async Task Edit_LocksTheDeparture_ButKeepsTheArrivalEditable()
     {
         var fx = await WithPending();
 
         fx.Page.PendingRows[0].EditCommand.Execute(null);
 
         Assert.True(fx.Page.IsEditing);
-        Assert.False(fx.Page.IsListEnabled);
-        Assert.False(fx.Page.FromCompany.IsEnabled);
-        Assert.False(fx.Page.IsModeEnabled);
+        Assert.True(fx.Page.IsDepartureLocked);
+        Assert.True(fx.Page.FromCountry.IsLocked);
+        Assert.True(fx.Page.FromCity.IsLocked);
+        Assert.True(fx.Page.FromCompany.IsLocked);
+        Assert.True(fx.Page.Slot.IsLocked);
         Assert.Equal("Locked while editing", fx.Page.FromCompany.Hint);
+        Assert.False(fx.Page.ToCountry.IsLocked);
+        Assert.True(fx.Page.ToCountry.IsEnabled);
+        Assert.True(fx.Page.Cargo.IsEnabled);
         Assert.Equal("Update in review", fx.Page.AddText);
         Assert.Equal("machinery", fx.Page.Cargo.Selected!.Key);
-        Assert.True(fx.Page.Cargo.IsEnabled);
-        Assert.True(fx.Page.ToCity.IsEnabled);
-        Assert.False(fx.Page.CanSwapCities);
+        Assert.False(fx.Page.SwapCommand.CanExecute(null));
         Assert.False(fx.Page.ShowPendingCard);
     }
 
     [Fact]
-    public async Task Edit_ShowsOnlyDestinationCitiesTheFixedCompanyServes()
+    public async Task Edit_OfACompanyWithASingleSlot_ShowsTheLockedSlot()
     {
-        var fx = await WithPending();
+        var fx = await Open();
+        Pick(fx.Page.FromCountry, "bulgaria");
+        Pick(fx.Page.FromCompany, JobsSample.Kaarfor);
+        Pick(fx.Page.ToCountry, "turkey");
+        Pick(fx.Page.Cargo, "machinery");
+        fx.Page.AddCommand.Execute(null);
+        Assert.False(fx.Page.ShowSlot);
 
         fx.Page.PendingRows[0].EditCommand.Execute(null);
 
-        var cities = fx.Page.ToCity.AllOptions.Select(o => (string)o.Key).Order().ToArray();
-        Assert.Equal(new[] { "belgrad", "istanbul", "praha", "sofia" }, cities); // praha: a empresa fixa envia maquinário e lá se recebe
+        Assert.True(fx.Page.ShowSlot);
+        Assert.True(fx.Page.Slot.IsLocked);
     }
 
     [Fact]
@@ -502,7 +630,7 @@ public class JobsPageTests
     }
 
     [Fact]
-    public async Task Edit_Cancel_LeavesThePendingChangeAndClearsTheForm()
+    public async Task Edit_Cancel_LeavesThePendingChange_ClearsTheCargo_AndKeepsTheCities()
     {
         var fx = await WithPending();
         fx.Page.PendingRows[0].EditCommand.Execute(null);
@@ -510,28 +638,28 @@ public class JobsPageTests
         fx.Page.CancelEditCommand.Execute(null);
 
         Assert.False(fx.Page.IsEditing);
+        Assert.False(fx.Page.IsDepartureLocked);
+        Assert.False(fx.Page.FromCity.IsLocked);
         Assert.Single(fx.Session.Pending);
         Assert.Null(fx.Page.Cargo.Selected);
-        Assert.True(fx.Page.IsListEnabled);
+        Assert.Equal("sofia", fx.Page.FromCity.Selected!.Key);
+        Assert.Equal("istanbul", fx.Page.ToCity.Selected!.Key);
     }
 
     [Fact]
     public async Task Edit_OfAReplacement_KeepsTheOfferFixed()
     {
         var fx = await Open();
-        fx.Page.SelectFromCity("istanbul");
-        Pick(fx.Page.ToCity, "belgrad");
+        Pick(fx.Page.FromCountry, "turkey");
+        Pick(fx.Page.Slot, JobSlotChoice.Replace("_nameless.d"));
+        Pick(fx.Page.ToCountry, "serbia");
         Pick(fx.Page.Cargo, "bricks");
-        Pick(fx.Page.Offer, "_nameless.d");
         fx.Page.AddCommand.Execute(null);
-        fx.Page.SelectFromCity("istanbul");
 
         fx.Page.PendingRows[0].EditCommand.Execute(null);
 
-        Assert.Equal(JobSlotMode.ReplaceOffer, fx.Page.SelectedMode!.Mode);
-        Assert.False(fx.Page.Offer.IsEnabled);
-        Assert.Equal("_nameless.d", fx.Page.Offer.Selected!.Key);
-        Assert.Equal("Locked while editing", fx.Page.Offer.Hint);
+        Assert.True(fx.Page.Slot.IsLocked);
+        Assert.Equal(JobSlotChoice.Replace("_nameless.d"), fx.Page.Slot.Selected!.Key);
         fx.Page.AddCommand.Execute(null);
         Assert.Equal("jobs:slot:_nameless.d", Assert.Single(fx.Session.Pending).Key);
     }
@@ -553,27 +681,154 @@ public class JobsPageTests
     }
 
     [Fact]
-    public async Task CityWithOnlyPendingChanges_StaysInTheList_AndShowsNoSlotsNotice()
+    public async Task DepartureCity_WithAllSlotsInPendingChanges_StaysSelected_WithNoUsableCompany()
     {
-        var fx = await Open(JobsSample.Text());
-        // esgota Istambul: só ofertas, as duas viram pendências
-        fx.Page.SelectFromCity("istanbul");
-        Pick(fx.Page.ToCity, "belgrad");
+        var fx = await Open();
+        Pick(fx.Page.FromCountry, "turkey");
+        Pick(fx.Page.Slot, JobSlotChoice.Replace("_nameless.c"));
+        Pick(fx.Page.ToCountry, "serbia");
         Pick(fx.Page.Cargo, "bricks");
-        Pick(fx.Page.Offer, "_nameless.c");
         fx.Page.AddCommand.Execute(null);
         Pick(fx.Page.Cargo, "bricks");
-        Pick(fx.Page.Offer, "_nameless.d");
         fx.Page.AddCommand.Execute(null);
 
-        var istanbul = fx.Page.CityItems.Single(c => c.Id == "istanbul");
+        Assert.Equal("istanbul", fx.Page.FromCity.Selected!.Key);
+        Assert.Empty(fx.Page.FromCompany.AllOptions);
+        Assert.Null(fx.Page.FromCompany.Selected);
+        Assert.Equal(2, fx.Page.PendingRows.Count);
+        Assert.False(fx.Page.AddCommand.CanExecute(null));
+    }
 
-        Assert.Equal(2, istanbul.Pending);
-        Assert.Equal("2 pending", istanbul.PendingText);
-        Assert.True(fx.Page.ShowNoSlots);
-        Assert.False(fx.Page.ShowSteps);
-        Assert.Equal("No free slot or offer in istanbul", fx.Page.NoSlotsTitle);
+    // ---- Add com dispatcher que enfileira (como em produção)
+
+    private static async Task<(JobsFixture Fx, QueueUiDispatcher Queue)> OpenQueued()
+    {
+        var queue = new QueueUiDispatcher();
+        var fx = await new JobsFixture(ui: queue).AttachAsync();
+        return (fx, queue);
+    }
+
+    /// <summary>sofia/kaarfor (uma vaga, sem ofertas) → istanbul/lognstick, machinery.</summary>
+    private static void ReadyKaarfor(JobsFixture fx)
+    {
+        Pick(fx.Page.FromCountry, "bulgaria");
+        Pick(fx.Page.FromCity, "sofia");
+        Pick(fx.Page.FromCompany, JobsSample.Kaarfor);
+        Pick(fx.Page.ToCountry, "turkey");
+        Pick(fx.Page.ToCity, "istanbul");
+        Pick(fx.Page.ToCompany, JobsSample.Lognstick);
+        Pick(fx.Page.Cargo, "machinery");
+    }
+
+    [Fact]
+    public async Task Add_QueuedDispatcher_ExhaustedDepartureCompany_EndsEmptyWithAddDisabled()
+    {
+        var (fx, queue) = await OpenQueued();
+        ReadyKaarfor(fx);
+
+        fx.Page.AddCommand.Execute(null);
+        queue.Drain();
+
+        Assert.Single(fx.Session.Pending);
+        Assert.Equal("sofia", fx.Page.FromCity.Selected!.Key);
+        Assert.Null(fx.Page.FromCompany.Selected);
+        Assert.Null(fx.Page.Slot.Selected);
+        Assert.Null(fx.Page.Cargo.Selected);
+        Assert.False(fx.Page.AddCommand.CanExecute(null));
         Assert.False(fx.Page.CanAdd);
+    }
+
+    [Fact]
+    public async Task Add_QueuedDispatcher_CompanyWithMoreSlots_KeepsTheRestLikeTheSyncCase()
+    {
+        var (fx, queue) = await OpenQueued();
+        fx.Ready();
+
+        fx.Page.AddCommand.Execute(null);
+        queue.Drain();
+
+        Assert.Equal(JobsSample.Radus, (CompanyLocation)fx.Page.FromCompany.Selected!.Key);
+        Assert.Equal("istanbul", fx.Page.ToCity.Selected!.Key);
+        Assert.Equal("turkey", fx.Page.ToCountry.Selected!.Key);
+        Assert.Null(fx.Page.Cargo.Selected);
+        Assert.False(fx.Page.CanAdd);
+    }
+
+    [Fact]
+    public async Task Add_QueuedDispatcher_StageThrowsNonCoreException_DoesNotLeaveTheNextJobFlagStuck()
+    {
+        var queue = new QueueUiDispatcher();
+        var fx = new JobsFixture(ui: queue);
+        var session = new StageThrowsSession(fx.Session, new InvalidOperationException("boom"));
+        await fx.Page.AttachAsync(session, default);
+        fx.Ready();
+
+        Assert.Throws<InvalidOperationException>(() => fx.Page.AddCommand.Execute(null));
+        session.RaiseChanged();
+        queue.Drain();
+
+        Assert.Equal("machinery", fx.Page.Cargo.Selected!.Key); // revalidou; não aplicou "próximo frete"
+    }
+
+    [Fact]
+    public async Task Add_QueuedDispatcher_DistanceRefreshQueuedBefore_DoesNotSwallowTheAddEffect()
+    {
+        var queue = new QueueUiDispatcher();
+        var fx = new JobsFixture(ui: queue);
+        fx.Factory.RefreshAdds = 1; // o RefreshDistances já enfileira um Rebuild ao abrir
+        await fx.AttachAsync();
+        ReadyKaarfor(fx);
+
+        fx.Page.AddCommand.Execute(null);
+        queue.Drain();
+
+        // um Rebuild seguinte pode escolher sozinha a única empresa restante (opção única); a carga recomeça
+        Assert.Single(fx.Session.Pending);
+        Assert.Null(fx.Page.Cargo.Selected);
+        Assert.False(fx.Page.CanAdd);
+    }
+
+    // ---- sem vaga, erro de carga, aviso
+
+    [Fact]
+    public async Task Attach_WarmUpFails_GoesToErrorState_AndRetryReloads()
+    {
+        var fx = new JobsFixture();
+        fx.Factory.WarmUpFails = new IOException("disco");
+
+        await fx.AttachAsync();
+        Assert.Equal(PageState.Error, fx.Page.State);
+        fx.Factory.WarmUpFails = null;
+        fx.Page.RetryCommand.Execute(null);
+
+        Assert.Equal(PageState.Ready, fx.Page.State);
+    }
+
+    [Fact]
+    public async Task Attach_CreateFails_GoesToErrorState_AndRetryReloads()
+    {
+        var fx = new JobsFixture();
+        fx.Factory.CreateFails = new InvalidOperationException("indice");
+
+        await fx.AttachAsync();
+        Assert.Equal(PageState.Error, fx.Page.State);
+        fx.Factory.CreateFails = null;
+        fx.Page.RetryCommand.Execute(null);
+
+        Assert.Equal(PageState.Ready, fx.Page.State);
+        Assert.NotEmpty(fx.Page.FromCountry.AllOptions);
+    }
+
+    [Fact]
+    public async Task Notice_SlotAutoPicked_NeverMentionsTheSlot()
+    {
+        var fx = await Open();
+        Pick(fx.Page.FromCountry, "bulgaria");
+        Pick(fx.Page.FromCity, "sofia");
+
+        Pick(fx.Page.FromCompany, JobsSample.Kaarfor); // vaga única, escolhida sozinha
+
+        Assert.DoesNotContain(fx.Loc["Jobs_Missing_Slot"], fx.Page.Notice ?? "", StringComparison.OrdinalIgnoreCase);
     }
 
     // ---- distância
@@ -582,86 +837,53 @@ public class JobsPageTests
     public async Task Distance_Known_ShowsKmWithoutTag()
     {
         var fx = await Open();
-        fx.Page.SelectFromCity("sofia");
-        Pick(fx.Page.ToCity, "belgrad");
+        Pick(fx.Page.FromCountry, "bulgaria");
+        Pick(fx.Page.FromCompany, JobsSample.Radus);
+        Pick(fx.Page.ToCountry, "serbia");
 
         Assert.Equal("394 km", fx.Page.DistanceValue);
         Assert.Null(fx.Page.DistanceTag);
-        Assert.Equal("Known: from offers in your saves", fx.Page.DistanceHint);
         Assert.Equal("394 km", fx.Page.MapDistanceText);
     }
 
     [Fact]
-    public async Task Distance_Estimated_ShowsApproxWithTagAndHelp()
+    public async Task Distance_Estimated_ShowsApproxWithTag()
     {
         var fx = await Open();
-        fx.Page.SelectFromCity("sofia");
-        Pick(fx.Page.ToCity, "praha");
+        Pick(fx.Page.FromCountry, "bulgaria");
+        Pick(fx.Page.FromCompany, JobsSample.Radus);
+        Pick(fx.Page.ToCountry, "");
 
+        Assert.Equal("praha", fx.Page.ToCity.Selected!.Key);
         Assert.StartsWith("≈ ", fx.Page.DistanceValue);
-        Assert.EndsWith(" km", fx.Page.DistanceValue);
         Assert.Equal("Estimated", fx.Page.DistanceTag);
-        Assert.Equal("This is the app's estimate: your saves don't have this route. The game recalculates the route on the GPS.", fx.Page.DistanceHint);
         Assert.EndsWith(" · estimated", fx.Page.MapDistanceText);
     }
 
     [Fact]
-    public async Task Distance_WithoutBothCities_ShowsAPlaceholder()
+    public async Task Distance_BeforeTheArrivalCity_ShowsAPlaceholder()
     {
         var fx = await Open();
-        fx.Page.SelectFromCity("sofia");
+        Pick(fx.Page.FromCountry, "bulgaria");
 
         Assert.Equal("—", fx.Page.DistanceValue);
-        Assert.Equal("Choose both cities", fx.Page.DistanceHint);
         Assert.Null(fx.Page.MapOrigin);
     }
 
     [Fact]
-    public async Task ToCityOptions_PutKnownDistancesFirst_ThenEstimated_WithTagsAndKm()
+    public async Task ToCityOptions_WithoutCountries_PutKnownDistancesFirst_ThenEstimatedWithTag()
     {
-        var fx = await Open();
-        fx.Page.SelectFromCity("sofia");
+        var fx = await Open(countries: CountryLayout.None);
+        Pick(fx.Page.FromCity, "sofia");
+        Pick(fx.Page.FromCompany, JobsSample.Radus);
 
-        var options = fx.Page.ToCity.AllOptions.Where(o => o.IsEnabled).ToList();
-        var firstEstimated = options.FindIndex(o => o.Trailing!.StartsWith("≈"));
+        var options = fx.Page.ToCity.AllOptions.ToList();
 
-        Assert.True(firstEstimated > 0);
-        Assert.All(options.Take(firstEstimated), o => Assert.DoesNotContain("≈", o.Trailing));
-        Assert.All(options.Skip(firstEstimated), o => Assert.StartsWith("≈", o.Trailing));
-        var belgrad = options.Single(o => (string)o.Key == "belgrad");
-        Assert.Equal("394 km", belgrad.Trailing);
-        Assert.Null(belgrad.Tag);
-        Assert.Equal("Estimated", options.Single(o => (string)o.Key == "praha").Tag);
-    }
-
-    [Fact]
-    public async Task ToCityOptions_NoMatchHasPriorityOverEstimated_AndTheToggleHidesIt()
-    {
-        var fx = await Open();
-        fx.Page.SelectFromCity("sofia");
-
-        var oslo = fx.Page.ToCity.AllOptions.Single(o => (string)o.Key == "oslo");
-        Assert.Equal("No match", oslo.Tag);
-        fx.Page.ToCity.ToggleChecked = true;
-
-        Assert.DoesNotContain(fx.Page.ToCity.Items, o => (string)o.Key == "oslo");
-        Assert.Contains(fx.Page.ToCity.Items, o => (string)o.Key == "sofia"); // a cidade de saída segue no topo? ela é a opção desativada
-    }
-
-    [Fact]
-    public async Task NoMatch_HidesTheSteps_AndOffersToChangeCity()
-    {
-        var fx = await Open();
-        fx.Page.SelectFromCity("sofia");
-        Pick(fx.Page.ToCity, "oslo");
-
-        Assert.True(fx.Page.ShowNoMatch);
-        Assert.False(fx.Page.ShowSteps);
-        Assert.False(fx.Page.CanAdd);
-        Assert.Contains("Change one of the cities", fx.Page.NoMatchBody);
-        fx.Page.ChangeToCityCommand.Execute(null);
-        Assert.True(fx.Page.ToCity.IsOpen);
-        Assert.True(fx.Page.ToCity.ToggleChecked);
+        Assert.Equal(["belgrad", "istanbul", "praha"], options.Select(o => (string)o.Key));
+        Assert.Equal("394 km", options[0].Trailing);
+        Assert.Null(options[0].Tag);
+        Assert.StartsWith("≈", options[2].Trailing);
+        Assert.Equal("Estimated", options[2].Tag);
     }
 
     [Fact]
@@ -678,7 +900,7 @@ public class JobsPageTests
         Assert.True(afterFirst >= 2); // criação + refeito depois das distâncias
     }
 
-    // ---- avisos
+    // ---- avisos, sessão, idioma
 
     [Fact]
     public async Task NoCatalog_ShowsTheInfoBanner_WithAnActionToSettings()
@@ -714,50 +936,23 @@ public class JobsPageTests
 
         Assert.Equal(creates, fx.Factory.Creates);
         Assert.Equal(PageState.Idle, fx.Page.State);
-        Assert.Empty(fx.Page.CityItems);
+        Assert.Empty(fx.Page.FromCountry.AllOptions);
+        Assert.Empty(fx.Page.FromCity.AllOptions);
     }
 
     [Fact]
-    public async Task ChangingTheLanguage_RefreshesTheNamesAndKeepsTheChoices()
+    public async Task ChangingTheLanguage_RefreshesTheLabels_AndKeepsTheChoices()
     {
         var fx = await Open(language: Language.PtBr);
-        fx.Page.SelectFromCity("sofia");
-        Pick(fx.Page.ToCity, "belgrad");
-        Assert.Equal("Sófia", fx.Page.FromChipText);
+        Pick(fx.Page.FromCountry, "bulgaria");
+        Assert.Equal("Cidade", fx.Page.FromCity.Label);
 
         fx.Loc.SetLanguage(Language.En);
 
-        Assert.Equal("Sófia", fx.Page.FromChipText); // o nome vem do jogo (fake fixo); o texto da tela segue o idioma
-        Assert.Equal("Departure city", fx.Page.FromCompany.Label.Length > 0 ? "Departure city" : "");
-        Assert.Equal("Departure company", fx.Page.FromCompany.Label);
-        Assert.Equal("belgrad", fx.Page.ToCity.Selected!.Key);
-    }
-
-    [Fact]
-    public async Task FocusRequested_PointsToTheNextIncompleteStep()
-    {
-        var fx = await Open();
-        var targets = new List<JobsFocusTarget>();
-        fx.Page.FocusRequested += (_, t) => targets.Add(t);
-
-        fx.Page.SelectFromCity("sofia");
-        Pick(fx.Page.ToCity, "istanbul");
-        Pick(fx.Page.FromCompany, JobsSample.Radus);
-        Pick(fx.Page.Cargo, "machinery");
-
-        Assert.Equal([JobsFocusTarget.FromCompany, JobsFocusTarget.Cargo, JobsFocusTarget.ToCompany], targets); // a lista de cidades mantém o foco: as setas já escolhem
-    }
-
-    [Fact]
-    public async Task SelectedCity_NullFromTheListBox_IsIgnored()
-    {
-        var fx = await Open();
-        fx.Page.SelectFromCity("sofia");
-
-        fx.Page.SelectedCity = null;
-
-        Assert.Equal("sofia", fx.Page.SelectedCity!.Id);
-        Assert.True(fx.Page.Step1Done);
+        Assert.Equal("City", fx.Page.FromCity.Label);
+        Assert.Equal("Country", fx.Page.FromCountry.Label);
+        Assert.Equal("bulgaria", fx.Page.FromCountry.Selected!.Key);
+        Assert.Equal("sofia", fx.Page.FromCity.Selected!.Key);
     }
 }
 

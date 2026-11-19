@@ -43,26 +43,36 @@ public class JobsRealSaveTests(Xunit.Abstractions.ITestOutputHelper output)
             s.AddSingleton<IJobBoardFactory>(new FakeBoardFactory()); // nada de cache de distâncias real; o board é o real
         });
         var shell = provider.GetRequiredService<ShellViewModel>();
+        var open = Stopwatch.StartNew();
         await shell.OpenSaveAsync(slot);
+        output.WriteLine($"Abrir o módulo: {open.ElapsedMilliseconds} ms");
+        Assert.True(open.Elapsed < TimeSpan.FromSeconds(30), $"Abrir o módulo demorou {open.Elapsed}");
         var page = Assert.IsType<JobsPageViewModel>(shell.CurrentPage);
         Assert.NotEqual(PageState.Loading, page.State);
         if (page.State != PageState.Ready) return; // save sem vagas nem ofertas: nada a planejar
 
         var timer = Stopwatch.StartNew();
         var board = JobBoard.Build(shell.Session!.View, shell.Session.GameData);
-        output.WriteLine($"JobBoard: {timer.ElapsedMilliseconds} ms, {board.Cities().Count} cidades, {board.OriginCities().Count} de saída");
+        var cities = board.DepartureCities(null);
+        output.WriteLine($"JobBoard: {timer.ElapsedMilliseconds} ms, {cities.Count} cidades de saída, {board.DepartureCountries().Count} países");
         Assert.True(timer.Elapsed < TimeSpan.FromSeconds(5), $"JobBoard demorou {timer.Elapsed}");
 
-        // acha um par de cidades com combinação e monta o frete pelos passos da tela
-        var from = board.OriginCities().First(c => board.DestinationCities(c).Count > 0);
-        var to = board.DestinationCities(from).First();
-        page.SelectFromCity(from);
-        page.ToCity.Selected = page.ToCity.AllOptions.First(o => Equals(o.Key, to));
-        Assert.True(page.ShowSteps, "o par escolhido tem combinação");
-        if (page.FromCompany.Selected is null) page.FromCompany.Selected = page.FromCompany.AllOptions.First();
-        if (page.SelectedMode?.Mode == JobSlotMode.ReplaceOffer && page.Offer.Selected is null) page.Offer.Selected = page.Offer.AllOptions.First();
-        if (page.Cargo.Selected is null) page.Cargo.Selected = page.Cargo.AllOptions.First();
-        if (page.ToCompany.Selected is null) page.ToCompany.Selected = page.ToCompany.AllOptions.First();
+        // acha uma saída com chegada possível e monta o frete pelos passos da tela: país -> cidade -> empresa -> chegada -> carga
+        var fromCity = cities.First(c => board.DepartureCompanies(c.City).Any(f => board.ArrivalCities(f, null).Count > 0));
+        var fromCompany = board.DepartureCompanies(fromCity.City).First(f => board.ArrivalCities(f, null).Count > 0);
+        var toCity = board.ArrivalCities(fromCompany, null).First();
+
+        timer.Restart();
+        if (fromCity.Country is not null) page.FromCountry.Selected = page.FromCountry.AllOptions.First(o => Equals(o.Key, fromCity.Country));
+        page.FromCity.Selected = page.FromCity.AllOptions.First(o => Equals(o.Key, fromCity.City));
+        page.FromCompany.Selected = page.FromCompany.AllOptions.First(o => Equals(o.Key, fromCompany));
+        if (page.Slot.Selected is null) page.Slot.Selected = page.Slot.AllOptions.First(o => o.IsEnabled);
+        if (board.HasCountries && board.CountryOf(toCity) is { } toCountry) page.ToCountry.Selected = page.ToCountry.AllOptions.First(o => Equals(o.Key, toCountry));
+        page.ToCity.Selected = page.ToCity.AllOptions.First(o => Equals(o.Key, toCity));
+        if (page.ToCompany.Selected is null) page.ToCompany.Selected = page.ToCompany.AllOptions.First(o => o.IsEnabled);
+        if (page.Cargo.Selected is null) page.Cargo.Selected = page.Cargo.AllOptions.First(o => o.IsEnabled);
+        output.WriteLine($"Escolha país->cidade->empresa->chegada->carga: {timer.ElapsedMilliseconds} ms");
+        Assert.True(timer.Elapsed < TimeSpan.FromSeconds(5), $"Escolher o frete demorou {timer.Elapsed}");
 
         Assert.True(page.CanAdd, page.MissingText);
         page.AddCommand.Execute(null);

@@ -9,4 +9,7 @@ public interface IGameData : IGameNames
     bool Ships(string company, string cargo);
     bool Accepts(string company, string cargo);
     IReadOnlyCollection<string> CargoOut(string company);
+
+    /// <summary>Id do país da cidade; null se desconhecido.</summary>
+    string? CityCountry(string city);
 }

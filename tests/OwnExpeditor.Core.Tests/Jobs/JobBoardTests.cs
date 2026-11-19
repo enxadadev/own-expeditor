@@ -10,61 +10,33 @@ public class JobBoardTests
         new(Kaarfor, to, cargo, JobSlotMode.FillEmpty, FillSlotId: slot);
 
     [Fact]
-    public void OriginCities_are_cities_with_usable_company()
+    public void DepartureCities_are_cities_with_usable_company()
     {
         // berlin: sem slots; wien: vaga livre mas não envia carga com reboque conhecido
-        Assert.Equal(["budapest", "kosice"], Board(Open()).OriginCities());
+        Assert.Equal(["budapest", "kosice"], Board(Open()).DepartureCities(null).Select(c => c.City));
     }
 
     [Fact]
-    public void Cities_lists_every_city_of_the_save()
+    public void ArrivalCities_are_reachable_by_some_combination_and_exclude_origin()
     {
-        Assert.Equal(["berlin", "budapest", "kosice", "wien"], Board(Open()).Cities());
+        Assert.Equal(["berlin", "kosice"], Board(Open()).ArrivalCities(Kaarfor, null));
     }
 
     [Fact]
-    public void DestinationCities_are_reachable_by_some_combination_and_exclude_origin()
-    {
-        Assert.Equal(["berlin", "kosice"], Board(Open()).DestinationCities("budapest"));
-    }
-
-    [Fact]
-    public void DestinationCities_unknown_or_unusable_origin_is_empty()
+    public void DepartureCompanies_with_free_slot_or_offer_and_a_cargo_some_arrival_accepts()
     {
         var board = Board(Open());
-        Assert.Empty(board.DestinationCities("wien"));
-        Assert.Empty(board.DestinationCities("atlantis"));
+        Assert.Equal([Kaarfor], board.DepartureCompanies("budapest"));
+        Assert.Empty(board.DepartureCompanies("wien"));
     }
 
     [Fact]
-    public void OriginCompanies_with_free_slot_or_offer_and_a_cargo_the_destination_accepts()
-    {
-        var board = Board(Open());
-        Assert.Equal([Kaarfor], board.OriginCompanies("budapest", "berlin"));
-        Assert.Empty(board.OriginCompanies("budapest", "wien"));
-    }
-
-    [Fact]
-    public void OriginCompanies_qualifies_with_only_a_replaceable_offer()
+    public void DepartureCompanies_qualifies_with_only_a_replaceable_offer()
     {
         // lkwlog.kosice não tem vaga livre, só a oferta c; envia empty_palet e a kaarfor (budapest) a recebe
         var board = Board(Open());
         Assert.Equal(0, board.FreeSlots(Lkwlog));
-        Assert.Equal([Lkwlog], board.OriginCompanies("kosice", "budapest"));
-    }
-
-    [Fact]
-    public void OriginCompanies_same_city_is_empty()
-    {
-        Assert.Empty(Board(Open()).OriginCompanies("budapest", "budapest"));
-    }
-
-    [Fact]
-    public void HasMatch_tells_whether_the_pair_has_a_combination()
-    {
-        var board = Board(Open());
-        Assert.True(board.HasMatch("budapest", "berlin"));
-        Assert.False(board.HasMatch("berlin", "budapest"));
+        Assert.Equal([Lkwlog], board.DepartureCompanies("kosice"));
     }
 
     [Fact]
@@ -72,16 +44,17 @@ public class JobBoardTests
     {
         var board = Board(Open());
         // kaarfor envia used_plast, empty_palet e ghost (sem reboque no save); kosice só recebe used_plast
-        Assert.Equal(["used_plast"], board.Cargos(Kaarfor, "kosice"));
-        Assert.Equal(["empty_palet", "used_plast"], board.Cargos(Kaarfor, "berlin"));
+        Assert.Equal(["used_plast"], board.Cargos(Kaarfor, Lkwlog));
+        Assert.Equal(["empty_palet", "used_plast"], board.Cargos(Kaarfor, Dfh));
     }
 
     [Fact]
-    public void DestinationCompanies_accept_the_cargo()
+    public void ArrivalCompanies_accept_a_cargo_the_origin_sends()
     {
         var board = Board(Open());
-        Assert.Equal([Dfh], board.DestinationCompanies("berlin", "used_plast"));
-        Assert.Empty(board.DestinationCompanies("kosice", "empty_palet"));
+        Assert.Equal([Dfh], board.ArrivalCompanies(Kaarfor, "berlin"));
+        Assert.Equal([Lkwlog], board.ArrivalCompanies(Kaarfor, "kosice"));
+        Assert.Empty(board.ArrivalCompanies(Kaarfor, "budapest"));
     }
 
     [Fact]
@@ -117,14 +90,14 @@ public class JobBoardTests
     }
 
     [Fact]
-    public void Company_with_every_slot_pending_is_no_longer_an_origin()
+    public void Company_with_every_slot_pending_is_no_longer_a_departure()
     {
         var s = Open();
         s.Stage(JobPlanner.Plan(s.Original, Board(s), Fill(Dfh)));
         s.Stage(JobPlanner.Plan(s.Original, Board(s),
             new JobRequest(Kaarfor, Dfh, "empty_palet", JobSlotMode.ReplaceOffer, "_nameless.a")));
 
-        Assert.Empty(Board(s).OriginCompanies("budapest", "berlin"));
+        Assert.Empty(Board(s).DepartureCompanies("budapest"));
     }
 
     [Fact]
@@ -142,9 +115,9 @@ public class JobBoardTests
         var board = Board(s);
 
         // a oferta a revela: kaarfor envia used_plast e lkwlog recebe
-        Assert.Equal(["used_plast"], board.Cargos(Kaarfor, "kosice"));
-        Assert.Equal([Kaarfor], board.OriginCompanies("budapest", "kosice"));
-        Assert.Equal(["kosice"], board.DestinationCities("budapest"));
+        Assert.Equal(["used_plast"], board.Cargos(Kaarfor, Lkwlog));
+        Assert.Equal([Kaarfor], board.DepartureCompanies("budapest"));
+        Assert.Equal(["kosice"], board.ArrivalCities(Kaarfor, null));
     }
 
     [Fact]
@@ -154,7 +127,7 @@ public class JobBoardTests
         data.In["dfh"] = ["used_plast"]; // o catálogo só diz que dfh recebe; quem envia vem do save (oferta a)
         var board = Board(Open(data: data));
 
-        Assert.Equal(["berlin", "kosice"], board.DestinationCities("budapest"));
+        Assert.Equal(["berlin", "kosice"], board.ArrivalCities(Kaarfor, null));
     }
 
     [Fact]
@@ -163,7 +136,7 @@ public class JobBoardTests
         var text = "SiiNunit\r\n{\r\ncompany : company.volatile.weird {\r\n job_offer: 1\r\n job_offer[0]: _nameless.zz\r\n}\r\n\r\n" +
                    "company : company.volatile.x.y {\r\n job_offer: 1\r\n job_offer[0]: _nameless.missing\r\n}\r\n\r\n}\r\n";
         var board = Board(Open(text));
-        Assert.Empty(board.OriginCities());
+        Assert.Empty(board.DepartureCities(null));
         Assert.Equal(0, board.FreeSlots(new CompanyLocation("x", "y")));
     }
 
