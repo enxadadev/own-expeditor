@@ -17,6 +17,30 @@ public class JobBoardTests
     }
 
     [Fact]
+    public void DepartureCompanies_equal_brute_force_and_agree_with_DepartureCities_and_Cargos()
+    {
+        var b = Board(Open());
+        var cities = b.DepartureCities(null).ToDictionary(c => c.City);
+        foreach (var city in b.DepartureCities(null).Select(c => c.City).Concat(["wien", "berlin"]).Distinct())
+        {
+            var companies = b.DepartureCompanies(city);
+            foreach (var from in companies)
+            {
+                var hasCargo = b.ArrivalCities(from, null)
+                    .SelectMany(to => b.ArrivalCompanies(from, to)).Any(to => b.Cargos(from, to).Count > 0);
+                Assert.True(hasCargo);
+                Assert.True(b.FreeSlots(from) + b.ReplaceableOffers(from).Count > 0);
+            }
+            if (cities.TryGetValue(city, out var info))
+            {
+                Assert.Equal(companies.Count, info.Companies);
+                Assert.Equal(companies.Sum(c => b.FreeSlots(c)), info.FreeSlots);
+                Assert.Equal(companies.Sum(c => b.ReplaceableOffers(c).Count), info.Offers);
+            }
+        }
+    }
+
+    [Fact]
     public void ArrivalCities_are_reachable_by_some_combination_and_exclude_origin()
     {
         Assert.Equal(["berlin", "kosice"], Board(Open()).ArrivalCities(Kaarfor, null));

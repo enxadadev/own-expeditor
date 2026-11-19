@@ -1,4 +1,4 @@
-# 0007. Cadeia de escolhas do frete no Core e país da cidade pelo IGameData
+# 0008. Cadeia de escolhas do frete no Core e país da cidade pelo IGameData
 
 - Status: aceita
 - Data: 2026-11-18

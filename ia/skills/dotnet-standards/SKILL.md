@@ -1,6 +1,6 @@
 ---
 name: dotnet-standards
-description: Convenções C#/.NET 8 do Own Expeditor — nullable, records, async com cancelamento, exceções, Span em parsing, nomes, organização de arquivos. Use ao escrever ou corrigir código C# (core-dev, sii-engine, test-engineer, build-fixer, code-reviewer).
+description: Convenções C#/.NET 8 — nullable, records, async com cancelamento, exceções, Span em parsing, nomes. Use ao escrever ou corrigir código C#.
 ---
 
 # .NET standards

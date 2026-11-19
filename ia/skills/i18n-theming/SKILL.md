@@ -1,6 +1,6 @@
 ---
 name: i18n-theming
-description: Como o Own Expeditor suporta tema (Light/Dark/Sistema) e idioma (pt-BR/en) — recursos .resx, troca em runtime, formatação por cultura, ThemeVariant, persistência da preferência. Use ao adicionar qualquer texto visível, cor ou tela (ui-dev, ux-reviewer, core-dev para configurações).
+description: Tema Light/Dark/Sistema e idioma pt-BR/en: .resx, troca em runtime, cultura, persistência; verifica com check-i18n.sh. Use ao adicionar texto visível, cor ou tela.
 ---
 
 # Tema e idioma

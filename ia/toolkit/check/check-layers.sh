@@ -1,10 +1,14 @@
 #!/usr/bin/env bash
-# Verifica a regra de camadas (App → Core → Data/Sii → Domain) em três níveis:
+# Verifica a regra de camadas (App → Core → Data/Sii → Domain).
+# uso: ia/toolkit/check/check-layers.sh
+# agentes: code-reviewer, core-dev, ui-dev, test-runner
+# saída: 'CAMADAS: ok' ou 1 linha por violação
+# Níveis verificados:
 #   1. ProjectReference nos .csproj de src/;
 #   2. `using`/`global using` de namespaces de camada proibida;
 #   3. uso qualificado (OwnExpeditor.Sii.Foo) em código e .axaml.
-# tools/, toolkit/ e tests/ ficam fora da regra (só src/ é verificado).
-source "$(dirname "$0")/_lib.sh"
+# tools/, ia/toolkit/ e tests/ ficam fora da regra (só src/ é verificado).
+source "$(dirname "$0")/../_lib.sh"
 declare -A ALLOW=([App]="Core Domain" [Core]="Data Sii Domain" [Data]="Sii Domain" [Sii]="Domain" [Domain]="")
 LAYERS="App Core Data Sii Domain"
 err=0

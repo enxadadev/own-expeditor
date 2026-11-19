@@ -34,7 +34,7 @@ em `Directory.Build.props`.
 
 - `Core/Modules/Jobs`: `JobSelection`, `JobSelectionResult` e `JobSelectionRules`
   (funções puras sobre o `JobBoard`). A cadeia não fica na ViewModel. Ver
-  [ADR 0007](decisions/0007-cadeia-de-escolhas-do-frete-no-core-e-pais-da-cidade-pelo-igamedata.md).
+  [ADR 0008](decisions/0008-cadeia-de-escolhas-do-frete-no-core-e-pais-da-cidade-pelo-igamedata.md).
 - `JobBoard` responde por país: `DepartureCountries`, `DepartureCities(country)`,
   `ArrivalCountries`, `ArrivalCities`, `ArrivalCompanies` e `Cargos(from, to)`.
 - `IGameData.CityCountry(city)` e `GameNameKind.Country` (nome pela cadeia do jogo,
@@ -101,7 +101,7 @@ por um shell com módulos. Ainda sem release publicado; a versão em
 - `Data/Distances`: cache de distâncias por jogo.
 - Projetos de teste novos: `tests/OwnExpeditor.Data.Tests` e
   `tests/OwnExpeditor.App.Tests`. Total: 764 testes passando.
-- Textos em `.resx` (pt-BR e en), gerados por `toolkit/gen-resx.py`.
+- Textos em `.resx` (pt-BR e en), gerados por `toolkit/gen/gen-resx.py`.
 - A CLI `tools/OwnExpeditor.Cli` perdeu o comando `inject`. Restaram `decode`,
   `scs-ls`, `scs-cat` e `catalog`.
 
@@ -117,7 +117,7 @@ por um shell com módulos. Ainda sem release publicado; a versão em
   prazo como minutos de tempo de jogo.
 - Não há módulos além de Fretes: Frota, Perfil, Empresa e Mapa são espaços
   reservados.
-- O release para Windows (`toolkit/release.sh`) ainda não foi testado num
+- O release para Windows (`toolkit/release/release.sh`) ainda não foi testado num
   ambiente Windows.
 
 ## 0.1.0 (não publicado)

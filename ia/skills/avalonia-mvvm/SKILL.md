@@ -1,6 +1,6 @@
 ---
 name: avalonia-mvvm
-description: Padrões de código para a UI Avalonia 11 + CommunityToolkit.Mvvm do Own Expeditor — compiled bindings, ViewModels, comandos assíncronos, Dispatcher, DI, navegação, listas grandes, design-time. Use ao escrever ou revisar Views/ViewModels (ui-dev, code-reviewer).
+description: Padrões Avalonia 11 + CommunityToolkit.Mvvm do Own Expeditor — compiled bindings, ViewModels, comandos assíncronos, Dispatcher, DI, listas grandes. Use ao escrever ou revisar Views e ViewModels.
 ---
 
 # Avalonia MVVM

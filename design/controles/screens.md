@@ -516,7 +516,7 @@ Amostras: `RouteMap/{Schematic,Geographic,Empty,Loading,SameCity,LongLabels}`.
 - **Cada seção**: título do controle (nome da classe), uma linha de descrição, os estados em grade com legenda `Caption` embaixo de cada exemplo (nome do estado). Estados de ponteiro e foco são **forçados** por helper anexado `Gallery.ForceState="Hover|Pressed|Focus|Disabled"` que liga as pseudo-classes (`:pointerover`, `:pressed`, `:focus-visible`), pois não dá para segurar o mouse numa captura.
 - **Tamanho**: 1280 de largura, altura livre (rolagem vertical); cerca de 5.400 px com as duas colunas. Coluna ≈ 600 px úteis, o que também testa larguras estreitas (itens de lista a 292 px).
 - **Navegação**: índice fixo à esquerda em largura ≥ 1400 (âncora por controle); foco em cada seção por `Ctrl+↓`/`↑`.
-- **Screenshots** (`toolkit/screenshots.sh`): amostras `Gallery/<Controle>/<Light|Dark>/<pt-BR|en>`; falha se houver erro de binding. Cada controle da lista acima tem `DesignSample` (A3, A6).
+- **Screenshots** (`ia/toolkit/release/screenshots.sh`): amostras `Gallery/<Controle>/<Light|Dark>/<pt-BR|en>`; falha se houver erro de binding. Cada controle da lista acima tem `DesignSample` (A3, A6).
 - **Dados**: sintéticos (`Radus`, `LogNStick`, `Sofia`, `Istanbul`; mods fictícios "Balkans Expansion"); nada de marcas ou arte da SCS.
 
 ### 3.2 O que a galeria precisa mostrar por controle

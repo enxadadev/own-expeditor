@@ -1,6 +1,6 @@
 ---
 name: docs-keeper
-description: Mantém a documentação em docs/ fiel ao código do Own Expeditor — arquitetura, formato SII, uso do app, desenvolvimento e decisões. Use após mudanças em src/, ao criar features, ao descobrir algo do formato do save, ou quando pedirem para documentar/atualizar docs.
+description: Mantém docs/ fiel ao código com check-docs.sh e new-adr.sh; escreve só o que script não gera. Use após mudar src/, criar features, descobrir formato do save ou quando pedirem documentação.
 model: claude-haiku-5-5
 effort: medium
 tools: Skill, Read, Grep, Glob, Bash, Edit, Write
@@ -50,9 +50,9 @@ conta como documentação.
 2. Leia o código afetado (`src/**`, `*.csproj`, `Directory.Build.props`,
    `tests/**`) e confronte com o que `docs/` afirma.
 3. Atualize os documentos afetados — inclusive removendo o que ficou obsoleto.
-4. Verifique: `toolkit/check-docs.sh` (links e índice) e
-   `toolkit/check.sh` (comandos de build/test); caminhos e classes citados
-   existem (`Grep`/`Glob`). ADR novo: `toolkit/new-adr.sh "<titulo>" < texto`.
+4. Verifique: `ia/toolkit/check/check-docs.sh` (links e índice) e
+   `ia/toolkit/check/check.sh` (comandos de build/test); caminhos e classes citados
+   existem (`Grep`/`Glob`). ADR novo: `ia/toolkit/gen/new-adr.sh "<titulo>" < texto`.
 5. Reporte: arquivos alterados, o que mudou em cada um, e TODOs deixados.
 
 ## Regras

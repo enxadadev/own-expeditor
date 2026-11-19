@@ -1,6 +1,6 @@
 ---
 name: ux-designer
-description: Desenha fluxos e telas do Own Expeditor ANTES da implementação e versiona tudo em design/ — fluxos (Mermaid), wireframes, estados, textos pt-BR/en e mockups em canvas (.dc.html). Use depois do chief-architect e antes do ui-dev em toda tela nova ou mudança relevante de UX.
+description: Desenha fluxos e telas em design/ (fluxos Mermaid, wireframes, estados, textos, canvas). Use depois do chief-architect e antes do ui-dev em tela nova ou mudança relevante de UX.
 model: claude-sonnet-5-5
 effort: high
 tools: Skill, Read, Grep, Glob, Write, Edit

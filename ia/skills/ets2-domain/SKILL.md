@@ -1,11 +1,11 @@
 ---
 name: ets2-domain
-description: Glossário do domínio ETS2/ATS como aparece no game.sii — job offers, empresas, cidades, cargas, reboques, tempo de jogo — com os campos reais levantados nos saves de exemplo. Use ao desenhar ou implementar leitura/injeção de jobs (chief-architect, core-dev, sii-engine, test-engineer, save-inspector).
+description: Glossário ETS2/ATS como aparece no game.sii — job offers, empresas, cidades, cargas, reboques, com campos reais dos saves. Use ao desenhar ou implementar leitura e injeção de jobs.
 ---
 
 # Domínio ETS2/ATS no save
 
-Fatos levantados com `toolkit/sii.sh` num save real (texto, ~6.500 ofertas).
+Fatos levantados com `ia/toolkit/inspect/sii.sh` num save real (texto, ~6.500 ofertas).
 O que não foi confirmado está marcado **(?)** — confirme com
 `save-inspector` antes de depender disso. Ao descobrir algo novo,
 atualize esta skill e `docs/sii-format.md`.

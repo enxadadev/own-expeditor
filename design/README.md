@@ -37,6 +37,7 @@ não direto no navegador.
 | [controles](controles/README.md) | aprovado | [link](https://claude.ai/artifact/AHbpXwyEujo1i82j8AZEED) |
 | [fretes](fretes/README.md) | aprovado | https://claude.ai/artifact/DGcBW2CtBSZWnZXgzE7PhM |
 | [fretes-pais-cidade](fretes-pais-cidade/README.md) | aprovado | https://claude.ai/artifact/NouqD8vrQDUzGsF2fdkJjc |
+| [mapa-jogo](mapa-jogo/README.md) | aprovado | — |
 
 ## Regras
 - Mudou a tela? Atualize o desenho **antes**, no mesmo PR.

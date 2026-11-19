@@ -8,7 +8,7 @@ Vale o plano 0005 no que este não altera.
 **Estado:** fases F0 a F7 concluídas. O app abre sempre o shell modular; a tela
 única (`MainViewModel`), `Core/Legacy` (`LegacyJobs`), `SaveSession`, `JobInjector`,
 `WriteAsNewSave`, `SiiDocument.Save` e o comando `inject` da CLI foram removidos.
-Estado final: 764 testes verdes (`toolkit/check.sh`). Pendente: teste no jogo
+Estado final: 764 testes verdes (`ia/toolkit/check/check.sh`). Pendente: teste no jogo
 (item 7.5). As tabelas abaixo ficam como registro do plano; a coluna de situação
 diz o que aconteceu.
 
@@ -162,7 +162,7 @@ public interface IClipboardService { Task SetTextAsync(string text); }
 ## Fases
 
 Regras: contratos/stubs primeiro, testes antes da implementação; a cada fase
-`toolkit/check.sh` verde, `toolkit/check-layers.sh` ok e o app faz o fluxo atual.
+`ia/toolkit/check/check.sh` verde, `ia/toolkit/check/check-layers.sh` ok e o app faz o fluxo atual.
 
 ### F0 — sem código — concluída
 | # | Agente | Faz | Pronto quando |

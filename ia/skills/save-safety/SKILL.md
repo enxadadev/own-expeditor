@@ -1,6 +1,6 @@
 ---
 name: save-safety
-description: Regras obrigatórias para qualquer código que lê, grava ou substitui o game.sii do usuário no Own Expeditor — backup, escrita atômica, verificação antes de substituir, jogo aberto, encoding, recuperação. Use ao implementar ou revisar escrita de save (sii-engine, core-dev, code-reviewer).
+description: Regras para código que lê, grava ou substitui o game.sii: backup, escrita atômica, verificação, jogo aberto, encoding; check-rules.sh (regra d). Use ao implementar ou revisar escrita de save.
 ---
 
 # Save safety

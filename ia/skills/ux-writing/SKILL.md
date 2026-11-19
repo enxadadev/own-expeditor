@@ -1,6 +1,6 @@
 ---
 name: ux-writing
-description: Guia de textos de interface do Own Expeditor em pt-BR e en — tom, botões, mensagens de erro/sucesso/vazio, confirmações, glossário alinhado ao jogo. Use ao escrever ou revisar qualquer texto visível ou entradas dos .resx (ui-dev, ux-reviewer, docs-keeper).
+description: Guia de textos de interface pt-BR e en — tom, botões, erros, vazios, confirmações, glossário do jogo. Use ao escrever ou revisar texto visível ou entradas .resx.
 ---
 
 # UX writing (pt-BR e en)

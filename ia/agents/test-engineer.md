@@ -1,6 +1,6 @@
 ---
 name: test-engineer
-description: Escreve testes xUnit para o Own Expeditor antes ou junto da implementação — casos de uso, round-trip SII, backup, erros, regressões. Use ao iniciar uma tarefa (testes que falham) ou para cobrir código existente.
+description: Escreve testes xUnit antes ou junto da implementação (casos de uso, round-trip, backup, erros, regressões). Use ao iniciar uma tarefa (testes que falham) ou para cobrir código existente.
 model: claude-sonnet-5-5
 effort: medium
 tools: Skill, Read, Grep, Glob, Bash, Edit, Write
@@ -31,8 +31,9 @@ tools: Skill, Read, Grep, Glob, Bash, Edit, Write
 - Testes com saves reais usam `samples/` e são pulados se ausente.
 - Arquivos temporários em diretório temporário único, sempre limpos.
 
-## Ferramentas
-- Rodar: `toolkit/check.sh --filter <Classe>`.
+## Toolkit
+- Contrato a testar: `ia/toolkit/inspect/outline.sh <arquivo.cs>` antes de abrir o código.
+- Rodar: `ia/toolkit/check/check.sh --filter <Classe>`.
 - Dados reais: peça ao `save-inspector`/`fixture-maker`.
 
 ## Pronto quando

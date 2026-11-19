@@ -36,7 +36,7 @@ records próprios no `Domain`:
 - `JobSelection` e `JobSelectionResult` (`Core/Modules/Jobs`): a escolha em
   andamento na tela (país, cidade, empresa, vaga, carga, nos dois lados) e o
   resultado de revalidar, com os campos limpos e os preenchidos sozinhos.
-  `JobSelectionRules` faz as contas sobre eles (ver [ADR 0007](../decisions/0007-cadeia-de-escolhas-do-frete-no-core-e-pais-da-cidade-pelo-igamedata.md)).
+  `JobSelectionRules` faz as contas sobre eles (ver [ADR 0008](../decisions/0008-cadeia-de-escolhas-do-frete-no-core-e-pais-da-cidade-pelo-igamedata.md)).
 - `JobRequest`, `ChangeSet` e `SavePatch` (`Core`): o pedido de frete e a mudança
   que vai para a revisão.
 

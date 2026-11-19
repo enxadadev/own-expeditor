@@ -49,6 +49,10 @@ Mudança pequena (bug isolado, ajuste visual) pode pular 1–2 e começar no 5.
 
 ## Regras para a orquestradora
 
+- **Obrigatório:** toda instrução do usuário passa por um workflow `wf-*`
+  e é executada pelos agentes donos da área. A orquestradora nunca faz o
+  trabalho sozinha (ver "Orquestração obrigatória" no `CLAUDE.md`).
+
 - Prefira o agente mais barato que resolve: logs e status via `test-runner`,
   nunca lendo a saída inteira na sessão principal.
 - Tarefa para Haiku: um objetivo, caminhos explícitos, formato de saída.
@@ -72,28 +76,30 @@ Mudança pequena (bug isolado, ajuste visual) pode pular 1–2 e começar no 5.
 | `wf-commit` | commit com aprovação (git-ops) |
 | `wf-release` | exe Windows + notas |
 
-## Toolkit (`toolkit/`) — trabalho repetitivo sem gastar tokens
+## Toolkit (`ia/toolkit/`) — trabalho repetitivo sem gastar tokens
 
-| Script | Faz |
+Fonte da verdade: `ia/toolkit/help.sh` (lista todos os scripts; `--agents` agrupa por agente).
+Os scripts ficam em subpastas por assunto:
+
+| Pasta | Conteúdo |
 | --- | --- |
-| `check.sh [--filter X]` | build + testes, saída resumida |
-| `check-layers.sh` | regra de camadas pelos ProjectReference/usings |
-| `check-docs.sh` | links e índice de `docs/`, conta TODOs |
-| `diff-summary.sh [base] [-- caminhos]` | diff compacto para revisores |
-| `samples.sh [--text]` | saves de exemplo e formato de cada um |
-| `sii.sh <cmd> <save>` | format/formats/decode/types/list/show/attrs/roundtrip (SiiTool) |
-| `next-owne.sh` | próximo número OWNE |
-| `bump-version.sh patch\|minor\|major [--dry-run]` | versão M.X.Y |
-| `precommit.sh` | tudo que o git-ops precisa para propor um commit |
-| `lint-commit-msg.sh <msg>` | valida formato/OWNE/menções proibidas |
-| `commit.sh <msg> <arquivos>` | valida e commita (após aprovação) |
-| `install-hooks.sh` | instala hook commit-msg |
-| `new-adr.sh "<titulo>" < texto` | próximo ADR numerado |
-| `codex-review.sh [base]` | revisão pelo Codex CLI em `.reviews/` |
-| `release.sh` | publish win-x64 + notas |
-| `screenshots.sh [View]` | PNGs das Views em Light/Dark × pt-BR/en (Avalonia.Headless) |
+| `ia/toolkit/git/` | precommit, commit, lint-commit-msg, next-owne, bump-version, install-hooks, diff-summary |
+| `ia/toolkit/check/` | check (build+testes), check-layers, check-docs, check-rules, check-i18n, check-agents |
+| `ia/toolkit/inspect/` | samples, sii (SiiTool), outline |
+| `ia/toolkit/gen/` | gen-resx.py, new-adr |
+| `ia/toolkit/release/` | release, screenshots, codex-review |
+
+### Economia de tokens
+
+- Rode o script antes de ler arquivos: a saída curta substitui a leitura.
+- Arquivo grande: `ia/toolkit/inspect/outline.sh` antes de abrir; depois só o trecho.
+- `check-*.sh` no lugar de inspeção manual (camadas, regras, i18n, docs, agentes).
+- Saída de script nunca é colada inteira no brief; passe só as linhas relevantes.
+- O subagente recebe o mínimo: caminhos + critério de pronto.
+- Logs e status via `test-runner`; consultas a saves via `save-inspector`.
 
 Regra: se um agente repete a mesma sequência de comandos, vira script aqui.
+Todo script tem saída curta (`OK` ou `arquivo:linha`) e cabeçalho `# uso:` / `# agentes:` / `# saída:`.
 
 ## Skills
 

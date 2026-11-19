@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- GERADO por toolkit/gen-resx.py a partir de design/*/strings.md. Não edite à mão. -->
+<!-- GERADO por ia/toolkit/gen/gen-resx.py a partir de design/*/strings.md. Não edite à mão. -->
 <root>
   <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
   <resheader name="version"><value>2.0</value></resheader>

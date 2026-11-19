@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 # Prepara a proposta de commit para o git-ops em uma chamada.
-# uso: toolkit/precommit.sh   → branch, próximo OWNE, versão, arquivos, alertas
-source "$(dirname "$0")/_lib.sh"
+# uso: ia/toolkit/git/precommit.sh   → branch, próximo OWNE, versão, arquivos, alertas
+# agentes: git-ops
+# saída: ~15 linhas
+source "$(dirname "$0")/../_lib.sh"
 br=$(git branch --show-current)
 echo "BRANCH: $br$([[ $br == "$(main_branch)" ]] && echo '  (ALERTA: branch principal — criar branch)')"
-echo "PROXIMO: $(toolkit/next-owne.sh)"
+echo "PROXIMO: $(ia/toolkit/git/next-owne.sh)"
 echo "VERSAO: $(props_version)"
 echo "ARQUIVOS:"; git status --porcelain | sed 's/^/  /'
 bad=$(git status --porcelain | awk '{print $NF}' | grep -E '\.sii$|\.sii\.bak-|(^|/)(bin|obj|samples|publish)/' || true)

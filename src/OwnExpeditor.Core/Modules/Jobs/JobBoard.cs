@@ -33,10 +33,13 @@ public sealed class JobBoard
     private readonly Dictionary<CityPair, int> _saveDistances = [];
     private DistanceTable _distances = new([]);
     private IReadOnlyDictionary<CityPair, int>? _ownEstimates;
+    // Caches preguiçosos: a App consulta o board de threads diferentes (UI e Task.Run); todos sob _gate.
+    private readonly object _gate = new();
     private bool? _hasCountries;
     private List<DepartureCity>? _departureCities;
     private Dictionary<string, List<Slots>>? _acceptorsByCargo;
     private readonly Dictionary<string, List<Slots>> _acceptorsByOrigin = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, string[]> _shipped = new(StringComparer.Ordinal);
 
     private JobBoard(IGameData data) => _data = data;
 
@@ -69,7 +72,7 @@ public sealed class JobBoard
     public const string OtherCountry = "";
 
     /// <summary>Alguma cidade com empresa tem país conhecido (senão os campos de país não existem).</summary>
-    public bool HasCountries => _hasCountries ??= _byCity.Keys.Any(c => CountryOf(c) is not null);
+    public bool HasCountries { get { lock (_gate) return _hasCountries ??= _byCity.Keys.Any(c => CountryOf(c) is not null); } }
 
     /// <summary>País da cidade; nulo se desconhecido (nunca vazio).</summary>
     public string? CountryOf(string city)
@@ -179,7 +182,12 @@ public sealed class JobBoard
 
     private bool IsDepartureCompany(Slots c) => c.Free.Count + c.Offers.Count > 0 && Acceptors(c.Location).Count > 0;
 
-    private List<DepartureCity> DepartureList() => _departureCities ??= _byCity
+    private List<DepartureCity> DepartureList()
+    {
+        lock (_gate) return _departureCities ??= BuildDepartureList();
+    }
+
+    private List<DepartureCity> BuildDepartureList() => _byCity
         .Select(kv =>
         {
             var companies = kv.Value.Where(IsDepartureCompany).ToList();
@@ -199,24 +207,33 @@ public sealed class JobBoard
     /// <summary>Empresas (fora da cidade de saída) que recebem alguma carga enviada pela empresa, com reboque conhecido.</summary>
     private List<Slots> Acceptors(CompanyLocation from)
     {
-        if (_acceptorsByOrigin.TryGetValue(from.Key, out var cached)) return cached;
-        if (_acceptorsByCargo is null)
+        lock (_gate)
         {
-            _acceptorsByCargo = new Dictionary<string, List<Slots>>(StringComparer.Ordinal);
-            foreach (var cargo in _templates.Keys)
-                _acceptorsByCargo[cargo] = _companies.Values.Where(c => Accepts(c.Location.Company, cargo)).ToList();
+            if (_acceptorsByOrigin.TryGetValue(from.Key, out var cached)) return cached;
+            if (_acceptorsByCargo is null)
+            {
+                var byCargo = new Dictionary<string, List<Slots>>(StringComparer.Ordinal);
+                foreach (var cargo in _templates.Keys)
+                    byCargo[cargo] = _companies.Values.Where(c => Accepts(c.Location.Company, cargo)).ToList();
+                _acceptorsByCargo = byCargo;
+            }
+            var result = ShippedWithTemplate(from)
+                .SelectMany(cargo => _acceptorsByCargo.GetValueOrDefault(cargo) ?? [])
+                .Where(a => a.Location.City != from.City).Distinct().ToList();
+            return _acceptorsByOrigin[from.Key] = result;
         }
-        var result = ShippedWithTemplate(from)
-            .SelectMany(cargo => _acceptorsByCargo.GetValueOrDefault(cargo) ?? [])
-            .Where(a => a.Location.City != from.City).Distinct().ToList();
-        return _acceptorsByOrigin[from.Key] = result;
     }
 
-    private IEnumerable<string> ShippedWithTemplate(CompanyLocation origin)
+    /// <summary>Cargas que a empresa envia (catálogo ∪ aprendidas) e têm reboque conhecido; memoizado por empresa.</summary>
+    private string[] ShippedWithTemplate(CompanyLocation origin)
     {
-        var shipped = new HashSet<string>(_data.CargoOut(origin.Company), StringComparer.Ordinal);
-        if (_learnedOut.TryGetValue(origin.Company, out var learned)) shipped.UnionWith(learned);
-        return shipped.Where(_templates.ContainsKey);
+        lock (_gate)
+        {
+            if (_shipped.TryGetValue(origin.Company, out var hit)) return hit;
+            var shipped = new HashSet<string>(_data.CargoOut(origin.Company), StringComparer.Ordinal);
+            if (_learnedOut.TryGetValue(origin.Company, out var learned)) shipped.UnionWith(learned);
+            return _shipped[origin.Company] = shipped.Where(_templates.ContainsKey).ToArray();
+        }
     }
 
     private void Index(ISaveView view)
