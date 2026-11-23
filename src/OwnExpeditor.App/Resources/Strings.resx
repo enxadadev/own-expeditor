@@ -259,6 +259,19 @@
   <data name="Loading_Stage_Parse" xml:space="preserve"><value>Interpreting the save</value></data>
   <data name="Loading_Stage_Read" xml:space="preserve"><value>Reading the file</value></data>
   <data name="Loading_Title" xml:space="preserve"><value>Reading save…</value></data>
+  <data name="Map_Building" xml:space="preserve"><value>Preparing the game map…</value></data>
+  <data name="Map_Center" xml:space="preserve"><value>Center route</value></data>
+  <data name="Map_Distance_Calculated" xml:space="preserve"><value>{0:N0} km (calculated)</value></data>
+  <data name="Map_Empty_Message" xml:space="preserve"><value>The route shows here once both cities are chosen.</value></data>
+  <data name="Map_Empty_Title" xml:space="preserve"><value>Choose both cities</value></data>
+  <data name="Map_Error_NoRoute" xml:space="preserve"><value>No route found; showing a straight line</value></data>
+  <data name="Map_Error_Read" xml:space="preserve"><value>Couldn't read the game map</value></data>
+  <data name="Map_Error_Version" xml:space="preserve"><value>Couldn't read the map for this game version</value></data>
+  <data name="Map_Hint_NoGame" xml:space="preserve"><value>Set the game folder to see the map</value></data>
+  <data name="Map_StraightLine" xml:space="preserve"><value>Straight line, not the GPS route</value></data>
+  <data name="Map_StraightLine_Short" xml:space="preserve"><value>straight line</value></data>
+  <data name="Map_ZoomIn" xml:space="preserve"><value>Zoom in</value></data>
+  <data name="Map_ZoomOut" xml:space="preserve"><value>Zoom out</value></data>
   <data name="Module_Jobs_Title" xml:space="preserve"><value>Jobs</value></data>
   <data name="Module_Profile_Title" xml:space="preserve"><value>Profile</value></data>
   <data name="Module_company" xml:space="preserve"><value>Company</value></data>

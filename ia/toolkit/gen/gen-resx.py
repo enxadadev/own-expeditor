@@ -20,7 +20,7 @@ from xml.sax.saxutils import escape
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent.parent.parent
 # Maior prioridade primeiro. review-apply é a fonte dos 20 Error_<CoreError> (ADR 0006).
-SOURCES = ["controles", "review-apply", "shell", "fretes-pais-cidade", "fretes", "nomes-reboques"]
+SOURCES = ["controles", "review-apply", "shell", "fretes-pais-cidade", "fretes", "nomes-reboques", "mapa-jogo"]
 OUT = ROOT / "src/OwnExpeditor.App/Resources"
 KEY = re.compile(r"[A-Za-z][A-Za-z0-9_]*")
 

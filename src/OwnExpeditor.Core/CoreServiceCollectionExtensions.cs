@@ -1,11 +1,13 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using OwnExpeditor.Core.Games;
+using OwnExpeditor.Core.Maps;
 using OwnExpeditor.Core.Profiles;
 using OwnExpeditor.Core.Session;
 using OwnExpeditor.Core.Settings;
 using OwnExpeditor.Data;
 using OwnExpeditor.Data.Games;
+using OwnExpeditor.Data.Maps;
 using OwnExpeditor.Data.Saves;
 using OwnExpeditor.Data.Settings;
 
@@ -35,6 +37,10 @@ public static class CoreServiceCollectionExtensions
         services.TryAddSingleton<IGameStatusMonitor>(sp => new GameStatusMonitor(
             sp.GetRequiredService<IEditSessionHost>(), sp.GetRequiredService<IGameProcessMonitor>(),
             sp.GetRequiredService<TimeProvider>()));
+        services.TryAddSingleton<IMapService>(sp => new MapService(
+            sp.GetRequiredService<IMapSource>(), sp.GetRequiredService<IModLocator>(),
+            sp.GetRequiredService<IGameInstallLocator>()));
+        services.TryAddSingleton<IGameMapProvider>(sp => new GameMapProvider(sp.GetRequiredService<IMapService>()));
         return services;
     }
 }

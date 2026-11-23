@@ -4,10 +4,23 @@
              xmlns:loc="using:OwnExpeditor.App.Markup"
              x:Class="OwnExpeditor.App.Controls.RouteMap"
              x:Name="Root" x:DataType="c:RouteMap" MinHeight="220">
+  <UserControl.Styles>
+    <Style Selector="Path.noteicon">
+      <Setter Property="Fill" Value="{DynamicResource TextMutedBrush}" />
+    </Style>
+    <Style Selector="Path.noteicon.error">
+      <Setter Property="Fill" Value="{DynamicResource DangerBrush}" />
+    </Style>
+  </UserControl.Styles>
   <Border Background="{DynamicResource MapBrush}" BorderBrush="{DynamicResource LineBrush}" BorderThickness="1"
           CornerRadius="{StaticResource RadiusXl}" ClipToBounds="True">
     <Panel>
       <c:RouteCanvas x:Name="Canvas" />
+      <!-- só este overlay recebe o ponteiro: tooltip "linha reta, não é a rota do GPS" sobre o segmento -->
+      <Canvas IsVisible="{Binding #Root.ShowStraightLine}" AutomationProperties.AccessibilityView="Raw">
+        <Border x:Name="LineHit" Background="Transparent" Height="22" RenderTransformOrigin="0%,50%"
+                ToolTip.Tip="{loc:Tr Map_StraightLine}" />
+      </Canvas>
       <Border Background="{DynamicResource OverlayBrush}" BorderBrush="{DynamicResource LineBrush}" BorderThickness="1"
               CornerRadius="{StaticResource RadiusMd}" Padding="10,6" Margin="12" HorizontalAlignment="Left" VerticalAlignment="Top"
               MaxWidth="{Binding #Root.ChipMaxWidth}" IsVisible="{Binding #Root.ShowChip}">
@@ -15,12 +28,24 @@
       </Border>
       <Border Background="{DynamicResource OverlayBrush}" BorderBrush="{DynamicResource LineBrush}" BorderThickness="1"
               CornerRadius="{StaticResource RadiusMd}" Padding="12,4" Margin="12" HorizontalAlignment="Right" VerticalAlignment="Bottom"
-              IsVisible="{Binding #Root.ShowDistance}">
-        <TextBlock Classes="hero" Text="{Binding #Root.DistanceText}" />
+              MaxWidth="{Binding #Root.ChipMaxWidth}" IsVisible="{Binding #Root.ShowDistance}">
+        <DockPanel LastChildFill="True">
+          <TextBlock DockPanel.Dock="Right" Classes="caption" Margin="8,0,0,0" VerticalAlignment="Center" Text="{loc:Tr Map_StraightLine_Short}"
+                     IsVisible="{Binding #Root.ShowStraightLine}" ToolTip.Tip="{loc:Tr Map_StraightLine}" />
+          <TextBlock Classes="subtitle trim" Text="{Binding #Root.DistanceText}" ToolTip.Tip="{Binding #Root.DistanceText}" />
+        </DockPanel>
       </Border>
-      <c:EmptyState Title="{loc:Tr Route_Empty_Title}" Message="{loc:Tr Route_Empty_Message}" IsVisible="{Binding #Root.ShowDefaultEmpty}" />
+      <Border Background="{DynamicResource OverlayBrush}" BorderBrush="{DynamicResource LineBrush}" BorderThickness="1"
+              CornerRadius="{StaticResource RadiusMd}" Padding="10,4" Margin="12" HorizontalAlignment="Left" VerticalAlignment="Bottom"
+              MaxWidth="{Binding #Root.ChipMaxWidth}" IsVisible="{Binding #Root.ShowNote}" AutomationProperties.LiveSetting="Polite">
+        <StackPanel Orientation="Horizontal" Spacing="6">
+          <Path x:Name="NoteIcon" Classes="noteicon" Data="{StaticResource IconWarning}" Width="14" Height="14" Stretch="Uniform"
+                VerticalAlignment="Center" IsVisible="False" AutomationProperties.AccessibilityView="Raw" />
+          <TextBlock Classes="caption trim" Text="{Binding #Root.Note}" ToolTip.Tip="{Binding #Root.Note}" />
+        </StackPanel>
+      </Border>
+      <c:EmptyState Title="{loc:Tr Map_Empty_Title}" Message="{loc:Tr Map_Empty_Message}" IsVisible="{Binding #Root.ShowDefaultEmpty}" />
       <c:EmptyState Title="{Binding #Root.EmptyTitle}" Message="{Binding #Root.EmptyMessage}" IsVisible="{Binding #Root.ShowCustomEmpty}" />
-      <c:LoadingPanel Text="{loc:Tr Loading_Map}" ShowDelay="0:0:0" IsVisible="{Binding #Root.IsLoading}" />
     </Panel>
   </Border>
 </UserControl>

@@ -1,3 +1,4 @@
+using OwnExpeditor.Core.Maps;
 using System;
 using Microsoft.Extensions.DependencyInjection;
 using OwnExpeditor.App.Modules.Jobs;
@@ -56,7 +57,8 @@ public static class AppComposition
     {
         services.AddModule(JobsPageViewModel.Id, $"Module_{JobsPageViewModel.Id}", "IconNavJobs", 1,
             sp => new JobsPageViewModel(sp.GetRequiredService<ILocalizer>(), sp.GetRequiredService<IJobBoardFactory>(),
-                sp.GetRequiredService<IToastService>(), sp.GetRequiredService<IUiDispatcher>()));
+                sp.GetRequiredService<IToastService>(), sp.GetRequiredService<IUiDispatcher>(),
+                sp.GetRequiredService<IGameMapProvider>()));
         return AddModulePlaceholders(services);
     }
 

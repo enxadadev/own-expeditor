@@ -179,9 +179,32 @@ Cada item: agente — arquivos — pronto quando.
 5. A distância calculada fica só exibida, ou um dia substitui a estimativa do `DistanceTable` ou é gravada no save?
 6. Qual limite de espaço em disco é aceitável para o cache?
 
+## Respostas adotadas (padrão, 2026-11-18)
+
+Escolhidas como padrão sensato ao iniciar a implementação; podem ser revistas pelo usuário.
+
+1. Mods ficam para a 1b; a 1a cobre jogo base + DLC.
+2. O fundo mostra só as cidades do save que têm posição.
+3. O mapa continua no cartão atual na fase 1; área maior/zoom entra na fase 2.
+4. Só a versão estável atual de cada jogo (a versão de setor encontrada na fase 0); outras → `UnsupportedVersion`.
+5. A distância calculada fica só exibida; nunca é gravada.
+6. Cache de no máximo ~50 MB por jogo, mantendo os 3 índices mais recentes.
+
+## Revisão após a Fase 0 (2026-11-18)
+
+- **Alvo visual:** o mapa de seleção de frete do jogo (fundo escuro, nomes de países, pinos de cidade, bandeiras de saída/chegada, zoom/arrastar). A rota usa o âmbar/mostarda do app, não o vermelho do jogo.
+- **Vetor, não textura.** Nos 11 pacotes de exemplo não há textura de mapa nem fronteira de país; o jogo desenha o mapa em tempo real (`def/map_data.sii`). Decodificar texturas exigiria GDeflate próprio e reproduz arte da SCS. Os países entram como rótulos (`def/country/*.sui`, campo `pos`); pinos e rótulos de cidade usam `population` e `map_x/y_offsets` por zoom (`def/city/*.sui`). Contorno de país fica como aproximação ou pendência.
+- **Sem `base.scs` no ambiente de desenvolvimento.** Testes usam setores sintéticos e as DLCs; a verificação do mapa base, do ATS e de uma possível textura/fronteira em `base.scs` fica como pendência registrada em `docs/scs-map-format.md`. O leitor deve tratar a ausência/diferença de setores com `PartiallyRead`/`UnsupportedVersion`.
+- **Fase 1a** passa a incluir: posições das cidades (City, versão 907), países como rótulos, pinos por população e fundo escuro no `RouteCanvas`; estradas e rota GPS seguem nas fases 2 e 3.
+
 ## Consequências
 
 - Novo módulo Maps em Domain, Data e Core. A Data passa a ler `base*.scs` (hoje lê só def/dlc/locale).
 - Manutenção a cada versão maior do jogo, registrada em `docs/scs-map-format.md`.
 - Atualizar o design-system §2.14, a skill `ets2-domain` (posições vêm dos setores) e o ADR 0006 (mods passam a ser lidos na 1b).
-- Plano detalhado em `docs/architecture/plan-0007-mapa.md`.
+
+## Pendências
+
+- Validar a Fase 1a com um `base.scs` real e com o ATS. Até lá, a medição é só com as DLCs de mapa do ETS2 (sem `base.scs`); ver `docs/scs-map-format.md`, seção 9.
+- Evento `IMapService.Changed` ainda não disparado: trocar a pasta do jogo ou os mods não reconstrói o índice em runtime.
+- Tabela global de nós: a Fase 1a guarda todos os nós do mapa em memória durante a leitura (16 bytes por nó; milhões com base.scs e mods). Otimização futura: resolver as empresas no próprio setor e só reler para os uids pendentes.

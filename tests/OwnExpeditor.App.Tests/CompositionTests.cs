@@ -5,6 +5,7 @@ using OwnExpeditor.App.Shell;
 using OwnExpeditor.App.ViewModels;
 using OwnExpeditor.App.Views;
 using OwnExpeditor.Core.Games;
+using OwnExpeditor.Core.Maps;
 using OwnExpeditor.Core.Session;
 using OwnExpeditor.Domain.Settings;
 
@@ -22,6 +23,7 @@ public class CompositionTests
         Assert.Equal(5, shell.Modules.Count);
         Assert.NotNull(provider.GetRequiredService<IEditSessionHost>());
         Assert.NotNull(provider.GetRequiredService<IGameStatusMonitor>());
+        Assert.NotNull(provider.GetRequiredService<IGameMapProvider>());
     }
 
     [Fact]
