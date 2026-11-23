@@ -140,10 +140,10 @@
     <!-- RouteMap -->
     <g:GallerySection Title="RouteMap">
       <WrapPanel Classes="cells">
-        <g:GalleryCell Caption="Schematic"><c:RouteMap Width="400" Height="260" Origin="{Binding OriginNoGeo}" Destination="{Binding DestinationNoGeo}" DistanceText="{Binding Km569}" RouteLabel="{Binding RouteChip}" /></g:GalleryCell>
-        <g:GalleryCell Caption="Geographic"><c:RouteMap Width="400" Height="260" Origin="{Binding Origin}" Destination="{Binding Destination}" Cities="{Binding Cities}" DistanceText="{Binding Km1240}" RouteLabel="{Binding RouteChip}" /></g:GalleryCell>
+        <g:GalleryCell Caption="{loc:Tr Gallery_Map_Schematic}"><c:RouteMap Width="400" Height="260" Origin="{Binding OriginNoGeo}" Destination="{Binding DestinationNoGeo}" DistanceText="{Binding Km569}" RouteLabel="{Binding RouteChip}" /></g:GalleryCell>
+        <g:GalleryCell Caption="{loc:Tr Gallery_Map_Geographic}"><c:RouteMap Width="400" Height="260" Origin="{Binding Origin}" Destination="{Binding Destination}" Cities="{Binding Cities}" Countries="{Binding Countries}" DistanceText="{Binding Km1240}" RouteLabel="{Binding RouteChip}" /></g:GalleryCell>
+        <g:GalleryCell Caption="{loc:Tr Gallery_Map_Note}"><c:RouteMap Width="400" Height="260" Origin="{Binding OriginNoGeo}" Destination="{Binding DestinationNoGeo}" RouteLabel="{Binding RouteChip}" Note="{loc:Tr Map_Error_Version}" NoteKind="Error" /></g:GalleryCell>
         <g:GalleryCell Caption="{loc:Tr Gallery_State_Empty}"><c:RouteMap Width="400" Height="260" /></g:GalleryCell>
-        <g:GalleryCell Caption="{loc:Tr Gallery_State_Loading}"><c:RouteMap Width="400" Height="260" IsLoading="True" /></g:GalleryCell>
       </WrapPanel>
     </g:GallerySection>
 

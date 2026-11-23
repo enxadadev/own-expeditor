@@ -8,6 +8,9 @@
   <data name="Gallery_HitAreas" xml:space="preserve"><value>Áreas de clique</value></data>
   <data name="Gallery_Language" xml:space="preserve"><value>Idioma</value></data>
   <data name="Gallery_LongTexts" xml:space="preserve"><value>Textos longos</value></data>
+  <data name="Gallery_Map_Geographic" xml:space="preserve"><value>Geográfico</value></data>
+  <data name="Gallery_Map_Note" xml:space="preserve"><value>Com nota de erro</value></data>
+  <data name="Gallery_Map_Schematic" xml:space="preserve"><value>Esquemático</value></data>
   <data name="Gallery_State_Disabled" xml:space="preserve"><value>disabled</value></data>
   <data name="Gallery_State_Empty" xml:space="preserve"><value>vazio</value></data>
   <data name="Gallery_State_Error" xml:space="preserve"><value>erro</value></data>

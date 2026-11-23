@@ -1,3 +1,4 @@
+using OwnExpeditor.Core.Maps;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,11 +49,13 @@ public sealed partial class JobsPageViewModel : ModulePageViewModel
     private string? _error;
     private bool _cloudDismissed;
 
-    public JobsPageViewModel(ILocalizer loc, IJobBoardFactory factory, IToastService toast, IUiDispatcher ui) : base(loc)
+    public JobsPageViewModel(ILocalizer loc, IJobBoardFactory factory, IToastService toast, IUiDispatcher ui,
+        IGameMapProvider? maps = null) : base(loc)
     {
         _factory = factory;
         _toast = toast;
         _ui = ui;
+        _maps = maps;
 
         Listen(FromCountry, JobField.FromCountry);
         Listen(FromCity, JobField.FromCity);
@@ -127,6 +130,7 @@ public sealed partial class JobsPageViewModel : ModulePageViewModel
         session.Changed += OnSessionChanged;
         _lifetime = new CancellationTokenSource();
         ct.ThrowIfCancellationRequested();
+        StartMapLoad(session);
         await LoadAsync(session, ct);
         if (State == PageState.Ready) FocusRequested?.Invoke(this, NextFocus()); // o primeiro campo vazio, sem abrir popup
     }
@@ -154,6 +158,7 @@ public sealed partial class JobsPageViewModel : ModulePageViewModel
     protected override void OnSessionClosed()
     {
         if (_session is not null) _session.Changed -= OnSessionChanged;
+        CancelMapLoad();
         _lifetime?.Cancel();
         _lifetime?.Dispose();
         _lifetime = null;

@@ -99,9 +99,9 @@ public sealed partial class JobsPageViewModel
 
     private bool HasBothCities => _board is not null && _sel.FromCity is not null && _sel.ToCity is not null;
 
-    public MapPoint? MapOrigin => HasBothCities ? new MapPoint(CityName(_sel.FromCity!)) : null;
+    public MapPoint? MapOrigin => HasBothCities ? MapPointOf(_sel.FromCity!) : null;
 
-    public MapPoint? MapDestination => HasBothCities ? new MapPoint(CityName(_sel.ToCity!)) : null;
+    public MapPoint? MapDestination => HasBothCities ? MapPointOf(_sel.ToCity!) : null;
 
     public string? MapRouteLabel => !HasBothCities ? null
         : _sel.FromCompany is not null && _sel.ToCompany is not null
@@ -116,7 +116,7 @@ public sealed partial class JobsPageViewModel
 
     public string MapEmptyTitle => Loc["Jobs_Map_Empty"];
 
-    public string MapNote => Loc["Jobs_Map_Schematic"];
+    public string MapEmptyMessage => Loc["Map_Empty_Message"];
 
     // ---- detalhes (só com a carga)
 

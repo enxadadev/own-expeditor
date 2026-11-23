@@ -3,6 +3,69 @@
 A versão do produto fica em `Directory.Build.props` (`M.X.Y`). Quem a altera é
 o agente `git-ops` (ver `ia/agents/git-ops.md`).
 
+## 0.5.0 (em desenvolvimento)
+
+Fase 1a do mapa do jogo na tela de Fretes: o mapa passa a usar as posições reais
+das cidades do jogo, em vez do desenho esquemático.
+
+### Para o usuário
+
+- **Mapa do jogo.** A área de rota da tela de Fretes mostra o mapa real do jogo
+  sobre fundo escuro, com os países como rótulos e as cidades como pinos. O
+  tamanho do pino segue a população da cidade, e os nomes são posicionados para
+  não se sobrepor.
+- **Bandeiras de saída e chegada.** A cidade de saída e a de chegada ganham a
+  bandeira do país.
+- **Linha reta tracejada em âmbar.** Liga saída e chegada em linha reta, como
+  aviso de que não é a rota que o GPS do jogo usaria.
+- **Lido da instalação do jogo.** O mapa vem dos arquivos do próprio jogo (jogo
+  base e DLCs instalados). Nada é fixo. Mods ainda não são lidos: cidades de mod
+  ficam no mapa esquemático.
+- **Fallback e nota de estado.** Se o mapa do jogo não puder ser lido (pasta do
+  jogo não encontrada, versão de setor não suportada ou arquivo ilegível), a tela
+  volta ao mapa esquemático e mostra uma nota dizendo o motivo.
+- **Abertura mais rápida.** Depois da primeira leitura, o índice do mapa fica em
+  cache, e as próximas aberturas do mesmo jogo não lêem os setores de novo.
+
+### Mudanças técnicas
+
+- Leitor de setores do mapa, versão 907 (`Data/Maps`): lê `map/*/*.base` e extrai
+  cidades, empresas e países. Formato documentado em
+  [scs-map-format.md](scs-map-format.md). Setor de outra versão é reportado como
+  ilegível, sem exceção para a tela.
+- Índice em cache em disco (`MapIndexCache`, schema 1), com cerca de 58 KB. Na
+  segunda abertura, a leitura do índice leva cerca de 3 ms (medição de
+  desenvolvimento; ver pendências).
+- `HashFsArchive` valida os limites de cada entrada antes de ler e ganhou
+  `OpenPooled`, que devolve um `PooledMemoryStream` sobre um buffer do pool
+  (`ArrayPool`). O buffer volta ao pool uma única vez, mesmo com `Dispose` chamado
+  duas vezes. A leitura completa caiu de ~257 MB para ~60 MB de alocação.
+- `Core/Maps`: `IMapService` (`MapService`) e a porta `IGameMapProvider`
+  (`GameMapProvider`), registrados em `CoreServiceCollectionExtensions`. A App
+  depende só da porta.
+- `Domain/Maps`: `MapIndex`, `MapCity`, `MapCompany`, `MapCountry`, `MapPos` e
+  `MapStatus`, sem dependências.
+- `MapPoint` (App) guarda as coordenadas em metros. A conversão para a tela fica
+  no `RouteCanvas`.
+- Tokens de cor novos `MapCountryText` (`MapCountryTextColor` e
+  `MapCountryTextBrush`) em `Styles/Colors.axaml`, nos temas Claro e Escuro.
+- Textos novos em `Strings.resx` e `Strings.pt-BR.resx` (pt-BR e en), incluindo a
+  nota de fallback. Gerados por `toolkit/gen/gen-resx.py`.
+- Decisão de arquitetura: [ADR 0007](decisions/0007-mapa-do-jogo-com-rota-gps.md).
+
+### Limitações conhecidas
+
+- Falta validar o mapa com `base.scs` e com o ATS. O formato é o do ETS2 (ver
+  [scs-map-format.md](scs-map-format.md)).
+  > TODO: confirmar com `base.scs` e com o ATS antes de publicar.
+- Sem estradas no fundo e sem zoom: fica para a fase 2.
+- A linha entre saída e chegada é reta. A rota GPS do jogo fica para a fase 3.
+- Mods: cidades de mods ficam no mapa esquemático. O suporte a mods fica para a
+  fase 1b.
+- O tempo de 3 ms da segunda abertura é uma medição de desenvolvimento, não um
+  teste automatizado.
+  > TODO: confirmar a medição; `scs-map-format.md` ainda diz "poucos ms".
+
 ## 0.4.0 (em desenvolvimento)
 
 Fluxo de frete por país.

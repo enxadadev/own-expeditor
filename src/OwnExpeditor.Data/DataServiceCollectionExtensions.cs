@@ -2,6 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using OwnExpeditor.Data.Distances;
 using OwnExpeditor.Data.Games;
+using OwnExpeditor.Data.Maps;
 using OwnExpeditor.Data.Saves;
 using OwnExpeditor.Data.Settings;
 
@@ -25,6 +26,9 @@ public static class DataServiceCollectionExtensions
         services.TryAddSingleton<IDistanceCache>(sp => new JsonDistanceCache(
             sp.GetRequiredService<DataOptions>().SettingsDirectory
             ?? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "OwnExpeditor")));
+        services.TryAddSingleton<IModLocator>(_ => new NullModLocator());
+        services.TryAddSingleton<IMapSource>(sp => new MapSource(Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "OwnExpeditor", "cache", "map")));
         return services;
     }
 }

@@ -259,6 +259,19 @@
   <data name="Loading_Stage_Parse" xml:space="preserve"><value>Interpretando o save</value></data>
   <data name="Loading_Stage_Read" xml:space="preserve"><value>Lendo o arquivo</value></data>
   <data name="Loading_Title" xml:space="preserve"><value>Lendo save…</value></data>
+  <data name="Map_Building" xml:space="preserve"><value>Preparando o mapa do jogo…</value></data>
+  <data name="Map_Center" xml:space="preserve"><value>Centralizar rota</value></data>
+  <data name="Map_Distance_Calculated" xml:space="preserve"><value>{0:N0} km (calculada)</value></data>
+  <data name="Map_Empty_Message" xml:space="preserve"><value>A rota aparece aqui quando as duas cidades estiverem escolhidas.</value></data>
+  <data name="Map_Empty_Title" xml:space="preserve"><value>Escolha as duas cidades</value></data>
+  <data name="Map_Error_NoRoute" xml:space="preserve"><value>Rota não encontrada; mostrando linha reta</value></data>
+  <data name="Map_Error_Read" xml:space="preserve"><value>Não foi possível ler o mapa do jogo</value></data>
+  <data name="Map_Error_Version" xml:space="preserve"><value>Não foi possível ler o mapa desta versão do jogo</value></data>
+  <data name="Map_Hint_NoGame" xml:space="preserve"><value>Configure a pasta do jogo para ver o mapa</value></data>
+  <data name="Map_StraightLine" xml:space="preserve"><value>Linha reta, não é a rota do GPS</value></data>
+  <data name="Map_StraightLine_Short" xml:space="preserve"><value>linha reta</value></data>
+  <data name="Map_ZoomIn" xml:space="preserve"><value>Aproximar</value></data>
+  <data name="Map_ZoomOut" xml:space="preserve"><value>Afastar</value></data>
   <data name="Module_Jobs_Title" xml:space="preserve"><value>Fretes</value></data>
   <data name="Module_Profile_Title" xml:space="preserve"><value>Perfil</value></data>
   <data name="Module_company" xml:space="preserve"><value>Empresa</value></data>

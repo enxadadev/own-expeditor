@@ -30,6 +30,7 @@
       <Color x:Key="MapGridColor">#1A1F24</Color>
       <Color x:Key="MapCityDotColor">#6B7783</Color>
       <Color x:Key="MapCityTextColor">#8A949E</Color>
+      <Color x:Key="MapCountryTextColor">#7C8691</Color>
       <Color x:Key="RouteGlowColor">#2EF5A524</Color>
       <Color x:Key="OverlayColor">#E0121417</Color>
       <SolidColorBrush x:Key="BgBrush" Color="{DynamicResource BgColor}" />
@@ -59,6 +60,7 @@
       <SolidColorBrush x:Key="MapGridBrush" Color="{DynamicResource MapGridColor}" />
       <SolidColorBrush x:Key="MapCityDotBrush" Color="{DynamicResource MapCityDotColor}" />
       <SolidColorBrush x:Key="MapCityTextBrush" Color="{DynamicResource MapCityTextColor}" />
+      <SolidColorBrush x:Key="MapCountryTextBrush" Color="{DynamicResource MapCountryTextColor}" />
       <SolidColorBrush x:Key="RouteGlowBrush" Color="{DynamicResource RouteGlowColor}" />
       <SolidColorBrush x:Key="OverlayBrush" Color="{DynamicResource OverlayColor}" />
     </ResourceDictionary>
@@ -90,6 +92,7 @@
       <Color x:Key="MapGridColor">#E2DCCF</Color>
       <Color x:Key="MapCityDotColor">#8F8675</Color>
       <Color x:Key="MapCityTextColor">#6A624F</Color>
+      <Color x:Key="MapCountryTextColor">#6A624F</Color>
       <Color x:Key="RouteGlowColor">#29B86E00</Color>
       <Color x:Key="OverlayColor">#EBFFFFFF</Color>
       <SolidColorBrush x:Key="BgBrush" Color="{DynamicResource BgColor}" />
@@ -119,6 +122,7 @@
       <SolidColorBrush x:Key="MapGridBrush" Color="{DynamicResource MapGridColor}" />
       <SolidColorBrush x:Key="MapCityDotBrush" Color="{DynamicResource MapCityDotColor}" />
       <SolidColorBrush x:Key="MapCityTextBrush" Color="{DynamicResource MapCityTextColor}" />
+      <SolidColorBrush x:Key="MapCountryTextBrush" Color="{DynamicResource MapCountryTextColor}" />
       <SolidColorBrush x:Key="RouteGlowBrush" Color="{DynamicResource RouteGlowColor}" />
       <SolidColorBrush x:Key="OverlayBrush" Color="{DynamicResource OverlayColor}" />
     </ResourceDictionary>

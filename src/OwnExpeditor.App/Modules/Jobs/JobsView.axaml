@@ -132,9 +132,10 @@
             </StackPanel>
           </c:SectionCard>
 
-          <!-- mapa da rota: último bloco da página (outra frente troca o esquema pelo mapa real) -->
-          <c:RouteMap Height="{Binding MapHeight}" MinHeight="{Binding MapHeight}" Mode="Schematic" EmptyTitle="{Binding MapEmptyTitle}"
-                      EmptyMessage="{Binding MapNote}" Origin="{Binding MapOrigin}" Destination="{Binding MapDestination}"
+          <!-- mapa da rota: último bloco da página; geográfico quando o mapa do jogo tem as duas cidades, senão esquemático (ADR 0007) -->
+          <c:RouteMap Height="{Binding MapHeight}" MinHeight="{Binding MapHeight}" Mode="Auto" EmptyTitle="{Binding MapEmptyTitle}"
+                      EmptyMessage="{Binding MapEmptyMessage}" Origin="{Binding MapOrigin}" Destination="{Binding MapDestination}"
+                      Cities="{Binding MapCities}" Countries="{Binding MapCountries}" Note="{Binding MapStatusNote}" NoteKind="{Binding MapNoteKind}"
                       RouteLabel="{Binding MapRouteLabel}" DistanceText="{Binding MapDistanceText}" />
         </StackPanel>
       </ScrollViewer>

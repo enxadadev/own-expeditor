@@ -19,6 +19,7 @@ Falta o teste no jogo (item 7.5 do plano 0006).
 | [development.md](development.md) | Pré-requisitos, comandos de build, teste e execução, publicação para Windows, toolkit e convenções |
 | [ai-workflow.md](ai-workflow.md) | Como os agentes de IA, as skills (workflows `wf-*` e skills de apoio) e o toolkit se organizam (resumo; a fonte está em `ia/`) |
 | [sii-format.md](sii-format.md) | Formato do `game.sii`: camadas ScsC, BSII e SiiNunit, campos de job e comportamento do parser |
+| [scs-map-format.md](scs-map-format.md) | Formato dos setores do mapa (`map/*/sec*.base`) do ETS2/ATS: City, Company, nós, medições e o que falta verificar (fase 0 da ADR 0007) |
 | [architecture/overview.md](architecture/overview.md) | Visão geral, diagrama de camadas e fluxo principal de leitura, injeção e escrita |
 | [architecture/layers.md](architecture/layers.md) | Responsabilidade de cada projeto em `src/` e a regra de dependência |
 | [architecture/domain.md](architecture/domain.md) | Tipos do `Domain` (jogo, perfil, save, ajustes) e onde ficam as entidades do jogo |

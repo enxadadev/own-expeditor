@@ -17,10 +17,10 @@ Mesmo lugar e tamanho do `RouteMap` atual em `JobsView` (painel direito do módu
 | Estado | Desenho | Texto |
 | --- | --- | --- |
 | Sem pasta do jogo | esquemático atual | `Map_Hint_NoGame` |
-| Montando índice | esquemático + barra fina de progresso no rodapé | `Map_Building` |
+| Montando índice | esquemático + nota no rodapé (sem barra: o índice não expõe progresso) | `Map_Building` |
 | Erro / versão não suportada | esquemático + ícone de aviso | `Map_Error_Version` / `Map_Error_Read` |
 | Geográfico sem rota | cidades de fundo (dots + nomes que não colidem) | estado vazio atual do módulo |
-| Fase 1 com par | pontas âmbar, linha reta **tracejada** | `Map_StraightLine` (tooltip da linha) |
+| Fase 1 com par | pontas âmbar, linha reta **tracejada, sem halo** (halo só na rota sólida) | `Map_StraightLine` (tooltip do segmento e do chip) e `Map_StraightLine_Short` no chip de distância |
 | Fase 3 com par | rota sólida âmbar com halo sobre as estradas | chip de distância com "calculada" |
 | Rota não encontrada | linha tracejada + aviso pequeno | `Map_Error_NoRoute` |
 
@@ -30,6 +30,6 @@ Mesmo lugar e tamanho do `RouteMap` atual em `JobsView` (painel direito do módu
 - Perto: estradas com largura proporcional, nomes de todas as cidades.
 
 ## Teclado e acessibilidade
-- Mapa focável (Tab). `+`/`-` zoom, setas movem, `0` centraliza a rota.
+- v1 (fase 1): o mapa **não é focável** (exceção documentada: não há ação nem zoom; o conteúdo vai no nome acessível e na nota). Fase 2: mapa focável (Tab) com foco visível; `+`/`-` zoom, setas movem, `0` centraliza a rota.
 - Nome acessível continua `Route_A11y` (origem, destino, distância); o mapa é decorativo para leitores de tela.
 - Movimento: zoom animado ≤150 ms; respeita "reduzir animações".

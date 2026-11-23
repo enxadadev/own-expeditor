@@ -91,15 +91,17 @@ public partial class GalleryViewModel : ViewModelBase
 
     partial void OnLongTextsChanged(bool value) => OnPropertyChanged(string.Empty);
 
-    public MapPoint Origin => new(CityA, 23.32, 42.70);
-    public MapPoint Destination => new(CityB, 28.98, 41.01);
+    // metros do mundo (Y = norte); valores de exemplo, não do jogo
+    public MapPoint Origin => new(CityA, 0, 0, 1_200_000);
+    public MapPoint Destination => new(CityB, 440_000, -190_000, 15_000_000);
     public MapPoint OriginNoGeo => new(CityA);
     public MapPoint DestinationNoGeo => new(CityB);
     public IReadOnlyList<MapPoint> Cities { get; } =
     [
-        new("Plovdiv", 24.75, 42.15), new("Varna", 27.91, 43.21), new("Edirne", 26.56, 41.68),
-        new("Bursa", 29.06, 40.18), new("Burgas", 27.47, 42.50), new("Nis", 21.90, 43.32),
+        new("Plovdiv", 130_000, -20_000, 340_000), new("Varna", 330_000, 120_000, 330_000), new("Edirne", 300_000, -150_000, 170_000),
+        new("Bursa", 520_000, -280_000, 1_900_000), new("Burgas", 300_000, 40_000, 200_000), new("Nis", -190_000, 30_000, 260_000),
     ];
+    public IReadOnlyList<MapPoint> Countries { get; } = [new("Bulgaria", 120_000, 70_000), new("Turkey", 380_000, -330_000), new("Serbia", -260_000, 90_000)];
 
     public string RouteChip => $"{CompanyA} · {CityA} → {CompanyB} · {CityB}";
 
